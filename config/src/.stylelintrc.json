@@ -1,0 +1,42 @@
+{
+  "extends": [
+    "stylelint-config-standard",
+    "stylelint-config-prettier",
+    "stylelint-config-standard-scss"
+  ],
+  "plugins": ["stylelint-order", "stylelint-prettier"],
+  "rules": {
+    "prettier/prettier": true,
+    "declaration-empty-line-before": "never",
+    "color-hex-length": "long",
+    "declaration-block-no-redundant-longhand-properties": null,
+    "declaration-colon-newline-after": null,
+    "font-family-no-missing-generic-family-keyword": [
+      true,
+      {
+        "ignoreFontFamilies": ["Material Icons", "Material Icons Outlined"]
+      }
+    ],
+    "function-no-unknown": [
+      true,
+      { "ignoreFunctions": ["math.div", "math.percentage", "vars"] }
+    ],
+    "selector-pseudo-class-no-unknown": [
+      true,
+      {
+        "ignorePseudoClasses": ["global"]
+      }
+    ],
+    "string-quotes": "single",
+    "no-descending-specificity": null,
+    "scss/at-mixin-pattern": null,
+    "value-list-comma-newline-after": null,
+    "value-keyword-case": null,
+    "selector-class-pattern": [
+      "^.([a-zA-Z0-9])+((-|_)*([a-zA-Z0-9]*))*([a-zA-Z0-9])+$",
+      {
+        "resolveNestedSelectors": true
+      }
+    ]
+  }
+}

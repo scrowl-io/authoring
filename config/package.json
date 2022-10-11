@@ -1,0 +1,36 @@
+{
+  "name": "@scrowl/config",
+  "version": "0.0.1",
+  "license": "MIT",
+  "files": [
+    "src",
+    "package.json",
+    "tsconfig.json"
+  ],
+  "exports": {
+    ".": "./src/.eslintrc.json",
+    "./package": "./package.json",
+    "./prettier": "./src/.prettierrc.json",
+    "./stylelint": "./src/.stylelintrc.json",
+    "./tsconfig": "./tsconfig.json"
+  },
+  "dependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.38.1",
+    "@typescript-eslint/parser": "^5.38.1",
+    "eslint": "^8.24.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-jsx-a11y": "^6.6.1",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.31.8",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "prettier": "^2.7.1",
+    "stylelint": "^14.13.0",
+    "stylelint-config-prettier": "^9.0.3",
+    "stylelint-config-standard": "^28.0.0",
+    "stylelint-config-standard-scss": "^5.0.0",
+    "stylelint-order": "^5.0.0",
+    "stylelint-prettier": "^2.0.0",
+    "typescript": "^4.8.4"
+  }
+}
