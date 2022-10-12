@@ -24,6 +24,7 @@
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.31.8",
     "eslint-plugin-react-hooks": "^4.6.0",
+    "postcss": "^8.4.17",
     "prettier": "^2.7.1",
     "stylelint": "^14.13.0",
     "stylelint-config-prettier": "^9.0.3",
