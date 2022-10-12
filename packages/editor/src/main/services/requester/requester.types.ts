@@ -23,16 +23,16 @@ export type JsonResult = {
 
 export type EventCallback = (event: IpcMainInvokeEvent, ...args: any[]) => any;
 
-export type RegisterEventType = 'send' | 'invoke' | 'on';
+export type RegisterEndpointType = 'send' | 'invoke' | 'on';
 
-export interface RegisterEvent {
+export interface RegisterEndpoint {
   name: string;
-  type: RegisterEventType;
+  type: RegisterEndpointType;
   fn?: EventCallback;
 }
 
-export interface RegisterEvents {
-  [key: string]: RegisterEvent;
+export interface RegisterEndpoints {
+  [key: string]: RegisterEndpoint;
 }
 
 export interface ApiResultError extends JsonResult {

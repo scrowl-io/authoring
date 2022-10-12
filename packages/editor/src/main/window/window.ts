@@ -4,11 +4,12 @@ import {
   shell,
   BrowserWindowConstructorOptions,
 } from 'electron';
-import { getAppPath, getAssetPath } from './locate';
+import { getAppPath, getAssetPath, getSourcePath } from './locate';
+import { Models } from '../models';
 
 export const init = () => {
   const appPath = getAppPath('app.html');
-  const preloadPath = getAppPath('preload.js');
+  const preloadPath = getSourcePath('dist', 'preload.js');
   const iconPath = getAssetPath('icon.png');
   const isDARWIN = process.platform === 'darwin';
   const isDevEnv = process.env.NODE_ENV === 'development';
@@ -34,6 +35,7 @@ export const init = () => {
         throw 'Unable to create App window';
       }
 
+      Models.init();
       mainWindow.loadURL(appPath);
 
       mainWindow.on('ready-to-show', () => {

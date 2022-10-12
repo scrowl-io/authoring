@@ -115,6 +115,7 @@
     "bootstrap": "^5.2.2",
     "electron-context-menu": "^3.5.0",
     "electron-log": "^4.4.8",
+    "electron-settings": "^4.0.2",
     "electron-squirrel-startup": "^1.0.0",
     "framer-motion": "^7.5.3",
     "fs-extra": "^10.1.0",

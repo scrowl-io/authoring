@@ -24,7 +24,12 @@ export const getAssetPath = (...paths: string[]) => {
   return fs.joinPath(RESOURCES_PATH, ...paths);
 };
 
+export const getSourcePath = (...paths: string[]) => {
+  return fs.joinPath(__dirname, '../../', ...paths);
+};
+
 export default {
   getAppPath,
   getAssetPath,
+  getSourcePath,
 };
