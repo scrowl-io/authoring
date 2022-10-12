@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import './_root.scss';
 import {
   MemoryRouter as Router,
   Routes,

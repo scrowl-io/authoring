@@ -1,0 +1,347 @@
+@use './temp' as *;
+@use '@owlui/lib/src/theme/utils' as *;
+@use '@owlui/lib/src/theme/global/bootstrap' as *;
+
+// OSG Bootstrap Theme Variables and Overrides
+//
+
+.owlui-modal-title {
+  @extend .h5;
+
+  &.h1,
+  &.h2,
+  &.h3,
+  &.h4,
+  &.h5 {
+    margin-bottom: 0;
+    line-height: var(--bs-modal-title-line-height);
+    user-select: none;
+  }
+}
+
+.owl-avatar {
+  display: inline-block;
+  padding: 0.25rem;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  color: var(--bs-body-color);
+
+  &:hover,
+  &:focus,
+  &.show {
+    text-decoration: none;
+    color: var(--bs-body-color);
+
+    .owl-avatar__img {
+      &:last-child {
+        --owl-avatar-border-color: var(--bs-primary);
+      }
+    }
+  }
+
+  &__img {
+    --owl-avatar-border-color: var(--bs-border-color);
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    overflow: hidden;
+    vertical-align: middle;
+    background: var(--owl-navbar-bg);
+    border-radius: 1rem;
+    box-shadow: 0 0 0 2px var(--owl-avatar-border-color),
+      0 0 0 4px var(--owl-navbar-bg);
+
+    & + & {
+      margin-left: -0.75rem;
+    }
+
+    &--yellow {
+      --owl-avatar-border-color: var(--bs-yellow);
+    }
+
+    &--purple {
+      --owl-avatar-border-color: var(--bs-purple);
+    }
+  }
+}
+
+.btn,
+.owlui-btn {
+  span[class^='owlui-icons']:first-child {
+    margin-right: 0.25em;
+    font-size: 1.5em;
+    line-height: 0.66;
+    vertical-align: inherit;
+  }
+}
+
+.owl-btn-icon {
+  *:hover > &,
+  *:focus > &,
+  *:active > &,
+  .active > &,
+  *:disabled > & {
+    color: inherit;
+  }
+}
+
+.owl-dropdown-icon {
+  margin-right: 0.5rem;
+  color: var(--owl-color-default);
+
+  .disabled &,
+  [disabled] &,
+  .active > &,
+  *:active > & {
+    color: inherit;
+  }
+}
+
+.owl-more-options {
+  &:focus-within {
+    opacity: 1 !important;
+  }
+
+  &__button {
+    padding: 0;
+    margin-top: -0.25em;
+    width: 1.5em;
+    height: 1.5em;
+    line-height: 1;
+    color: var(--bs-body-color);
+    border-radius: var(--bs-border-radius-pill);
+    border: 0;
+    opacity: 0.8;
+
+    &:hover,
+    &:focus {
+      opacity: 1;
+      background: var(--owl-transparent-hover-bg);
+    }
+
+    &:active {
+      color: var(--owl-active-color);
+      background: var(--owl-active-bg);
+    }
+  }
+}
+
+.owl-grabhandle {
+  position: absolute;
+  z-index: 2;
+  width: $owl-sys-size-grabhandle;
+  border-width: 0 1px 0 1px;
+  border-style: solid;
+  border-color: transparent;
+  top: 0;
+  bottom: 0;
+  cursor: col-resize;
+
+  > div {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: calc($owl-sys-size-grabhandle-hover / -2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 0;
+    overflow: hidden;
+    background: var(--owl-border-color);
+    transition-duration: 0.1s;
+    transition-delay: 0.2s;
+    transition-timing-function: $owl-ref-style-cubic-bezier;
+    transition-property: opacity;
+    pointer-events: none;
+    opacity: 0;
+  }
+
+  &:hover,
+  &:focus,
+  &:active {
+    > div {
+      opacity: 1;
+      width: $owl-sys-size-grabhandle-hover;
+    }
+  }
+
+  &:active {
+    > div {
+      color: var(--owl-active-color);
+      background: var(--owl-active-bg);
+    }
+  }
+
+  &--left {
+    right: -1px;
+  }
+
+  &--right {
+    left: -1px;
+  }
+}
+
+.owl-pane {
+  &__heading {
+    @include typeface-label();
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: calc($owl-sys-space-sidebar/2) calc($owl-sys-space-sidebar/2)
+      calc($owl-sys-space-sidebar/2) $owl-sys-space-sidebar;
+    line-height: $owl-ref-typeface-lineheight-sm;
+    font-size: 0.75rem;
+    user-select: none;
+  }
+
+  .nav-tabs {
+    font-size: 12px;
+  }
+
+  .tab-pane {
+    font-size: $font-size-sm;
+  }
+}
+
+.owl-sticky-add-item {
+  position: absolute;
+  z-index: 1;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 0.75rem $owl-sys-space-sidebar;
+  border-top: 1px solid var(--owl-border-color);
+  background: var(--owl-sidebar-bg);
+
+  &__button {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 0.5rem 0.5rem 0.5rem 1rem;
+    font-size: $owl-ref-typeface-size-xs;
+    line-height: 1.1;
+    color: var(--owl-input-color);
+    text-align: left;
+    border: 1px solid var(--owl-border-color);
+    border-radius: 50rem;
+    background: var(--owl-chatbox-bg);
+
+    &:hover,
+    &:focus {
+      background: var(--owl-chatbox-bg-hover);
+    }
+
+    span[class^='material-symbols'] {
+      font-size: $font-size-lg;
+      color: var(--owl-input-placeholder-color);
+    }
+  }
+}
+
+.owl-offcanvas-form {
+  display: grid;
+  min-height: 100%;
+  grid-auto-flow: row;
+  grid-template-rows: auto 1fr;
+
+  &__textarea {
+    display: flex;
+    flex-direction: column;
+
+    textarea {
+      flex-grow: 1;
+    }
+  }
+}
+
+// Custom Styles
+.color-module {
+  color: var(--owl-color-module);
+}
+
+.color-lesson {
+  color: var(--owl-color-lesson);
+}
+
+.color-slide {
+  color: var(--owl-color-slide);
+}
+
+.color-template {
+  color: var(--owl-color-template);
+}
+
+.color-default {
+  color: var(--owl-color-default);
+}
+
+.color-quiz {
+  color: var(--owl-color-quiz);
+}
+
+.btn-ghost-group {
+  &:focus-within {
+    box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.5);
+  }
+}
+
+@mixin lightMode {
+  .btn-ghost-primary {
+    @include button-outline-variant(
+      $gray-700,
+      $color-hover: color-contrast(shade-color($primary, 20%)),
+      $active-background: shade-color($primary, 20%),
+      $active-border: shade-color($primary, 20%),
+      $active-color: color-contrast(shade-color($primary, 20%))
+    );
+
+    --bs-btn-focus-shadow-rgb: var(--bs-primary-rgb);
+
+    &:first-child {
+      &:hover,
+      &:focus {
+        & + .dropdown-toggle-split {
+          color: color-contrast(shade-color($primary, 20%));
+          border-color: shade-color($primary, 20%);
+          background: shade-color($primary, 20%);
+        }
+      }
+
+      &:active {
+        box-shadow: none;
+
+        & + .dropdown-toggle-split {
+          box-shadow: none;
+        }
+      }
+    }
+
+    &.dropdown-toggle-split:active {
+      box-shadow: none;
+    }
+  }
+}
+
+@mixin darkMode {
+  .btn-ghost-primary {
+    @include button-outline-variant(
+      $gray-300,
+      $color-hover: color-contrast(shade-color($primary, 20%)),
+      $active-background: shade-color($primary, 20%),
+      $active-border: shade-color($primary, 20%),
+      $active-color: color-contrast(shade-color($primary, 20%))
+    );
+  }
+}
+
+.theme--dark {
+  @include darkMode;
+}
+
+.theme--default {
+  @include lightMode;
+}

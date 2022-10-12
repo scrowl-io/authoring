@@ -1,0 +1,9 @@
+// Temp variables to go to OwlUI
+:root {
+  --owl-sidebar-spacing: 1rem;
+}
+
+.owlui-btn-link:focus {
+  outline: 1px var(--bs-primary) solid;
+  outline-offset: 2px;
+}

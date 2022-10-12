@@ -1318,6 +1318,226 @@
   dependencies:
     "@octokit/openapi-types" "^13.11.0"
 
+"@owlui/accordion@^0.0.43":
+  version "0.0.43"
+  resolved "https://registry.yarnpkg.com/@owlui/accordion/-/accordion-0.0.43.tgz#3d4311390127effaf143c986cb66cac80851a2af"
+  integrity sha512-3sR9ygjJCy+G6eYp/HeeuYuacJPCLKPR7lTNwWW3BBdPOB5lGeBwGimHEcPHcbQ3bU5DqSNH6cq4LO4l9F5xQA==
+  dependencies:
+    "@owlui/lib" "^0.0.43"
+
+"@owlui/badge@^0.0.43":
+  version "0.0.43"
+  resolved "https://registry.yarnpkg.com/@owlui/badge/-/badge-0.0.43.tgz#70eb9f2317e6ec65704e91dcbf5deeaf66325014"
+  integrity sha512-ZAUbk6ZkkbJOGJDWveiJEspKxrYrnBqknWBoIcyCgML+6me6iDmClt/326pa9SzWayFF76v6HnwqxXAVxeJkzQ==
+  dependencies:
+    "@owlui/lib" "^0.0.43"
+
+"@owlui/button@^0.0.43":
+  version "0.0.43"
+  resolved "https://registry.yarnpkg.com/@owlui/button/-/button-0.0.43.tgz#a5aea1493ff47d252c8a7c87314b89fb1c717faa"
+  integrity sha512-KaSIuQWZzHXcmJo2G8S+Nvh+gN121kMkmA0qa9DVJkfa35RqWqIV9oKMtUuUrcGIUFVy5zEAbUnKLQigfUcWYg==
+  dependencies:
+    "@owlui/lib" "^0.0.43"
+
+"@owlui/card@^0.0.43":
+  version "0.0.43"
+  resolved "https://registry.yarnpkg.com/@owlui/card/-/card-0.0.43.tgz#005ab4b52b04c491e761d573d0f5342c3d32f79c"
+  integrity sha512-nNHfNqJGB6WoX+E5Du8d0Nj8QjbWFP3AcOFH0BW4T/HJNjqD0datxDZa3riRtMl/hOaljQBgmCUA47p9oGyd7A==
+  dependencies:
+    "@owlui/lib" "^0.0.43"
+
+"@owlui/carousel@^0.0.43":
+  version "0.0.43"
+  resolved "https://registry.yarnpkg.com/@owlui/carousel/-/carousel-0.0.43.tgz#370f29de1c577386324047ead01d4ee78c161121"
+  integrity sha512-dqjNgeLZDrgU9KSnuYFUiZwjDB62icF7CSXcC9NC18Ev1eQiXBT/D0bmos+/w5jOfk9Qtq2rGpOadgD8wb5KZQ==
+  dependencies:
+    "@owlui/lib" "^0.0.43"
+
+"@owlui/closebutton@^0.0.43":
+  version "0.0.43"
+  resolved "https://registry.yarnpkg.com/@owlui/closebutton/-/closebutton-0.0.43.tgz#39121fdf0b59c64b8d76dad524fefb5706737dd0"
+  integrity sha512-Cd8eGi1OpnmggifmQtZt4d4EwGkUyBlOqbd8nA74W+a1+100vSvupKhU6zutyV/mPS9ilN2UvaFLBJST42cyAQ==
+  dependencies:
+    "@owlui/lib" "^0.0.43"
+
+"@owlui/design@^0.0.43":
+  version "0.0.43"
+  resolved "https://registry.yarnpkg.com/@owlui/design/-/design-0.0.43.tgz#170edb79eb5040e76976113a805b9c131fa73917"
+  integrity sha512-VQtYoro2yxTYEda5+tKeVeA39jO9kSSuXeipM1P35TVowxjL96qKNqdnIWToLA9vWhL5sThBqZmI7vBLD1FbDA==
+
+"@owlui/drawer@^0.0.43":
+  version "0.0.43"
+  resolved "https://registry.yarnpkg.com/@owlui/drawer/-/drawer-0.0.43.tgz#42579797c6c006526f6f83fe1635810768808d6e"
+  integrity sha512-QBCunfVsBt92O2elsRdOgb/fR30RhTSwHWUuRIOY7XgRKoSiW/Vcd4wKB/Qv1Luok4+rEuutLRK27cBFI6o4Nw==
+  dependencies:
+    "@owlui/lib" "^0.0.43"
+
+"@owlui/dropdown@^0.0.43":
+  version "0.0.43"
+  resolved "https://registry.yarnpkg.com/@owlui/dropdown/-/dropdown-0.0.43.tgz#b1d5f1f6971f6173235f1ed6d750a6b79d8c8f58"
+  integrity sha512-bIFLuI1WrmBiAtDsre8644+cG4GAIzzEkdFD6kFmdP/M/PaN0iWAavP+On01Hx5MbT4AOztcGmOtDOvpVHklmw==
+  dependencies:
+    "@owlui/lib" "^0.0.43"
+
+"@owlui/form@^0.0.43":
+  version "0.0.43"
+  resolved "https://registry.yarnpkg.com/@owlui/form/-/form-0.0.43.tgz#5a3df1142b62118402a600ab20679be7488baf83"
+  integrity sha512-HdXy14Qxi4ateuJYR9MHWpcLzWyrmo93To0VZG6s7OiqSt/Lixi9h0W91/8Q/DoEug7jXxRhNDO6VHZ6k8iX8Q==
+  dependencies:
+    "@owlui/lib" "^0.0.43"
+
+"@owlui/icons@^0.0.43":
+  version "0.0.43"
+  resolved "https://registry.yarnpkg.com/@owlui/icons/-/icons-0.0.43.tgz#5dea21ddf0a24f7ba7ffe905c7322374828a1470"
+  integrity sha512-gJfGwcncNIGN+gWebWX8cP+0z7W5janorhA/b9ISxE7ncd5jqpN2dIerkzI7dsMPtvSqXsgZ9qeaCcu1Zapz2g==
+  dependencies:
+    "@owlui/lib" "^0.0.43"
+
+"@owlui/input@^0.0.43":
+  version "0.0.43"
+  resolved "https://registry.yarnpkg.com/@owlui/input/-/input-0.0.43.tgz#71ab64af8c2ee79e0053be7d7c3f96dbfcd3ccd3"
+  integrity sha512-ztRhKV4QJgBIpzo7/88W3+XiyshCAxOz2fJO41bvCWosblwtys9kI8elPUyNBpmmuuwSLIC1KO8hrIMM9OmPKg==
+  dependencies:
+    "@owlui/lib" "^0.0.43"
+
+"@owlui/lib@^0.0.43":
+  version "0.0.43"
+  resolved "https://registry.yarnpkg.com/@owlui/lib/-/lib-0.0.43.tgz#2d38a93d7f43156302109c71fd993997bb855a00"
+  integrity sha512-RUrf8eouYCQcMAhE2qR8gOIAGCo4BxtCBvurrowKWsAvtJ3IeORlQUp/Xzyb5oEZPtMrCrbuZXBWQN5T1WMcIQ==
+  dependencies:
+    "@owlui/accordion" "^0.0.43"
+    "@owlui/badge" "^0.0.43"
+    "@owlui/button" "^0.0.43"
+    "@owlui/card" "^0.0.43"
+    "@owlui/carousel" "^0.0.43"
+    "@owlui/closebutton" "^0.0.43"
+    "@owlui/design" "^0.0.43"
+    "@owlui/drawer" "^0.0.43"
+    "@owlui/dropdown" "^0.0.43"
+    "@owlui/form" "^0.0.43"
+    "@owlui/icons" "^0.0.43"
+    "@owlui/input" "^0.0.43"
+    "@owlui/listgroup" "^0.0.43"
+    "@owlui/modal" "^0.0.43"
+    "@owlui/nav" "^0.0.43"
+    "@owlui/navbar" "^0.0.43"
+    "@owlui/navigationdrawer" "^0.0.43"
+    "@owlui/progressbar" "^0.0.43"
+    "@owlui/range" "^0.0.43"
+    "@owlui/select" "^0.0.43"
+    "@owlui/spinner" "^0.0.43"
+    "@owlui/switchtoggle" "^0.0.43"
+    "@owlui/table" "^0.0.43"
+    "@owlui/tabs" "^0.0.43"
+    "@owlui/textfield" "^0.0.43"
+    "@owlui/toast" "^0.0.43"
+    "@owlui/tooltip" "^0.0.43"
+
+"@owlui/listgroup@^0.0.43":
+  version "0.0.43"
+  resolved "https://registry.yarnpkg.com/@owlui/listgroup/-/listgroup-0.0.43.tgz#acfe84f7157c2fe9854ce42d42bb0f091d9b4d28"
+  integrity sha512-o5OW0gWDruSw9l9VxMF1/pjYCF0Q1wZLujL33S+RUU6+NJ+yWBdbo++G8EP+I9uD+H8gR4qKUkMJKgL0XFFJSg==
+  dependencies:
+    "@owlui/lib" "^0.0.43"
+
+"@owlui/modal@^0.0.43":
+  version "0.0.43"
+  resolved "https://registry.yarnpkg.com/@owlui/modal/-/modal-0.0.43.tgz#b1202d25d91f03094953969e9685fa9dfed3d1dc"
+  integrity sha512-mmqWB8BtKNJnUUUeY3QwbMsUT3MrolBbkfFLF7wLLFrcJRDg+lCtm1gXoAO9BRGdKdwv67gxrz0VS+jyv1ubcg==
+  dependencies:
+    "@owlui/lib" "^0.0.43"
+
+"@owlui/nav@^0.0.43":
+  version "0.0.43"
+  resolved "https://registry.yarnpkg.com/@owlui/nav/-/nav-0.0.43.tgz#01e1cb9b30632ee04d62901d47495c7192c2e0e4"
+  integrity sha512-1d9FGYW7vbv9fkpSmfTWiKTzH1ug0+N8yJgTT6rxaqdeutZuVi20OQsxpTW0xgVEZSe7w1BokNCP3+QPsdiyUg==
+  dependencies:
+    "@owlui/lib" "^0.0.43"
+
+"@owlui/navbar@^0.0.43":
+  version "0.0.43"
+  resolved "https://registry.yarnpkg.com/@owlui/navbar/-/navbar-0.0.43.tgz#496d1c86484b3c09d42bc047576abdee59758e21"
+  integrity sha512-HWnM06sQlvJtkZ9STX6rtwQU1BDr+hllXQx9v010LfBxjo0JWafOIspnFtmq8NcDtbw4BMjaPjlRtpKsFBWttg==
+  dependencies:
+    "@owlui/lib" "^0.0.43"
+
+"@owlui/navigationdrawer@^0.0.43":
+  version "0.0.43"
+  resolved "https://registry.yarnpkg.com/@owlui/navigationdrawer/-/navigationdrawer-0.0.43.tgz#d94751aeb7bba48d08782d17df8f9789a289ffde"
+  integrity sha512-w0aQV3mw5966vKVgXPSchNvEbMYgtzWSGoRwisTTH0sbR4VQ2cl3s5CudD68MlCPp1gqMtY0oE9bcHMLjUpW8g==
+  dependencies:
+    "@owlui/lib" "^0.0.43"
+
+"@owlui/progressbar@^0.0.43":
+  version "0.0.43"
+  resolved "https://registry.yarnpkg.com/@owlui/progressbar/-/progressbar-0.0.43.tgz#a938ebd8c617380202635d06ba8a3582a5d6f617"
+  integrity sha512-ZgdSvbLMa/uKiIoKZlDtMBUhrn7nyqOkKlPedrlPWbyB7YAhZ4uktnuWN6Tzfyw1KfAHkW8AGYoJGvPk8f9c9w==
+  dependencies:
+    "@owlui/lib" "^0.0.43"
+
+"@owlui/range@^0.0.43":
+  version "0.0.43"
+  resolved "https://registry.yarnpkg.com/@owlui/range/-/range-0.0.43.tgz#489aaaa9ca67bfa5dee5b0345b1480b02f438bf8"
+  integrity sha512-bs66aOR4CmVsfn12aninfy1z0cBO0DxTKyAMBNeF5rcQnCYu5OB6FUMJRuwPhzL+Aphx+CmM0WWD9AB/z4F/BA==
+  dependencies:
+    "@owlui/lib" "^0.0.43"
+
+"@owlui/select@^0.0.43":
+  version "0.0.43"
+  resolved "https://registry.yarnpkg.com/@owlui/select/-/select-0.0.43.tgz#fa7ac9b0d587d6dfea9ccc55d857da43698cf2dd"
+  integrity sha512-urWYXrWWZLwKvG2QyJ24Xxrrcpd+Kh+E31Dqfj/1gO4gxmshUfgmDb+LotZ4XlIuF9967RitcnIDSdrsTOk0hQ==
+  dependencies:
+    "@owlui/lib" "^0.0.43"
+
+"@owlui/spinner@^0.0.43":
+  version "0.0.43"
+  resolved "https://registry.yarnpkg.com/@owlui/spinner/-/spinner-0.0.43.tgz#49fdf936f5ef8ec1867d0c3eb07703a140c6c57a"
+  integrity sha512-rMj8lOi52OjIdDUDZiN5rZWJMK6SvUOFxngoXlUiGBXvjbOLfqAF5yucEsfPPq0n7T6kp52wJuzmbyEsuhWdxQ==
+  dependencies:
+    "@owlui/lib" "^0.0.43"
+
+"@owlui/switchtoggle@^0.0.43":
+  version "0.0.43"
+  resolved "https://registry.yarnpkg.com/@owlui/switchtoggle/-/switchtoggle-0.0.43.tgz#55465e7bd0f73507c83a4ec85139ad79a7abb705"
+  integrity sha512-UlycyZ8Ugar+prqAOtbeuiQMd8GJu3PfaAC+hvdXjfV4j3ZgNEYGEqriO7Xvud29moZopdor0gQtiou4dUSNhg==
+  dependencies:
+    "@owlui/lib" "^0.0.43"
+
+"@owlui/table@^0.0.43":
+  version "0.0.43"
+  resolved "https://registry.yarnpkg.com/@owlui/table/-/table-0.0.43.tgz#81f83abd2e0f5b14c8087a6a1fff4aad41b23dd2"
+  integrity sha512-jlx90nKARI4IJA6WeGJD1GZhvzxOOcjYAcogUMbUN+1X4L64KdgiFKpb2wUgfLLcDNopkW4zkVcgC2alFpIcjQ==
+  dependencies:
+    "@owlui/lib" "^0.0.43"
+
+"@owlui/tabs@^0.0.43":
+  version "0.0.43"
+  resolved "https://registry.yarnpkg.com/@owlui/tabs/-/tabs-0.0.43.tgz#0cab0e0d749b3865128a3f8b4b45253c0eb064a2"
+  integrity sha512-lFLDCSjK5PJnJ0eePhDXXMF+13qxKFBXGau5x8r2e7tKz9VGNMhk5pTKWzFdAmFrAQUrC8SR9Ik61MkAaUYoAQ==
+  dependencies:
+    "@owlui/lib" "^0.0.43"
+
+"@owlui/textfield@^0.0.43":
+  version "0.0.43"
+  resolved "https://registry.yarnpkg.com/@owlui/textfield/-/textfield-0.0.43.tgz#6458effaf94a075b84c955fbb40194d060e337a3"
+  integrity sha512-AWSn+6dkIA25SmY3eolVQYNCTdKnHro5lwzXGjapNbmh/Lzx6+AhwQff85oKQayJJ9pb5nALrodrpZt0fcqwzw==
+  dependencies:
+    "@owlui/lib" "^0.0.43"
+
+"@owlui/toast@^0.0.43":
+  version "0.0.43"
+  resolved "https://registry.yarnpkg.com/@owlui/toast/-/toast-0.0.43.tgz#d11b464fdc9007ee6c98b84f6b65ac3c1b1fa706"
+  integrity sha512-1+GEDlwJRdg4RPdp+xHCJPsbfS+TAA+HQivjT15bbgptsmFw9BLnEObHj8bf6X9mdV1RyxGETfuZRDaLUql19A==
+  dependencies:
+    "@owlui/lib" "^0.0.43"
+
+"@owlui/tooltip@^0.0.43":
+  version "0.0.43"
+  resolved "https://registry.yarnpkg.com/@owlui/tooltip/-/tooltip-0.0.43.tgz#72c58ad17981de783c1c1c28249c52cc4ab98d58"
+  integrity sha512-zjYTO9gQ+6vI87qlIybdt3A1klr3ff8mh8ulpiM/AJmksBVFpD/Gf7YEW5Z3zxQVaDIuYGfVQz4c95Pg8LZf3A==
+  dependencies:
+    "@owlui/lib" "^0.0.43"
+
 "@parcel/bundler-default@2.7.0":
   version "2.7.0"
   resolved "https://registry.yarnpkg.com/@parcel/bundler-default/-/bundler-default-2.7.0.tgz#17d94be7185f29773aa21454063cbba3cdc03d49"
