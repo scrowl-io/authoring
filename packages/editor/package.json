@@ -1,0 +1,132 @@
+{
+  "name": "@scrowl/editor",
+  "version": "0.0.1",
+  "license": "MIT",
+  "keywords": [],
+  "author": {
+    "name": "OSG"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/scrowl-io/authoring.git",
+    "directory": "packages/editor"
+  },
+  "bugs": {
+    "url": "https://github.com/scrowl-io/scrowl/issues"
+  },
+  "homepage": "https://github.com/scrowl-io/scrowl/apps/authoring#readme",
+  "scripts": {
+    "clean": "rimraf dist",
+    "start:frontend": "parcel serve --target frontend --no-cache --port 5003 --no-cache",
+    "start:backend": "parcel watch --target backend --target preload --port 5002 --no-cache",
+    "reload:backend": "wait-on http://localhost:5003 && nodemon --watch dist/main.js --exec electron ./dist/main.js",
+    "prestart": "yarn clean && node ./scripts/reset-dev-env.mjs",
+    "start": "cross-env NODE_ENV=development PORT=5003 concurrently \"yarn start:frontend\" \"yarn start:backend\" \"yarn reload:backend\"",
+    "build": "",
+    "lint": "",
+    "postinstall": ""
+  },
+  "backend": "./dist/main.js",
+  "preload": "./dist/preload.js",
+  "frontend": "./dist/app.html",
+  "targets": {
+    "main": false,
+    "backend": {
+      "context": "electron-main",
+      "source": "./src/main/index.ts"
+    },
+    "preload": {
+      "context": "electron-main",
+      "source": "./src/main/preload.ts"
+    },
+    "frontend": {
+      "context": "browser",
+      "source": "./src/app/index.html"
+    }
+  },
+  "eslintConfig": {
+    "extends": "@scrowl/config"
+  },
+  "prettier": "@scrowl/config/prettier",
+  "stylelint": {
+    "extends": "@scrowl/config/stylelint",
+    "rules": {
+      "scss/at-extend-no-missing-placeholder": null
+    }
+  },
+  "build": {
+    "asar": false,
+    "appId": "io.scrowl.app",
+    "copyright": "Occupational Safety Group Inc.",
+    "productName": "Scrowl",
+    "files": [
+      "dist/*",
+      "../../node_modules/**/*",
+      "./package.json"
+    ],
+    "extraResources": [
+      "./assets/**"
+    ],
+    "directories": {
+      "output": "release/build",
+      "buildResources": "assets"
+    },
+    "dmg": {
+      "contents": [
+        {
+          "x": 110,
+          "y": 150
+        },
+        {
+          "x": 240,
+          "y": 150,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    }
+  },
+  "devDependencies": {
+    "@types/adm-zip": "^0.5.0",
+    "@types/fs-extra": "^9.0.13",
+    "@types/node": "^18.8.4",
+    "@types/react": "^18.0.21",
+    "@types/react-dom": "^18.0.6",
+    "@types/react-redux": "^7.1.24",
+    "concurrently": "^7.4.0",
+    "cross-env": "^7.0.3",
+    "electron": "^21.1.0",
+    "electron-builder": "^23.6.0",
+    "electron-notarize": "^1.2.1",
+    "eslint": "^8.25.0",
+    "nodemon": "^2.0.20",
+    "parcel": "^2.7.0",
+    "postcss": "^8.4.17",
+    "postcss-import": "^15.0.0",
+    "postcss-modules": "^5.0.0",
+    "prettier": "^2.7.1",
+    "rimraf": "^3.0.2",
+    "stylelint": "^14.13.0",
+    "wait-on": "^6.0.1"
+  },
+  "dependencies": {
+    "@reduxjs/toolkit": "^1.8.6",
+    "@scrowl/config": "^0.0.1",
+    "bootstrap": "^5.2.2",
+    "electron-context-menu": "^3.5.0",
+    "electron-log": "^4.4.8",
+    "electron-squirrel-startup": "^1.0.0",
+    "framer-motion": "^7.5.3",
+    "fs-extra": "^10.1.0",
+    "hasha": "^5.2.2",
+    "lottie-react": "^2.3.1",
+    "md5": "^2.3.0",
+    "react": "^18.2.0",
+    "react-bootstrap": "^2.5.0",
+    "react-dom": "^18.2.0",
+    "react-redux": "^8.0.4",
+    "react-router-dom": "^6.4.2",
+    "simple-scorm-packager": "^0.2.7",
+    "uuid": "^9.0.0"
+  }
+}
