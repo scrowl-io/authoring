@@ -1,0 +1,46 @@
+.first-welcome {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  top: 0;
+  left: 0;
+  z-index: 9999999;
+  background-color: var(--bs-body-bg);
+
+  .body {
+    width: 900px;
+    padding-top: 3em;
+    margin: 0 auto;
+    text-align: center;
+
+    h1 {
+      font-weight: 400;
+      font-size: 3.6em;
+    }
+
+    h2 {
+      font-weight: 300;
+      font-size: 1.25em;
+      margin-top: 0.75em;
+
+      color: var(--bs-gray-700);
+    }
+
+    button {
+      margin-top: 2em;
+      font-weight: 400;
+
+      &.btn-lg {
+        padding: 0.9em 2.5em;
+      }
+    }
+
+    .hello-animation {
+      display: block;
+      width: calc(100vh - 8em);
+      margin: auto;
+      margin-top: 1.5em;
+    }
+  }
+}

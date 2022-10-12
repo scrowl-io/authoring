@@ -1824,6 +1824,15 @@
     "@parcel/utils" "2.7.0"
     react-refresh "^0.9.0"
 
+"@parcel/transformer-sass@2.7.0":
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/@parcel/transformer-sass/-/transformer-sass-2.7.0.tgz#651b7a88bbc1ef452ace90ccb0883c1ad8cff721"
+  integrity sha512-6m2T6Y5eQLX7ckIeuOjXXIZbzhyovnl69AvJ2FujoWb2nA55H/kg6ZdbKjo3CfXkOfg9LyG3nVnOE5PMgMpRFQ==
+  dependencies:
+    "@parcel/plugin" "2.7.0"
+    "@parcel/source-map" "^2.0.0"
+    sass "^1.38.0"
+
 "@parcel/transformer-svg@2.7.0":
   version "2.7.0"
   resolved "https://registry.yarnpkg.com/@parcel/transformer-svg/-/transformer-svg-2.7.0.tgz#c2a7d10bdbc6aeb2ae7ef85db5b583574807071c"
@@ -2952,7 +2961,7 @@ charenc@0.0.2:
   resolved "https://registry.yarnpkg.com/charenc/-/charenc-0.0.2.tgz#c0a1d2f3a7092e03774bfa83f14c0fc5790a8667"
   integrity sha512-yrLQ/yVUFXkzg7EDQsPieE/53+0RlaWTs+wBrvW36cyilJ2SaDWfl4Yj7MtLTXleV9uEKefbAGUPv2/iWSooRA==
 
-chokidar@^3.5.1, chokidar@^3.5.2:
+"chokidar@>=3.0.0 <4.0.0", chokidar@^3.5.1, chokidar@^3.5.2:
   version "3.5.3"
   resolved "https://registry.yarnpkg.com/chokidar/-/chokidar-3.5.3.tgz#1cf37c8707b932bd1af1ae22c0432e2acd1903bd"
   integrity sha512-Dr3sfKRP6oTcjf2JmUmFJfeVMvXBdegxB0iVQ5eb2V10uFJUCAS8OByZdVAyVb8xXNz3GjjTgj9kLWsZTqE6kw==
@@ -5051,6 +5060,11 @@ immer@^9.0.7:
   resolved "https://registry.yarnpkg.com/immer/-/immer-9.0.15.tgz#0b9169e5b1d22137aba7d43f8a81a495dd1b62dc"
   integrity sha512-2eB/sswms9AEUSkOm4SbV5Y7Vmt/bKRwByd52jfLkW4OLYeaTP3EEiJ9agqU0O/tq6Dk62Zfj+TJSqfm1rLVGQ==
 
+immutable@^4.0.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/immutable/-/immutable-4.1.0.tgz#f795787f0db780183307b9eb2091fcac1f6fafef"
+  integrity sha512-oNkuqVTA8jqG1Q6c+UglTOD1xhC1BtjKI7XkCXRkZHrN5m18/XsnUp8Q89GkQO/z+0WjonSvl0FLhDYftp46nQ==
+
 import-fresh@^3.0.0, import-fresh@^3.2.1:
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/import-fresh/-/import-fresh-3.3.0.tgz#37162c25fcb9ebaa2e6e53d5b4d88ce17d9e0c2b"
@@ -7040,10 +7054,10 @@ popmotion@11.0.5:
     style-value-types "5.1.2"
     tslib "2.4.0"
 
-postcss-import@^15.0.0:
-  version "15.0.0"
-  resolved "https://registry.yarnpkg.com/postcss-import/-/postcss-import-15.0.0.tgz#0b66c25fdd9c0d19576e63c803cf39e4bad08822"
-  integrity sha512-Y20shPQ07RitgBGv2zvkEAu9bqvrD77C9axhj/aA1BQj4czape2MdClCExvB27EwYEJdGgKZBpKanb0t1rK2Kg==
+postcss-import@^14.1.0:
+  version "14.1.0"
+  resolved "https://registry.yarnpkg.com/postcss-import/-/postcss-import-14.1.0.tgz#a7333ffe32f0b8795303ee9e40215dac922781f0"
+  integrity sha512-flwI+Vgm4SElObFVPpTIT7SU7R3qk2L7PyduMcokiaVKuWv9d/U+Gm/QAd8NDLuykTWTkcrjOeD2Pp1rMeBTGw==
   dependencies:
     postcss-value-parser "^4.0.0"
     read-cache "^1.0.0"
@@ -7082,10 +7096,10 @@ postcss-modules-values@^4.0.0:
   dependencies:
     icss-utils "^5.0.0"
 
-postcss-modules@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/postcss-modules/-/postcss-modules-5.0.0.tgz#4a02bc58ecaa7394f8e9a34b7e21cb6c725f15df"
-  integrity sha512-rGvpTDOM3//3Ysn3Xtvhzaj8ab984wKCpP02TEF559tLbUjNay3RQDpPxb7BREmfBtJm3/1WbQOZ7fSXwYLZ/w==
+postcss-modules@^4.3.1:
+  version "4.3.1"
+  resolved "https://registry.yarnpkg.com/postcss-modules/-/postcss-modules-4.3.1.tgz#517c06c09eab07d133ae0effca2c510abba18048"
+  integrity sha512-ItUhSUxBBdNamkT3KzIZwYNNRFKmkJrofvC2nWab3CPKhYBQ1f27XXh1PAPE27Psx58jeelPsxWB/+og+KEH0Q==
   dependencies:
     generic-names "^4.0.0"
     icss-replace-symbols "^1.1.0"
@@ -7737,6 +7751,15 @@ sanitize-filename@^1.6.3:
   dependencies:
     truncate-utf8-bytes "^1.0.0"
 
+sass@^1.38.0:
+  version "1.55.0"
+  resolved "https://registry.yarnpkg.com/sass/-/sass-1.55.0.tgz#0c4d3c293cfe8f8a2e8d3b666e1cf1bff8065d1c"
+  integrity sha512-Pk+PMy7OGLs9WaxZGJMn7S96dvlyVBwwtToX895WmCpAOr5YiJYEUJfiJidMuKb613z2xNWcXCHEuOvjZbqC6A==
+  dependencies:
+    chokidar ">=3.0.0 <4.0.0"
+    immutable "^4.0.0"
+    source-map-js ">=0.6.2 <2.0.0"
+
 sax@^1.2.4:
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/sax/-/sax-1.2.4.tgz#2816234e2378bddc4e5354fab5caa895df7100d9"
@@ -7925,7 +7948,7 @@ sort-keys@^4.0.0:
   dependencies:
     is-plain-obj "^2.0.0"
 
-source-map-js@^1.0.2:
+"source-map-js@>=0.6.2 <2.0.0", source-map-js@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/source-map-js/-/source-map-js-1.0.2.tgz#adbc361d9c62df380125e7f161f71c826f1e490c"
   integrity sha512-R0XvVJ9WusLiqTCEiGCmICCMplcCkIwwR11mOSD9CR5u+IXYdiseeEuXCVAjS54zqwkLcPNnmU4OeJ6tUrWhDw==
