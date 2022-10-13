@@ -4,13 +4,14 @@ import {
   shell,
   BrowserWindowConstructorOptions,
 } from 'electron';
-import { getAppPath, getAssetPath } from './locate';
+import { getAppPath, getSourcePath } from './locate';
 import { Models } from '../models';
+import { rq } from '../services';
 
 export const init = () => {
   const appPath = getAppPath('app.html');
-  const preloadPath = getAppPath('preload.js');
-  const iconPath = getAssetPath('icon.png');
+  const preloadPath = getSourcePath('dist', 'preload.js');
+  const iconPath = getSourcePath('assets', 'icon.png');
   const isDARWIN = process.platform === 'darwin';
   const isDevEnv = process.env.NODE_ENV === 'development';
   let mainWindow: BrowserWindow | null = null;
@@ -25,6 +26,8 @@ export const init = () => {
         height: 728,
         icon: iconPath,
         webPreferences: {
+          nodeIntegration: false,
+          contextIsolation: true,
           preload: preloadPath,
         },
       };
@@ -36,6 +39,7 @@ export const init = () => {
       }
 
       Models.init();
+      rq.init();
       mainWindow.loadURL(appPath);
 
       mainWindow.on('ready-to-show', () => {
@@ -52,7 +56,6 @@ export const init = () => {
         if (isDevEnv) {
           mainWindow.webContents.openDevTools({
             mode: 'detach',
-            activate: true
           });
         }
       });

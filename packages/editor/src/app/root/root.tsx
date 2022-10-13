@@ -42,7 +42,9 @@ export const Root = () => {
   models.Settings.useProcessor();
 
   useEffect(() => {
-    let initd = false;
+    if (isReady) {
+      return;
+    }
 
     modelNames.map((name) => {
       const model = modelModules[name];
@@ -55,16 +57,8 @@ export const Root = () => {
     });
 
     Promise.allSettled(inits).then(() => {
-      if (initd) {
-        return;
-      }
-
       setIsReady(true);
     });
-
-    return () => {
-      initd = true;
-    };
   }, [modelModules, modelNames, inits]);
 
   return (

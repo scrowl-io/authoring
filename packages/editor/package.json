@@ -18,10 +18,12 @@
   "scripts": {
     "clean": "rimraf dist",
     "start:frontend": "parcel serve --target frontend --no-cache --port 5003 --no-cache",
-    "start:backend": "parcel watch --target backend --target preload --port 5002 --no-cache",
-    "reload:backend": "wait-on http://localhost:5003 && nodemon --watch dist/main.js --exec electron ./dist/main.js",
+    "start:preload": "parcel build --target preload --no-cache",
+    "reload:preload": "nodemon --watch src/main/preload.ts --exec parcel build --target preload --no-cache",
+    "start:backend": "parcel watch --target backend --port 5002 --no-cache",
+    "reload:backend": "wait-on dist/preload.js dist/main.js http://localhost:5003 && nodemon --watch dist/main.js --watch dist/preload.js --exec electron ./dist/main.js",
     "prestart": "yarn clean && node ./scripts/reset-dev-env.mjs",
-    "start": "cross-env NODE_ENV=development PORT=5003 concurrently \"yarn start:frontend\" \"yarn start:backend\" \"yarn reload:backend\"",
+    "start": "cross-env NODE_ENV=development PORT=5003 concurrently \"yarn start:frontend\" \"yarn start:preload\" \"yarn reload:preload\" \"yarn start:backend\" \"yarn reload:backend\"",
     "build": "",
     "lint": "",
     "postinstall": "yarn electron-builder install-app-deps"

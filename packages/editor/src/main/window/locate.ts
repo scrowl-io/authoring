@@ -16,15 +16,13 @@ export const getAppPath = (filename: string) => {
   }
 };
 
-export const getAssetPath = (...paths: string[]) => {
-  const RESOURCES_PATH = app.isPackaged
-  ? fs.joinPath(process.resourcesPath, 'assets')
-  : fs.joinPath(__dirname, '../../../assets');
+export const getSourcePath = (...paths: string[]) => {
+  const RESOURCES_PATH = app.isPackaged ? process.resourcesPath : process.cwd();
 
   return fs.joinPath(RESOURCES_PATH, ...paths);
 };
 
 export default {
   getAppPath,
-  getAssetPath,
+  getSourcePath,
 };

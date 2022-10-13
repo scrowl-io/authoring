@@ -40,7 +40,7 @@ contextBridge.exposeInMainWorld('scrowlAPI', {
       const isValid = await checkEndpoint(endpoint, 'send');
 
       if (isValid) {
-        return ipcRenderer.on(endpoint, listener);
+        ipcRenderer.on(endpoint, listener);
       }
     },
     async send (endpoint: string, ...args: unknown[]) {
@@ -48,7 +48,7 @@ contextBridge.exposeInMainWorld('scrowlAPI', {
       const isValid = await checkEndpoint(endpoint, 'on');
 
       if (isValid) {
-        return ipcRenderer.send(endpoint, ...args);
+        ipcRenderer.send(endpoint, ...args);
       }
     },
     async removeListener (endpoint: string, listener: Listener) {
@@ -56,7 +56,7 @@ contextBridge.exposeInMainWorld('scrowlAPI', {
       const isValid = await checkEndpoint(endpoint);
 
       if (isValid) {
-        return ipcRenderer.removeListener(endpoint, listener);
+        ipcRenderer.removeListener(endpoint, listener);
       }
     },
     async removeListenerAll (endpoint: string) {
@@ -64,7 +64,7 @@ contextBridge.exposeInMainWorld('scrowlAPI', {
       const isValid = await checkEndpoint(endpoint);
 
       if (isValid) {
-        return ipcRenderer.removeAllListeners(endpoint);
+        ipcRenderer.removeAllListeners(endpoint);
       }
     },
   }
