@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import * as styles from './page-welcome.scss';
 import { HelloEnvelope } from './components';
+import { Projects } from '../../models';
 
 export const Path = '/welcome';
 
 export const Page = () => {
   const [inProgress, setProgress] = useState(false);
+  const navigator = useNavigate();
 
   const handleCreateCourse = () => {
     if (inProgress) {
@@ -14,7 +17,15 @@ export const Page = () => {
     }
 
     setProgress(true);
-    // TODO: create a new course using the default template here
+    Projects.create().then((result) => {
+      if (result.error) {
+        console.error(result);
+        return;
+      }
+
+      setProgress(false);
+      navigator('/workspace');
+    });
   };
 
   return (

@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { ActionCreatorWithoutPayload } from '@reduxjs/toolkit';
-import { stateManager } from '../../services';
+import { stateManager, rq } from '../../services';
 import { API, state } from './';
 
 const processor: stateManager.StateProcessor = {};
@@ -242,21 +242,21 @@ export const removeResourceItem = (data) => {
   processor.dispatch(state.removeResourceItem(data));
 };
 
-export const create = () => {
+export const create = (): Promise<rq.ApiResult> => {
 
   return new Promise((resolve) => {
     API.create().then(resolve);
   });
 };
 
-export const importAsset = () => {
+export const importAsset = (): Promise<rq.ApiResult> => {
 
   return new Promise((resolve) => {
     API.importAsset().then(resolve);
   });
 };
 
-export const save = () => {
+export const save = (): Promise<rq.ApiResult> => {
   const data = useSelector((data: stateManager.RootState) => data.projects);
 
   return new Promise((resolve) => {
@@ -264,21 +264,21 @@ export const save = () => {
   });
 };
 
-export const publish = () => {
+export const publish = (): Promise<rq.ApiResult> => {
 
   return new Promise((resolve) => {
     API.publish().then(resolve);
   });
 };
 
-export const list = () => {
+export const list = (): Promise<rq.ApiResult> => {
 
   return new Promise((resolve) => {
     API.list().then(resolve);
   });
 };
 
-export const open = () => {
+export const open = (): Promise<rq.ApiResult> => {
 
   return new Promise((resolve) => {
     API.open().then(resolve);

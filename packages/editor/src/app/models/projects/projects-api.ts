@@ -10,27 +10,27 @@ const ENDPOINTS:ProjectsEndpoints = {
   open: '/projects/open',
 };
 
-export const create = (data?) => {
+export const create = (data?: any): Promise<rq.ApiResult> => {
   return rq.invoke(ENDPOINTS.create, data);
 };
 
-export const importAsset = (data?) => {
+export const importAsset = (data?): Promise<rq.ApiResult> => {
   return rq.invoke(ENDPOINTS.importAsset, data);
 };
 
-export const save = (data?) => {
+export const save = (data?): Promise<rq.ApiResult> => {
   return rq.invoke(ENDPOINTS.save, data);
 };
 
-export const publish = (data?) => {
+export const publish = (data?): Promise<rq.ApiResult> => {
   return rq.invoke(ENDPOINTS.publish, data);
 };
 
-export const list = (data?) => {
+export const list = (data?): Promise<rq.ApiResult> => {
   return rq.invoke(ENDPOINTS.list, data);
 };
 
-export const open = (data?) => {
+export const open = (data?): Promise<rq.ApiResult> => {
   return rq.invoke(ENDPOINTS.open, data);
 };
 
