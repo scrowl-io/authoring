@@ -4,12 +4,12 @@ import {
   shell,
   BrowserWindowConstructorOptions,
 } from 'electron';
-import { getAppPath, getAssetPath, getSourcePath } from './locate';
+import { getAppPath, getAssetPath } from './locate';
 import { Models } from '../models';
 
 export const init = () => {
   const appPath = getAppPath('app.html');
-  const preloadPath = getSourcePath('dist', 'preload.js');
+  const preloadPath = getAppPath('preload.js');
   const iconPath = getAssetPath('icon.png');
   const isDARWIN = process.platform === 'darwin';
   const isDevEnv = process.env.NODE_ENV === 'development';
@@ -50,7 +50,10 @@ export const init = () => {
         }
 
         if (isDevEnv) {
-          mainWindow.webContents.openDevTools({ mode: 'detach', activate: false });
+          mainWindow.webContents.openDevTools({
+            mode: 'detach',
+            activate: true
+          });
         }
       });
 

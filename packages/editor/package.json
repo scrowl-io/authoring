@@ -12,9 +12,9 @@
     "directory": "packages/editor"
   },
   "bugs": {
-    "url": "https://github.com/scrowl-io/scrowl/issues"
+    "url": "https://github.com/scrowl-io/authoring/issues"
   },
-  "homepage": "https://github.com/scrowl-io/scrowl/apps/authoring#readme",
+  "homepage": "https://github.com/scrowl-io/authoring/packages/editor#readme",
   "scripts": {
     "clean": "rimraf dist",
     "start:frontend": "parcel serve --target frontend --no-cache --port 5003 --no-cache",
@@ -24,7 +24,7 @@
     "start": "cross-env NODE_ENV=development PORT=5003 concurrently \"yarn start:frontend\" \"yarn start:backend\" \"yarn reload:backend\"",
     "build": "",
     "lint": "",
-    "postinstall": ""
+    "postinstall": "yarn electron-builder install-app-deps"
   },
   "backend": "./dist/main.js",
   "preload": "./dist/preload.js",
@@ -33,15 +33,24 @@
     "main": false,
     "backend": {
       "context": "electron-main",
-      "source": "./src/main/index.ts"
+      "source": "./src/main/index.ts",
+      "engines": {
+        "node": "16.15.1"
+      }
     },
     "preload": {
       "context": "electron-main",
-      "source": "./src/main/preload.ts"
+      "source": "./src/main/preload.ts",
+      "engines": {
+        "node": "16.15.1"
+      }
     },
     "frontend": {
       "context": "browser",
-      "source": "./src/app/index.html"
+      "source": "./src/app/index.html",
+      "engines": {
+        "browsers": "Chrome 104"
+      }
     }
   },
   "eslintConfig": {
@@ -55,10 +64,9 @@
     }
   },
   "build": {
-    "asar": false,
     "appId": "io.scrowl.app",
-    "copyright": "Occupational Safety Group Inc.",
     "productName": "Scrowl",
+    "copyright": "Occupational Safety Group Inc.",
     "files": [
       "dist/*",
       "../../node_modules/**/*",
@@ -71,6 +79,7 @@
       "output": "release/build",
       "buildResources": "assets"
     },
+    "publish": null,
     "dmg": {
       "contents": [
         {
@@ -93,6 +102,7 @@
     "@parcel/runtime-react-refresh": "^2.7.0",
     "@parcel/transformer-sass": "^2.7.0",
     "@parcel/transformer-typescript-types": "^2.7.0",
+    "@scrowl/config": "^0.0.1",
     "@types/adm-zip": "^0.5.0",
     "@types/fs-extra": "^9.0.13",
     "@types/node": "^18.8.4",
@@ -101,7 +111,7 @@
     "@types/react-redux": "^7.1.24",
     "concurrently": "^7.4.0",
     "cross-env": "^7.0.3",
-    "electron": "^21.1.0",
+    "electron": "20.3.0",
     "electron-builder": "^23.6.0",
     "electron-notarize": "^1.2.1",
     "eslint": "^8.25.0",
@@ -111,6 +121,7 @@
     "postcss-import": "^14.1.0",
     "postcss-modules": "^4.3.1",
     "prettier": "^2.7.1",
+    "process": "^0.11.10",
     "rimraf": "^3.0.2",
     "stylelint": "^14.13.0",
     "wait-on": "^6.0.1"
@@ -119,7 +130,6 @@
     "@owlui/lib": "^0.0.43",
     "@popperjs/core": "2.11.6",
     "@reduxjs/toolkit": "^1.8.6",
-    "@scrowl/config": "^0.0.1",
     "bootstrap": "^5.2.2",
     "electron-context-menu": "^3.5.0",
     "electron-log": "^4.4.8",
