@@ -1,9 +1,26 @@
 import React from 'react';
+import {
+  Overlay,
+  Header,
+  PaneDetails,
+  Canvas,
+  PaneEditor,
+  StatusBar,
+} from './components';
 
 export const Path = '/workspace';
 
 export const Page = () => {
-  return <div>Workspace Page</div>;
+  return (
+    <>
+      <Overlay />
+      <Header />
+      <PaneDetails />
+      <Canvas />
+      <PaneEditor />
+      <StatusBar />
+    </>
+  );
 };
 
 export default {
