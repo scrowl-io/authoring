@@ -40,6 +40,7 @@ export const Root = () => {
   const [isReady, setIsReady] = useState(false);
 
   models.Settings.useProcessor();
+  models.Projects.useProcessor();
 
   useEffect(() => {
     if (isReady) {
