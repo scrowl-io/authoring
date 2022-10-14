@@ -16,8 +16,8 @@ const Loader = () => {
 };
 
 const PageRoutes = () => {
-  const isFirstLoad = models.Settings.useFirstLoad();
-  let defaultPath = isFirstLoad ? pages.Welcome.Path : pages.Start.Path;
+  const hasWelcomed = models.Settings.useHasWelcomed();
+  let defaultPath = hasWelcomed ? pages.Start.Path : pages.Welcome.Path;
   const pageModules = pages as Pages;
   const pageNames = Object.keys(pageModules);
 

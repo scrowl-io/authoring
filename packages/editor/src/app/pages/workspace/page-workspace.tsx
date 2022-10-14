@@ -1,4 +1,5 @@
 import React from 'react';
+import { useProcessor } from './page-workspace-hooks';
 import {
   Overlay,
   Header,
@@ -11,6 +12,8 @@ import {
 export const Path = '/workspace';
 
 export const Page = () => {
+  useProcessor();
+
   return (
     <>
       <Overlay />

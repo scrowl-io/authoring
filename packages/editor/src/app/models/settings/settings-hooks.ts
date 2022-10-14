@@ -68,17 +68,17 @@ export const setAnimation = (data) => {
   processor.dispatch(state.setAnimation(data));
 };
 
-export const useFirstLoad = () => {
-  return useSelector((data: stateManager.RootState) => data.settings.aspect);
+export const useHasWelcomed = () => {
+  return useSelector((data: stateManager.RootState) => data.settings.hasWelcomed);
 };
 
-export const setFirstLoad = (data) => {
+export const setHasWelcomed = (data) => {
   if (!processor.dispatch) {
     console.warn('settings processor not ready');
     return;
   }
 
-  processor.dispatch(state.setFirstLoad(data));
+  processor.dispatch(state.setHasWelcomed(data));
 };
 
 export const init = () => {
@@ -113,8 +113,8 @@ export default {
   setAspect,
   useAnimation,
   setAnimation,
-  useFirstLoad,
-  setFirstLoad,
+  useHasWelcomed,
+  setHasWelcomed,
   init,
   save,
 };

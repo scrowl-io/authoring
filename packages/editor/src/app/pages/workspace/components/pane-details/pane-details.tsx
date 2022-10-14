@@ -1,7 +1,18 @@
 import React from 'react';
+import { Button } from '@owlui/lib';
+import { setGlossaryEditor } from '../../';
 
 export const PaneDetails = () => {
-  return <div>Details</div>;
+  const handleOpenGlossary = () => {
+    setGlossaryEditor(true);
+  };
+
+  return (
+    <aside>
+      <div>Details</div>
+      <Button onClick={handleOpenGlossary}>Open Glossary</Button>
+    </aside>
+  );
 };
 
 export default {

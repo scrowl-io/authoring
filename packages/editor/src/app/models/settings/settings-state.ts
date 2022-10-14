@@ -8,7 +8,7 @@ export enum ASPECT_RATIO {
 };
 
 export const initialState = {
-  firstLoad: true,
+  hasWelcomed: false,
   theme: 'light',
   aspect: ASPECT_RATIO.Fit,
   reducedAnimations: false,
@@ -22,8 +22,8 @@ export const config: stateManager.StateConfig = {
     setState: (state, action) => {
       state = Object.assign(state, action.payload);
     },
-    setFirstLoad: (state, action) => {
-      state.firstLoad = action.payload;
+    setHasWelcomed: (state, action) => {
+      state.hasWelcomed = action.payload;
     },
     setTheme: (state, action) => {
       state.theme = action.payload;
@@ -45,7 +45,7 @@ export const config: stateManager.StateConfig = {
 
 export const slice = createSlice(config);
 
-export const { setState, setTheme, setAspect, setAnimation, setFirstLoad } = slice.actions;
+export const { setState, setTheme, setAspect, setAnimation, setHasWelcomed } = slice.actions;
 
 export const reducer = slice.reducer;
 
