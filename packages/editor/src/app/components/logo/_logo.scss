@@ -1,0 +1,41 @@
+.logo {
+  svg {
+    fill: #002a6a; // var(--bs-secondary) doesn't match Scott's design
+    filter: drop-shadow(0px 0px 1px var(--bs-white));
+
+    .eyes {
+      fill: var(--bs-white);
+    }
+
+    .body {
+      fill: var(--bs-gray-100);
+      transition: fill 0.4s var(--owl-cubic-bezier);
+    }
+
+    .wings {
+      fill: var(--bs-cyan);
+      transition: fill 0.4s var(--owl-cubic-bezier);
+    }
+  }
+}
+
+a.logo{
+  &:hover {
+    svg {
+      filter: drop-shadow(0px 2px 3px var(--bs-cyan));
+
+      .body {
+        fill: var(--bs-primary-100);
+      }
+
+      .wings {
+        fill: var(--bs-primary-400);
+      }
+    }
+  }
+
+  &:active {
+    transform: translateY(1px);
+    filter: drop-shadow(0px 0px 4px var(--bs-cyan));
+  }
+}

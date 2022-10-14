@@ -15,8 +15,6 @@ export const GlossaryEditor = (props) => {
     ev.preventDefault();
   };
 
-  console.log('glossary is open', isOpen);
-
   return (
     <>
       <Drawer isAnimated={isAnimated} isOpen={isOpen}>

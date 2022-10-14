@@ -1,4 +1,5 @@
 import React from 'react';
+import * as css from './_page-workspace.scss';
 import { useProcessor } from './page-workspace-hooks';
 import {
   Overlay,
@@ -17,11 +18,13 @@ export const Page = () => {
   return (
     <>
       <Overlay />
-      <Header />
-      <PaneDetails />
-      <Canvas />
-      <PaneEditor />
-      <StatusBar />
+      <div className={css.workspace}>
+        <Header />
+        <PaneDetails />
+        <Canvas />
+        <PaneEditor />
+        <StatusBar />
+      </div>
     </>
   );
 };

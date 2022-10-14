@@ -1,0 +1,111 @@
+@use '@owlui/lib/src/theme/utils' as *;
+@use '@owlui/lib/src/theme/global/bootstrap' as *;
+
+.workspace-header {
+  --bs-navbar-color: var(--owl-navbar-color);
+  --bs-navbar-hover-color: var(--owl-navbar-hover-color);
+  --bs-navbar-disabled-color: var(--owl-navbar-disabled-color);
+  --bs-navbar-active-color: var(--owl-navbar-active-color);
+
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  height: $owl-sys-size-navbar-height;
+  background: var(--owl-navbar-bg);
+  border-bottom: var(--owl-border-color) solid var(--owl-border-width);
+  box-shadow: var(--owl-navbar-box-shadow);
+  user-select: none;
+}
+
+.project-meta {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.project-name {
+  --owl-input-color: var(--bs-body-color);
+  display: inline-grid;
+  align-items: center;
+  justify-content: flex-start;
+  position: relative;
+  vertical-align: top;
+  margin-left: 0.5rem;
+  padding-right: 0.5rem;
+
+  &::after,
+  input {
+    width: auto;
+    min-width: 1em;
+    grid-area: 1 / 2;
+    padding: $input-btn-padding-y-sm;
+    font-size: $font-size-lg;
+    font-weight: 500;
+    background: none;
+    resize: none;
+  }
+
+  input {
+    padding-top: 0;
+    padding-bottom: 0;
+    border-width: 2px;
+    border-color: transparent;
+
+    &:hover {
+      border-color: $input-border-color;
+    }
+
+    &:focus {
+      border-color: $input-focus-border-color;
+    }
+
+    &:disabled {
+      background-color: transparent;
+    }
+  }
+
+  &::after {
+    content: attr(data-value) ' ';
+    visibility: hidden;
+    white-space: pre-wrap;
+  }
+}
+
+.project-actions {
+  flex-direction: row;
+}
+
+.project-actions__btn {
+  display: flex;
+  align-items: center;
+  font-weight: $headings-font-weight;
+  padding: 0.375em 1em;
+
+  &:hover,
+  &:focus,
+  &:active {
+    .owlui-icons {
+      color: #ffffff;
+    }
+  }
+
+  .owlui-icons-outlined[style] {
+    margin-right: 0.6rem;
+    font-size: 1.5em;
+    line-height: 0.66;
+    font-variation-settings: 'FILL' 1 !important;
+  }
+
+  .owlui-icons {
+    color: var(--owl-color-default);
+    margin-right: 0.25em;
+    font-size: 1.5em;
+    line-height: 0.66;
+  }
+}
+
+.owlui-btn.btn-publish {
+  span[class^='owlui-icons']:first-child {
+    margin-right: 0.5rem;
+  }
+}

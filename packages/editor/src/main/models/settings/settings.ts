@@ -8,7 +8,6 @@ export const get = (ev: rq.RequestEvent, key, defaultValue) => {
       settingsHandler
         .get()
         .then((settings) => {
-          console.log('settings', settings);
           resolve({
             error: false,
             data: {
