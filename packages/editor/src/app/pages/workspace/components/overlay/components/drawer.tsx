@@ -57,8 +57,7 @@ export const Drawer = ({
       }
       break;
   }
-  console.log('');
-  console.log('drawer opts', opts);
+
   return (
     <motion.div
       className={classes}
