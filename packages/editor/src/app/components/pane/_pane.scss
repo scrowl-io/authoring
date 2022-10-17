@@ -1,0 +1,110 @@
+@use '@owlui/lib/src/theme/utils' as *;
+
+.pane {
+  --panel-width: 325px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  flex-shrink: 0;
+  min-width: $owl-sys-size-sidebar-minwidth;
+  width: var(--panel-width);
+  color: var(--owl-sidebar-color);
+  background: var(--owl-sidebar-bg);
+  padding-top: 0.5rem;
+
+  &__header {
+    flex: 0 1 auto;
+    margin-top: calc($owl-sys-space-sidebar / 2);
+  }
+
+  &__content {
+    flex: 1 1 auto;
+    padding-bottom: $owl-sys-space-sidebar;
+    overflow-y: auto;
+  }
+
+  &--left {
+    border-right: var(--owl-border-width) var(--owl-border-color) solid;
+  }
+
+  &--right {
+    border-left: var(--owl-border-width) var(--owl-border-color) solid;
+  }
+
+  &__heading {
+    @include typeface-label();
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: calc(var(--owl-sidebar-spacing) / 2)
+      calc(var(--owl-sidebar-spacing) / 2) calc(var(--owl-sidebar-spacing) / 2)
+      var(--owl-sidebar-spacing);
+    line-height: $owl-ref-typeface-lineheight-sm;
+    font-size: $owl-ref-typeface-size-xs;
+    user-select: none;
+  }
+
+  .owlui-nav-tabs {
+    font-size: $owl-ref-typeface-size-xs;
+  }
+
+  .owlui-tab-pane {
+    font-size: $owl-ref-typeface-size-xs;
+  }
+}
+
+.grab-handle {
+  position: absolute;
+  z-index: 2;
+  width: $owl-sys-size-grabhandle;
+  border-width: 0 1px 0 1px;
+  border-style: solid;
+  border-color: transparent;
+  top: 0;
+  bottom: 0;
+  cursor: col-resize;
+
+  > div {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: calc($owl-sys-size-grabhandle-hover / -2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 0;
+    overflow: hidden;
+    background: var(--owl-border-color);
+    transition-duration: 0.1s;
+    transition-delay: 0.2s;
+    transition-timing-function: $owl-ref-style-cubic-bezier;
+    transition-property: opacity;
+    pointer-events: none;
+    opacity: 0;
+  }
+
+  &:hover,
+  &:focus,
+  &:active {
+    > div {
+      opacity: 1;
+      width: $owl-sys-size-grabhandle-hover;
+    }
+  }
+
+  &:active {
+    > div {
+      color: var(--owl-active-color);
+      background: var(--owl-active-bg);
+    }
+  }
+
+  &--left {
+    right: -1px;
+  }
+
+  &--right {
+    left: -1px;
+  }
+}
