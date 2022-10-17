@@ -1,11 +1,21 @@
 import React, { useState } from 'react';
-import { Navbar, Nav } from 'react-bootstrap';
+import { ButtonGroup, Dropdown, Navbar, Nav } from 'react-bootstrap';
 import { motion } from 'framer-motion';
 import { Button, Icon } from '@owlui/lib';
 import * as css from './_workspace-header.scss';
+import { Elem } from '../../../../utils';
 import { Projects, Settings } from '../../../../models';
+import { menu } from '../../../../services';
 import { Path as startPath } from '../../../start';
 import { Logo } from '../../../../components';
+
+export enum PREVIEW_MODE {
+  default = 'default',
+  slide = 'slide',
+  lesson = 'lesson',
+  module = 'module',
+  project = 'project',
+}
 
 export const Header = () => {
   const projectMeta = Projects.useMeta();
@@ -14,6 +24,7 @@ export const Header = () => {
   const [projectNameSize, setProjectNameSize] = useState(
     projectNameLn - 3 < 13 ? 13 : projectNameLn - 3
   );
+  const [previewMode, setPreviewMode] = useState(PREVIEW_MODE.project);
   const animationSettings = Settings.useAnimation();
   const isAnimated = !animationSettings.reducedAnimations;
   const animationDelay = animationSettings.animationDelay;
@@ -61,6 +72,58 @@ export const Header = () => {
     Projects.setMeta({ name: projectName });
   };
 
+  const preivewMenuItems: Array<menu.ContextMenuItem> = [
+    {
+      label: 'Current Slide',
+      checked: previewMode === PREVIEW_MODE.slide,
+      click: () => {
+        setPreviewMode(PREVIEW_MODE.slide);
+        console.log('preview slide');
+      },
+    },
+    {
+      label: 'Current Lesson',
+      checked: previewMode === PREVIEW_MODE.lesson,
+      click: () => {
+        setPreviewMode(PREVIEW_MODE.lesson);
+        console.log('preview lesson');
+      },
+    },
+    {
+      label: 'Current Module',
+      checked: previewMode === PREVIEW_MODE.module,
+      click: () => {
+        setPreviewMode(PREVIEW_MODE.module);
+        console.log('preview module');
+      },
+    },
+    { type: 'separator' },
+    {
+      label: 'Entire Project',
+      checked: previewMode === PREVIEW_MODE.project,
+      click: () => {
+        setPreviewMode(PREVIEW_MODE.project);
+        console.log('preview project');
+      },
+    },
+  ];
+
+  const handlePreviewProject = (ev: React.MouseEvent) => {
+    console.log('previewing', previewMode);
+  };
+
+  const handleOpenPreviewMenu = (ev: React.MouseEvent, offsetX?: number) => {
+    const position = Elem.getPosition(
+      ev.target,
+      Elem.ELEM_ALIGNMENT.LeftBottom,
+      [-100 + (offsetX ? offsetX : 0), 6]
+    );
+    menu.API.contextMenu(preivewMenuItems, position).then((result) => {
+      console.log('menu closed', result);
+    });
+    console.log('opening preview mode');
+  };
+
   return (
     <motion.div
       initial={motionOptsContainer.initial}
@@ -96,13 +159,30 @@ export const Header = () => {
 
         <Nav className={`${css.projectActions} align-items-center`}>
           <Nav.Item>
-            <Button
-              className={`ms-3 ${css.projectActionsBtn}`}
-              variant="ghost"
-              size="sm"
-            >
-              Preview
-            </Button>
+            <Dropdown as={ButtonGroup}>
+              <Button
+                className={`ms-3 ${css.projectActionsBtn}`}
+                variant="ghost"
+                size="sm"
+                onClick={handlePreviewProject}
+                onContextMenu={(ev: React.MouseEvent) => {
+                  handleOpenPreviewMenu(ev, 102);
+                }}
+              >
+                <Icon icon="interests" filled display="sharp" opsz={20} />
+                Preview
+              </Button>
+
+              <Button
+                className="dropdown-toggle dropdown-toggle-split"
+                variant="ghost"
+                size="sm"
+                onClick={handleOpenPreviewMenu}
+                onContextMenu={handleOpenPreviewMenu}
+              >
+                <Icon icon="arrow_drop_down" filled display="sharp" opsz={20} />
+              </Button>
+            </Dropdown>
           </Nav.Item>
           <Nav.Item>
             <Button
@@ -110,7 +190,7 @@ export const Header = () => {
               variant="primary"
               size="sm"
             >
-              <Icon icon="history_edu" filled display="sharp" opsz={20} />
+              <Icon icon="rocket_launch" filled display="sharp" opsz={20} />
               Publish
             </Button>
           </Nav.Item>

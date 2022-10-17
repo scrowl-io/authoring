@@ -73,6 +73,21 @@
 
 .project-actions {
   flex-direction: row;
+
+  .owlui-btn-ghost {
+    border-color: var(--bs-btn-hover-border-color);
+  }
+
+  .owlui-btn-ghost:first-child {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  .owlui-btn-ghost:last-child {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-left: none;
+  }
 }
 
 .project-actions__btn {

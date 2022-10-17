@@ -1,6 +1,6 @@
 import { rq } from '../services';
 
-export interface Model {
+export interface Service {
   API?: rq.RegisterEndpoints;
   init?: () => void;
   [key: string]: any;

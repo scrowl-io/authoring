@@ -6,7 +6,7 @@ import {
 } from 'electron';
 import { getAppPath, getSourcePath } from './locate';
 import { Models } from '../models';
-import { rq } from '../services';
+import { Services } from '../services';
 
 export const init = () => {
   const appPath = getAppPath('app.html');
@@ -39,7 +39,7 @@ export const init = () => {
       }
 
       Models.init();
-      rq.init();
+      Services.init();
       mainWindow.loadURL(appPath);
 
       mainWindow.on('ready-to-show', () => {
