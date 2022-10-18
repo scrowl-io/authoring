@@ -22,20 +22,20 @@ export const resetState = () => {
 };
 
 export const useState = () => {
-  return useSelector((data: stateManager.RootState) => data.projects);
+  return useSelector((data: stateManager.RootState) => data.projects.data);
 };
 
-export const setState = (data) => {
+export const setData = (data) => {
   if (!processor.dispatch) {
     console.warn('settings processor not ready');
     return;
   }
 
-  processor.dispatch(state.setState(data));
+  processor.dispatch(state.setData(data));
 };
 
 export const useMeta = () => {
-  return useSelector((data: stateManager.RootState) => data.projects.meta);
+  return useSelector((data: stateManager.RootState) => data.projects.data.meta);
 };
 
 export const setMeta = (data) => {
@@ -48,7 +48,7 @@ export const setMeta = (data) => {
 };
 
 export const useScorm = () => {
-  return useSelector((data: stateManager.RootState) => data.projects.scorm);
+  return useSelector((data: stateManager.RootState) => data.projects.data.scorm);
 };
 
 export const setScorm = (data) => {
@@ -61,7 +61,7 @@ export const setScorm = (data) => {
 };
 
 export const useModules = () => {
-  return useSelector((data: stateManager.RootState) => data.projects.modules);
+  return useSelector((data: stateManager.RootState) => data.projects.data.modules);
 };
 
 export const addModule = (data) => {
@@ -100,8 +100,16 @@ export const removeModule = (data) => {
   processor.dispatch(state.removeModule(data));
 };
 
-export const useLessons = () => {
-  return useSelector((data: stateManager.RootState) => data.projects.lessons);
+export const useLessons = (moduleIdx?: number) => {
+  return useSelector((data: stateManager.RootState) => {
+    if (!moduleIdx) {
+      return data.projects.data.lessons;
+    }
+    
+    return data.projects.data.lessons.filter((lesson) => {
+      return lesson.moduleIdx === moduleIdx;
+    })
+  });
 };
 
 export const addLesson = (data) => {
@@ -140,8 +148,16 @@ export const removeLesson = (data) => {
   processor.dispatch(state.removeLesson(data));
 };
 
-export const useSlides = () => {
-  return useSelector((data: stateManager.RootState) => data.projects.slides);
+export const useSlides = (moduleIdx?: number, lessonIdx?: number) => {
+  return useSelector((data: stateManager.RootState) => {
+    if (!moduleIdx || !lessonIdx) {
+      return data.projects.data.slides;
+    }
+    
+    return data.projects.data.slides.filter((slide) => {
+      return slide.moduleIdx === moduleIdx && slide.lessonIdx === lessonIdx;
+    })
+  });
 };
 
 export const addSlide = (data) => {
@@ -181,7 +197,7 @@ export const removeSlide = (data) => {
 };
 
 export const useGlossary = () => {
-  return useSelector((data: stateManager.RootState) => data.projects.glossary);
+  return useSelector((data: stateManager.RootState) => data.projects.data.glossary);
 }
 
 export const addGlossaryItem = (data) => {
@@ -211,11 +227,11 @@ export const removeGlossaryItem = (data) => {
   processor.dispatch(state.removeGlossaryItem(data));
 };
 
-export const useResouces = () => {
-  return useSelector((data: stateManager.RootState) => data.projects.resources);
+export const useResources = () => {
+  return useSelector((data: stateManager.RootState) => data.projects.data.resources);
 }
 
-export const addResourceyItem = (data) => {
+export const addResourceItem = (data) => {
   if (!processor.dispatch) {
     console.warn('settings processor not ready');
     return;
@@ -243,9 +259,14 @@ export const removeResourceItem = (data) => {
 };
 
 export const create = (): Promise<rq.ApiResult> => {
-
   return new Promise((resolve) => {
-    API.create().then(resolve);
+    API.create().then((result) => {
+      if (!result.error) {
+        setData(result.data.project);
+      }
+
+      resolve(result);
+    });
   });
 };
 
@@ -257,7 +278,7 @@ export const importAsset = (): Promise<rq.ApiResult> => {
 };
 
 export const save = (): Promise<rq.ApiResult> => {
-  const data = useSelector((data: stateManager.RootState) => data.projects);
+  const data = useSelector((data: stateManager.RootState) => data.projects.data.data);
 
   return new Promise((resolve) => {
     API.save(data).then(resolve);
@@ -289,7 +310,7 @@ export default {
   useProcessor,
   resetState,
   useState,
-  setState,
+  setData,
   useMeta,
   setMeta,
   useScorm,
@@ -313,8 +334,8 @@ export default {
   addGlossaryItem,
   setGlossaryItem,
   removeGlossaryItem,
-  useResouces,
-  addResourceyItem,
+  useResources,
+  addResourceItem,
   setResourceItem,
   removeResourceItem,
   create,

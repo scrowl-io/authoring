@@ -2,34 +2,36 @@ import { createSlice } from '@reduxjs/toolkit';
 import { stateManager } from '../../services';
 
 export const initialState = {
-  meta: {
-    id: null,
-    name: "",
-    blueprint: "",
-    version: 0,
-    createdBy: "",
-    folder: "",
-    tags: [],
-    scrowlVer: "",
-    dateCreated: 0,
-    lastSaved: 0,
+  data: {
+    meta: {
+      id: null,
+      name: "",
+      blueprint: "",
+      version: 0,
+      createdBy: "",
+      folder: "",
+      tags: [],
+      scrowlVer: "",
+      dateCreated: 0,
+      lastSaved: 0,
+    },
+    scorm: {
+      name: "",
+      description: "",
+      authors: "",
+      organization: "",
+      reportStatus: "Passed/Incomplete",
+      lmsIdentifier: "",
+      outputFormat: "SCORM 2004",
+      optomizeMedia: "Recommended",
+    },
+    assets: [],
+    modules: [],
+    lessons: [],
+    slides: [],
+    glossary: [],
+    resources: []
   },
-  scorm: {
-    name: "",
-    description: "",
-    authors: "",
-    organization: "",
-    reportStatus: "Passed/Incomplete",
-    lmsIdentifier: "",
-    outputFormat: "SCORM 2004",
-    optomizeMedia: "Recommended",
-  },
-  assets: [],
-  modules: [],
-  lessons: [],
-  slides: [],
-  glossary: [],
-  resources: []
 };
 
 export const config: stateManager.StateConfig = {
@@ -39,14 +41,14 @@ export const config: stateManager.StateConfig = {
     resetState: (state) => {
       state = initialState
     },
-    setState: (state, action) => {
-      state = Object.assign(state, action.payload);
+    setData: (state, action) => {
+      state.data = Object.assign(state.data, action.payload);
     },
     setMeta: (state, action) => {
-      state.meta = Object.assign(state.meta, action.payload);
+      state.data.meta = Object.assign(state.data.meta, action.payload);
     },
     setScorm: (state, action) => {
-      state.scorm = Object.assign(state.scorm, action.payload);
+      state.data.scorm = Object.assign(state.data.scorm, action.payload);
     },
     addModule: (state, action) => {
       
@@ -109,7 +111,7 @@ export const slice = createSlice(config);
 
 export const {
   resetState,
-  setState,
+  setData,
   setMeta,
   setScorm,
   addModule,

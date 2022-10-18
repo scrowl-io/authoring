@@ -1,4 +1,5 @@
 import { ProjectsApi } from './projects.types';
+import { createProject } from './project.data';
 import { rq } from '../../services';
 
 export const create = (ev: rq.RequestEvent) => {
@@ -6,7 +7,7 @@ export const create = (ev: rq.RequestEvent) => {
     resolve({
       error: false,
       data: {
-        created: true,
+        project: createProject(),
       },
     });
   });
