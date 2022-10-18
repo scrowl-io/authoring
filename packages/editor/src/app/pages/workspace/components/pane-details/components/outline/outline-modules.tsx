@@ -45,7 +45,7 @@ export const OutlineModuleItem = ({
             </span>
             <span className={css.outlineItemIconDetail}>
               <Icon
-                icon="interests"
+                icon="folder"
                 display="sharp"
                 filled={!isOpen}
                 grad={200}
