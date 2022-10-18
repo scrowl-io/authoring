@@ -13,6 +13,7 @@ export const Pane = ({ className, side, children, ...props }: PaneProps) => {
 
   useEffect(() => {
     const grabElem = grabNode.current;
+    let winResizeTimer: ReturnType<typeof setTimeout>;
 
     if (!grabElem) {
       return;
@@ -31,7 +32,9 @@ export const Pane = ({ className, side, children, ...props }: PaneProps) => {
 
       if (width > maxWidth) {
         newWidth = maxWidth;
-      } else if (width < minWidth) {
+      }
+
+      if (width < minWidth) {
         newWidth = minWidth;
       }
 
@@ -66,17 +69,22 @@ export const Pane = ({ className, side, children, ...props }: PaneProps) => {
     };
 
     const handleWindowResize = () => {
-      console.log(
-        'window resize',
-        panelElem.style.getPropertyValue('--panel-width')
-      );
-      // let currentWidth = parseInt(
-      //   getComputedStyle(document.documentElement).getPropertyValue(
-      //     '--panel-width-left'
-      //   )
-      // );
+      if (winResizeTimer) {
+        clearTimeout(winResizeTimer);
+      }
 
-      // setPanelWidth(resizePane(currentWidth));
+      winResizeTimer = setTimeout(() => {
+        // ensure that the max width of the panel is respected
+        const newWidth = parseInt(
+          panelElem.style.getPropertyValue('--panel-width').replace('px', '')
+        );
+
+        if (isNaN(newWidth)) {
+          return;
+        }
+
+        setPanelWidth(resizePane(newWidth));
+      }, 50);
     };
 
     grabElem.addEventListener('mousedown', handleGrabStart);
@@ -87,6 +95,10 @@ export const Pane = ({ className, side, children, ...props }: PaneProps) => {
     return () => {
       if (!grabElem) {
         return;
+      }
+
+      if (winResizeTimer) {
+        clearTimeout(winResizeTimer);
       }
 
       grabElem.removeEventListener('mousedown', handleGrabStart);
