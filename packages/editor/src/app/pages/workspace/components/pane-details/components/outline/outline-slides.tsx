@@ -3,6 +3,7 @@ import { Button, Icon } from '@owlui/lib';
 import { OutlineSlidesProps, OutlineSlideItemProps } from './outline.types';
 import * as css from '../../_pane-details.scss';
 import { Projects } from '../../../../../../models';
+import { useActiveSlide, setActiveSlide } from '../../../../';
 
 export const OutlineSlideItem = ({
   slide,
@@ -10,14 +11,26 @@ export const OutlineSlideItem = ({
   className,
   ...props
 }: OutlineSlideItemProps) => {
-  let classes = `${css.outlineHeader} `;
+  const activeSlide = useActiveSlide();
+  const isActive =
+    slide.moduleIdx === activeSlide.moduleIdx &&
+    slide.lessonIdx === activeSlide.lessonIdx &&
+    slideIdx === activeSlide.slideIdx;
+  let classes = `${css.outlineHeader}`;
 
   if (className) {
-    classes += `${className} `;
+    classes += ` ${className}`;
+  }
+
+  if (isActive) {
+    classes += ` ${css.active}`;
   }
 
   const handleSetActiveSlide = () => {
-    console.log('active slide', slide);
+    setActiveSlide({
+      slide,
+      slideIdx,
+    });
   };
 
   return (

@@ -342,11 +342,11 @@
       margin-top: 0.33em;
     }
 
-    &:not(.slideActive):hover {
+    &:not(.active):hover {
       background-color: var(--owl-sidebar-hover-bg);
     }
 
-    &.slideActive {
+    &.active {
       color: var(--owl-selection-color);
       background: var(--owl-selection-bg);
     }
