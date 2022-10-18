@@ -57,11 +57,13 @@ export const OutlineLessonItem = ({
         </Button>
       </div>
       <Collapse in={isOpen}>
-        <OutlineSlides
-          id={menuId}
-          moduleIdx={lesson.moduleIdx}
-          lessonIdx={lessonIdx}
-        />
+        <div>
+          <OutlineSlides
+            id={menuId}
+            moduleIdx={lesson.moduleIdx}
+            lessonIdx={lessonIdx}
+          />
+        </div>
       </Collapse>
     </div>
   );

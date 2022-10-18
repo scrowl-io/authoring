@@ -57,7 +57,9 @@ export const OutlineModuleItem = ({
         </Button>
       </div>
       <Collapse in={isOpen}>
-        <OutlineLessons id={menuId} moduleIdx={moduleIdx} />
+        <div>
+          <OutlineLessons id={menuId} moduleIdx={moduleIdx} />
+        </div>
       </Collapse>
     </div>
   );
