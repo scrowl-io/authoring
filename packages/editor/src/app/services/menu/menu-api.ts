@@ -23,14 +23,13 @@ export const contextMenu = (items: Array<ContextMenuItem>, position?: ContextMen
 
     rq.invoke(ENDPOINTS.contextMenu, menuItems, position)
       .then((result) => {
-        if (result.error) {
-          resolve(result);
-          return;
+        if (!result.error) {
+          const id = result.data.item.id;
+
+          menuItemMap[id](result.data);
         }
 
-        const id = result.data.item.id;
-
-        menuItemMap[id](result.data);
+        resolve(result);
       }).
       catch((e) => {
         console.error('Context Menu Failed', e);

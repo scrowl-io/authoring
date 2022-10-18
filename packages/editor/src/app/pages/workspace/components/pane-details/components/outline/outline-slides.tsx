@@ -4,6 +4,8 @@ import { OutlineSlidesProps, OutlineSlideItemProps } from './outline.types';
 import * as css from '../../_pane-details.scss';
 import { Projects } from '../../../../../../models';
 import { useActiveSlide, setActiveSlide } from '../../../../';
+import { Elem } from '../../../../../../utils';
+import { menu } from '../../../../../../services';
 
 export const OutlineSlideItem = ({
   slide,
@@ -17,6 +19,34 @@ export const OutlineSlideItem = ({
     slide.lessonIdx === activeSlide.lessonIdx &&
     slideIdx === activeSlide.slideIdx;
   let classes = `${css.outlineHeader}`;
+  const slideMenuItems: Array<menu.ContextMenuItem> = [
+    {
+      label: 'Duplicate Slide',
+      click: () => {
+        console.log('duplicate slide');
+      },
+    },
+    {
+      label: 'Add New Slide After',
+      click: () => {
+        console.log('add slide after');
+      },
+    },
+    { type: 'separator' },
+    {
+      label: 'Rename',
+      click: () => {
+        console.log('rename slide');
+      },
+    },
+    { type: 'separator' },
+    {
+      label: 'Delete Slide',
+      click: () => {
+        console.log('remove Slide');
+      },
+    },
+  ];
 
   if (className) {
     classes += ` ${className}`;
@@ -26,10 +56,23 @@ export const OutlineSlideItem = ({
     classes += ` ${css.active}`;
   }
 
-  const handleSetActiveSlide = () => {
+  const handleSetActiveSlide = (ev: React.MouseEvent) => {
+    ev.preventDefault();
     setActiveSlide({
       slide,
       slideIdx,
+    });
+  };
+
+  const handleOpenSlideMenu = (ev: React.MouseEvent) => {
+    ev.preventDefault();
+
+    const target = ev.target as HTMLElement;
+    const position = Elem.getPosition(target);
+
+    menu.API.contextMenu(slideMenuItems, position).then((result) => {
+      console.log('menu close', result);
+      target.blur();
     });
   };
 
@@ -40,6 +83,7 @@ export const OutlineSlideItem = ({
           className={css.outlineItem}
           variant="link"
           onClick={handleSetActiveSlide}
+          onContextMenu={handleOpenSlideMenu}
         >
           <span className={css.outlineItemIconDetail}>
             <Icon
@@ -51,6 +95,14 @@ export const OutlineSlideItem = ({
             />
           </span>
           <span>{slide.name}</span>
+        </Button>
+        <Button
+          className={css.actionMenu}
+          variant="ghost"
+          onClick={handleOpenSlideMenu}
+          onContextMenu={handleOpenSlideMenu}
+        >
+          <Icon display="rounded" icon="more_vert" opsz={20} filled />
         </Button>
       </div>
     </div>

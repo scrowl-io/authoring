@@ -5,6 +5,8 @@ import { OutlineLessonsProps, OutlineLessonItemProps } from './outline.types';
 import * as css from '../../_pane-details.scss';
 import { OutlineSlides } from './outline-slides';
 import { Projects } from '../../../../../../models';
+import { Elem } from '../../../../../../utils';
+import { menu } from '../../../../../../services';
 
 export const OutlineLessonItem = ({
   lesson,
@@ -15,13 +17,60 @@ export const OutlineLessonItem = ({
   let classes = `${css.outlineHeader} `;
   const [isOpen, setOpen] = useState(true);
   const menuId = `module-${lesson.moduleIdx}-lesson-menu-${lessonIdx}`;
+  const lessonMenuItems: Array<menu.ContextMenuItem> = [
+    {
+      label: 'Add Slide',
+      click: () => {
+        console.log('add slide');
+      },
+    },
+    {
+      label: 'Duplicate Lesson',
+      click: () => {
+        console.log('duplicate lesson');
+      },
+    },
+    {
+      label: 'Add New Lesson After',
+      click: () => {
+        console.log('add lesson after');
+      },
+    },
+    { type: 'separator' },
+    {
+      label: 'Rename',
+      click: () => {
+        console.log('rename lesson');
+      },
+    },
+    { type: 'separator' },
+    {
+      label: 'Delete Lesson',
+      click: () => {
+        console.log('remove lesson');
+      },
+    },
+  ];
 
   if (className) {
     classes += `${className} `;
   }
 
-  const handleToggleOpen = () => {
+  const handleToggleOpen = (ev: React.MouseEvent) => {
+    ev.preventDefault();
     setOpen(!isOpen);
+  };
+
+  const handleOpenLessonMenu = (ev: React.MouseEvent) => {
+    ev.preventDefault();
+
+    const target = ev.target as HTMLElement;
+    const position = Elem.getPosition(target);
+
+    menu.API.contextMenu(lessonMenuItems, position).then((result) => {
+      console.log('menu close', result);
+      target.blur();
+    });
   };
 
   return (
@@ -32,6 +81,7 @@ export const OutlineLessonItem = ({
           aria-controls={menuId}
           className={css.outlineItem}
           onClick={handleToggleOpen}
+          onContextMenu={handleOpenLessonMenu}
           variant="link"
         >
           <div className={css.lessonIcons}>
@@ -54,6 +104,14 @@ export const OutlineLessonItem = ({
             </span>
             <span className={css.outlineItemLabel}>{lesson.name}</span>
           </div>
+        </Button>
+        <Button
+          className={css.actionMenu}
+          variant="ghost"
+          onClick={handleOpenLessonMenu}
+          onContextMenu={handleOpenLessonMenu}
+        >
+          <Icon display="rounded" icon="more_vert" opsz={20} filled />
         </Button>
       </div>
       <Collapse in={isOpen}>
