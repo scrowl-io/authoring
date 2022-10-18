@@ -451,6 +451,31 @@
   &--lesson .nav {
     box-shadow: -2px 0 0 0 var(--owl-color-lesson);
   }
+
+  &-add.owlui-btn {
+    display: block;
+    width: 100%;
+    text-align: left;
+    color: var(--owl-sidebar-color);
+    background-color: inherit;
+    padding: 5px 0 6px 22px;
+    margin: 0;
+    font-size: var(--bs-font-size-sm);
+    font-weight: var(--bs-body-font-weight);
+
+    span.owlui-icons-outlined {
+      color: var(--owl-color-default);
+      margin-right: 0.625rem;
+      margin-top: -3px;
+      font-size: 0.9rem;
+    }
+
+    &:focus,
+    &:hover {
+      background-color: var(--owl-sidebar-hover-bg);
+      color: var(--bs-body-color);
+    }
+  }
 }
 
 .owlui-offcanvas-header {

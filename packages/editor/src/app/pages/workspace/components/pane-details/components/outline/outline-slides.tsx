@@ -117,6 +117,9 @@ export const OutlineSlides = ({
 }: OutlineSlidesProps) => {
   const slides = Projects.useSlides(moduleIdx, lessonIdx);
   let classes = `nav flex-column `;
+  const handleAddSlide = () => {
+    console.log('add slide');
+  };
 
   if (className) {
     classes += `${className} `;
@@ -127,6 +130,14 @@ export const OutlineSlides = ({
       {slides.map((slide, idx) => {
         return <OutlineSlideItem key={idx} slide={slide} slideIdx={idx} />;
       })}
+      <Button
+        variant="link"
+        className={css.outlineAdd}
+        onClick={handleAddSlide}
+      >
+        <Icon icon="add" display="outlined" />
+        <span>Add New Slide</span>
+      </Button>
     </div>
   );
 };

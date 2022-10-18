@@ -134,6 +134,9 @@ export const OutlineLessons = ({
 }: OutlineLessonsProps) => {
   const lessons = Projects.useLessons(moduleIdx);
   let classes = `nav flex-column `;
+  const handleAddLesson = () => {
+    console.log('add lesson');
+  };
 
   if (className) {
     classes += `${className} `;
@@ -144,6 +147,14 @@ export const OutlineLessons = ({
       {lessons.map((lesson, idx) => {
         return <OutlineLessonItem key={idx} lesson={lesson} lessonIdx={idx} />;
       })}
+      <Button
+        variant="link"
+        className={css.outlineAdd}
+        onClick={handleAddLesson}
+      >
+        <Icon icon="add" display="outlined" />
+        <span>Add New Lesson</span>
+      </Button>
     </div>
   );
 };

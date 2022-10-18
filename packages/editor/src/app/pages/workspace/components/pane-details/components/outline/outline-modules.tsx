@@ -125,12 +125,23 @@ export const OutlineModuleItem = ({
 
 export const OutlineModules = ({ ...props }: OutlineModulesProps) => {
   const modules = Projects.useModules();
+  const handleAddModule = () => {
+    console.log('add module');
+  };
 
   return (
     <div {...props}>
       {modules.map((module, idx) => {
         return <OutlineModuleItem key={idx} module={module} moduleIdx={idx} />;
       })}
+      <Button
+        variant="link"
+        className={css.outlineAdd}
+        onClick={handleAddModule}
+      >
+        <Icon icon="add" display="outlined" />
+        <span>Add New Module</span>
+      </Button>
     </div>
   );
 };
