@@ -34,7 +34,7 @@ export const OutlineLessonItem = ({
           onClick={handleToggleOpen}
           variant="link"
         >
-          <div className={css.outlineItemLessonIcons}>
+          <div className={css.lessonIcons}>
             <span className={css.outlineItemIconHandle}>
               <Icon
                 icon="arrow_drop_down"
