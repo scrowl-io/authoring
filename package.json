@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "lint": "",
-    "start": "",
+    "start": "yarn workspace @scrowl/editor run start",
     "build": ""
   },
   "workspaces": [
