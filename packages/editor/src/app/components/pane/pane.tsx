@@ -44,7 +44,10 @@ export const Pane = ({ className, side, children, ...props }: PaneProps) => {
 
     const handleGrabMove = (ev: MouseEvent) => {
       ev.preventDefault();
-      setPanelWidth(resizePane(ev.clientX));
+      const newWidth =
+        side === 'right' ? window.innerWidth - ev.clientX : ev.clientX;
+
+      setPanelWidth(resizePane(newWidth));
     };
 
     const handleGrabEnd = (ev: MouseEvent) => {
