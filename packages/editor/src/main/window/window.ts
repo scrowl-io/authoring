@@ -4,6 +4,9 @@ import {
   shell,
   BrowserWindowConstructorOptions,
 } from 'electron';
+import installExtension, {
+  REACT_DEVELOPER_TOOLS,
+} from 'electron-devtools-installer';
 import { getAppPath, getSourcePath } from './locate';
 import { Models } from '../models';
 import { Services } from '../services';
@@ -17,7 +20,13 @@ export const init = () => {
   let mainWindow: BrowserWindow | null = null;
   let isQuitting = false;
 
-  const create = () => {
+  const installExtensions = () => {
+    return Promise.all([
+      installExtension(REACT_DEVELOPER_TOOLS),
+    ]);
+  };
+
+  const create = async () => {
     try {
       const config: BrowserWindowConstructorOptions = {
         show: false,
@@ -31,6 +40,12 @@ export const init = () => {
           preload: preloadPath,
         },
       };
+
+      if (isDevEnv) {
+        const installResult = await installExtensions();
+
+        console.log(`\n\nAdded Extensions: ${installResult}\n\n`);
+      }
 
       mainWindow = new BrowserWindow(config);
 
