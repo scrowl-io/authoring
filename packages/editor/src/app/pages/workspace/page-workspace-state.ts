@@ -9,9 +9,19 @@ export const initialState = {
     slideIdx: -1,
   },
   data: {
-    moduleIdx: -1,
-    lessonIdx: -1,
-    name: ''
+    meta: {
+      moduleIdx: -1,
+      lessonIdx: -1,
+      name: '',
+    },
+    template: {
+      meta: {
+        name: '',
+        filename: '',
+        component: '',
+      },
+      elements: {},
+    }
   }
 };
 
@@ -24,8 +34,8 @@ export const config: stateManager.StateConfig = {
     },
     setActiveSlide: (state, action) => {
       const position = {
-        moduleIdx: action.payload.slide.moduleIdx,
-        lessonIdx: action.payload.slide.lessonIdx,
+        moduleIdx: action.payload.slide.meta.moduleIdx,
+        lessonIdx: action.payload.slide.meta.lessonIdx,
         slideIdx: action.payload.slideIdx,
       };
 

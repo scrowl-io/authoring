@@ -15,8 +15,8 @@ export const OutlineSlideItem = ({
 }: OutlineSlideItemProps) => {
   const activeSlide = useActiveSlide();
   const isActive =
-    slide.moduleIdx === activeSlide.moduleIdx &&
-    slide.lessonIdx === activeSlide.lessonIdx &&
+    slide.meta.moduleIdx === activeSlide.moduleIdx &&
+    slide.meta.lessonIdx === activeSlide.lessonIdx &&
     slideIdx === activeSlide.slideIdx;
   let classes = `${css.outlineHeader}`;
   const slideMenuItems: Array<menu.ContextMenuItem> = [
@@ -94,7 +94,7 @@ export const OutlineSlideItem = ({
               appearance="Slide"
             />
           </span>
-          <span>{slide.name}</span>
+          <span>{slide.meta.name}</span>
         </Button>
         <Button
           className={css.actionMenu}

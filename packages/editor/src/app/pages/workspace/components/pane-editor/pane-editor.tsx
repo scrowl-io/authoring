@@ -1,10 +1,10 @@
 import React from 'react';
-import { useData } from '../../';
+import { useTemplateElements } from '../../';
 
 export const PaneEditor = () => {
-  const activeSlide = useData();
+  const data = useTemplateElements();
 
-  console.log('Editor Pane', activeSlide);
+  console.log('Editor Pane', data);
   return <div>Editor</div>;
 };
 

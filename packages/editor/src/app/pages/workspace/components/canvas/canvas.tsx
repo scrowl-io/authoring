@@ -1,11 +1,14 @@
 import React from 'react';
-import { useData } from '../../';
+import { CanvasHeader, CanvasFrame, CanvasNotes } from './components';
 
 export const Canvas = () => {
-  const activeSlide = useData();
-
-  console.log('Canvas', activeSlide);
-  return <div>Canvas</div>;
+  return (
+    <div>
+      <CanvasHeader />
+      <CanvasFrame />
+      <CanvasNotes />
+    </div>
+  );
 };
 
 export default {
