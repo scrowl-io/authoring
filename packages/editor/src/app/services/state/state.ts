@@ -9,22 +9,34 @@ export const init = () => {
   const config: StoreConfig = {
     reducer: {},
   };
+  
   const addGlobalState = (entity) => {
-    if (!entity.state || !entity.state.reducer || !entity.state.config.name) {
+    let state = entity.state ? entity.state : (entity.reducer && entity.config ? entity : null);
+
+    if (!state) {
+      return;
+    } else if (!state.reducer || !state.config.name) {
+      const subStates = Object.keys(state);
+
+      addGlobalStates(subStates, state);
       return;
     }
+    
+    config.reducer[state.config.name] = state.reducer;
+  };
 
-    config.reducer[entity.state.config.name] = entity.state.reducer;
+  const addGlobalStates = (states, stateMap) => {
+    states.forEach((name) => {
+      addGlobalState(stateMap[name]);
+    });
   };
 
   modelNames.forEach((name) => {
     addGlobalState(models[name]);
   });
 
-  pageNames.forEach((name) => {
-    addGlobalState(pages[name]);
-  });
-
+  addGlobalStates(modelNames, models);
+  addGlobalStates(pageNames, pages);
   return configureStore(config);
 };
 

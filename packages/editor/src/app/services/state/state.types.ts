@@ -17,6 +17,9 @@ export type StateConfig = {
   reducers: {
     [key: string]: (state: any, action: PayloadAction<StateValue>) => void;
   };
+  extraReducers?: {
+    [key: string]: (state: any, action: PayloadAction<StateValue>) => void;
+  }
 };
 
 export type StoreConfig = {

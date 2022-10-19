@@ -88,11 +88,9 @@ export type ProjectLesson = {
 };
 
 export type ProjectSlide = {
-  meta: {
-    name: string;
-    moduleIdx: number;
-    lessonIdx: number;
-  };
+  name: string;
+  moduleIdx: number;
+  lessonIdx: number;
   template: TemplateManifest;
 };
 

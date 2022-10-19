@@ -1,11 +1,12 @@
 import React from 'react';
 import * as css from './_pane-editor.scss';
-import { useTemplateElements } from '../../';
+import { useHooks } from '../../';
 import { Pane } from '../../../../components';
 import { Settings } from '../../../../models';
 
 export const PaneEditor = () => {
-  const data = useTemplateElements();
+  // const hooks = useHooks();
+  // const data = hooks.useActiveTemplate();
   const animationSettings = Settings.useAnimation();
   const isAnimated = !animationSettings.reducedAnimations;
   const animationDelay = animationSettings.animationDelay;
@@ -29,7 +30,7 @@ export const PaneEditor = () => {
         },
   };
 
-  console.log('Editor Pane', data);
+  // console.log('Editor Pane', data);
   return (
     <Pane
       initial={animationOpts.initial}

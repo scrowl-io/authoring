@@ -40,11 +40,9 @@ const createSlide = (name: string, mIdx: number, lIdx: number, type: keyof typeo
   const template: TemplateManifest = TEMPLATES[type];
 
   return {
-    meta: {
-      name,
-      moduleIdx: mIdx,
-      lessonIdx: lIdx,
-    },
+    name,
+    moduleIdx: mIdx,
+    lessonIdx: lIdx,
     template,
   };
 }

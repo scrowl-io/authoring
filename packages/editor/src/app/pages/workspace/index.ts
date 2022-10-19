@@ -1,4 +1,4 @@
 export * from './page-workspace.types';
 export * from './page-workspace';
-export * as state from './page-workspace-state';
+export * as state from './states';
 export * from './page-workspace-hooks';

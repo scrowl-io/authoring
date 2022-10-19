@@ -1,14 +1,17 @@
 import React from 'react';
 import { Backdrop } from './backdrop';
-import { useGlossaryEditor, setGlossaryEditor } from '../../../';
+import { useHooks } from '../../../';
 import { Drawer } from './';
 
 export const GlossaryEditor = (props) => {
-  const isOpen = useGlossaryEditor();
+  const hooks = useHooks();
+  const isOpen = hooks.useWorkspace('isOpenGlossaryEditor');
   const isAnimated = props.isAnimated;
 
   const handleClose = () => {
-    setGlossaryEditor(false);
+    hooks.setWorkspace({
+      isOpenGlossaryEditor: false,
+    });
   };
 
   const handleSubmit = (ev: React.MouseEvent<Element, MouseEvent>) => {

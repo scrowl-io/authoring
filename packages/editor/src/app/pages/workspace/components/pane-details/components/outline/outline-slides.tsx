@@ -3,7 +3,7 @@ import { Button, Icon } from '@owlui/lib';
 import { OutlineSlidesProps, OutlineSlideItemProps } from './outline.types';
 import * as css from '../../_pane-details.scss';
 import { Projects } from '../../../../../../models';
-import { useActiveSlide, setActiveSlide } from '../../../../';
+import { useHooks } from '../../../../';
 import { Elem } from '../../../../../../utils';
 import { menu } from '../../../../../../services';
 
@@ -13,10 +13,11 @@ export const OutlineSlideItem = ({
   className,
   ...props
 }: OutlineSlideItemProps) => {
-  const activeSlide = useActiveSlide();
+  const hooks = useHooks();
+  const activeSlide = hooks.useActiveSlide();
   const isActive =
-    slide.meta.moduleIdx === activeSlide.moduleIdx &&
-    slide.meta.lessonIdx === activeSlide.lessonIdx &&
+    slide.moduleIdx === activeSlide.moduleIdx &&
+    slide.lessonIdx === activeSlide.lessonIdx &&
     slideIdx === activeSlide.slideIdx;
   let classes = `${css.outlineHeader}`;
   const slideMenuItems: Array<menu.ContextMenuItem> = [
@@ -58,7 +59,7 @@ export const OutlineSlideItem = ({
 
   const handleSetActiveSlide = (ev: React.MouseEvent) => {
     ev.preventDefault();
-    setActiveSlide({
+    hooks.setActiveSlide({
       slide,
       slideIdx,
     });
@@ -94,7 +95,7 @@ export const OutlineSlideItem = ({
               appearance="Slide"
             />
           </span>
-          <span>{slide.meta.name}</span>
+          <span>{slide.name}</span>
         </Button>
         <Button
           className={css.actionMenu}

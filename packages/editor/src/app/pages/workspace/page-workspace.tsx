@@ -1,13 +1,10 @@
 import React from 'react';
 import * as css from './_page-workspace.scss';
-import { useProcessor } from './page-workspace-hooks';
 import { Overlay, Header, PaneDetails, Canvas, PaneEditor } from './components';
 
 export const Path = '/workspace';
 
 export const Page = () => {
-  useProcessor();
-
   return (
     <>
       <Overlay />
