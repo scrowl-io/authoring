@@ -129,7 +129,7 @@
     "wait-on": "^6.0.1"
   },
   "dependencies": {
-    "@owlui/lib": "^0.0.43",
+    "@owlui/lib": "^0.0.44",
     "@popperjs/core": "2.11.6",
     "@reduxjs/toolkit": "^1.8.6",
     "bootstrap": "^5.2.2",
