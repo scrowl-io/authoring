@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Icon } from '@owlui/lib';
 import { OutlineSlidesProps, OutlineSlideItemProps } from './outline.types';
 import * as css from '../../_pane-details.scss';
@@ -19,6 +19,7 @@ export const OutlineSlideItem = ({
     slide.lessonIdx === activeSlide.lessonIdx &&
     slideIdx === activeSlide.slideIdx;
   let classes = `${css.outlineHeader}`;
+  const [slideName, setSlideName] = useState(slide.name);
   const slideMenuItems: Array<menu.ContextMenuItem> = [
     {
       label: 'Duplicate Slide',
@@ -76,6 +77,12 @@ export const OutlineSlideItem = ({
     });
   };
 
+  useEffect(() => {
+    if (isActive) {
+      setSlideName(activeSlide.name);
+    }
+  });
+
   return (
     <div className={css.outlineSlide} {...props}>
       <div className={classes}>
@@ -94,7 +101,7 @@ export const OutlineSlideItem = ({
               appearance="Slide"
             />
           </span>
-          <span>{slide.name}</span>
+          <span>{slideName}</span>
         </Button>
         <Button
           className={css.actionMenu}
