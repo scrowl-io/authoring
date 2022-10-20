@@ -68,6 +68,10 @@ export const CanvasHeader = () => {
     };
   }, [name, isDirty]);
 
+  if (slideIdx === -1) {
+    return <></>;
+  }
+
   return (
     <motion.div
       className={css.canvasHeader}
