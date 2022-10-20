@@ -86,10 +86,10 @@ export const useActiveTemplate = (prop?: string) => {
       return data.activeTemplate;
     }
 
-    if (hasProp(data.activeTemplate, prop)) {
-      return data.activeTemplate[prop];
+    if (hasProp(data.activeSlide.template, prop)) {
+      return data.activeSlide.template[prop];
     } else {
-      console.warn('active template does not have prop', prop, data.activeTemplate);
+      console.warn('active template does not have prop', prop, data.activeSlide.template);
       return;
     }
   });
@@ -101,17 +101,16 @@ export const setActiveTemplate = (data) => {
     return;
   }
 
-  processor.dispatch(state.activeTemplate.setData(data));
+  processor.dispatch(state.activeSlide.setTemplate(data));
 };
 
-export const resetActiveTemplate = () => {
+export const setActiveTemplateElements = (data) => {
   if (!processor.dispatch) {
     console.warn('workspace processor not ready');
     return;
   }
 
-  const fn = state.activeTemplate.resetData as ActionCreatorWithoutPayload;
-  processor.dispatch(fn());
+  processor.dispatch(state.activeSlide.setTemplateElements(data));
 };
 
 export default {
@@ -124,5 +123,5 @@ export default {
   resetActiveSlide,
   useActiveTemplate,
   setActiveTemplate,
-  resetActiveTemplate,
+  setActiveTemplateElements,
 };
