@@ -33,15 +33,18 @@ export const config: stateManager.StateConfig = {
     resetData: (state) => {
       state = initialState;
     },
-    setSlideName: (state, action) => {
-      state.name = action.payload;
+    setTemplate: (state, action) => {
+      updateObj(state.template, action.payload);
+    },
+    setTemplateElements: (state, action) => {
+      updateObj(state.template.elements, action.payload);
     },
   },
 };
 
 export const slice = createSlice(config);
 
-export const { setData, resetData, setSlideName } = slice.actions;
+export const { setData, resetData, setTemplate, setTemplateElements } = slice.actions;
 
 export const reducer = slice.reducer;
 
