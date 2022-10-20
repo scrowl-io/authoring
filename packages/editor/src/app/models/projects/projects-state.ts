@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { stateManager } from '../../services';
+import { updateObj } from '../../utils';
 
 export const initialState = {
   data: {
@@ -42,67 +43,88 @@ export const config: stateManager.StateConfig = {
       state = initialState
     },
     setData: (state, action) => {
-      state.data = Object.assign(state.data, action.payload);
+      state.data = action.payload;
     },
     setMeta: (state, action) => {
-      state.data.meta = Object.assign(state.data.meta, action.payload);
+      updateObj(state.data.meta, action.payload);
     },
     setScorm: (state, action) => {
-      state.data.scorm = Object.assign(state.data.scorm, action.payload);
+      updateObj(state.data.scorm, action.payload);
     },
     addModule: (state, action) => {
-      
+      state.data.modules.push(action.payload);
     },
-    setModuleName: (state, action) => {
-      
+    setModule: (state, action) => {
+      const modules = state.data.modules;
+      const { moduleIdx, ...data } = action.payload;
+
+      if (moduleIdx === null || moduleIdx === undefined || !modules[moduleIdx]) {
+        return;
+      }
+
+      updateObj(modules[moduleIdx], data);
     },
     moveModule: (state, action) => {
       
     },
     removeModule: (state, action) => {
-      
+      state.data.modules.splice(action.payload.idx);
     },
     addLesson: (state, action) => {
-      
+      state.data.lessons.push(action.payload);
     },
-    setLessonName: (state, action) => {
-      
+    setLesson: (state, action) => {
+      const lessons = state.data.lessons;
+      const { lessonIdx, ...data } = action.payload;
+
+      if (lessonIdx === null || lessonIdx === undefined || !lessons[lessonIdx]) {
+        return;
+      }
+
+      updateObj(lessons[lessonIdx], data);
     },
     moveLesson: (state, action) => {
       
     },
     removeLesson: (state, action) => {
-      
+      state.data.lessons.splice(action.payload.idx);
     },
     addSlide: (state, action) => {
-      
+      state.data.slides.push(action.payload);
     },
-    setSlideName: (state, action) => {
-      
+    setSlide: (state, action) => {
+      const slides = state.data.slides;
+      const { slideIdx, ...data } = action.payload;
+
+      if (slideIdx === null || slideIdx === undefined || !slides[slideIdx]) {
+        return;
+      }
+
+      updateObj(slides[slideIdx], data);
     },
     moveSlide: (state, action) => {
       
     },
     removeSlide: (state, action) => {
-      
+      state.data.slides.splice(action.payload.idx);
     },
     addGlossaryItem: (state, action) => {
-
+      state.data.glossary.push(action.payload);
     },
     setGlossaryItem: (state, action) => {
       
     },
     removeGlossaryItem: (state, action) => {
-      
+      state.data.glossary.splice(action.payload.idx);
     },
     addResourceItem: (state, action) => {
-
+      state.data.resources.push(action.payload);
     },
     setResourceItem: (state, action) => {
       
     },
     removeResourceItem: (state, action) => {
-      
+      state.data.resources.splice(action.payload.idx);
     },
   }
 };
@@ -115,15 +137,15 @@ export const {
   setMeta,
   setScorm,
   addModule,
-  setModuleName,
+  setModule,
   moveModule,
   removeModule,
   addLesson,
-  setLessonName,
+  setLesson,
   moveLesson,
   removeLesson,
   addSlide,
-  setSlideName,
+  setSlide,
   moveSlide,
   removeSlide,
   addGlossaryItem,

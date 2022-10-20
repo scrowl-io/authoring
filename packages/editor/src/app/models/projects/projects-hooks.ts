@@ -73,13 +73,13 @@ export const addModule = (data) => {
   processor.dispatch(state.addModule(data));
 };
 
-export const setModuleName = (data) => {
+export const setModule = (data) => {
   if (!processor.dispatch) {
     console.warn('settings processor not ready');
     return;
   }
 
-  processor.dispatch(state.setModuleName(data));
+  processor.dispatch(state.setModule(data));
 };
 
 export const moveModule = (data) => {
@@ -121,13 +121,13 @@ export const addLesson = (data) => {
   processor.dispatch(state.addLesson(data));
 };
 
-export const setLessonName = (data) => {
+export const setLesson = (data) => {
   if (!processor.dispatch) {
     console.warn('settings processor not ready');
     return;
   }
 
-  processor.dispatch(state.setLessonName(data));
+  processor.dispatch(state.setLesson(data));
 };
 
 export const moveLesson = (data) => {
@@ -169,13 +169,13 @@ export const addSlide = (data) => {
   processor.dispatch(state.addSlide(data));
 };
 
-export const setSlideName = (data) => {
+export const setSlide = (data) => {
   if (!processor.dispatch) {
     console.warn('settings processor not ready');
     return;
   }
 
-  processor.dispatch(state.setSlideName(data));
+  processor.dispatch(state.setSlide(data));
 };
 
 export const moveSlide = (data) => {
@@ -317,17 +317,17 @@ export default {
   setScorm,
   useModules,
   addModule,
-  setModuleName,
+  setModule,
   moveModule,
   removeModule,
   useLessons,
   addLesson,
-  setLessonName,
+  setLesson,
   moveLesson,
   removeLesson,
   useSlides,
   addSlide,
-  setSlideName,
+  setSlide,
   moveSlide,
   removeSlide,
   useGlossary,
