@@ -1,9 +1,8 @@
 import React from 'react';
-import { useHooks } from '../../../';
+import { useActiveTemplate } from '../../../';
 
 export const CanvasFrame = () => {
-  const hooks = useHooks();
-  const data = hooks.useActiveTemplate('meta');
+  const data = useActiveTemplate('meta');
 
   if (data) {
     console.log('canvas frame', data);

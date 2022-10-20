@@ -1,13 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Icon } from '@owlui/lib';
 import * as css from '../_canvas.scss';
-import { useHooks } from '../../../';
+import { useActiveSlide, setActiveSlide } from '../../../';
 import { Settings } from '../../../../../models';
 
 export const CanvasHeader = () => {
-  const hooks = useHooks();
-  const name = hooks.useActiveSlide('name');
+  const name = useActiveSlide('name');
   let nameLn = name.length;
   const [nameSize, setNameSize] = useState(nameLn - 3 < 13 ? 13 : nameLn - 3);
   const animationSettings = Settings.useAnimation();
@@ -24,7 +23,7 @@ export const CanvasHeader = () => {
 
     nameLn = val.length;
     setNameSize(nameLn - 3 < 13 ? 13 : nameLn - 3);
-    hooks.setActiveSlide({ name: val });
+    setActiveSlide({ name: val });
   };
 
   const handleNameInput = (ev: React.KeyboardEvent<HTMLInputElement>) => {
@@ -33,7 +32,7 @@ export const CanvasHeader = () => {
         ev.currentTarget.blur();
         break;
       case 'Escape':
-        hooks.setActiveSlide({ name });
+        setActiveSlide({ name });
         ev.currentTarget.blur();
         break;
     }

@@ -1,15 +1,14 @@
 import React from 'react';
 import { Backdrop } from './backdrop';
-import { useHooks } from '../../../';
+import { useWorkspace, setWorkspace } from '../../../';
 import { Drawer } from './';
 
 export const GlossaryEditor = (props) => {
-  const hooks = useHooks();
-  const isOpen = hooks.useWorkspace('isOpenGlossaryEditor');
+  const isOpen = useWorkspace('isOpenGlossaryEditor');
   const isAnimated = props.isAnimated;
 
   const handleClose = () => {
-    hooks.setWorkspace({
+    setWorkspace({
       isOpenGlossaryEditor: false,
     });
   };

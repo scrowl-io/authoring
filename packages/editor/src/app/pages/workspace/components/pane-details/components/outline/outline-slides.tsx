@@ -3,7 +3,7 @@ import { Button, Icon } from '@owlui/lib';
 import { OutlineSlidesProps, OutlineSlideItemProps } from './outline.types';
 import * as css from '../../_pane-details.scss';
 import { Projects } from '../../../../../../models';
-import { useHooks } from '../../../../';
+import { useActiveSlide, setActiveSlide } from '../../../../';
 import { Elem } from '../../../../../../utils';
 import { menu } from '../../../../../../services';
 
@@ -13,8 +13,7 @@ export const OutlineSlideItem = ({
   className,
   ...props
 }: OutlineSlideItemProps) => {
-  const hooks = useHooks();
-  const activeSlide = hooks.useActiveSlide();
+  const activeSlide = useActiveSlide();
   const isActive =
     slide.moduleIdx === activeSlide.moduleIdx &&
     slide.lessonIdx === activeSlide.lessonIdx &&
@@ -59,7 +58,7 @@ export const OutlineSlideItem = ({
 
   const handleSetActiveSlide = (ev: React.MouseEvent) => {
     ev.preventDefault();
-    hooks.setActiveSlide({
+    setActiveSlide({
       slide,
       slideIdx,
     });
