@@ -1,12 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Icon } from '@owlui/lib';
 import * as css from '../_canvas.scss';
 import { useActiveSlide, setActiveSlide } from '../../../';
-import { Settings } from '../../../../../models';
+import { Settings, Projects } from '../../../../../models';
 
 export const CanvasHeader = () => {
   const name = useActiveSlide('name');
+  const slideIdx = useActiveSlide('slideIdx');
+  const isDirty = useRef(false);
+  const prevName = useRef(name);
+  const prevSlideIdx = useRef(slideIdx);
   let nameLn = name.length;
   const [nameSize, setNameSize] = useState(nameLn - 3 < 13 ? 13 : nameLn - 3);
   const animationSettings = Settings.useAnimation();
@@ -17,13 +21,14 @@ export const CanvasHeader = () => {
     animate: !isAnimated ? {} : { opacity: 1 },
     transition: !isAnimated ? {} : { delay: animationDelay + 0.1 },
   };
-  console.log('name', name);
+
   const handleNameChange = (ev: React.FormEvent<HTMLInputElement>) => {
     const val = ev.currentTarget.value;
 
     nameLn = val.length;
     setNameSize(nameLn - 3 < 13 ? 13 : nameLn - 3);
     setActiveSlide({ name: val });
+    isDirty.current = true;
   };
 
   const handleNameInput = (ev: React.KeyboardEvent<HTMLInputElement>) => {
@@ -32,11 +37,36 @@ export const CanvasHeader = () => {
         ev.currentTarget.blur();
         break;
       case 'Escape':
-        setActiveSlide({ name });
+        setActiveSlide({ name: prevName.current });
+        isDirty.current = false;
         ev.currentTarget.blur();
         break;
     }
   };
+
+  const handleNameUpdate = (ev: React.FocusEvent<HTMLInputElement>) => {
+    const val = ev.currentTarget.value;
+
+    prevName.current = val;
+
+    if (isDirty.current) {
+      Projects.setSlide({
+        slideIdx,
+        name: val,
+      });
+      isDirty.current = false;
+    }
+  };
+
+  useEffect(() => {
+    if (!isDirty.current || prevSlideIdx.current !== slideIdx) {
+      prevName.current = name;
+    }
+
+    return () => {
+      prevSlideIdx.current = slideIdx;
+    };
+  }, [name, isDirty]);
 
   return (
     <motion.div
@@ -56,6 +86,7 @@ export const CanvasHeader = () => {
           placeholder="Untitled Slide"
           onKeyDown={handleNameInput}
           onChange={handleNameChange}
+          onBlur={handleNameUpdate}
           size={nameSize}
         />
       </div>
