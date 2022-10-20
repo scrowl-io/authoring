@@ -1,0 +1,15 @@
+{
+  "extends": "@scrowl/config/tsconfig",
+  "compilerOptions": {
+    "types": ["@scrowl/config/src/typings"],
+    "noEmit": false,
+    "isolatedModules": false,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "declarationMap": true,
+    "outDir": "./lib",
+    "outFile": "./lib/scrowl.player.d.ts"
+  },
+  "include": ["./src/**/*.ts", "./src/**/*.tsx", "./types/*.d.ts"],
+  "exclude": ["./scripts/**/*.js", ""]
+}

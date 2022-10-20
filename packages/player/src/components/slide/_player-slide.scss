@@ -1,0 +1,41 @@
+@use '@owlui/lib/src/theme/utils' as *;
+
+.slide {
+  margin: 0 $owl-sys-space-workspace $owl-sys-space-workspace;
+  color: var(--bs-body-color);
+  border: var(--owl-border-width) solid var(--owl-border-color);
+  background: var(--bs-body-bg);
+  box-shadow: var(--owl-box-shadow);
+  max-height: 110vmin;
+  max-width: 110vmin;
+
+  &:not(.aspect-ratio) {
+    transform: scale(1);
+    max-height: calc(100% - $owl-sys-space-workspace );
+    max-width: 100%;
+  }
+
+  &.aspect-ratio--4x3 {
+    aspect-ratio: 4 / 3;
+
+    iframe {
+      aspect-ratio: 4 / 3;
+    }
+  }
+
+  &.aspect-ratio--16x9 {
+    aspect-ratio: 16 / 9;
+
+    iframe {
+      aspect-ratio: 16 / 9;
+    }
+  }
+
+  &.aspect-ratio--16x10 {
+    aspect-ratio: 16 / 10;
+
+    iframe {
+      aspect-ratio: 16 / 10;
+    }
+  }
+}
