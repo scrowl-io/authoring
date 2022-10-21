@@ -83,7 +83,7 @@ export const resetActiveSlide = () => {
 export const useActiveTemplate = (prop?: string) => {
   return useSelector((data: stateManager.RootState) => {
     if (!prop) {
-      return data.activeTemplate;
+      return data.activeSlide.template;
     }
 
     if (hasProp(data.activeSlide.template, prop)) {
@@ -102,6 +102,21 @@ export const setActiveTemplate = (data) => {
   }
 
   processor.dispatch(state.activeSlide.setTemplate(data));
+};
+
+export const useActiveTemplateElements = (prop?: string) => {
+  return useSelector((data: stateManager.RootState) => {
+    if (!prop) {
+      return data.activeSlide.template.elements;
+    }
+
+    if (hasProp(data.activeSlide.template.elements, prop)) {
+      return data.activeSlide.template.elements[prop];
+    } else {
+      console.warn('active template elements does not have prop', prop, data.activeSlide.template.elements);
+      return;
+    }
+  });
 };
 
 export const setActiveTemplateElements = (data) => {
@@ -123,5 +138,6 @@ export default {
   resetActiveSlide,
   useActiveTemplate,
   setActiveTemplate,
+  useActiveTemplateElements,
   setActiveTemplateElements,
 };

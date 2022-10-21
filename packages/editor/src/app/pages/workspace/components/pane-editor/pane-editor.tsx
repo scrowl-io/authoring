@@ -3,6 +3,7 @@ import * as css from './_pane-editor.scss';
 import { useActiveTemplate } from '../../';
 import { Pane } from '../../../../components';
 import { Settings } from '../../../../models';
+import { TemplateForm } from './components';
 
 export const PaneEditor = () => {
   const data = useActiveTemplate();
@@ -29,14 +30,19 @@ export const PaneEditor = () => {
         },
   };
 
-  console.log('Editor Pane', data);
+  if (!data.meta.filename) {
+    return <></>;
+  }
+
   return (
     <Pane
       initial={animationOpts.initial}
       animate={animationOpts.animate}
       side="right"
     >
-      <div className={css.paneEditor}>Editor</div>
+      <div className={css.paneEditor}>
+        <TemplateForm />
+      </div>
     </Pane>
   );
 };

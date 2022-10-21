@@ -126,6 +126,15 @@ export const config: stateManager.StateConfig = {
     removeResourceItem: (state, action) => {
       state.data.resources.splice(action.payload.idx);
     },
+    addAssetItem: (state, action) => {
+      state.data.assets.push(action.payload);
+    },
+    setAssetItem: (state, action) => {
+      
+    },
+    removeAssetItem: (state, action) => {
+      state.data.assets.splice(action.payload.idx);
+    },
   }
 };
 
@@ -154,6 +163,9 @@ export const {
   addResourceItem,
   setResourceItem,
   removeResourceItem,
+  addAssetItem,
+  setAssetItem,
+  removeAssetItem,
 } = slice.actions;
 
 export const reducer = slice.reducer;

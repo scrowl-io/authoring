@@ -4,6 +4,7 @@ import { updateObj } from '../../../utils';
 
 export const initialState = {
   isOpenGlossaryEditor: false,
+  isOpenAssetBrowser: false,
 };
 
 export const config: stateManager.StateConfig = {

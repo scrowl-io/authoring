@@ -13,7 +13,7 @@ export const useProcessor = () => {
 
 export const resetState = () => {
   if (!processor.dispatch) {
-    console.warn('settings processor not ready');
+    console.warn('projects processor not ready');
     return;
   }
 
@@ -27,7 +27,7 @@ export const useState = () => {
 
 export const setData = (data) => {
   if (!processor.dispatch) {
-    console.warn('settings processor not ready');
+    console.warn('projects processor not ready');
     return;
   }
 
@@ -40,7 +40,7 @@ export const useMeta = () => {
 
 export const setMeta = (data) => {
   if (!processor.dispatch) {
-    console.warn('settings processor not ready');
+    console.warn('projects processor not ready');
     return;
   }
 
@@ -53,7 +53,7 @@ export const useScorm = () => {
 
 export const setScorm = (data) => {
   if (!processor.dispatch) {
-    console.warn('settings processor not ready');
+    console.warn('projects processor not ready');
     return;
   }
 
@@ -66,7 +66,7 @@ export const useModules = () => {
 
 export const addModule = (data) => {
   if (!processor.dispatch) {
-    console.warn('settings processor not ready');
+    console.warn('projects processor not ready');
     return;
   }
 
@@ -75,7 +75,7 @@ export const addModule = (data) => {
 
 export const setModule = (data) => {
   if (!processor.dispatch) {
-    console.warn('settings processor not ready');
+    console.warn('projects processor not ready');
     return;
   }
 
@@ -84,7 +84,7 @@ export const setModule = (data) => {
 
 export const moveModule = (data) => {
   if (!processor.dispatch) {
-    console.warn('settings processor not ready');
+    console.warn('projects processor not ready');
     return;
   }
 
@@ -93,7 +93,7 @@ export const moveModule = (data) => {
 
 export const removeModule = (data) => {
   if (!processor.dispatch) {
-    console.warn('settings processor not ready');
+    console.warn('projects processor not ready');
     return;
   }
 
@@ -114,7 +114,7 @@ export const useLessons = (moduleIdx?: number) => {
 
 export const addLesson = (data) => {
   if (!processor.dispatch) {
-    console.warn('settings processor not ready');
+    console.warn('projects processor not ready');
     return;
   }
 
@@ -123,7 +123,7 @@ export const addLesson = (data) => {
 
 export const setLesson = (data) => {
   if (!processor.dispatch) {
-    console.warn('settings processor not ready');
+    console.warn('projects processor not ready');
     return;
   }
 
@@ -132,7 +132,7 @@ export const setLesson = (data) => {
 
 export const moveLesson = (data) => {
   if (!processor.dispatch) {
-    console.warn('settings processor not ready');
+    console.warn('projects processor not ready');
     return;
   }
 
@@ -141,7 +141,7 @@ export const moveLesson = (data) => {
 
 export const removeLesson = (data) => {
   if (!processor.dispatch) {
-    console.warn('settings processor not ready');
+    console.warn('projects processor not ready');
     return;
   }
 
@@ -162,7 +162,7 @@ export const useSlides = (moduleIdx?: number, lessonIdx?: number) => {
 
 export const addSlide = (data) => {
   if (!processor.dispatch) {
-    console.warn('settings processor not ready');
+    console.warn('projects processor not ready');
     return;
   }
 
@@ -171,7 +171,7 @@ export const addSlide = (data) => {
 
 export const setSlide = (data) => {
   if (!processor.dispatch) {
-    console.warn('settings processor not ready');
+    console.warn('projects processor not ready');
     return;
   }
 
@@ -180,7 +180,7 @@ export const setSlide = (data) => {
 
 export const moveSlide = (data) => {
   if (!processor.dispatch) {
-    console.warn('settings processor not ready');
+    console.warn('projects processor not ready');
     return;
   }
 
@@ -189,7 +189,7 @@ export const moveSlide = (data) => {
 
 export const removeSlide = (data) => {
   if (!processor.dispatch) {
-    console.warn('settings processor not ready');
+    console.warn('projects processor not ready');
     return;
   }
 
@@ -202,7 +202,7 @@ export const useGlossary = () => {
 
 export const addGlossaryItem = (data) => {
   if (!processor.dispatch) {
-    console.warn('settings processor not ready');
+    console.warn('projects processor not ready');
     return;
   }
 
@@ -211,7 +211,7 @@ export const addGlossaryItem = (data) => {
 
 export const setGlossaryItem = (data) => {
   if (!processor.dispatch) {
-    console.warn('settings processor not ready');
+    console.warn('projects processor not ready');
     return;
   }
 
@@ -220,7 +220,7 @@ export const setGlossaryItem = (data) => {
 
 export const removeGlossaryItem = (data) => {
   if (!processor.dispatch) {
-    console.warn('settings processor not ready');
+    console.warn('projects processor not ready');
     return;
   }
 
@@ -233,7 +233,7 @@ export const useResources = () => {
 
 export const addResourceItem = (data) => {
   if (!processor.dispatch) {
-    console.warn('settings processor not ready');
+    console.warn('projects processor not ready');
     return;
   }
 
@@ -242,7 +242,7 @@ export const addResourceItem = (data) => {
 
 export const setResourceItem = (data) => {
   if (!processor.dispatch) {
-    console.warn('settings processor not ready');
+    console.warn('projects processor not ready');
     return;
   }
 
@@ -251,11 +251,42 @@ export const setResourceItem = (data) => {
 
 export const removeResourceItem = (data) => {
   if (!processor.dispatch) {
-    console.warn('settings processor not ready');
+    console.warn('projects processor not ready');
     return;
   }
 
   processor.dispatch(state.removeResourceItem(data));
+};
+
+export const useAssets = () => {
+  return useSelector((data: stateManager.RootState) => data.projects.data.assets);
+}
+
+export const addAsset = (data) => {
+  if (!processor.dispatch) {
+    console.warn('projects processor not ready');
+    return;
+  }
+
+  processor.dispatch(state.addAssetItem(data));
+};
+
+export const setAsset = (data) => {
+  if (!processor.dispatch) {
+    console.warn('projects processor not ready');
+    return;
+  }
+
+  processor.dispatch(state.setAssetItem(data));
+};
+
+export const removeAsset = (data) => {
+  if (!processor.dispatch) {
+    console.warn('projects processor not ready');
+    return;
+  }
+
+  processor.dispatch(state.removeAssetItem(data));
 };
 
 export const create = (): Promise<rq.ApiResult> => {
@@ -338,6 +369,10 @@ export default {
   addResourceItem,
   setResourceItem,
   removeResourceItem,
+  useAssets,
+  addAsset,
+  setAsset,
+  removeAsset,
   create,
   importAsset,
   save,
