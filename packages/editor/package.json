@@ -17,6 +17,7 @@
   "homepage": "https://github.com/scrowl-io/authoring/packages/editor#readme",
   "scripts": {
     "clean": "rimraf dist",
+    "copy:assets": "node ./scripts/copy-assets.mjs",
     "start:frontend": "parcel serve --target frontend --no-cache --port 5003 --no-cache",
     "start:preload": "parcel build --target preload --no-cache",
     "reload:preload": "nodemon --watch src/main/preload.ts --exec parcel build --target preload --no-cache",
@@ -133,6 +134,7 @@
     "@popperjs/core": "2.11.6",
     "@reduxjs/toolkit": "^1.8.6",
     "@scrowl/player": "^0.0.1",
+    "@scrowl/template-block-text": "^1.0.0",
     "bootstrap": "^5.2.2",
     "electron-context-menu": "^3.5.0",
     "electron-devtools-installer": "^3.2.0",

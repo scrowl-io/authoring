@@ -19,15 +19,20 @@
   "scripts": {
     "clean": "rimraf ../.parcel-cache",
     "prebuild": "yarn run clean && rimraf dist",
-    "build": "parcel build --target prod --no-cache && tsc"
+    "build": "parcel build --target prod --no-cache"
   },
   "main": "./src/index.ts",
   "prod": "./dist/scrowl.template-core.js",
+  "alias": {
+    "react": {
+      "global": "React"
+    }
+  },
   "targets": {
     "prod": {
-      "source": "./src/index.ts",
-      "outputFormat": "esmodule",
-      "isLibrary": true
+      "source": "./src/prod.ts",
+      "outputFormat": "global",
+      "optimize": true
     }
   },
   "exports": {
@@ -36,7 +41,8 @@
       "default": "./dist/scrowl.template-core.js",
       "import": "./src/index.ts"
     },
-    "./src": "./src/index.ts"
+    "./src": "./src/index.ts",
+    "./template": "./dist/scrowl.template-core.js"
   },
   "eslintConfig": {
     "extends": "@scrowl/config"
@@ -61,6 +67,7 @@
     "@parcel/transformer-typescript-types": "2.7.0",
     "@parcel/validator-typescript": "2.7.0",
     "@scrowl/config": "^0.0.1",
+    "@types/animejs": "^3.1.6",
     "@types/react": "^18.0.21",
     "@types/react-dom": "^18.0.6",
     "@types/scrollmagic": "^2.0.2",

@@ -6,8 +6,9 @@
   "type": "module",
   "scripts": {
     "lint": "",
-    "start": "yarn workspace @scrowl/editor run start",
     "build:player": "yarn workspace @scrowl/player run build",
+    "update": "yarn build:player && yarn workspace @scrowl/editor run copy:assets",
+    "start": "yarn workspace @scrowl/editor run start",
     "build": ""
   },
   "workspaces": [
