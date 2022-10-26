@@ -1,6 +1,14 @@
 import fs from './utils/file-system.mjs';
 
 const config = {
+  'node_modules/@scrowl/runtime/dist': {
+    dest: './src/main/assets/project',
+    includePaths: ['../../'],
+  },
+  'node_modules/@scrowl/template-core/dist': {
+    dest: './src/main/assets/project',
+    includePaths: ['../../'],
+  },
   'node_modules/@scrowl/template-block-text/dist': {
     dest: './src/main/assets/templates/block-text',
     includePaths: ['../../'],
@@ -8,10 +16,6 @@ const config = {
       overwrite: true,
     },
   },
-  'node_modules/@scrowl/template-core/dist': {
-    dest: './src/main/assets/project',
-    includePaths: ['../../'],
-  }
 };
 
 const findPath = (source, includePaths) => {

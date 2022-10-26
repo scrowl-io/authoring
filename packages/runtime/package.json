@@ -1,0 +1,75 @@
+{
+  "name": "@scrowl/runtime",
+  "version": "0.0.1",
+  "description": "",
+  "license": "MIT",
+  "keywords": [],
+  "author": {
+    "name": "OSG"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/scrowl-io/authoring.git",
+    "directory": "packages/runtime"
+  },
+  "bugs": {
+    "url": "https://github.com/scrowl-io/scrowl/issues"
+  },
+  "homepage": "https://github.com/scrowl-io/authoring/packages/runtime#readme",
+  "scripts": {
+    "clean": "rimraf ../.parcel-cache",
+    "prebuild": "yarn run clean && rimraf dist",
+    "build": "parcel build --target prod --no-cache"
+  },
+  "main": "./src/index.ts",
+  "prod": "./dist/scrowl.runtime.js",
+  "targets": {
+    "prod": {
+      "source": "./src/prod.ts",
+      "outputFormat": "global",
+      "optimize": true
+    }
+  },
+  "exports": {
+    ".": {
+      "require": "./dist/scrowl.template-block-text.js",
+      "default": "./dist/scrowl.template-block-text.js",
+      "import": "./src/index.ts"
+    },
+    "./src": "./src/index.ts"
+  },
+  "eslintConfig": {
+    "extends": "@scrowl/config"
+  },
+  "prettier": "@scrowl/config/prettier",
+  "stylelint": {
+    "extends": "@scrowl/config/stylelint"
+  },
+  "files": [
+    "LICENSE",
+    "README.md",
+    "dist/",
+    "src/",
+    "package.json"
+  ],
+  "devDependencies": {
+    "@parcel/core": "2.7.0",
+    "@parcel/packager-ts": "2.7.0",
+    "@parcel/reporter-dev-server": "2.7.0",
+    "@parcel/runtime-react-refresh": "2.7.0",
+    "@parcel/transformer-sass": "2.7.0",
+    "@parcel/transformer-typescript-types": "2.7.0",
+    "@parcel/validator-typescript": "2.7.0",
+    "@scrowl/config": "^0.0.1",
+    "eslint": "^8.25.0",
+    "parcel": "2.7.0",
+    "postcss": "^8.4.17",
+    "postcss-import": "^14.1.0",
+    "postcss-modules": "^4.3.1",
+    "prettier": "^2.7.1",
+    "process": "^0.11.10",
+    "rimraf": "^3.0.2",
+    "stylelint": "^14.13.0",
+    "typescript": "^4.7.0"
+  }
+}
