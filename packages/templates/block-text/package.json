@@ -22,17 +22,21 @@
     "prebuild": "yarn run clean && rimraf dist",
     "build": "parcel build --target prod --no-cache"
   },
-  "prod": "./dist/scrowl.player.js",
+  "main": "./src/index.ts",
+  "prod": "./dist/scrowl.template-block-text.js",
+  "alias": {
+    "react": {
+      "global": "React"
+    },
+    "@scrowl/template-core": {
+      "global": "TemplateCore"
+    }
+  },
   "targets": {
     "prod": {
-      "source": "./src/index.ts",
+      "source": "./src/prod.ts",
       "outputFormat": "global",
-      "publicUrl": "./",
-      "includeNodeModules": {
-        "@owlui/lib": false,
-        "@scrowl/template-core": false,
-        "react": false
-      }
+      "optimize": false
     },
     "dev": {
       "source": "./src/dev/index.html",
@@ -44,7 +48,10 @@
       "require": "./dist/scrowl.template-block-text.js",
       "default": "./dist/scrowl.template-block-text.js",
       "import": "./src/index.ts"
-    }
+    },
+    "./src": "./src/index.ts",
+    "./template": "./dist/scrowl.template-block-text.js",
+    "./meta": "./src/meta.json"
   },
   "eslintConfig": {
     "extends": "@scrowl/config"
