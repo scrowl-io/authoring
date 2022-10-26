@@ -3,6 +3,7 @@ import {
   RegisterEndpoint,
   RegisterEndpoints,
 } from './requester.types';
+import { useTemplateMiddleware } from './';
 
 const ENDPOINTS: Array<RegisterEndpoint> = [];
 
@@ -56,6 +57,7 @@ export const init = () => {
       };
     },
   });
+  useTemplateMiddleware();
 };
 
 export default {

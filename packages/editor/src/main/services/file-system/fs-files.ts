@@ -8,6 +8,23 @@ export const pathSaveFolder = app.getPath('userData');
 export const pathTempFolder = path.join(app.getPath('temp'), 'scrowl');
 export const pathDownloadsFolder = app.getPath('downloads');
 
+const createResultError = (message: string, error?: unknown): FSResult => {
+  if (error === undefined) {
+    return {
+      error: true,
+      message,
+    };
+  } else {
+    return {
+      error: true,
+      message,
+      data: {
+        trace: error,
+      },
+    };
+  }
+};
+
 export const normalizePath = (pathname: string) => {
   return path.normalize(pathname);
 };
@@ -66,6 +83,30 @@ export const fileExistsSync = (pathname: string): FSResult => {
   }
 };
 
+export const fileExists = (pathname: string) => {
+  return new Promise<FSResult>(resolve => {
+    try {
+      fs.pathExists(pathname)
+        .then(exists => {
+          resolve({
+            error: false,
+            data: {
+              exists,
+              pathname,
+            },
+          });
+        })
+        .catch(e => {
+          resolve(
+            createResultError(`Unable to check existence: ${pathname}`, e)
+          );
+        });
+    } catch (e) {
+      resolve(createResultError(`Failed to check existence: ${pathname}`, e));
+    }
+  });
+};
+
 export const fileReadSync = (
   pathname: string,
   media: BufferEncoding = 'utf8'
@@ -115,6 +156,51 @@ export const fileReadSync = (
   }
 };
 
+export const fileRead = (pathname: string) => {
+  return new Promise<FSResult>(resolve => {
+    if (!pathname) {
+      resolve(createResultError('Unable to read file: path required'));
+      return;
+    }
+
+    const existsRes = fileExistsSync(pathname);
+
+    if (existsRes.error) {
+      resolve(existsRes);
+      return;
+    }
+
+    if (!existsRes.data.exists) {
+      resolve(
+        createResultError(
+          `Unable to read file: file does not exist ${pathname}`
+        )
+      );
+      return;
+    }
+
+    try {
+      fs.readFile(pathname, { encoding: 'utf-8', flag: 'r' }).then(file => {
+        resolve({
+          error: false,
+          data: {
+            pathname,
+            contents: isJSON(pathname) ? JSON.parse(file) : file,
+          },
+        });
+      });
+    } catch (e) {
+      resolve({
+        error: true,
+        message: `Unable to read from: ${pathname}`,
+        data: {
+          trace: e,
+        },
+      });
+    }
+  });
+};
+
 export const fileWriteSync = (
   pathname: string,
   contents: unknown
@@ -157,6 +243,44 @@ export const fileWriteSync = (
   }
 };
 
+export const fileWrite = (pathname: string, contents: unknown) => {
+  return new Promise<FSResult>((resolve, reject) => {
+    if (!pathname) {
+      resolve(createResultError('Unable to write file: path required'));
+      return;
+    }
+
+    if (!contents) {
+      resolve(createResultError('Unable to write file: contents required'));
+      return;
+    }
+
+    try {
+      let fileData = contents;
+
+      if (isJSON(pathname)) {
+        if (typeof contents !== 'string') {
+          fileData = JSON.stringify(contents, null, 2);
+        } else {
+          fileData = JSON.stringify(JSON.parse(contents), null, 2);
+        }
+      }
+
+      fs.outputFile(pathname, fileData).then(() => {
+        resolve({
+          error: false,
+          data: {
+            pathname,
+            contents: fileData,
+          },
+        });
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
 export default {
   normalizePath,
   isJSON,
@@ -166,6 +290,9 @@ export default {
   getBasename,
   getAssetPath,
   fileExistsSync,
+  fileExists,
   fileReadSync,
-  fileWriteSync
+  fileRead,
+  fileWriteSync,
+  fileWrite
 };
