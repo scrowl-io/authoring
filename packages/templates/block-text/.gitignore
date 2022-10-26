@@ -1,0 +1,26 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Dependency directories
+node_modules/
+
+# caches
+.npm
+*.tsbuildinfo
+.parcel-cache
+
+# Output of 'npm pack'
+*.tgz
+
+# dotenv environment variables file
+.env
+.env.test
+
+# build
+dist/
+
+# dev
+dev/
+!src/dev/

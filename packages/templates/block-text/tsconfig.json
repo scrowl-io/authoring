@@ -1,0 +1,8 @@
+{
+  "extends": "@scrowl/config/tsconfig",
+  "compilerOptions": {
+    "types": ["@scrowl/config/src/typings"]
+  },
+  "include": ["./src/**/*.ts", "./src/**/*.tsx", "./types/*.d.ts"],
+  "exclude": ["./scripts/**/*.js"]
+}

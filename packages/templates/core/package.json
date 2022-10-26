@@ -1,6 +1,6 @@
 {
-  "name": "@scrowl/player",
-  "version": "0.0.1",
+  "name": "@scrowl/template-core",
+  "version": "1.0.0",
   "description": "",
   "license": "MIT",
   "keywords": [],
@@ -10,28 +10,33 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/scrowl-io/authoring.git",
-    "directory": "packages/player"
+    "directory": "packages/template/core"
   },
   "bugs": {
     "url": "https://github.com/scrowl-io/scrowl/issues"
   },
-  "homepage": "https://github.com/scrowl-io/authoring/packages/player#readme",
+  "homepage": "https://github.com/scrowl-io/authoring/packages/template/core#readme",
   "scripts": {
     "clean": "rimraf ../.parcel-cache",
-    "prebuild": "yarn run clean && rimraf dist && rimraf lib",
-    "build": "parcel build --no-cache && tsc",
-    "postbuild": "node ./scripts/post-build.mjs"
+    "prebuild": "yarn run clean && rimraf dist",
+    "build": "parcel build --target prod --no-cache && tsc"
   },
-  "source": "./src/components/index.ts",
-  "main": "./dist/scrowl.player.js",
-  "module": "./lib/scrowl.player.js",
+  "main": "./src/index.ts",
+  "prod": "./dist/scrowl.template-core.js",
+  "targets": {
+    "prod": {
+      "source": "./src/index.ts",
+      "outputFormat": "esmodule",
+      "isLibrary": true
+    }
+  },
   "exports": {
     ".": {
-      "require": "./dist/scrowl.player.js",
-      "default": "./dist/scrowl.player.js",
-      "import": "./src/components/index.ts"
+      "require": "./dist/scrowl.template-core.js",
+      "default": "./dist/scrowl.template-core.js",
+      "import": "./src/index.ts"
     },
-    "./lib": "./lib/scrowl.player.js"
+    "./src": "./src/index.ts"
   },
   "eslintConfig": {
     "extends": "@scrowl/config"
@@ -44,7 +49,7 @@
     "LICENSE",
     "README.md",
     "dist/",
-    "lib/",
+    "src/",
     "package.json"
   ],
   "devDependencies": {
@@ -58,6 +63,7 @@
     "@scrowl/config": "^0.0.1",
     "@types/react": "^18.0.21",
     "@types/react-dom": "^18.0.6",
+    "@types/scrollmagic": "^2.0.2",
     "eslint": "^8.25.0",
     "parcel": "2.7.0",
     "postcss": "^8.4.17",
@@ -70,11 +76,14 @@
     "typescript": "^4.7.0"
   },
   "dependencies": {
+    "@fec/remark-a11y-emoji": "^3.1.0",
     "@owlui/lib": "^0.0.44",
+    "animejs": "^3.2.1",
     "bootstrap": "^5.2.2",
     "react": "^18.2.0",
     "react-bootstrap": "^2.5.0",
-    "react-dom": "^18.2.0",
-    "react-router-dom": "^6.4.2"
+    "react-markdown": "^8.0.3",
+    "remark-gfm": "^3.0.1",
+    "scrollmagic": "^2.0.8"
   }
 }

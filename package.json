@@ -12,7 +12,8 @@
   },
   "workspaces": [
     "config",
-    "packages/*"
+    "packages/*",
+    "packages/templates/*"
   ],
   "devDependencies": {
     "lerna": "^5.5.4"

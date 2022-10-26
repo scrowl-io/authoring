@@ -1,6 +1,6 @@
 {
-  "name": "@scrowl/player",
-  "version": "0.0.1",
+  "name": "@scrowl/template-block-text",
+  "version": "1.0.0",
   "description": "",
   "license": "MIT",
   "keywords": [],
@@ -10,28 +10,41 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/scrowl-io/authoring.git",
-    "directory": "packages/player"
+    "directory": "packages/template/block-text"
   },
   "bugs": {
     "url": "https://github.com/scrowl-io/scrowl/issues"
   },
-  "homepage": "https://github.com/scrowl-io/authoring/packages/player#readme",
+  "homepage": "https://github.com/scrowl-io/authoring/packages/template/block-text#readme",
   "scripts": {
     "clean": "rimraf ../.parcel-cache",
-    "prebuild": "yarn run clean && rimraf dist && rimraf lib",
-    "build": "parcel build --no-cache && tsc",
-    "postbuild": "node ./scripts/post-build.mjs"
+    "start": "parcel serve --target dev --dist-dir ./dev --no-cache --open",
+    "prebuild": "yarn run clean && rimraf dist",
+    "build": "parcel build --target prod --no-cache"
   },
-  "source": "./src/components/index.ts",
-  "main": "./dist/scrowl.player.js",
-  "module": "./lib/scrowl.player.js",
+  "prod": "./dist/scrowl.player.js",
+  "targets": {
+    "prod": {
+      "source": "./src/index.ts",
+      "outputFormat": "global",
+      "publicUrl": "./",
+      "includeNodeModules": {
+        "@owlui/lib": false,
+        "@scrowl/template-core": false,
+        "react": false
+      }
+    },
+    "dev": {
+      "source": "./src/dev/index.html",
+      "distDir": "./dev"
+    }
+  },
   "exports": {
     ".": {
-      "require": "./dist/scrowl.player.js",
-      "default": "./dist/scrowl.player.js",
-      "import": "./src/components/index.ts"
-    },
-    "./lib": "./lib/scrowl.player.js"
+      "require": "./dist/scrowl.template-block-text.js",
+      "default": "./dist/scrowl.template-block-text.js",
+      "import": "./src/index.ts"
+    }
   },
   "eslintConfig": {
     "extends": "@scrowl/config"
@@ -44,7 +57,7 @@
     "LICENSE",
     "README.md",
     "dist/",
-    "lib/",
+    "src/",
     "package.json"
   ],
   "devDependencies": {
@@ -71,10 +84,7 @@
   },
   "dependencies": {
     "@owlui/lib": "^0.0.44",
-    "bootstrap": "^5.2.2",
-    "react": "^18.2.0",
-    "react-bootstrap": "^2.5.0",
-    "react-dom": "^18.2.0",
-    "react-router-dom": "^6.4.2"
+    "@scrowl/template-core": "^1.0.0",
+    "react": "^18.2.0"
   }
 }
