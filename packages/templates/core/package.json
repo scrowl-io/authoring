@@ -33,7 +33,8 @@
       "import": "./lib/scrowl.template-core.module.js"
     },
     "./src": "./src/index.ts",
-    "./web": "./dist/scrowl.template-core.js"
+    "./web": "./dist/scrowl.template-core.js",
+    "./build-config": "./webpack.config.js"
   },
   "eslintConfig": {
     "extends": "@scrowl/config"
@@ -65,6 +66,7 @@
     "css-loader": "^6.7.1",
     "eslint": "^8.25.0",
     "file-loader": "^6.2.0",
+    "mini-css-extract-plugin": "^2.6.1",
     "parcel": "2.7.0",
     "postcss": "^8.4.17",
     "postcss-import": "^14.1.0",
@@ -75,7 +77,6 @@
     "rimraf": "^3.0.2",
     "sass": "^1.55.0",
     "sass-loader": "^13.1.0",
-    "style-loader": "^3.3.1",
     "stylelint": "^14.13.0",
     "terser-webpack-plugin": "^5.3.6",
     "ts-loader": "^9.4.1",
@@ -85,11 +86,8 @@
   },
   "dependencies": {
     "@fec/remark-a11y-emoji": "^3.1.0",
-    "@owlui/lib": "^0.0.44",
     "animejs": "^3.2.1",
-    "bootstrap": "^5.2.2",
     "react": "^18.2.0",
-    "react-bootstrap": "^2.5.0",
     "react-markdown": "^8.0.3",
     "remark-gfm": "^3.0.1",
     "scrollmagic": "^2.0.8"
