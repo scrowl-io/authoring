@@ -1,7 +1,4 @@
-import * as core from '../src';
+import Scrowl from '../src';
 
-window.Scrowl = {
-  core,
-};
-
+window.Scrowl = Scrowl;
 console.log('hello world', window);

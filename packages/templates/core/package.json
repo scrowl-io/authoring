@@ -34,7 +34,7 @@
     },
     "./src": "./src/index.ts",
     "./web": "./dist/scrowl.template-core.js",
-    "./build-config": "./webpack.config.js"
+    "./webpack.config": "./webpack.common.js"
   },
   "eslintConfig": {
     "extends": "@scrowl/config"

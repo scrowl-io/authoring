@@ -1,7 +1,7 @@
 import '@owlui/lib/dist/owl.lib.css';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import { scroll } from '@scrowl/template-core';
+import Scrowl from '@scrowl/template-core';
 import * as css from './_index.scss';
 import { BlockText, BlockTextSchema, BlockTextLayout } from '../src';
 
@@ -11,7 +11,7 @@ const container = document.getElementById('app') as HTMLElement;
 const root = createRoot(container);
 const App = () => {
   const layout = BlockTextSchema as BlockTextLayout;
-  const controller = new scroll.Controller();
+  const controller = new Scrowl.core.scroll.Controller();
   layout.options.fields.showProgress.value = true;
   return (
     <BlockText

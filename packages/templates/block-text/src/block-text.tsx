@@ -1,5 +1,5 @@
 import React from 'react';
-import * as core from '@scrowl/template-core';
+import Scrowl from '@scrowl/template-core';
 import * as css from './_index.scss';
 import { BlockTextProps } from './block-text.types';
 
@@ -48,7 +48,7 @@ export const BlockText = ({ layout, ...props }: BlockTextProps) => {
     }
 
     scrollScenes.current.push(
-      new core.scroll.Scene({
+      new Scrowl.core.scroll.Scene({
         triggerElement: '#' + getId(),
         duration: slideDuration,
         offset: 0,
@@ -59,7 +59,7 @@ export const BlockText = ({ layout, ...props }: BlockTextProps) => {
         .enabled(false)
     );
 
-    timeline.current = core.anime.timeline({
+    timeline.current = Scrowl.core.anime.timeline({
       easing: 'easeInOutQuad',
       autoplay: false,
     });
@@ -91,7 +91,7 @@ export const BlockText = ({ layout, ...props }: BlockTextProps) => {
   }, [showProgressBar]);
 
   return (
-    <core.Template
+    <Scrowl.core.Template
       {...props}
       className={classes}
       duration={slideDuration}
@@ -133,7 +133,7 @@ export const BlockText = ({ layout, ...props }: BlockTextProps) => {
                   }
                 }}
               >
-                <core.Markdown children={layoutText} />
+                <Scrowl.core.Markdown children={layoutText} />
               </p>
             </div>
           </div>
@@ -165,7 +165,7 @@ export const BlockText = ({ layout, ...props }: BlockTextProps) => {
           )}
         </div>
       </div>
-    </core.Template>
+    </Scrowl.core.Template>
   );
 };
 

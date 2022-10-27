@@ -23,9 +23,10 @@
   "homepage": "https://github.com/scrowl-io/authoring/packages/template/block-text#readme",
   "scripts": {
     "clean": "rimraf ../../../.parcel-cache",
+    "prestart": "yarn run clean && rimraf dev/dist",
     "start": "cd dev && parcel serve --no-cache --open",
     "prebuild": "yarn run clean && rimraf dist",
-    "build": "cd web && parcel build --target web --no-cache"
+    "build": "webpack --config webpack.config.js"
   },
   "exports": {
     ".": {
@@ -34,7 +35,7 @@
       "import": "./src/index.ts"
     },
     "./src": "./src/index.ts",
-    "./template": "./dist/scrowl.template-block-text.js"
+    "./web": "./dist/scrowl.template-block-text.js"
   },
   "eslintConfig": {
     "extends": "@scrowl/config"
@@ -70,7 +71,8 @@
     "process": "^0.11.10",
     "rimraf": "^3.0.2",
     "stylelint": "^14.13.0",
-    "typescript": "4.7.4"
+    "typescript": "4.7.4",
+    "webpack-merge": "^5.8.0"
   },
   "dependencies": {
     "@owlui/lib": "^0.0.44",
