@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import ScrollMagic from 'scrollmagic';
-import { TemplateProps } from './core.types';
-import * as css from './_index.scss';
+import * as css from './_template.scss';
+import { TemplateProps } from './template.types';
 
 export const Template = ({
   id,
@@ -17,6 +17,9 @@ export const Template = ({
   ...props
 }: TemplateProps) => {
   let classes = css.slideContainer;
+  const [slideDuration, setSlideDiration] = useState(
+    duration + window.innerHeight * 2
+  );
   const styles = {
     height: `calc(100vh + ${duration}px)`,
   };
@@ -35,18 +38,14 @@ export const Template = ({
 
   useEffect(() => {
     const windowHeight = window.innerHeight;
-    const slideDuration = duration + windowHeight * 2;
-    let slideVisible: boolean = false;
     let lastStageName = '';
-
+    let slideVisible = false;
     const setSlideVisible = (visible: boolean) => {
       if (visible === slideVisible) {
         return;
       }
-
       slideVisible = visible;
     };
-
     const sceneTrigger = new ScrollMagic.Scene({
       triggerElement: '#' + id,
       duration: slideDuration,
@@ -54,7 +53,6 @@ export const Template = ({
     })
       .on('progress', function (e: any) {
         const progressPixels = e.progress * slideDuration;
-
         let stageName = '';
         let stageProgress = 0;
         if (progressPixels <= windowHeight) {
@@ -64,10 +62,8 @@ export const Template = ({
               stage: 'body',
               stageProgress: 0,
             };
-
             onScroll(progressEvent);
           }
-
           stageName = 'in_view';
           stageProgress = progressPixels / windowHeight;
         } else if (progressPixels >= slideDuration - windowHeight) {
@@ -77,10 +73,8 @@ export const Template = ({
               stage: 'body',
               stageProgress: 1,
             };
-
             onScroll(progressEvent);
           }
-
           stageName = 'out_view';
           stageProgress =
             (progressPixels - (slideDuration - windowHeight)) / windowHeight;
@@ -91,7 +85,6 @@ export const Template = ({
               stage: 'body',
               stageProgress: 0,
             };
-
             if (lastStageName === 'in_view') {
               onScroll(progressEvent);
             } else if (lastStageName === 'out_view') {
@@ -99,13 +92,10 @@ export const Template = ({
               onScroll(progressEvent);
             }
           }
-
           stageProgress = (progressPixels - windowHeight) / slideDuration;
           stageName = 'body';
         }
-
         lastStageName = stageName;
-
         if (onScroll) {
           const progressEvent = {
             progress: e.progress,
@@ -119,13 +109,10 @@ export const Template = ({
         if (!controller || !onStateChange) {
           return;
         }
-
         let scrollDirection = controller.info('scrollDirection');
-
         if (typeof scrollDirection === 'string') {
           scrollDirection = scrollDirection.toLowerCase();
         }
-
         if (e.type === 'enter') {
           setSlideVisible(true);
           onStateChange({
@@ -141,11 +128,16 @@ export const Template = ({
         }
       })
       .addTo(controller);
-
     return () => {
       controller.removeScene(sceneTrigger);
     };
-  }, [props, duration, id]);
+  }, [duration, slideDuration, id]);
+
+  const handleResize = () => {
+    setSlideDiration(duration + window.innerHeight * 2);
+  };
+
+  window.addEventListener('resize', handleResize);
 
   return (
     <div id={id} className={classes} style={styles} {...props}>

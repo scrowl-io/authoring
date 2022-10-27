@@ -22,31 +22,10 @@
   },
   "homepage": "https://github.com/scrowl-io/authoring/packages/template/block-text#readme",
   "scripts": {
-    "clean": "rimraf ../.parcel-cache",
-    "start": "parcel serve --target dev --dist-dir ./dev --no-cache --open",
+    "clean": "rimraf ../../../.parcel-cache",
+    "start": "cd dev && parcel serve --no-cache --open",
     "prebuild": "yarn run clean && rimraf dist",
-    "build": "parcel build --target prod --no-cache"
-  },
-  "main": "./src/index.ts",
-  "prod": "./dist/scrowl.template-block-text.js",
-  "alias": {
-    "react": {
-      "global": "React"
-    },
-    "@scrowl/template-core": {
-      "global": "TemplateCore"
-    }
-  },
-  "targets": {
-    "prod": {
-      "source": "./src/prod.ts",
-      "outputFormat": "global",
-      "optimize": false
-    },
-    "dev": {
-      "source": "./src/dev/index.html",
-      "distDir": "./dev"
-    }
+    "build": "cd web && parcel build --target web --no-cache"
   },
   "exports": {
     ".": {
@@ -55,8 +34,7 @@
       "import": "./src/index.ts"
     },
     "./src": "./src/index.ts",
-    "./template": "./dist/scrowl.template-block-text.js",
-    "./meta.json": "./src/meta.json"
+    "./template": "./dist/scrowl.template-block-text.js"
   },
   "eslintConfig": {
     "extends": "@scrowl/config"
@@ -92,7 +70,7 @@
     "process": "^0.11.10",
     "rimraf": "^3.0.2",
     "stylelint": "^14.13.0",
-    "typescript": "^4.7.0"
+    "typescript": "4.7.4"
   },
   "dependencies": {
     "@owlui/lib": "^0.0.44",

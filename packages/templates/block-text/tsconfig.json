@@ -3,6 +3,14 @@
   "compilerOptions": {
     "types": ["@scrowl/config/src/typings"]
   },
-  "include": ["./src/**/*.ts", "./src/**/*.tsx", "./types/*.d.ts"],
+  "include": [
+    "./src/**/*.ts",
+    "./src/**/*.tsx",
+    "./web/**/*.ts",
+    "./web/**/*.tsx",
+    "./dev/**/*.ts",
+    "./dev/**/*.tsx",
+    "./types/*.d.ts"
+  ],
   "exclude": ["./scripts/**/*.js"]
 }

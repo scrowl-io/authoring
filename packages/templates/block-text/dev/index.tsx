@@ -3,7 +3,7 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { scroll } from '@scrowl/template-core';
 import * as css from './_index.scss';
-import { BlockText, BlockTextSchema, BlockTextLayout } from '../index';
+import { BlockText, BlockTextSchema, BlockTextLayout } from '../src';
 
 document.body.className = `${css.body} owlui-theme--default`;
 

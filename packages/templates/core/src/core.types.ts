@@ -1,6 +1,3 @@
-import React from 'react';
-import { Controller, ProgressEvent, ScrollDirection } from 'scrollmagic';
-
 export enum LAYOUT_INPUT_TYPE {
   Fieldset,
   Asset,
@@ -97,38 +94,3 @@ export interface InputFieldsetProps extends BaseInputProps {
       | InputTextboxProps
     };
 }
-
-export type TemplateContent = {
-  [key: string]:
-  | InputAssetProps
-  | InputCheckboxProps
-  | InputNumberSpinnerProps
-  | InputSelectProps
-  | InputTextboxProps
-  | InputFieldsetProps;
-};
-
-export type TemplateOnScrollEvent = {
-  progress: ProgressEvent;
-  stage: string;
-  stageProgrogress: number;
-};
-
-export type TemplateOnStateChangeEvent = {
-  state: 'visible' | 'hidden';
-  direction: ScrollDirection;
-};
-
-export interface TemplateCommons {
-  templateKey: string;
-  duration: number;
-  editMode?: boolean;
-  ready?: boolean;
-  focusElement?: any;
-  validationErrors?: any;
-  controller: Controller;
-  onScroll?: (TemplateOnScrollEvent) => void;
-  onStateChange?: (TemplateOnStateChangeEvent) => void;
-};
-
-export type TemplateProps = TemplateCommons & React.AllHTMLAttributes<HTMLDivElement>;

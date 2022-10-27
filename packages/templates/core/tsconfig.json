@@ -4,10 +4,14 @@
     "types": ["@scrowl/config/src/typings"],
     "outDir": "dist",
     "declaration": true,
-    "noEmit": false,
-    "emitDeclarationOnly": true,
-    "declarationMap": true
+    "noEmit": false
   },
-  "include": ["./src/*.ts", "./src/*.tsx", "./types/*.d.ts"],
+  "include": [
+    "./src/**/*.ts",
+    "./src/**/*.tsx",
+    "./types/*.d.ts",
+    "./web/**/*.ts",
+    "./web/**/*.tsx"
+  ],
   "exclude": ["./scripts/**/*.js"]
 }

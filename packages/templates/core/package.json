@@ -17,32 +17,23 @@
   },
   "homepage": "https://github.com/scrowl-io/authoring/packages/template/core#readme",
   "scripts": {
-    "clean": "rimraf ../.parcel-cache",
-    "prebuild": "yarn run clean && rimraf dist",
-    "build": "parcel build --target prod --no-cache"
+    "clean": "rimraf ../../../.parcel-cache",
+    "prebuild": "yarn run clean && rimraf dist && rimraf lib",
+    "build": "parcel build --no-cache",
+    "postbuild": "webpack --config webpack.config.js"
   },
-  "main": "./src/index.ts",
-  "prod": "./dist/scrowl.template-core.js",
-  "alias": {
-    "react": {
-      "global": "React"
-    }
-  },
-  "targets": {
-    "prod": {
-      "source": "./src/prod.ts",
-      "outputFormat": "global",
-      "optimize": true
-    }
-  },
+  "source": "./src/index.ts",
+  "main": "./lib/scrowl.template-core.js",
+  "module": "./lib/scrowl.template-core.module.js",
+  "types": "./lib/scrowl.template-core.d.ts",
   "exports": {
     ".": {
-      "require": "./dist/scrowl.template-core.js",
-      "default": "./dist/scrowl.template-core.js",
-      "import": "./src/index.ts"
+      "require": "./lib/scrowl.template-core.js",
+      "default": "./lib/scrowl.template-core.js",
+      "import": "./lib/scrowl.template-core.module.js"
     },
     "./src": "./src/index.ts",
-    "./template": "./dist/scrowl.template-core.js"
+    "./web": "./dist/scrowl.template-core.js"
   },
   "eslintConfig": {
     "extends": "@scrowl/config"
@@ -71,16 +62,26 @@
     "@types/react": "^18.0.21",
     "@types/react-dom": "^18.0.6",
     "@types/scrollmagic": "^2.0.2",
+    "css-loader": "^6.7.1",
     "eslint": "^8.25.0",
+    "file-loader": "^6.2.0",
     "parcel": "2.7.0",
     "postcss": "^8.4.17",
     "postcss-import": "^14.1.0",
+    "postcss-loader": "^7.0.1",
     "postcss-modules": "^4.3.1",
     "prettier": "^2.7.1",
     "process": "^0.11.10",
     "rimraf": "^3.0.2",
+    "sass": "^1.55.0",
+    "sass-loader": "^13.1.0",
+    "style-loader": "^3.3.1",
     "stylelint": "^14.13.0",
-    "typescript": "^4.7.0"
+    "terser-webpack-plugin": "^5.3.6",
+    "ts-loader": "^9.4.1",
+    "typescript": "4.7.4",
+    "webpack": "^5.74.0",
+    "webpack-cli": "^4.10.0"
   },
   "dependencies": {
     "@fec/remark-a11y-emoji": "^3.1.0",

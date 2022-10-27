@@ -20,7 +20,3 @@ node_modules/
 
 # build
 dist/
-
-# dev
-dev/
-!src/dev/

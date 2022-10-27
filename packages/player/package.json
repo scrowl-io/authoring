@@ -67,7 +67,7 @@
     "process": "^0.11.10",
     "rimraf": "^3.0.2",
     "stylelint": "^14.13.0",
-    "typescript": "^4.7.0"
+    "typescript": "4.7.4"
   },
   "dependencies": {
     "@owlui/lib": "^0.0.44",
