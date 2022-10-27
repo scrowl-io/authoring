@@ -13,7 +13,6 @@ const styleLoader = {
 const cssLoader = {
   loader: 'css-loader',
   options: {
-    sourceMap: true,
     importLoaders: 1,
     modules: {
       namedExport: true,

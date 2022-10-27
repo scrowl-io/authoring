@@ -21,6 +21,7 @@ node_modules/
 # build
 dist/
 lib/
+*.scss.json
 
 #dev
 # dev

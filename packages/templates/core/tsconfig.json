@@ -3,8 +3,9 @@
   "compilerOptions": {
     "types": ["@scrowl/config/src/typings"],
     "outDir": "dist",
-    "declaration": true,
-    "noEmit": false
+    "noEmit": false,
+    "declaration": false,
+    "declarationMap": false
   },
   "include": [
     "./src/**/*.ts",
