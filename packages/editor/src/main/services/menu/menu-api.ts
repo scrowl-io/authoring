@@ -74,11 +74,58 @@ export const contextMenu = (ev: rq.RequestEvent, items: Array<ContextMenuItem>, 
   });
 };
 
+export const toggleMenu = (ev: IpcMainInvokeEvent, id?: string) => {
+  return new Promise<rq.ApiResult>(resolve => {
+    if (!id) {
+      resolve({
+        error: true,
+        message: 'Unable to toggle menu - menu id required',
+      });
+      return;
+    }
+
+    const appMenu = Menu.getApplicationMenu();
+
+    if (!appMenu) {
+      resolve({
+        error: true,
+        message: `Unable to toggle menu: ${id} - menu not initialized`,
+      });
+      return;
+    }
+
+    const menuItem = appMenu.getMenuItemById(id);
+
+    if (!menuItem) {
+      resolve({
+        error: true,
+        message: `Unable to toggle menu: ${id} - menu not found`,
+      });
+      return;
+    }
+
+    menuItem.enabled = !menuItem.enabled;
+
+    resolve({
+      error: false,
+      data: {
+        id,
+        enabled: menuItem.enabled,
+      },
+    });
+  });
+};
+
 export const API: MenuApi = {
   contextMenu: {
     name: '/context-menu',
     type: 'invoke',
     fn: contextMenu,
+  },
+  toggleMenu: {
+    name: '/toggle-menu',
+    type: 'invoke',
+    fn: toggleMenu,
   },
 };
 

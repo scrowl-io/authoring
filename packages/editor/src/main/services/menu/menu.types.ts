@@ -6,12 +6,18 @@ export interface MenuApiContextMenu
   name: '/context-menu';
 }
 
+export interface MenuApiToggleMenu extends Omit<rq.RegisterEndpoint, 'name'> {
+  name: '/toggle-menu';
+}
+
 export type MenuApi = Partial<{
   contextMenu: MenuApiContextMenu;
+  toggleMenu: MenuApiToggleMenu;
 }>;
 
 export type MenuEndpoints = {
   contextMenu: MenuApiContextMenu['name'];
+  toggleMenu: MenuApiToggleMenu['name'];
 };
 
 export type ContextMenuItem = MenuItemConstructorOptions;
