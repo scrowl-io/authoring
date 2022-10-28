@@ -1,3 +1,4 @@
+export * from './menu-items-edit';
 export * from './menu-items-file';
 export * from './menu-items-help';
 export * from './menu-items-outline';

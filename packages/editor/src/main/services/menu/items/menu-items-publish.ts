@@ -5,11 +5,11 @@ export const publishMenuItems = (isMac: boolean) => {
   const template: MenuItemConstructorOptions = {
     id: menuId,
     label: "Publish",
-    enabled: false,
     submenu: [
       {
         id: `${menuId}-advanced`,
         label: "Publish Project",
+        enabled: false,
         click: () => {},
       },
       { type: "separator" },
@@ -17,6 +17,7 @@ export const publishMenuItems = (isMac: boolean) => {
         id: `${menuId}-quick`,
         label: "Quick Publish",
         accelerator: "CmdorCtrl+Alt+P",
+        enabled: false,
         click: () => {},
       },
     ],

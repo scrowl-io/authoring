@@ -45,9 +45,9 @@ export const contextMenu = (items: Array<ContextMenuItem>, position?: ContextMen
   });
 };
 
-export const toggleMenu = (id: string) => {
+export const toggleMenu = (id: Array<string> | string, isEnabled?: boolean) => {
   return new Promise<rq.ApiResult>((resolve) => {
-    rq.invoke(ENDPOINTS.toggleMenu, id).then((result) => {
+    rq.invoke(ENDPOINTS.toggleMenu, id, isEnabled).then((result) => {
       resolve(result);
     }).
     catch((e) => {
@@ -63,7 +63,41 @@ export const toggleMenu = (id: string) => {
   });
 };
 
+const projectMenuIds = [
+  'file-menu-save',
+  'file-menu-close',
+  'edit-menu-undo',
+  'edit-menu-redo',
+  'edit-menu-cut',
+  'edit-menu-copy',
+  'edit-menu-paste',
+  'edit-menu-delete',
+  'edit-menu-select-all',
+  'outline-menu-add-slide',
+  'outline-menu-add-lesson',
+  'outline-menu-add-module',
+  'outline-menu-dup-slide',
+  'outline-menu-rename-slide',
+  'outline-menu-delete-slide',
+  'preview-menu-slide',
+  'preview-menu-lesson',
+  'preview-menu-module',
+  'preview-menu-project',
+  'publish-menu-advanced',
+  'publish-menu-quick',
+];
+
+export const disableProjectActions = () => {
+  return toggleMenu(projectMenuIds, false);
+};
+
+export const enableProjectActions = () => {
+  return toggleMenu(projectMenuIds, true);
+};
+
 export default {
   contextMenu,
   toggleMenu,
+  disableProjectActions,
+  enableProjectActions,
 };

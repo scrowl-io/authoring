@@ -5,7 +5,6 @@ export const previewMenuItems = (isMac: boolean) => {
   const template: MenuItemConstructorOptions = {
     id: menuId,
     label: "Preview",
-    enabled: false,
     accelerator: "CmdorCtrl+A",
     submenu: [
       {
@@ -13,6 +12,7 @@ export const previewMenuItems = (isMac: boolean) => {
         type: "checkbox",
         label: "Current Slide",
         checked: false,
+        enabled: false,
         click: () => {},
       },
       {
@@ -20,6 +20,7 @@ export const previewMenuItems = (isMac: boolean) => {
         type: "checkbox",
         label: "Current Lesson",
         checked: false,
+        enabled: false,
         click: () => {},
       },
       {
@@ -27,6 +28,7 @@ export const previewMenuItems = (isMac: boolean) => {
         type: "checkbox",
         label: "Current Module",
         checked: false,
+        enabled: false,
         click: () => {},
       },
 
@@ -36,6 +38,7 @@ export const previewMenuItems = (isMac: boolean) => {
         type: "checkbox",
         label: "Entire Project",
         checked: false,
+        enabled: false,
         click: () => {},
       },
     ],
