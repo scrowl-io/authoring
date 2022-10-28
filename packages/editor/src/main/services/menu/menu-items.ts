@@ -11,7 +11,10 @@ import {
 export const createMenu = () => {
   const isMac = process.platform === 'darwin';
   const appMenu: MenuItemConstructorOptions = { role: 'appMenu' };
-  const editMenu: MenuItemConstructorOptions = { role: 'editMenu' };
+  const editMenu: MenuItemConstructorOptions = {
+    enabled: false,
+    role: 'editMenu'
+  };
   const template = [
     appMenu,
     fileMenuItems(isMac),

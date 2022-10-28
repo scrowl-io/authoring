@@ -129,12 +129,12 @@ export const API: MenuApi = {
   },
 };
 
-export const init = () => {
+export const register = () => {
   rq.registerEndpointAll(API);
 };
 
 export default {
   contextMenu,
   API,
-  init,
+  register,
 };

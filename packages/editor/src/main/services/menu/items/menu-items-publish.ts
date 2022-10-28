@@ -16,8 +16,7 @@ export const publishMenuItems = (isMac: boolean) => {
       {
         id: `${menuId}-quick`,
         label: "Quick Publish",
-        enabled: false,
-        accelerator: "CmdorAlt+P",
+        accelerator: "CmdorCtrl+Alt+P",
         click: () => {},
       },
     ],
