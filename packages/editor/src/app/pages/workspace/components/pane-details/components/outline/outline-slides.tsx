@@ -81,7 +81,20 @@ export const OutlineSlideItem = ({
     if (isActive) {
       setSlideName(activeSlide.name);
     }
-  });
+
+    const selectCurrentSlide = () => {
+      setTimeout(() => {
+        setActiveSlide({
+          slide,
+          slideIdx,
+        });
+      }, 250);
+    };
+
+    if (activeSlide.slideIdx === -1 && slideIdx === 0) {
+      selectCurrentSlide();
+    }
+  }, [isActive, activeSlide.slideIdx, slideIdx]);
 
   return (
     <div className={css.outlineSlide} {...props}>
