@@ -26,13 +26,18 @@
     "prestart": "yarn run clean && rimraf dev/dist",
     "start": "cd dev && parcel serve --no-cache --open",
     "prebuild": "yarn run clean && rimraf dist",
-    "build": "webpack --config webpack.config.js"
+    "build": "parcel build --no-cache",
+    "postbuild": "webpack --config webpack.config.js"
   },
+  "source": "./src/index.ts",
+  "main": "./lib/scrowl.template-block-text.js",
+  "module": "./lib/scrowl.template-block-text.module.js",
+  "types": "./lib/scrowl.template-block-text.d.ts",
   "exports": {
     ".": {
-      "require": "./dist/scrowl.template-block-text.js",
-      "default": "./dist/scrowl.template-block-text.js",
-      "import": "./src/index.ts"
+      "require": "./lib/scrowl.template-block-text.js",
+      "default": "./lib/scrowl.template-block-text.js",
+      "import": "./lib/scrowl.template-block-text.module.js"
     },
     "./src": "./src/index.ts",
     "./web": "./dist/scrowl.template-block-text.js"
