@@ -26,8 +26,7 @@ export const Page = () => {
         return;
       }
 
-      menu.API.enableProjectActions().then((result) => {
-        console.log('result', result);
+      menu.API.enableProjectActions().then(() => {
         setProgress(false);
         navigator('/workspace');
       });
