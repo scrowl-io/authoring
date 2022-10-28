@@ -7,6 +7,7 @@ import { rq } from '../../services';
 
 const ENDPOINTS: MenuEndpoints = {
   contextMenu: '/context-menu',
+  toggleMenu: '/toggle-menu',
 };
 
 export const contextMenu = (items: Array<ContextMenuItem>, position?: ContextMenuPosition) => {
@@ -44,6 +45,25 @@ export const contextMenu = (items: Array<ContextMenuItem>, position?: ContextMen
   });
 };
 
+export const toggleMenu = (id: string) => {
+  return new Promise<rq.ApiResult>((resolve) => {
+    rq.invoke(ENDPOINTS.toggleMenu, id).then((result) => {
+      resolve(result);
+    }).
+    catch((e) => {
+      console.error('Toggling Menu Failed', e);
+      resolve({
+        error: true,
+        message: 'Context Menu Failed',
+        data: {
+          trace: e,
+        },
+      });
+    });
+  });
+};
+
 export default {
   contextMenu,
+  toggleMenu,
 };
