@@ -1,4 +1,4 @@
-import { TwoColumn, BlockTextSchema, BlockTextLayout } from '../src';
+import { TwoColumn, TwoColumnSchema, BlockTextLayout } from '../src';
 
 window.TwoColumn = TwoColumn;
-window.BlockTextSchema = BlockTextSchema as BlockTextLayout;
+window.TwoColumnSchema = TwoColumnSchema as BlockTextLayout;

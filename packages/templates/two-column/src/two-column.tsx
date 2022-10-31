@@ -13,6 +13,9 @@ export const TwoColumn = ({ layout, ...props }: BlockTextProps) => {
   //@ts-ignore
   let layoutTextLeft = layout.textLeft.value;
   let layoutTextRight = layout.textRight.value;
+  let headingLeft = layout.headingLeft?.value;
+  let headingRight = layout.headingRight?.value;
+  let numberOfColumns = layout.columnOptions.numberOfColumns;
 
   let useImageAsBG = layout.bgImage.fields.bg.value;
   let alignment = layout.options.fields.alignment.value;
@@ -31,11 +34,11 @@ export const TwoColumn = ({ layout, ...props }: BlockTextProps) => {
     return props.id + '-' + id;
   }
 
-  const handleScrollUpdate = (e: any) => {
-    if (e.stage === 'body') {
-      timeline.current.seek(timeline.current.duration * e.stageProgress);
-    }
-  };
+  // const handleScrollUpdate = (e: any) => {
+  //   if (e.stage === 'body') {
+  //     timeline.current.seek(timeline.current.duration * e.stageProgress);
+  //   }
+  // };
 
   const handleStateChange = (e: any) => {
     if (e.state === 'visible') {
@@ -93,13 +96,112 @@ export const TwoColumn = ({ layout, ...props }: BlockTextProps) => {
     };
   }, [showProgressBar]);
 
+  const twoColumnLayout = () => {
+    return (
+      <div className="column-wrapper">
+        <div className="left">
+          <h2>{headingLeft}</h2>
+          <hr
+            id={getId('bar')}
+            style={{ width: showProgressBar ? '0%' : '100%' }}
+          />
+          <p
+            className={'can-focus ' + (focusElement === 'text' && ' has-focus')}
+            onMouseDown={() => {
+              if (editMode) {
+                // Scrowl.focusOnlayout('text');
+              }
+            }}
+          >
+            <Scrowl.core.Markdown children={layoutTextLeft} />
+          </p>
+        </div>
+        <div className="right">
+          <h2>{headingRight}</h2>
+          <hr
+            id={getId('bar')}
+            style={{ width: showProgressBar ? '0%' : '100%' }}
+          />
+          <p
+            className={'can-focus ' + (focusElement === 'text' && ' has-focus')}
+            onMouseDown={() => {
+              if (editMode) {
+                // Scrowl.focusOnlayout('text');
+              }
+            }}
+          >
+            <Scrowl.core.Markdown children={layoutTextRight} />
+          </p>
+        </div>
+      </div>
+    );
+  };
+
+  const threeColumnLayout = () => {
+    return (
+      <div className="column-wrapper">
+        <div className="left">
+          <h2>{headingLeft}</h2>
+          <hr
+            id={getId('bar')}
+            style={{ width: showProgressBar ? '0%' : '100%' }}
+          />
+          <p
+            className={'can-focus ' + (focusElement === 'text' && ' has-focus')}
+            onMouseDown={() => {
+              if (editMode) {
+                // Scrowl.focusOnlayout('text');
+              }
+            }}
+          >
+            <Scrowl.core.Markdown children={layoutTextLeft} />
+          </p>
+        </div>
+        <div className="middle">
+          <h2>{headingRight}</h2>
+          <hr
+            id={getId('bar')}
+            style={{ width: showProgressBar ? '0%' : '100%' }}
+          />
+          <p
+            className={'can-focus ' + (focusElement === 'text' && ' has-focus')}
+            onMouseDown={() => {
+              if (editMode) {
+                // Scrowl.focusOnlayout('text');
+              }
+            }}
+          >
+            <Scrowl.core.Markdown children={layoutTextRight} />
+          </p>
+        </div>
+        <div className="right">
+          <h2>{headingRight}</h2>
+          <hr
+            id={getId('bar')}
+            style={{ width: showProgressBar ? '0%' : '100%' }}
+          />
+          <p
+            className={'can-focus ' + (focusElement === 'text' && ' has-focus')}
+            onMouseDown={() => {
+              if (editMode) {
+                // Scrowl.focusOnlayout('text');
+              }
+            }}
+          >
+            <Scrowl.core.Markdown children={layoutTextRight} />
+          </p>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <Scrowl.core.Template
       {...props}
       className={classes}
       duration={slideDuration}
       onStateChange={handleStateChange}
-      onScroll={handleScrollUpdate}
+      // onScroll={handleScrollUpdate}
       ready={true}
     >
       <div className="slide-container">
@@ -122,44 +224,7 @@ export const TwoColumn = ({ layout, ...props }: BlockTextProps) => {
 
           <div className={'text ' + (alignment === 'right' ? ' right' : '')}>
             <div className="wrapper">
-              <div className="column-wrapper">
-                <div className="left">
-                  <hr
-                    id={getId('bar')}
-                    style={{ width: showProgressBar ? '0%' : '100%' }}
-                  />
-                  <p
-                    className={
-                      'can-focus ' + (focusElement === 'text' && ' has-focus')
-                    }
-                    onMouseDown={() => {
-                      if (editMode) {
-                        // Scrowl.focusOnlayout('text');
-                      }
-                    }}
-                  >
-                    <Scrowl.core.Markdown children={layoutTextLeft} />
-                  </p>
-                </div>
-                <div className="right">
-                  <hr
-                    id={getId('bar')}
-                    style={{ width: showProgressBar ? '0%' : '100%' }}
-                  />
-                  <p
-                    className={
-                      'can-focus ' + (focusElement === 'text' && ' has-focus')
-                    }
-                    onMouseDown={() => {
-                      if (editMode) {
-                        // Scrowl.focusOnlayout('text');
-                      }
-                    }}
-                  >
-                    <Scrowl.core.Markdown children={layoutTextRight} />
-                  </p>
-                </div>
-              </div>
+              {numberOfColumns === 2 ? twoColumnLayout() : threeColumnLayout()}
             </div>
           </div>
 
@@ -192,7 +257,7 @@ export const TwoColumn = ({ layout, ...props }: BlockTextProps) => {
       </div>
     </Scrowl.core.Template>
   );
-};
+};;;;;;;;;;
 
 export default {
   TwoColumn,

@@ -4,7 +4,7 @@ import {
   MIGRATION_HINT,
 } from '@scrowl/template-core';
 
-export const BlockTextSchema: TemplateContent = {
+export const TwoColumnSchema: TemplateContent = {
   textLeft: {
     type: LAYOUT_INPUT_TYPE.Textbox,
     hint: MIGRATION_HINT.BodyText,
@@ -17,6 +17,26 @@ export const BlockTextSchema: TemplateContent = {
     autoGrow: 10,
     allowLinebreaks: true,
   },
+  headingLeft: {
+    type: LAYOUT_INPUT_TYPE.Textbox,
+    label: 'Left Heading',
+    value: 'Left Heading',
+    placeholder: 'Left Heading',
+    multiline: true,
+    lines: 5,
+    autoGrow: 10,
+    allowLineBreaks: true,
+  },
+  headingRight: {
+    type: LAYOUT_INPUT_TYPE.Textbox,
+    label: 'Right Heading',
+    value: 'Right Heading',
+    placeholder: 'Right Heading',
+    multiline: true,
+    lines: 5,
+    autoGrow: 10,
+    allowLineBreaks: true,
+  },
   textRight: {
     type: LAYOUT_INPUT_TYPE.Textbox,
     hint: MIGRATION_HINT.BodyText,
@@ -28,6 +48,9 @@ export const BlockTextSchema: TemplateContent = {
     lines: 10,
     autoGrow: 10,
     allowLinebreaks: true,
+  },
+  columnOptions: {
+    numberOfColumns: 2,
   },
   bgImage: {
     type: LAYOUT_INPUT_TYPE.Fieldset,
@@ -87,5 +110,5 @@ export const BlockTextSchema: TemplateContent = {
 };
 
 export default {
-  BlockTextSchema,
+  TwoColumnSchema,
 };
