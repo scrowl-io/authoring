@@ -1,24 +1,22 @@
-export enum LAYOUT_INPUT_TYPE {
-  Fieldset,
-  Asset,
-  Checkbox,
-  NumberSpinner,
-  Select,
-  Textbox,
-}
+export type LAYOUT_INPUT_TYPE =
+  | 'Fieldset'
+  | 'Asset'
+  | 'Checkbox'
+  | 'NumberSpinner'
+  | 'Select'
+  | 'Textbox';
 
-export enum MIGRATION_HINT {
-  Header,
-  SubHeader,
-  BodyText,
-  BodyAlignment,
-  BulletPointList,
-  BulletPointCount,
-  BulletPoint,
-  Address,
-  Hero,
-  Time,
-}
+export type MIGRATION_HINT =
+  | 'Header'
+  | 'SubHeader'
+  | 'BodyText'
+  | 'BodyAlignment'
+  | 'BulletPointList'
+  | 'BulletPointCount'
+  | 'BulletPoint'
+  | 'Address'
+  | 'Hero'
+  | 'Time';
 
 export interface BaseInputProps {
   label: string;
@@ -36,19 +34,19 @@ export interface BaseInputProps {
 }
 
 export interface InputAssetProps extends BaseInputProps {
-  type: LAYOUT_INPUT_TYPE.Asset;
+  type: 'Asset';
   placeholder?: string;
   assetType?: string;
   value?: string;
 }
 
 export interface InputCheckboxProps extends BaseInputProps {
-  type: LAYOUT_INPUT_TYPE.Checkbox;
+  type: 'Checkbox';
   value?: boolean;
 }
 
 export interface InputNumberSpinnerProps extends BaseInputProps {
-  type: LAYOUT_INPUT_TYPE.NumberSpinner;
+  type: 'NumberSpinner';
   placeholder?: string;
   template?: string;
   min: number;
@@ -57,7 +55,7 @@ export interface InputNumberSpinnerProps extends BaseInputProps {
 }
 
 export interface InputSelectProps extends BaseInputProps {
-  type: LAYOUT_INPUT_TYPE.Select;
+  type: 'Select';
   options?: any;
   pre?: any;
   post?: any;
@@ -65,7 +63,7 @@ export interface InputSelectProps extends BaseInputProps {
 }
 
 export interface InputTextboxProps extends BaseInputProps {
-  type: LAYOUT_INPUT_TYPE.Textbox;
+  type: 'Textbox';
   placeholder?: string;
   checkbox?: boolean;
   multiLine?: boolean;
@@ -81,7 +79,7 @@ export interface InputTextboxProps extends BaseInputProps {
 }
 
 export interface InputFieldsetProps extends BaseInputProps {
-  type: LAYOUT_INPUT_TYPE.Fieldset;
+  type: 'Fieldset';
   name?: string;
   skinny?: boolean;
   revertErrors?: boolean;
@@ -94,3 +92,11 @@ export interface InputFieldsetProps extends BaseInputProps {
       | InputTextboxProps
     };
 }
+
+export type InputProps =
+  | InputAssetProps
+  | InputCheckboxProps
+  | InputNumberSpinnerProps
+  | InputSelectProps
+  | InputTextboxProps
+  | InputFieldsetProps;

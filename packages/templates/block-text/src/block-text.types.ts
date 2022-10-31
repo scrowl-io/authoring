@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  TemplateSchemaMeta,
   TemplateCommons,
   InputTextboxProps,
   InputFieldsetProps,
@@ -23,14 +24,17 @@ export interface BlockTextContentOptions extends InputFieldsetProps {
   }
 }
 
-export type BlockTextLayout = {
-  text: InputTextboxProps;
-  bgImage: BlockTextContentBgImage;
-  options: BlockTextContentOptions;
+export type BlockTextSchemaProps = {
+  meta: TemplateSchemaMeta,
+  content: {
+    text: InputTextboxProps;
+    bgImage: BlockTextContentBgImage;
+    options: BlockTextContentOptions;
+  }
 };
 
 export interface BlockTextCommons extends TemplateCommons {
-  layout: BlockTextLayout;
+  schema: BlockTextSchemaProps;
 };
 
 export type BlockTextProps = BlockTextCommons & React.AllHTMLAttributes<HTMLDivElement>;

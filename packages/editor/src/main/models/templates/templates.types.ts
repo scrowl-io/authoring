@@ -1,3 +1,7 @@
+import { TemplateSchema as schema } from '@scrowl/template-core';
+
+export type { TemplateSchema } from '@scrowl/template-core';
+
 export type AspectRatios = {
   '4:3': {
     label: 'Standard 4:3';
@@ -16,56 +20,8 @@ export type AspectRatios = {
   };
 };
 
-export type TemplateManifestSlide = {
-  aspect: keyof AspectRatios;
-};
-
-export type TemplateManifestElementText = {
-  value: string;
-  type: 'text';
-  label: string;
-};
-
-export type TemplateManifestElementTextarea = {
-  value: string;
-  type: 'textarea';
-  label: string;
-};
-
-export type TemplateManifestElementNumber = {
-  value: number;
-  type: 'number';
-  label: string;
-};
-
-export type ManifestElementListText = {
-  value: Array<string>;
-  type: 'listText';
-  label: string;
-};
-
-export type TemplateManifestElements = {
-  [key: string]:
-    | TemplateManifestElementText
-    | TemplateManifestElementNumber
-    | TemplateManifestElementTextarea
-    | ManifestElementListText;
-};
-
-export interface TemplateManifestMeta {
-  name: string;
-  filename: string;
-  component: string;
-}
-
-export interface TemplateManifest {
-  version?: string;
-  meta: TemplateManifestMeta;
-  elements: TemplateManifestElements;
-}
-
 export type TemplateRecords = Array<{
   name: string;
   source: string;
-  manifest: TemplateManifest;
+  manifest: schema;
 }>;

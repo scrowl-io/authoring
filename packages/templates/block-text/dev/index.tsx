@@ -3,23 +3,25 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import Scrowl from '@scrowl/template-core';
 import * as css from './_index.scss';
-import { BlockText, BlockTextSchema, BlockTextLayout } from '../src';
+import { BlockText, BlockTextSchema, BlockTextSchemaProps } from '../src';
 
 document.body.className = `${css.body} owlui-theme--default`;
 
 const container = document.getElementById('app') as HTMLElement;
 const root = createRoot(container);
 const App = () => {
-  const layout = BlockTextSchema as BlockTextLayout;
+  const schema = BlockTextSchema as BlockTextSchemaProps;
   const controller = new Scrowl.core.scroll.Controller();
-  layout.options.fields.showProgress.value = true;
+
+  schema.content.options.fields.showProgress.value = true;
+
   return (
     <BlockText
       id="template-block-text"
       templateKey="BlockText@1.0.0"
       duration={0}
       controller={controller}
-      layout={layout}
+      schema={schema}
     />
   );
 };

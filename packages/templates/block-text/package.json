@@ -1,11 +1,6 @@
 {
   "name": "@scrowl/template-block-text",
   "version": "1.0.0",
-  "meta": {
-    "label": "Text Block",
-    "component": "BlockText",
-    "filename": "block-text"
-  },
   "description": "",
   "license": "MIT",
   "keywords": [],
@@ -27,7 +22,8 @@
     "start": "cd dev && parcel serve --no-cache --open",
     "prebuild": "yarn run clean && rimraf dist",
     "build": "parcel build --no-cache",
-    "postbuild": "webpack --config webpack.config.js"
+    "build:schema": "cd schema && parcel build --no-cache",
+    "postbuild": "webpack --config webpack.config.js && yarn run build:schema"
   },
   "source": "./src/index.ts",
   "main": "./lib/scrowl.template-block-text.js",
@@ -39,8 +35,12 @@
       "default": "./lib/scrowl.template-block-text.js",
       "import": "./lib/scrowl.template-block-text.module.js"
     },
-    "./src": "./src/index.ts",
-    "./web": "./dist/scrowl.template-block-text.js"
+    "./web": "./dist/scrowl.template-block-text.js",
+    "./schema": {
+      "require": "./lib/schema.js",
+      "default": "./lib/schema.js",
+      "import": "./lib/schema.module.js"
+    }
   },
   "eslintConfig": {
     "extends": "@scrowl/config"

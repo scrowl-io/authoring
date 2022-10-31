@@ -1,35 +1,39 @@
 import React from 'react';
-import { useActiveTemplateElements } from '../../../page-workspace-hooks';
+import { useActiveTemplateContent } from '../../../page-workspace-hooks';
 import { FormBuilder } from '.';
 
 export const TemplateForm = () => {
-  const elementsConfig = useActiveTemplateElements();
+  const templateContent = useActiveTemplateContent();
 
-  console.log('elementsConfig', elementsConfig);
+  console.log('templateContent', templateContent);
+
+  const handleContentUpdate = (field, value) => {
+    console.log('content update', field, value);
+  };
+
+  const handleContentValidate = (field, value) => {
+    console.log('content validate', field, value);
+  };
+
+  const handleContentFocus = (field, value) => {
+    console.log('content focus', field, value);
+  };
+
+  const handleContentBlur = (field, value) => {
+    console.log('content blur', field, value);
+  };
 
   return (
     <div className="template-form">
       Content Form
-      {/* <FormBuilder
-        schema={contentLayout ? contentLayout.schema : {}}
-        content={slideContent}
-        onChange={async (fieldKey, value) => {
-          dispatch(courseActions.setSlideContent({ fieldKey, value }));
-        }}
-        onValidate={async (fieldKey, value) => {
-          dispatch(courseActions.setSlideContent({ fieldKey, value }));
-          dispatch(courseActions.validateSlideContent({}));
-        }}
-        onFocus={async (fieldKey, value, props) => {
-          return await dispatchTemplateEvent("onFocus", fieldKey, value, props);
-        }}
-        onBlur={async (fieldKey, value) => {
-          dispatch(courseActions.setContentPanelFocus(""));
-
-          return await dispatchTemplateEvent("onBlur", fieldKey, value);
-        }}
+      <FormBuilder
+        content={templateContent}
+        onChange={handleContentUpdate}
+        onValidate={handleContentValidate}
+        onFocus={handleContentFocus}
+        onBlur={handleContentBlur}
         revertErrors={false}
-      /> */}
+      />
     </div>
   );
 };

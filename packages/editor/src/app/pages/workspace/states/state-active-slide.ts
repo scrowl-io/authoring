@@ -13,7 +13,7 @@ export const initialState = {
       filename: '',
       component: '',
     },
-    elements: {},
+    content: {},
   }
 };
 
@@ -36,15 +36,15 @@ export const config: stateManager.StateConfig = {
     setTemplate: (state, action) => {
       updateObj(state.template, action.payload);
     },
-    setTemplateElements: (state, action) => {
-      updateObj(state.template.elements, action.payload);
+    setTemplateContent: (state, action) => {
+      updateObj(state.template.content, action.payload);
     },
   },
 };
 
 export const slice = createSlice(config);
 
-export const { setData, resetData, setTemplate, setTemplateElements } = slice.actions;
+export const { setData, resetData, setTemplate, setTemplateContent } = slice.actions;
 
 export const reducer = slice.reducer;
 

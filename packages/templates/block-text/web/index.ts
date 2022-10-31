@@ -1,4 +1,4 @@
-import { BlockText, BlockTextSchema, BlockTextLayout } from '../src';
+import { BlockText, BlockTextSchema, BlockTextSchemaProps } from '../src';
 
 window.BlockText = BlockText;
-window.BlockTextSchema = BlockTextSchema as BlockTextLayout;
+window.BlockTextSchema = BlockTextSchema as BlockTextSchemaProps;
