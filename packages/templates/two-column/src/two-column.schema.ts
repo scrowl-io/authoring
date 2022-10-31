@@ -91,6 +91,7 @@ export const TwoColumnSchema: TemplateContent = {
   },
   columnOptions: {
     numberOfColumns: 2,
+    stackOnMobile: true,
   },
   bgImage: {
     type: LAYOUT_INPUT_TYPE.Fieldset,

@@ -18,6 +18,8 @@ export const TwoColumn = ({ layout, ...props }: TwoColumnProps) => {
   let headingMiddle = layout.middleColumn?.headingMiddle?.value;
   let numberOfColumns = layout.columnOptions.numberOfColumns;
 
+  let stackOnMobile = layout.columnOptions.stackOnMobile;
+
   let useImageAsBG = layout.bgImage?.fields.bg.value;
   let alignment = layout.options.fields.alignment.value;
   let showProgressBar = layout.options.fields.showProgress.value;
@@ -99,7 +101,7 @@ export const TwoColumn = ({ layout, ...props }: TwoColumnProps) => {
 
   const renderColumns = () => {
     return (
-      <div className="column-wrapper">
+      <div className={`column-wrapper ${stackOnMobile ? 'stacked-view' : ''}`}>
         <div className="left">
           <h2>{headingLeft}</h2>
           <hr
