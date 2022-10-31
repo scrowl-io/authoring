@@ -1,23 +1,24 @@
 import React from 'react';
 import Scrowl from '@scrowl/template-core';
 import * as css from './_index.scss';
-import { BlockTextProps } from './block-text.types';
+import { TwoColumnProps } from './two-column.types';
 
-export const TwoColumn = ({ layout, ...props }: BlockTextProps) => {
+export const TwoColumn = ({ layout, ...props }: TwoColumnProps) => {
   let classes = `${css.templateBlockText} `;
   const editMode = props.editMode ? true : false;
   const focusElement = editMode ? props.focusElement : null;
   const scrollScenes: any = React.useRef([]);
   const timeline: any = React.useRef();
 
-  //@ts-ignore
-  let layoutTextLeft = layout.textLeft.value;
-  let layoutTextRight = layout.textRight.value;
-  let headingLeft = layout.headingLeft?.value;
-  let headingRight = layout.headingRight?.value;
+  let layoutTextLeft = layout.leftColumn.textLeft.value;
+  let layoutTextRight = layout.rightColumn.textRight.value;
+  let layoutTextMiddle = layout.middleColumn?.textMiddle.value;
+  let headingLeft = layout.leftColumn.headingLeft?.value;
+  let headingRight = layout.rightColumn.headingRight?.value;
+  let headingMiddle = layout.middleColumn?.headingMiddle?.value;
   let numberOfColumns = layout.columnOptions.numberOfColumns;
 
-  let useImageAsBG = layout.bgImage.fields.bg.value;
+  let useImageAsBG = layout.bgImage?.fields.bg.value;
   let alignment = layout.options.fields.alignment.value;
   let showProgressBar = layout.options.fields.showProgress.value;
   const slideDuration = showProgressBar ? 1000 : 0;
@@ -96,7 +97,7 @@ export const TwoColumn = ({ layout, ...props }: BlockTextProps) => {
     };
   }, [showProgressBar]);
 
-  const twoColumnLayout = () => {
+  const renderColumns = () => {
     return (
       <div className="column-wrapper">
         <div className="left">
@@ -116,64 +117,28 @@ export const TwoColumn = ({ layout, ...props }: BlockTextProps) => {
             <Scrowl.core.Markdown children={layoutTextLeft} />
           </p>
         </div>
-        <div className="right">
-          <h2>{headingRight}</h2>
-          <hr
-            id={getId('bar')}
-            style={{ width: showProgressBar ? '0%' : '100%' }}
-          />
-          <p
-            className={'can-focus ' + (focusElement === 'text' && ' has-focus')}
-            onMouseDown={() => {
-              if (editMode) {
-                // Scrowl.focusOnlayout('text');
+        {numberOfColumns === 2 ? null : (
+          <div className="middle">
+            <h2>{headingMiddle}</h2>
+            <hr
+              id={getId('bar')}
+              style={{ width: showProgressBar ? '0%' : '100%' }}
+            />
+            <p
+              className={
+                'can-focus ' + (focusElement === 'text' && ' has-focus')
               }
-            }}
-          >
-            <Scrowl.core.Markdown children={layoutTextRight} />
-          </p>
-        </div>
-      </div>
-    );
-  };
+              onMouseDown={() => {
+                if (editMode) {
+                  // Scrowl.focusOnlayout('text');
+                }
+              }}
+            >
+              <Scrowl.core.Markdown children={layoutTextMiddle} />
+            </p>
+          </div>
+        )}
 
-  const threeColumnLayout = () => {
-    return (
-      <div className="column-wrapper">
-        <div className="left">
-          <h2>{headingLeft}</h2>
-          <hr
-            id={getId('bar')}
-            style={{ width: showProgressBar ? '0%' : '100%' }}
-          />
-          <p
-            className={'can-focus ' + (focusElement === 'text' && ' has-focus')}
-            onMouseDown={() => {
-              if (editMode) {
-                // Scrowl.focusOnlayout('text');
-              }
-            }}
-          >
-            <Scrowl.core.Markdown children={layoutTextLeft} />
-          </p>
-        </div>
-        <div className="middle">
-          <h2>{headingRight}</h2>
-          <hr
-            id={getId('bar')}
-            style={{ width: showProgressBar ? '0%' : '100%' }}
-          />
-          <p
-            className={'can-focus ' + (focusElement === 'text' && ' has-focus')}
-            onMouseDown={() => {
-              if (editMode) {
-                // Scrowl.focusOnlayout('text');
-              }
-            }}
-          >
-            <Scrowl.core.Markdown children={layoutTextRight} />
-          </p>
-        </div>
         <div className="right">
           <h2>{headingRight}</h2>
           <hr
@@ -223,9 +188,7 @@ export const TwoColumn = ({ layout, ...props }: BlockTextProps) => {
           {useImageAsBG ? <div className="overlay" /> : null}
 
           <div className={'text ' + (alignment === 'right' ? ' right' : '')}>
-            <div className="wrapper">
-              {numberOfColumns === 2 ? twoColumnLayout() : threeColumnLayout()}
-            </div>
+            <div className="wrapper">{renderColumns()}</div>
           </div>
 
           {useImageAsBG ? null : (

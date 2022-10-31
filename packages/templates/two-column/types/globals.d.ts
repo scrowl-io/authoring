@@ -1,8 +1,8 @@
-import { BlockTextProps, BlockTextLayout } from '../src';
+import { TwoColumnProps, TwoColumnLayout } from '../src';
 
 declare global {
   interface Window {
-    TwoColumn: (props: BlockTextProps) => JSX.Element;
-    TwoColumnSchema: BlockTextLayout;
+    TwoColumn: (props: TwoColumnProps) => JSX.Element;
+    TwoColumnSchema: TwoColumnLayout;
   }
 }
