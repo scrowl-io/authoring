@@ -68,13 +68,23 @@
         max-height: calc(100vh - 32px);
         overflow: hidden;
 
-        @media only screen and (max-width: 600px) {
-          .stacked-view {
+        @media only screen and (max-width: 700px) {
+          .stacked-view-narrow {
             flex-direction: column;
           }
 
           h2 {
-            margin-top: 1em;
+            margin-top: 2em;
+          }
+        }
+
+        @media only screen and (max-width: 1000px) {
+          .stacked-view-wide {
+            flex-direction: column;
+          }
+
+          h2 {
+            margin-top: 2em;
           }
         }
 

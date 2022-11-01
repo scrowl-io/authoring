@@ -24,7 +24,7 @@ export interface TwoColumnContentOptions extends InputFieldsetProps {
 }
 
 export type ColumnOptions = {
-  numberOfColumns: number;
+  numberOfColumns: 1 | 2 | 3;
   stackOnMobile: boolean;
 };
 

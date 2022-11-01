@@ -5,18 +5,6 @@ import {
 } from '@scrowl/template-core';
 
 export const TwoColumnSchema: TemplateContent = {
-  // textLeft: {
-  //   type: LAYOUT_INPUT_TYPE.Textbox,
-  //   hint: MIGRATION_HINT.BodyText,
-  //   label: 'Block Text',
-  //   value:
-  //     'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-  //   placeholder: 'Write content here...',
-  //   multiLine: true,
-  //   lines: 10,
-  //   autoGrow: 10,
-  //   allowLinebreaks: true,
-  // },
   leftColumn: {
     headingLeft: {
       type: LAYOUT_INPUT_TYPE.Textbox,
@@ -31,7 +19,7 @@ export const TwoColumnSchema: TemplateContent = {
     textLeft: {
       type: LAYOUT_INPUT_TYPE.Textbox,
       hint: MIGRATION_HINT.BodyText,
-      label: 'Block Text',
+      label: 'Left Content',
       value:
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
       placeholder: 'Write content here...',
@@ -55,7 +43,7 @@ export const TwoColumnSchema: TemplateContent = {
     textRight: {
       type: LAYOUT_INPUT_TYPE.Textbox,
       hint: MIGRATION_HINT.BodyText,
-      label: 'Block Text',
+      label: 'Right Content',
       value:
         'DIFFERENT TEXT ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
       placeholder: 'Write content here...',
@@ -79,7 +67,7 @@ export const TwoColumnSchema: TemplateContent = {
     textMiddle: {
       type: LAYOUT_INPUT_TYPE.Textbox,
       hint: MIGRATION_HINT.BodyText,
-      label: 'Block Text',
+      label: 'Middle Content',
       value:
         'This is the middle text... ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
       placeholder: 'Write content here...',
@@ -90,7 +78,7 @@ export const TwoColumnSchema: TemplateContent = {
     },
   },
   columnOptions: {
-    numberOfColumns: 2,
+    numberOfColumns: 3,
     stackOnMobile: true,
   },
   bgImage: {

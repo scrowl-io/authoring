@@ -101,13 +101,21 @@ export const TwoColumn = ({ layout, ...props }: TwoColumnProps) => {
 
   const renderColumns = () => {
     return (
-      <div className={`column-wrapper ${stackOnMobile ? 'stacked-view' : ''}`}>
+      <div
+        className={`column-wrapper ${
+          stackOnMobile && numberOfColumns === 3
+            ? 'stacked-view-wide'
+            : stackOnMobile && numberOfColumns === 2
+            ? 'stacked-view-narrow'
+            : ''
+        }`}
+      >
         <div className="left">
           <h2>{headingLeft}</h2>
-          <hr
+          {/* <hr
             id={getId('bar')}
             style={{ width: showProgressBar ? '0%' : '100%' }}
-          />
+          /> */}
           <p
             className={'can-focus ' + (focusElement === 'text' && ' has-focus')}
             onMouseDown={() => {
@@ -122,10 +130,10 @@ export const TwoColumn = ({ layout, ...props }: TwoColumnProps) => {
         {numberOfColumns === 2 ? null : (
           <div className="middle">
             <h2>{headingMiddle}</h2>
-            <hr
+            {/* <hr
               id={getId('bar')}
               style={{ width: showProgressBar ? '0%' : '100%' }}
-            />
+            /> */}
             <p
               className={
                 'can-focus ' + (focusElement === 'text' && ' has-focus')
@@ -143,10 +151,10 @@ export const TwoColumn = ({ layout, ...props }: TwoColumnProps) => {
 
         <div className="right">
           <h2>{headingRight}</h2>
-          <hr
+          {/* <hr
             id={getId('bar')}
             style={{ width: showProgressBar ? '0%' : '100%' }}
-          />
+          /> */}
           <p
             className={'can-focus ' + (focusElement === 'text' && ' has-focus')}
             onMouseDown={() => {

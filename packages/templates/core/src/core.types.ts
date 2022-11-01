@@ -64,6 +64,30 @@ export interface InputSelectProps extends BaseInputProps {
   value?: boolean | number | string | { [key: string]: boolean | number | string };
 }
 
+/*
+- radio input - selected value: hides/shows other inputs  
+  radio: {
+    options: [
+      {
+        value: 1,
+        label?: 'One Col'
+        icon:? '',
+        inputControls?: ['midCol', 'rightCol']
+      },
+      { label: 'Two Col', icon: '', value: 2, inputControls: ['midCol'] },
+      { label: 'Three Col', icon: '', value: 3, inputControls: [] }
+    ],
+    valueControls?: {
+      inputs: true,
+      effect: {
+        style: {
+          display: none
+        }
+      }
+    }
+  }
+*/
+
 export interface InputTextboxProps extends BaseInputProps {
   type: LAYOUT_INPUT_TYPE.Textbox;
   placeholder?: string;
