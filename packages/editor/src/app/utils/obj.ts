@@ -37,8 +37,6 @@ export const setObjField = (obj, pointer, value) => {
         temp[field] = value;
       }
     }
-
-    temp = value;
   } catch (e) {
     console.error('Failed to set object', obj, pointer, value);
   }
