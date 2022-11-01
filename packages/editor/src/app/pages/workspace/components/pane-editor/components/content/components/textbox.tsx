@@ -91,7 +91,7 @@ export const Textbox = ({
     ref: inputRef,
     type: 'text',
     className: inputClasses,
-    value: cleanVal,
+    value: cleanVal || '',
     placeholder: placeholder,
     disabled: isDisabled,
     maxLength: maxLength,
