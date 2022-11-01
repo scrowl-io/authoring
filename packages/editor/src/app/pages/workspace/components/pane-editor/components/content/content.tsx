@@ -9,8 +9,6 @@ import { FormBuilder } from './components';
 export const Content = () => {
   const templateContent = useActiveTemplateContent();
 
-  console.log('templateContent', templateContent);
-
   const handleContentUpdate = (field, value) => {
     setActiveTemplateContent({ field, value });
   };
