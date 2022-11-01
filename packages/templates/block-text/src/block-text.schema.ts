@@ -52,15 +52,7 @@ export const BlockTextSchema: BlockTextSchemaProps = {
             { name: 'Align Left', value: 'left', icon: 'align_horizontal_left' },
             { name: 'Align Right', value: 'right', icon: 'align_horizontal_right' },
           ],
-          pre: {
-            width: 26,
-            items: [
-              {
-                type: 'icon',
-                name: 'align_horizontal_left',
-              },
-            ]
-          }
+          iconFromValue: true,
         },
         showProgress: {
           type: 'Checkbox',

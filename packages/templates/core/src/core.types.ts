@@ -60,6 +60,8 @@ export interface InputSelectProps extends BaseInputProps {
   value?: boolean | number | string | { [key: string]: boolean | number | string };
   pre?: any;
   post?: any;
+  icon?: string;
+  iconFromValue?: boolean;
 }
 
 export interface InputTextboxProps extends BaseInputProps {

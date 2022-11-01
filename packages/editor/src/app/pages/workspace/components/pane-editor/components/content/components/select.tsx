@@ -1,4 +1,5 @@
 import React from 'react';
+import { Icon } from '@owlui/lib';
 import { InputSelectProps } from '../../../pane-editor.types';
 import { GroupElement } from './';
 
@@ -16,6 +17,7 @@ export const Select = ({
   onFocus,
   onBlur,
   options,
+  iconFromValue,
   pre,
   post,
   ...props
@@ -97,6 +99,7 @@ export const Select = ({
 
   let groupClasses = 'input-group input-group-sm';
   let controlClasses = 'control-select mb-2 template-content-input';
+  let icon = '';
 
   if (disabled) {
     controlClasses += ' disabled';
@@ -106,10 +109,25 @@ export const Select = ({
     groupClasses += ' is-invalid';
   }
 
+  if (iconFromValue) {
+    options.forEach((opt) => {
+      if (opt.value === value) {
+        icon = opt.icon;
+      }
+    });
+  }
+
   return (
     <div className={controlClasses}>
       <label className="form-label">{label}</label>
       <div className={groupClasses}>
+        {!icon ? (
+          <></>
+        ) : (
+          <span className="input-group-text pre">
+            <Icon icon={icon} display="sharp" grad={200} opsz={20} />
+          </span>
+        )}
         {GroupElement('pre', pre)}
         <select {...inputProps}>
           {options.map((option) => {
