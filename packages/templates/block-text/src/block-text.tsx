@@ -3,17 +3,17 @@ import Scrowl from '@scrowl/template-core';
 import * as css from './_index.scss';
 import { BlockTextProps } from './block-text.types';
 
-export const BlockText = ({ layout, ...props }: BlockTextProps) => {
+export const BlockText = ({ schema, ...props }: BlockTextProps) => {
   let classes = `${css.templateBlockText} `;
   const editMode = props.editMode ? true : false;
   const focusElement = editMode ? props.focusElement : null;
   const scrollScenes: any = React.useRef([]);
   const timeline: any = React.useRef();
 
-  let layoutText = layout.text.value;
-  let useImageAsBG = layout.bgImage.fields.bg.value;
-  let alignment = layout.options.fields.alignment.value;
-  let showProgressBar = layout.options.fields.showProgress.value;
+  let schemaText = schema.content.text.value;
+  let useImageAsBG = schema.content.bgImage.content.bg.value;
+  let alignment = schema.content.options.content.alignment.value;
+  let showProgressBar = schema.content.options.content.showProgress.value;
   const slideDuration = showProgressBar ? 1000 : 0;
 
   if (showProgressBar) {
@@ -103,14 +103,14 @@ export const BlockText = ({ layout, ...props }: BlockTextProps) => {
         <div
           id={getId('pinned-body')}
           className="hero"
-          aria-label={useImageAsBG ? layout['bgImage.alt'] : ''}
+          aria-label={useImageAsBG ? schema['bgImage.alt'] : ''}
           style={
-            useImageAsBG && layout['bgImage.url']
+            useImageAsBG && schema['bgImage.url']
               ? {
                   width: '100vw',
                   height: '100vh',
                   backgroundImage:
-                    'url("./course/assets/' + layout['bgImage.url'] + '")',
+                    'url("./course/assets/' + schema['bgImage.url'] + '")',
                 }
               : {}
           }
@@ -129,11 +129,11 @@ export const BlockText = ({ layout, ...props }: BlockTextProps) => {
                 }
                 onMouseDown={() => {
                   if (editMode) {
-                    // Scrowl.focusOnlayout('text');
+                    // Scrowl.focusOnschema('text');
                   }
                 }}
               >
-                <Scrowl.core.Markdown children={layoutText} />
+                <Scrowl.core.Markdown children={schemaText} />
               </p>
             </div>
           </div>
@@ -141,7 +141,7 @@ export const BlockText = ({ layout, ...props }: BlockTextProps) => {
           {useImageAsBG ? null : (
             <div
               role="img"
-              aria-label={layout['hero_image.alt']}
+              aria-label={schema['hero_image.alt']}
               className={
                 'img ' +
                 (alignment === 'right' ? ' right' : '') +
@@ -150,14 +150,14 @@ export const BlockText = ({ layout, ...props }: BlockTextProps) => {
               }
               onMouseDown={() => {
                 if (editMode) {
-                  // Scrowl.focusOnlayout('bgImage.url');
+                  // Scrowl.focusOnschema('bgImage.url');
                 }
               }}
               style={
-                layout['bgImage.url']
+                schema['bgImage.url']
                   ? {
                       backgroundImage:
-                        'url("./course/assets/' + layout['bgImage.url'] + '")',
+                        'url("./course/assets/' + schema['bgImage.url'] + '")',
                     }
                   : {}
               }

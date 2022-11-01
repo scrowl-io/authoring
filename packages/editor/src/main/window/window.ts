@@ -53,8 +53,6 @@ export const init = () => {
         throw 'Unable to create App window';
       }
 
-      Models.init();
-      Services.init();
       mainWindow.loadURL(appPath);
 
       mainWindow.on('ready-to-show', () => {
@@ -132,6 +130,8 @@ export const init = () => {
   app
     .whenReady()
     .then(() => {
+      Models.init();
+      Services.init();
       create();
 
       app.on('activate', () => {

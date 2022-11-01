@@ -1,16 +1,48 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Slide, SlideCommons } from '@scrowl/player/src/components';
 import * as css from '../_canvas.scss';
-import { useActiveTemplate } from '../../../';
+import { useActiveSlide } from '../../../';
+import { rq } from '../../../../../services';
+import { Templates } from '../../../../../models';
 
 export const CanvasFrame = () => {
-  const data = useActiveTemplate('meta');
+  const data = useActiveSlide();
+  const slideIdx = data.slideIdx;
+  const slideTemplate = data.template.meta.component;
+  const prevSlideIdx = useRef(-1);
+  const prevSlideTemplate = useRef('');
   const [frameUrl, setFrameUrl] = useState('');
   const [slideOpts, setSlideOpts] = useState<SlideCommons>({
     aspect: '16:9',
   });
 
-  if (!data.filename) {
+  const updateFrameUrl = (res: rq.ApiResult) => {
+    if (res.error) {
+      console.error(res.message);
+      return;
+    }
+
+    setFrameUrl(res.data.url);
+  };
+
+  useEffect(() => {
+    if (slideIdx === -1) {
+      return;
+    }
+
+    const hasSlideChanged = prevSlideIdx.current !== slideIdx;
+    const hasTemplateChanged = prevSlideTemplate.current !== slideTemplate;
+
+    if (!hasSlideChanged && !hasTemplateChanged) {
+      return;
+    }
+
+    prevSlideIdx.current = slideIdx;
+    prevSlideTemplate.current = slideTemplate;
+    Templates.load(slideTemplate).then(updateFrameUrl);
+  }, [slideIdx]);
+
+  if (slideIdx === -1) {
     return <></>;
   }
 

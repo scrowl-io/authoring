@@ -1,0 +1,23 @@
+{
+  "name": "@scrowl/template-block-text-schema",
+  "version": "1.0.0",
+  "description": "",
+  "license": "MIT",
+  "keywords": [],
+  "author": {
+    "name": "OSG"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/scrowl-io/authoring.git",
+    "directory": "packages/template/block-text"
+  },
+  "bugs": {
+    "url": "https://github.com/scrowl-io/scrowl/issues"
+  },
+  "homepage": "https://github.com/scrowl-io/authoring/packages/template/block-text#readme",
+  "source": "../src/block-text.schema.ts",
+  "main": "../lib/schema.js",
+  "module": "../lib/schema.module.js",
+  "types": "../lib/schema.d.ts"
+}

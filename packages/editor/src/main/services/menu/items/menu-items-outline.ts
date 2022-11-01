@@ -1,45 +1,53 @@
 import { MenuItemConstructorOptions } from 'electron';
 
 export const outlineMenuItems = (isMac: boolean) => {
+  const menuId = 'outline-menu';
   const template: MenuItemConstructorOptions = {
+    id: menuId,
     label: 'Outline',
-    enabled: false,
     submenu: [
       {
+        id: `${menuId}-add-slide`,
         label: "Add New Slide",
+        accelerator:  "CmdorCtrl+Alt+S",
         enabled: false,
-        accelerator:  "CmdorAlt+Shift+S",
         click: () => {},
       },
       {
+        id: `${menuId}-add-lesson`,
         label: "Add New Lesson",
+        accelerator: "CmdorCtrl+Alt+L",
         enabled: false,
-        accelerator: "CmdorAlt+Shift+L",
         click: () => {},
       },
       {
+        id: `${menuId}-add-module`,
         label: "Add New Module",
-        accelerator: "CmdorAlt+Shift+M",
+        accelerator: "CmdorCtrl+Alt+M",
+        enabled: false,
         click: () => {},
       },
       { type: "separator" },
       {
+        id: `${menuId}-dup-slide`,
         label: "Duplicate Slide",
+        accelerator: "CmdorCtrl+Alt+D",
         enabled: false,
-        accelerator: "CmdorAlt+D",
         click: () => {},
       },
       {
+        id: `${menuId}-rename-slide`,
         label: "Rename Slide",
+        accelerator: "CmdorCtrl+Alt+R",
         enabled: false,
-        accelerator: "CmdorAlt+R",
         click: () => {},
       },
       { type: "separator" },
       {
+        id: `${menuId}-delete-slide`,
         label: "Delete Slide",
+        accelerator: "CmdorCtrl+D",
         enabled: false,
-        accelerator: "CmdorAlt+Shift+D",
         click: () => {},
       },
     ],

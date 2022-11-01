@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  TemplateSchemaMeta,
   TemplateCommons,
   InputTextboxProps,
   InputFieldsetProps,
@@ -9,7 +10,7 @@ import {
 } from '@scrowl/template-core';
 
 export interface BlockTextContentBgImage extends InputFieldsetProps {
-  fields: {
+  content: {
     alt: InputTextboxProps;
     url: InputAssetProps;
     bg: InputCheckboxProps;
@@ -17,20 +18,23 @@ export interface BlockTextContentBgImage extends InputFieldsetProps {
 }
 
 export interface BlockTextContentOptions extends InputFieldsetProps {
-  fields: {
+  content: {
     alignment: InputSelectProps;
     showProgress: InputCheckboxProps;
   }
 }
 
-export type BlockTextLayout = {
-  text: InputTextboxProps;
-  bgImage: BlockTextContentBgImage;
-  options: BlockTextContentOptions;
+export type BlockTextSchemaProps = {
+  meta: TemplateSchemaMeta,
+  content: {
+    text: InputTextboxProps;
+    bgImage: BlockTextContentBgImage;
+    options: BlockTextContentOptions;
+  }
 };
 
 export interface BlockTextCommons extends TemplateCommons {
-  layout: BlockTextLayout;
+  schema: BlockTextSchemaProps;
 };
 
 export type BlockTextProps = BlockTextCommons & React.AllHTMLAttributes<HTMLDivElement>;

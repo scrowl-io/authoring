@@ -10,6 +10,7 @@ import { Pages, Models } from './root.types';
 import { rq } from '../services';
 import * as pages from '../pages';
 import * as models from '../models';
+import { menu } from '../services';
 
 const Loader = () => {
   return <div>Loading...</div>;
@@ -54,7 +55,7 @@ export const Root = () => {
         return;
       }
 
-      inits.push(model.init());
+      inits.push(model.init(), menu.API.disableProjectActions());
     });
 
     Promise.allSettled(inits).then(() => {

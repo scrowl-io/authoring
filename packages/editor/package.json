@@ -136,6 +136,7 @@
     "@scrowl/player": "^0.0.1",
     "@scrowl/runtime": "^0.0.1",
     "@scrowl/template-block-text": "^1.0.0",
+    "@scrowl/template-core": "^1.0.0",
     "bootstrap": "^5.2.2",
     "electron-context-menu": "^3.5.0",
     "electron-devtools-installer": "^3.2.0",

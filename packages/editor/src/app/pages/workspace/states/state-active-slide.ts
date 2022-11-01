@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { stateManager } from '../../../services'
-import { updateObj } from '../../../utils';
+import { updateObj, setObjField } from '../../../utils';
 
 export const initialState = {
   moduleIdx: -1,
@@ -13,7 +13,7 @@ export const initialState = {
       filename: '',
       component: '',
     },
-    elements: {},
+    content: {},
   }
 };
 
@@ -36,15 +36,19 @@ export const config: stateManager.StateConfig = {
     setTemplate: (state, action) => {
       updateObj(state.template, action.payload);
     },
-    setTemplateElements: (state, action) => {
-      updateObj(state.template.elements, action.payload);
+    setTemplateContent: (state, action) => {
+      let pointer = typeof action.payload.field === 'string' ? action.payload.field : action.payload.field.join('.content.');
+      const value = action.payload.value;
+
+      pointer += '.value';
+      setObjField(state.template.content, pointer, value);
     },
   },
 };
 
 export const slice = createSlice(config);
 
-export const { setData, resetData, setTemplate, setTemplateElements } = slice.actions;
+export const { setData, resetData, setTemplate, setTemplateContent } = slice.actions;
 
 export const reducer = slice.reducer;
 

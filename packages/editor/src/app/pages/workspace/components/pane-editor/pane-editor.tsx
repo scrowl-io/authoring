@@ -1,9 +1,9 @@
 import React from 'react';
-import * as css from './_pane-editor.scss';
+import { Tabs } from '@owlui/lib';
 import { useActiveTemplate } from '../../';
 import { Pane } from '../../../../components';
 import { Settings } from '../../../../models';
-import { TemplateForm } from './components';
+import { Content } from './components';
 
 export const PaneEditor = () => {
   const data = useActiveTemplate();
@@ -29,6 +29,13 @@ export const PaneEditor = () => {
           transitionEnd: { boxShadow: '' },
         },
   };
+  const tabs = [
+    {
+      id: 'tab-content',
+      title: 'Content',
+      view: <Content />,
+    },
+  ];
 
   if (!data.meta.filename) {
     return <></>;
@@ -40,9 +47,7 @@ export const PaneEditor = () => {
       animate={animationOpts.animate}
       side="right"
     >
-      <div className={css.paneEditor}>
-        <TemplateForm />
-      </div>
+      <Tabs items={tabs} pxScale="Sm" transition={false} />
     </Pane>
   );
 };

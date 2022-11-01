@@ -103,3 +103,4 @@ dist
 # Build Output
 .parcel-cache
  
+packages/templates/core/.DS_Store

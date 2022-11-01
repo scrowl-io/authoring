@@ -1,14 +1,17 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import * as styles from './page-welcome.scss';
 import { HelloEnvelope } from './components';
 import { Projects } from '../../models';
+import { menu } from '../../services';
 
 export const Path = '/welcome';
 
 export const Page = () => {
   const [inProgress, setProgress] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const isReady = useRef(false);
   const navigator = useNavigate();
 
   const handleCreateCourse = () => {
@@ -23,10 +26,27 @@ export const Page = () => {
         return;
       }
 
-      setProgress(false);
-      navigator('/workspace');
+      menu.API.enableProjectActions().then(() => {
+        setProgress(false);
+        navigator('/workspace');
+      });
     });
   };
+
+  useEffect(() => {
+    if (isReady.current) {
+      return;
+    }
+
+    menu.API.disableProjectActions().then(() => {
+      isReady.current = false;
+      setIsLoading(false);
+    });
+
+    return () => {
+      isReady.current = true;
+    };
+  }, [isLoading, isReady]);
 
   return (
     <motion.div

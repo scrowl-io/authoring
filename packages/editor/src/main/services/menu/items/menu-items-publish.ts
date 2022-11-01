@@ -1,19 +1,23 @@
 import { MenuItemConstructorOptions } from 'electron';
 
 export const publishMenuItems = (isMac: boolean) => {
+  const menuId = 'publish-menu';
   const template: MenuItemConstructorOptions = {
+    id: menuId,
     label: "Publish",
-    enabled: false,
     submenu: [
       {
-        label: "Publish Course",
+        id: `${menuId}-advanced`,
+        label: "Publish Project",
+        enabled: false,
         click: () => {},
       },
       { type: "separator" },
       {
+        id: `${menuId}-quick`,
         label: "Quick Publish",
+        accelerator: "CmdorCtrl+Alt+P",
         enabled: false,
-        accelerator: "CmdorAlt+P",
         click: () => {},
       },
     ],

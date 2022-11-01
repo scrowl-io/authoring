@@ -1,15 +1,21 @@
 import React from 'react';
 import { Controller, ScrollDirection } from 'scrollmagic';
-import { InputAssetProps, InputCheckboxProps, InputNumberSpinnerProps, InputSelectProps, InputTextboxProps, InputFieldsetProps } from '../core.types';
+import { InputProps } from '../core.types';
 
-export type TemplateContent = {
-  [key: string]:
-  | InputAssetProps
-  | InputCheckboxProps
-  | InputNumberSpinnerProps
-  | InputSelectProps
-  | InputTextboxProps
-  | InputFieldsetProps;
+export type TemplateSchemaContent = {
+  [key: string]: InputProps;
+};
+
+export type TemplateSchemaMeta = {
+  label: string;
+  version: string;
+  component: string;
+  filename: string;
+};
+
+export type TemplateSchema = {
+  meta: TemplateSchemaMeta;
+  content: TemplateSchemaContent;
 };
 
 export type TemplateOnScrollEvent = {

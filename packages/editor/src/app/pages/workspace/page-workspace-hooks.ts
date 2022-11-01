@@ -104,28 +104,28 @@ export const setActiveTemplate = (data) => {
   processor.dispatch(state.activeSlide.setTemplate(data));
 };
 
-export const useActiveTemplateElements = (prop?: string) => {
+export const useActiveTemplateContent = (prop?: string) => {
   return useSelector((data: stateManager.RootState) => {
     if (!prop) {
-      return data.activeSlide.template.elements;
+      return data.activeSlide.template.content;
     }
-
-    if (hasProp(data.activeSlide.template.elements, prop)) {
-      return data.activeSlide.template.elements[prop];
+    
+    if (hasProp(data.activeSlide.template.content, prop)) {
+      return data.activeSlide.template.content[prop];
     } else {
-      console.warn('active template elements does not have prop', prop, data.activeSlide.template.elements);
+      console.warn('active template elements does not have prop', prop, data.activeSlide.template.content);
       return;
     }
   });
 };
 
-export const setActiveTemplateElements = (data) => {
+export const setActiveTemplateContent = (data) => {
   if (!processor.dispatch) {
     console.warn('workspace processor not ready');
     return;
   }
 
-  processor.dispatch(state.activeSlide.setTemplateElements(data));
+  processor.dispatch(state.activeSlide.setTemplateContent(data));
 };
 
 export default {
@@ -138,6 +138,6 @@ export default {
   resetActiveSlide,
   useActiveTemplate,
   setActiveTemplate,
-  useActiveTemplateElements,
-  setActiveTemplateElements,
+  useActiveTemplateContent,
+  setActiveTemplateContent,
 };

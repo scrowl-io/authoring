@@ -1,54 +1,23 @@
-export interface BaseInputProps {
-  label: string;
-  hint?: MIGRATION_HINT; // This is for migrations
+import { InputProps } from '@scrowl/template-core';
 
-  default?: any;
+export type {
+  InputProps,
+  InputAssetProps,
+  InputCheckboxProps,
+  InputFieldsetProps,
+  InputNumberSpinnerProps,
+  InputSelectProps,
+  InputTextboxProps,
+  LAYOUT_INPUT_TYPE,
+} from '@scrowl/template-core';
 
-  disabled?: boolean;
-  value?: any;
-  focus?: boolean;
-  validationError?: string;
-
-  // Events
-  onChange: Function;
-  onValidate: Function;
-  onFocus: Function;
-  onBlur: Function;
-}
-
-export const DefaultInputProps = {
-  onChange: () => {},
-  onValidate: () => {},
-  onFocus: () => {},
-  onBlur: () => {},
-
-  validationError: "",
-  focus: false,
-  disabled: false,
+export interface InputFactoryCommons {
+  field: string;
+  content: InputProps,
+  onChange: (field: string | Array<string>, value: any) => void;
+  onValidate: (field: string | Array<string>, value: any) => void;
+  onBlur: (field: string | Array<string>, value: any) => void;
+  onFocus: (field: string | Array<string>, value: any) => void;
 };
 
-export enum LAYOUT_INPUT_TYPE {
-  Fieldset = "FIELDSET",
-  Asset = "ASSET",
-  Checkbox = "CHECKBOX",
-  NumberSpinner = "NUMBER_SPINNER",
-  Select = "SELECT",
-  Textbox = "TEXTBOX",
-}
-
-export enum MIGRATION_HINT {
-  Header = "HEADER",
-  SubHeader = "SUB_HEADER",
-  BodyText = "BODY_TEXT",
-  BodyAlignment = "BODY_ALIGNMENT",
-  BulletPointList = "BULLET_POINT_LIST",
-  BulletPointCount = "BULLET_POINT_COUNT",
-  BulletPoint = "BULLET_POINT",
-  Address = "ADDRESS",
-  Hero = "HERO",
-  Time = "TIME",
-}
-
-export interface InputCheckboxProps extends BaseInputProps {
-  type: LAYOUT_INPUT_TYPE.Checkbox;
-}
+export type InputFactoryProps = InputFactoryCommons;

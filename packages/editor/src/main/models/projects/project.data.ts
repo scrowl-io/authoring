@@ -1,43 +1,13 @@
 import { ProjectData } from './projects.types';
-import { TemplateManifest } from '../templates/templates.types';
+import { TemplateSchema } from '../templates/templates.types';
+import { BlockTextSchema } from '@scrowl/template-block-text/schema';
 
 const TEMPLATES = {
-  blockText: {
-    meta: {
-      name: 'Block Text',
-      filename: 'template-block-text',
-      component: 'BlockText',
-    },
-    elements: {},
-  },
-  introduction: {
-    meta: {
-      name: 'Introduction',
-      filename: 'template-introduction',
-      component: 'Introduction',
-    },
-    elements: {},
-  },
-  lottie: {
-    meta: {
-      name: 'Lottie',
-      filename: 'template-lottie',
-      component: 'Lottie',
-    },
-    elements: {},
-  },
-  simpleText: {
-    meta: {
-      name: 'Simple Text',
-      filename: 'template-simple-text',
-      component: 'Simple Text',
-    },
-    elements: {},
-  },
+  blockText: JSON.stringify(BlockTextSchema),
 };
 
 const createSlide = (name: string, mIdx: number, lIdx: number, type: keyof typeof TEMPLATES) => {
-  const template: TemplateManifest = TEMPLATES[type];
+  const template: TemplateSchema = JSON.parse(TEMPLATES[type]);
 
   return {
     name,
@@ -83,7 +53,7 @@ export const createProject = () => {
       }
     ],
     slides: [
-      createSlide('Slide 1', 0, 0, 'introduction'),
+      createSlide('Slide 1', 0, 0, 'blockText'),
       createSlide('Slide 2', 0, 0, 'blockText'),
       createSlide('Slide 3', 0, 0, 'blockText'),
     ],

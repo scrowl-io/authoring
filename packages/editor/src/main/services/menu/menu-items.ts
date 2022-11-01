@@ -1,5 +1,6 @@
 import { Menu, MenuItemConstructorOptions } from 'electron';
 import {
+  editMenuItems,
   fileMenuItems,
   helpMenuItems,
   outlineMenuItems,
@@ -11,11 +12,10 @@ import {
 export const createMenu = () => {
   const isMac = process.platform === 'darwin';
   const appMenu: MenuItemConstructorOptions = { role: 'appMenu' };
-  const editMenu: MenuItemConstructorOptions = { role: 'editMenu' };
   const template = [
     appMenu,
     fileMenuItems(isMac),
-    editMenu,
+    editMenuItems(isMac),
     outlineMenuItems(isMac),
     previewMenuItems(isMac),
     publishMenuItems(isMac),

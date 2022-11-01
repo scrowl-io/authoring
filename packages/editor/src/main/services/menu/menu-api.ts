@@ -74,20 +74,116 @@ export const contextMenu = (ev: rq.RequestEvent, items: Array<ContextMenuItem>, 
   });
 };
 
+export const toggleMenu = (ev: IpcMainInvokeEvent, id?: Array<string> | string, isEnabled?: boolean) => {
+  const setMenu = (appMenu, menuId: string) => {
+    try {
+      const menuItem = appMenu.getMenuItemById(menuId);
+
+      if (!menuItem) {
+        return {
+          error: true,
+          message: `Unable to toggle menu: ${menuId} - menu not found`,
+        };
+      }
+
+      if (isEnabled !== null && isEnabled !== undefined) {
+        menuItem.enabled = isEnabled;
+      } else {
+        menuItem.enabled = !menuItem.enabled;
+      }
+
+      return {
+        error: false,
+        data: {
+          menu: {
+            id: menuItem.id,
+            enabled: menuItem.enabled,
+          },
+        }
+      };
+    } catch (e) {
+      return {
+        error: true,
+        message: `Failed to toggle item: ${menuId}`,
+        data: {
+          trace: e,
+        },
+      };
+    }
+  }
+
+  return new Promise<rq.ApiResult>(resolve => {
+    try {
+      if (!id) {
+        resolve({
+          error: true,
+          message: 'Unable to toggle menu - menu id required',
+        });
+        return;
+      }
+
+      const appMenu = Menu.getApplicationMenu();
+  
+      if (!appMenu) {
+        resolve({
+          error: true,
+          message: `Unable to toggle menu: ${id} - menu not initialized`,
+        });
+        return;
+      }
+
+      let result;
+
+      const setMenus = (menuId) => {
+        return setMenu(appMenu, menuId);
+      };
+  
+      if (Array.isArray(id)) {
+        result = id.map(setMenus);
+      } else {
+        result = setMenu(appMenu, id);
+      }
+
+      resolve({
+        error: false,
+        data: {
+          id,
+          result,
+        },
+      });
+    } catch (e) {
+      resolve({
+        error: true,
+        message: 'Failed to toggle menu',
+        data: {
+          id,
+          isEnabled,
+          trace: e,
+        },
+      })
+    }
+  });
+};
+
 export const API: MenuApi = {
   contextMenu: {
     name: '/context-menu',
     type: 'invoke',
     fn: contextMenu,
   },
+  toggleMenu: {
+    name: '/toggle-menu',
+    type: 'invoke',
+    fn: toggleMenu,
+  },
 };
 
-export const init = () => {
+export const register = () => {
   rq.registerEndpointAll(API);
 };
 
 export default {
   contextMenu,
   API,
-  init,
+  register,
 };

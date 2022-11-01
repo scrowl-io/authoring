@@ -1,61 +1,60 @@
 import React from 'react';
-import {
-  LAYOUT_INPUT_TYPE,
-  BaseInputProps,
-  DefaultInputProps,
-} from '../pane-editor.types';
+import { InputNumberSpinnerProps } from '../../../pane-editor.types';
 import { render } from './';
 
-export interface InputProps extends BaseInputProps {
-  type: LAYOUT_INPUT_TYPE.NumberSpinner;
-  placeholder?: string;
-  template?: string;
-
-  min: number;
-  max: number;
-}
-
-const defaultInputProps: InputProps = {
-  ...DefaultInputProps,
-
-  type: LAYOUT_INPUT_TYPE.NumberSpinner,
-  label: 'Input Label',
-  placeholder: 'Enter a value...',
-
-  min: 0,
-  max: 100,
-};
-
-export const NumberSpinner = (_props: InputProps) => {
-  const props: InputProps = { ...defaultInputProps, ..._props };
-
+export const NumberSpinner = ({
+  field,
+  type,
+  value,
+  label,
+  hint,
+  disabled,
+  focus,
+  validationError,
+  onChange,
+  onValidate,
+  onFocus,
+  onBlur,
+  placeholder,
+  template,
+  min,
+  max,
+  ...props
+}: InputNumberSpinnerProps) => {
   const inputRef: any = React.useRef();
   const lastFocusState: any = React.useRef(false);
+  const isInvalid =
+    validationError !== null &&
+    validationError !== undefined &&
+    validationError.length;
 
   React.useEffect(() => {}, []);
 
-  if (inputRef.current && lastFocusState.current !== props.focus) {
-    lastFocusState.current = props.focus;
+  if (inputRef.current && lastFocusState.current !== focus) {
+    lastFocusState.current = focus;
 
-    if (props.focus) {
+    if (focus) {
       inputRef.current.focus();
     }
   }
 
-  let cleanVal = props.value;
-  if (cleanVal && props.template) {
-    cleanVal = render(cleanVal, props.template);
+  let cleanVal: string | number | undefined = value;
+
+  if (cleanVal && template) {
+    cleanVal = render(cleanVal, template);
   }
 
-  const validationError: any = props.validationError;
+  let inputClasses = 'form-control form-control-sm';
+
+  if (isInvalid) {
+    inputClasses += ' is-invalid';
+  }
 
   const inputProps: any = {
     ref: inputRef,
     type: 'text',
-    className:
-      'form-control form-control-sm ' +
-      (validationError !== '' ? 'is-invalid' : ''),
-    disabled: props.disabled,
+    className: inputClasses,
+    disabled: disabled,
     value: cleanVal,
 
     onFocus: (ev: React.FocusEvent<HTMLInputElement>) => {
@@ -67,23 +66,24 @@ export const NumberSpinner = (_props: InputProps) => {
     },
   };
 
-  let minValue = parseInt(String(props.min)) || 1;
-  let maxValue = parseInt(String(props.max)) || Number.POSITIVE_INFINITY;
+  let minValue = parseInt(String(min)) || 1;
+  let maxValue = parseInt(String(max)) || Number.POSITIVE_INFINITY;
+  let groupClasses = 'input-group input-group-sm';
+  let controlClasses = 'control-number-spinner mb-2';
+
+  if (isInvalid) {
+    groupClasses += ' is-invalid';
+  }
 
   return (
-    <div className={'mb-2'}>
-      <label className="form-label">{props.label}</label>
-      <div
-        className={
-          'input-group input-group-sm ' +
-          (validationError !== '' ? 'is-invalid' : '')
-        }
-      >
+    <div className={controlClasses}>
+      <label className="form-label">{label}</label>
+      <div className={groupClasses}>
         <button
           style={{ width: '25%', maxWidth: '75px' }}
           className="btn btn-outline-primary pre"
           type="button"
-          disabled={props.disabled}
+          disabled={disabled}
           onClick={(ev: React.MouseEvent<HTMLButtonElement>) => {
             let cleanValue = parseInt(inputRef.current.value) - 1;
             if (cleanValue < minValue) {
@@ -91,8 +91,14 @@ export const NumberSpinner = (_props: InputProps) => {
             } else if (cleanValue > maxValue) {
               cleanValue = maxValue;
             }
-            props.onChange(cleanValue);
-            props.onValidate(cleanValue);
+
+            if (onChange) {
+              onChange(field, cleanValue);
+            }
+
+            if (onValidate) {
+              onValidate(cleanValue);
+            }
           }}
           onMouseUp={(ev: React.MouseEvent<HTMLButtonElement>) => {
             ev.currentTarget.blur();
@@ -116,16 +122,22 @@ export const NumberSpinner = (_props: InputProps) => {
           style={{ width: '25%', maxWidth: '75px' }}
           className="btn btn-outline-primary post"
           type="button"
-          disabled={props.disabled}
+          disabled={disabled}
           onClick={(ev: React.MouseEvent<HTMLButtonElement>) => {
             let cleanValue = parseInt(inputRef.current.value) + 1;
-            if (cleanValue < props.min) {
-              cleanValue = props.min;
-            } else if (cleanValue > props.max) {
-              cleanValue = props.max;
+            if (cleanValue < min) {
+              cleanValue = min;
+            } else if (cleanValue > max) {
+              cleanValue = max;
             }
-            props.onChange(cleanValue);
-            props.onValidate(cleanValue);
+
+            if (onChange) {
+              onChange(field, cleanValue);
+            }
+
+            if (onValidate) {
+              onValidate(cleanValue);
+            }
           }}
           onMouseUp={(ev: React.MouseEvent<HTMLButtonElement>) => {
             ev.currentTarget.blur();
@@ -141,9 +153,11 @@ export const NumberSpinner = (_props: InputProps) => {
           </span>
         </button>
       </div>
-      {validationError !== '' ? (
+      {isInvalid ? (
         <div className="invalid-feedback">{validationError}</div>
-      ) : null}
+      ) : (
+        <></>
+      )}
     </div>
   );
 };
