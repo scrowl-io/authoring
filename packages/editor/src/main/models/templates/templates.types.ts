@@ -1,4 +1,5 @@
 import { TemplateSchema as schema } from '@scrowl/template-core';
+import { rq } from '../../services';
 
 export type { TemplateSchema } from '@scrowl/template-core';
 
@@ -25,3 +26,16 @@ export type TemplateRecords = Array<{
   source: string;
   manifest: schema;
 }>;
+
+export interface TemplatesApiLoad
+  extends Omit<rq.RegisterEndpoint, 'name'> {
+  name: '/templates/load';
+}
+
+export type TemplatesApi = Partial<{
+  load: TemplatesApiLoad['name'];
+}>;
+
+export type TemplatesEndpoints = {
+  load: TemplatesApiLoad['name'];
+};
