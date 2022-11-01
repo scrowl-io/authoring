@@ -32,18 +32,12 @@ export type ColumnOptions = {
 export type TwoColumnSchemaProps = {
   meta: TemplateSchemaMeta;
   content: {
-    leftColumn: {
-      textLeft: InputTextboxProps;
-      headingLeft?: InputTextboxProps;
-    };
-    rightColumn: {
-      textRight: InputTextboxProps;
-      headingRight?: InputTextboxProps;
-    };
-    middleColumn?: {
-      textMiddle: InputTextboxProps;
-      headingMiddle?: InputTextboxProps;
-    };
+    textLeft: InputTextboxProps;
+    headingLeft?: InputTextboxProps;
+    textRight: InputTextboxProps;
+    headingRight?: InputTextboxProps;
+    textMiddle: InputTextboxProps;
+    headingMiddle?: InputTextboxProps;
     columnOptions: ColumnOptions;
     bgImage?: TwoColumnContentBgImage;
     options: TwoColumnContentOptions;

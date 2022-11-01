@@ -10,12 +10,12 @@ export const TwoColumn = ({ schema, ...props }: TwoColumnProps) => {
   const scrollScenes: any = React.useRef([]);
   const timeline: any = React.useRef();
 
-  let layoutTextLeft = schema.content.leftColumn.textLeft.value;
-  let layoutTextRight = schema.content.rightColumn.textRight.value;
-  let layoutTextMiddle = schema.content.middleColumn?.textMiddle.value;
-  let headingLeft = schema.content.leftColumn.headingLeft?.value;
-  let headingRight = schema.content.rightColumn.headingRight?.value;
-  let headingMiddle = schema.content.middleColumn?.headingMiddle?.value;
+  let layoutTextLeft = schema.content.textLeft.value;
+  let layoutTextRight = schema.content.textRight.value;
+  let layoutTextMiddle = schema.content.textMiddle.value;
+  let headingLeft = schema.content.headingLeft?.value;
+  let headingRight = schema.content.headingRight?.value;
+  let headingMiddle = schema.content.headingMiddle?.value;
   let numberOfColumns = schema.content.columnOptions.numberOfColumns;
 
   let stackOnMobile = schema.content.columnOptions.stackOnMobile;
