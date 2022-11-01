@@ -10,7 +10,7 @@ import {
 } from '@scrowl/template-core';
 
 export interface BlockTextContentBgImage extends InputFieldsetProps {
-  fields: {
+  content: {
     alt: InputTextboxProps;
     url: InputAssetProps;
     bg: InputCheckboxProps;
@@ -18,7 +18,7 @@ export interface BlockTextContentBgImage extends InputFieldsetProps {
 }
 
 export interface BlockTextContentOptions extends InputFieldsetProps {
-  fields: {
+  content: {
     alignment: InputSelectProps;
     showProgress: InputCheckboxProps;
   }

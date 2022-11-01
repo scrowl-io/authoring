@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { stateManager } from '../../../services'
-import { updateObj } from '../../../utils';
+import { updateObj, setObjField } from '../../../utils';
 
 export const initialState = {
   moduleIdx: -1,
@@ -37,7 +37,11 @@ export const config: stateManager.StateConfig = {
       updateObj(state.template, action.payload);
     },
     setTemplateContent: (state, action) => {
-      updateObj(state.template.content, action.payload);
+      let pointer = typeof action.payload.field === 'string' ? action.payload.field : action.payload.field.join('.content.');
+      const value = action.payload.value;
+
+      pointer += '.value';
+      setObjField(state.template.content, pointer, value);
     },
   },
 };

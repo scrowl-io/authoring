@@ -1,4 +1,4 @@
-export const render = (value: string, template: string) => {
+export const render = (value: any, template: string) => {
   value = String(value);
 
   let re = /{(\s+)?\d(\s+)?,?(\s+)?\d?(\s+)?(=(\s+)?[a-zA-Z0-9_]+)?}/g;

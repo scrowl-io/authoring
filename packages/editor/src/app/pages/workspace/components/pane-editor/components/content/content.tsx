@@ -1,14 +1,18 @@
 import React from 'react';
-import { useActiveTemplateContent } from '../../../page-workspace-hooks';
-import { FormBuilder } from '.';
+import * as css from '../../_pane-editor.scss';
+import {
+  useActiveTemplateContent,
+  setActiveTemplateContent,
+} from '../../../../page-workspace-hooks';
+import { FormBuilder } from './components';
 
-export const TemplateForm = () => {
+export const Content = () => {
   const templateContent = useActiveTemplateContent();
 
   console.log('templateContent', templateContent);
 
   const handleContentUpdate = (field, value) => {
-    console.log('content update', field, value);
+    setActiveTemplateContent({ field, value });
   };
 
   const handleContentValidate = (field, value) => {
@@ -24,8 +28,7 @@ export const TemplateForm = () => {
   };
 
   return (
-    <div className="template-form">
-      Content Form
+    <div className={css.contentForm}>
       <FormBuilder
         content={templateContent}
         onChange={handleContentUpdate}
@@ -39,5 +42,5 @@ export const TemplateForm = () => {
 };
 
 export default {
-  TemplateForm,
+  Content,
 };

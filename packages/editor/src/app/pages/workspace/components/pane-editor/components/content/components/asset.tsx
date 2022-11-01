@@ -1,37 +1,37 @@
 import React from 'react';
-import {
-  LAYOUT_INPUT_TYPE,
-  BaseInputProps,
-  DefaultInputProps,
-} from '../pane-editor.types';
-import { Projects } from '../../../../../models';
-import { setWorkspace } from '../../../page-workspace-hooks';
+import { InputAssetProps } from '../../../pane-editor.types';
+import { Projects } from '../../../../../../../models';
+import { setWorkspace } from '../../../../../page-workspace-hooks';
 
-export interface InputAssetProps extends BaseInputProps {
-  type: LAYOUT_INPUT_TYPE.Asset;
-  placeholder?: string;
-  assetType?: string;
-}
-
-const defaultInputProps: InputAssetProps = {
-  ...DefaultInputProps,
-
-  type: LAYOUT_INPUT_TYPE.Asset,
-  label: 'Input Label',
-  placeholder: 'Select an image...',
-  assetType: '',
-};
-
-export const ImageAsset = (_props: InputAssetProps) => {
-  const props: InputAssetProps = { ...defaultInputProps, ..._props };
+export const ImageAsset = ({
+  field,
+  type,
+  value,
+  label,
+  hint,
+  disabled,
+  focus,
+  validationError,
+  onChange,
+  onValidate,
+  onFocus,
+  onBlur,
+  placeholder,
+  assetType,
+  ...props
+}: InputAssetProps) => {
   const inputRef: any = React.useRef();
   const lastFocusState: any = React.useRef(false);
   const assets = Projects.useAssets();
-
-  const validationError: any = props.validationError;
+  const isInvalid =
+    validationError !== null &&
+    validationError !== undefined &&
+    validationError.length;
 
   const showAssetBrowser = () => {
-    props.onFocus();
+    if (onFocus) {
+      onFocus();
+    }
     setWorkspace({ isOpenAssetBrowser: true });
     // ::TODO:: fix this state
     // dispatch(
@@ -58,10 +58,10 @@ export const ImageAsset = (_props: InputAssetProps) => {
     // );
   };
 
-  if (inputRef.current && lastFocusState.current !== props.focus) {
-    lastFocusState.current = props.focus;
+  if (inputRef.current && lastFocusState.current !== focus) {
+    lastFocusState.current = focus;
 
-    if (props.focus) {
+    if (focus) {
       // requestAnimationFrame fixes a state update bug
       window.requestAnimationFrame(() => {
         showAssetBrowser();
@@ -69,20 +69,25 @@ export const ImageAsset = (_props: InputAssetProps) => {
     }
   }
 
-  const valueHash = props.value.split('.').shift();
-  const assetName = assets.reduce((a, p) => {
-    return p.fileHash === valueHash ? p.fileName : a;
-  }, '');
+  const valueHash = value ? value.split('.').shift() : '';
+  const assetName = '';
+  // const assetName = assets.reduce((a, p) => {
+  //   return p.fileHash === valueHash ? p.fileName : a;
+  // }, '');
+
+  let inputClasses = 'form-control form-control-sm';
+
+  if (isInvalid) {
+    inputClasses += ' is-invalid';
+  }
 
   const inputProps: any = {
     type: 'text',
-    className:
-      'form-control form-control-sm' +
-      (validationError !== '' ? ' is-invalid ' : ''),
+    className: inputClasses,
     style: { cursor: 'pointer', overflow: 'hidden', textOverflow: 'ellipsis' },
     value: assetName,
-    placeholder: props.placeholder,
-    disabled: props.disabled,
+    placeholder: placeholder,
+    disabled: disabled,
     tabIndex: '-1',
 
     onChange: (ev: React.FormEvent<HTMLInputElement>) => {},
@@ -96,34 +101,42 @@ export const ImageAsset = (_props: InputAssetProps) => {
     },
   };
 
+  let controlClasses = 'control-asset mb-2 template-content-input';
+  let groupClasses = 'input-group input-group-sm';
+
+  if (disabled) {
+    controlClasses += ' disabled';
+  }
+
+  if (isInvalid) {
+    groupClasses += ' is-invalid';
+  }
+
   return (
-    <div
-      className={
-        'mb-2 template-content-input ' + (props.disabled ? ' disabled ' : '')
-      }
-    >
-      <label className="form-label">{props.label}</label>
-      <div
-        className={
-          'input-group input-group-sm ' +
-          (validationError !== '' ? 'is-invalid' : '')
-        }
-      >
+    <div className={controlClasses}>
+      <label className="form-label">{label}</label>
+      <div className={groupClasses}>
         {assetName ? (
           <button
             style={{ width: '26px', paddingLeft: '5px' }}
             className="btn btn-outline-primary post"
             type="button"
-            disabled={props.disabled}
+            disabled={disabled}
             onClick={(e: any) => {
-              props.onChange('');
-              props.onValidate('');
+              if (onChange) {
+                onChange(field, '');
+              }
+              if (onValidate) {
+                onValidate(field, '');
+              }
             }}
             onMouseUp={(e: any) => {
               e.target.blur();
             }}
             onBlur={() => {
-              props.onBlur();
+              if (onBlur) {
+                onBlur(field, '');
+              }
             }}
           >
             <span
@@ -144,7 +157,7 @@ export const ImageAsset = (_props: InputAssetProps) => {
           style={{ width: '25%', maxWidth: '75px' }}
           className="btn btn-outline-primary post"
           type="button"
-          disabled={props.disabled}
+          disabled={disabled}
           onClick={(ev: React.MouseEvent<HTMLButtonElement>) => {
             showAssetBrowser();
           }}
@@ -152,15 +165,19 @@ export const ImageAsset = (_props: InputAssetProps) => {
             ev.currentTarget.blur();
           }}
           onBlur={(ev: React.FocusEvent<HTMLButtonElement>) => {
-            props.onBlur();
+            if (onBlur) {
+              onBlur(field, '');
+            }
           }}
         >
           Select
         </button>
       </div>
-      {validationError !== '' ? (
+      {isInvalid ? (
         <div className="invalid-feedback">{validationError}</div>
-      ) : null}
+      ) : (
+        <></>
+      )}
     </div>
   );
 };

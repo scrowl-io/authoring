@@ -13,7 +13,7 @@ const App = () => {
   const schema = BlockTextSchema as BlockTextSchemaProps;
   const controller = new Scrowl.core.scroll.Controller();
 
-  schema.content.options.fields.showProgress.value = true;
+  schema.content.options.content.showProgress.value = true;
 
   return (
     <BlockText

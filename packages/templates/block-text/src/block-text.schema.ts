@@ -21,7 +21,7 @@ export const BlockTextSchema: BlockTextSchemaProps = {
     bgImage: {
       type: 'Fieldset',
       label: 'Background Image',
-      fields: {
+      content: {
         alt: {
           type: 'Textbox',
           label: 'Alt Text',
@@ -42,7 +42,7 @@ export const BlockTextSchema: BlockTextSchemaProps = {
     options: {
       type: 'Fieldset',
       label: 'Options',
-      fields: {
+      content: {
         alignment: {
           type: 'Select',
           hint: 'BodyAlignment',

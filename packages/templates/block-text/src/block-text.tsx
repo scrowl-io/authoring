@@ -11,9 +11,9 @@ export const BlockText = ({ schema, ...props }: BlockTextProps) => {
   const timeline: any = React.useRef();
 
   let schemaText = schema.content.text.value;
-  let useImageAsBG = schema.content.bgImage.fields.bg.value;
-  let alignment = schema.content.options.fields.alignment.value;
-  let showProgressBar = schema.content.options.fields.showProgress.value;
+  let useImageAsBG = schema.content.bgImage.content.bg.value;
+  let alignment = schema.content.options.content.alignment.value;
+  let showProgressBar = schema.content.options.content.showProgress.value;
   const slideDuration = showProgressBar ? 1000 : 0;
 
   if (showProgressBar) {

@@ -1,46 +1,7 @@
 import React from 'react';
-import {
-  LAYOUT_INPUT_TYPE,
-  BaseInputProps,
-  DefaultInputProps,
-} from '../pane-editor.types';
+import { InputTextboxProps } from '../../../pane-editor.types';
 import { GroupElement } from './group-element';
 import { render } from './templater';
-
-export interface InputTextboxProps extends BaseInputProps {
-  type: LAYOUT_INPUT_TYPE.Textbox;
-  placeholder?: string;
-
-  checkbox?: boolean;
-
-  multiLine?: boolean;
-  autoGrow?: number; // Max number of lines to auto-grow to
-  lines?: number; // The initial number of lines to show
-  allowLinebreaks?: boolean;
-  maxLength?: number;
-
-  template?: string;
-  pre?: any;
-  post?: any;
-
-  focusRange?: [number, number];
-}
-
-const defaultInputProps: InputTextboxProps = {
-  ...DefaultInputProps,
-
-  type: LAYOUT_INPUT_TYPE.Textbox,
-  label: 'Input Label',
-  placeholder: 'Enter a value...',
-
-  multiLine: false,
-  autoGrow: 5,
-  lines: 3,
-  allowLinebreaks: false,
-  maxLength: 1500,
-
-  checkbox: false,
-};
 
 function autoSizeTextArea(textarea, minLines, maxLines) {
   const computedStyle = getComputedStyle(textarea);
@@ -60,56 +21,82 @@ function autoSizeTextArea(textarea, minLines, maxLines) {
     Math.min(Math.max(minHeight, textarea.scrollHeight + 2), maxHeight) + 'px';
 }
 
-export const Textbox = (_props: InputTextboxProps) => {
-  const props: InputTextboxProps = { ...defaultInputProps, ..._props };
-
+export const Textbox = ({
+  field,
+  type,
+  value,
+  label,
+  hint,
+  disabled,
+  focus,
+  validationError,
+  onChange,
+  onValidate,
+  onFocus,
+  onBlur,
+  placeholder,
+  checkbox,
+  multiLine,
+  autoGrow,
+  lines,
+  allowLinebreaks,
+  maxLength,
+  template,
+  pre,
+  post,
+  focusRange,
+  ...props
+}: InputTextboxProps) => {
   const inputRef: any = React.useRef();
   const [revertValue, setRevertValue]: any = React.useState(null);
   const lastFocusState: any = React.useRef(false);
+  const isChecked = value ? !value.startsWith('disabled::') : false;
+  const isInvalid =
+    validationError !== null &&
+    validationError !== undefined &&
+    validationError.length;
+  const isDisabled = disabled || (checkbox && !isChecked);
 
   React.useEffect(() => {
-    props.multiLine &&
-      autoSizeTextArea(inputRef.current, props.lines, props.lines);
-  }, [props.lines, props.multiLine]);
+    multiLine && autoSizeTextArea(inputRef.current, lines, lines);
+  }, [lines, multiLine]);
 
-  if (inputRef.current && lastFocusState.current !== props.focus) {
-    lastFocusState.current = props.focus;
+  if (inputRef.current && lastFocusState.current !== focus) {
+    lastFocusState.current = focus;
 
-    if (props.focus) {
+    if (focus) {
       inputRef.current.focus();
     }
   }
 
-  const validationError: any = props.validationError;
+  let cleanVal: string | number | undefined = value;
 
-  const isChecked = !props.value.startsWith('disabled::');
-
-  let cleanVal = props.value;
-  if (cleanVal.startsWith('disabled::')) {
+  if (cleanVal && cleanVal.startsWith('disabled::')) {
     cleanVal = cleanVal.substring(10);
   }
 
   if (revertValue === null) {
-    if (cleanVal && props.template) {
-      cleanVal = render(cleanVal, props.template);
+    if (cleanVal && template) {
+      cleanVal = render(cleanVal, template);
     }
+  }
+
+  let inputClasses = 'form-control form-control-sm';
+
+  if (isInvalid) {
+    inputClasses += ' is-invalid';
   }
 
   const inputProps: any = {
     ref: inputRef,
     type: 'text',
-    className:
-      'form-control form-control-sm' +
-      (validationError !== '' ? ' is-invalid ' : ''),
-
+    className: inputClasses,
     value: cleanVal,
-    placeholder: props.placeholder,
-    disabled: props.disabled || !isChecked,
-
-    maxLength: props.maxLength,
-
+    placeholder: placeholder,
+    disabled: isDisabled,
+    maxLength: maxLength,
     onChange: (ev: React.FormEvent<HTMLInputElement>) => {
-      if (props.allowLinebreaks !== true) {
+      if (allowLinebreaks !== true) {
         // Likely to happen during a paste
         const regex = /\n+/g;
         ev.currentTarget.value = ev.currentTarget.value.replace(regex, ' ');
@@ -117,12 +104,14 @@ export const Textbox = (_props: InputTextboxProps) => {
 
       const checkedValue =
         (isChecked ? '' : 'disabled::') + ev.currentTarget.value;
-      props.onChange(checkedValue);
-    },
 
+      if (onChange) {
+        onChange(field, checkedValue);
+      }
+    },
     onBlur: (ev: React.FocusEvent<HTMLInputElement>) => {
       let bestValue = ev.target.value;
-      if (props.allowLinebreaks !== true) {
+      if (allowLinebreaks !== true) {
         const regex = /\n+/g;
         bestValue = bestValue.replace(regex, ' ');
       } else {
@@ -134,27 +123,34 @@ export const Textbox = (_props: InputTextboxProps) => {
 
       ev.target.scrollTop = 0;
 
-      props.multiLine && autoSizeTextArea(ev.target, props.lines, props.lines);
+      multiLine && autoSizeTextArea(ev.target, lines, lines);
 
       const checkedValue = (isChecked ? '' : 'disabled::') + bestValue;
-      props.onValidate(checkedValue);
 
-      props.onBlur(checkedValue);
+      if (onValidate) {
+        onValidate(field, checkedValue);
+      }
+
+      if (onBlur) {
+        onBlur(field, checkedValue);
+      }
 
       setRevertValue(null);
     },
-
     onFocus: (ev: React.FocusEvent<HTMLInputElement>) => {
-      props.multiLine &&
-        autoSizeTextArea(ev.target, props.lines, props.autoGrow);
+      const val = ev.target.value;
 
-      props.onFocus(ev.target.value);
-      setRevertValue(ev.target.value);
+      multiLine && autoSizeTextArea(ev.target, lines, autoGrow);
+
+      if (onFocus) {
+        onFocus(field, val);
+      }
+
+      setRevertValue(val);
     },
-
     onKeyDown: (ev: React.KeyboardEvent<HTMLInputElement>) => {
       if (ev.key === 'Enter') {
-        if (props.multiLine && props.allowLinebreaks === true) {
+        if (multiLine && allowLinebreaks === true) {
           return;
         }
 
@@ -162,42 +158,44 @@ export const Textbox = (_props: InputTextboxProps) => {
         ev.preventDefault();
         return;
       } else if (ev.key === 'Escape') {
-        props.onChange(revertValue ? revertValue : '');
+        if (onChange) {
+          onChange(revertValue ? revertValue : '');
+        }
+
         ev.currentTarget.blur();
         ev.preventDefault();
         return;
       }
     },
-
     onInput: (e: any) => {
-      if (props.allowLinebreaks !== true) {
+      if (allowLinebreaks !== true) {
         const regex = /\n+/g;
         e.target.value = e.target.value.replace(regex, ' ');
       }
 
-      props.multiLine &&
-        autoSizeTextArea(e.target, props.lines, props.autoGrow);
+      multiLine && autoSizeTextArea(e.target, lines, autoGrow);
     },
   };
 
+  let groupClasses = 'input-group input-group-sm';
+  let controlClasses = 'control-textbox mb-2 template-content-input';
+
+  if (isDisabled) {
+    controlClasses += ' disabled';
+  }
+
+  if (isInvalid) {
+    groupClasses += ' is-invalid';
+  }
+
   return (
-    <div
-      className={
-        'mb-2 template-content-input ' +
-        (props.disabled || (props.checkbox && !isChecked) ? ' disabled ' : '')
-      }
-    >
-      <label className="form-label">{props.label}</label>
-      <div
-        className={
-          'input-group input-group-sm ' +
-          (validationError !== '' ? 'is-invalid' : '')
-        }
-      >
-        {props.checkbox ? (
+    <div className={controlClasses}>
+      <label className="form-label">{label}</label>
+      <div className={groupClasses}>
+        {checkbox ? (
           <div className="input-group-text checkbox pre">
             <input
-              disabled={props.disabled}
+              disabled={isDisabled}
               checked={isChecked}
               className="form-check-input form-check-input-sm"
               type="checkbox"
@@ -206,10 +204,13 @@ export const Textbox = (_props: InputTextboxProps) => {
                 if (cleanVal.startsWith('disabled::')) {
                   cleanVal = cleanVal.substring(10);
                 }
-                if (isChecked) {
-                  props.onChange('disabled::' + cleanVal);
-                } else {
-                  props.onChange(cleanVal);
+
+                if (onChange) {
+                  if (isChecked) {
+                    onChange('disabled::' + cleanVal);
+                  } else {
+                    onChange(cleanVal);
+                  }
                 }
 
                 inputProps.onBlur({ target: inputRef.current });
@@ -217,18 +218,16 @@ export const Textbox = (_props: InputTextboxProps) => {
             />
           </div>
         ) : (
-          GroupElement('pre', props.pre)
+          GroupElement('pre', pre)
         )}
-        {props.multiLine ? (
-          <textarea {...inputProps} />
-        ) : (
-          <input {...inputProps} />
-        )}
-        {GroupElement('post', props.post)}
+        {multiLine ? <textarea {...inputProps} /> : <input {...inputProps} />}
+        {GroupElement('post', post)}
       </div>
-      {validationError !== '' ? (
+      {isInvalid ? (
         <div className="invalid-feedback">{validationError}</div>
-      ) : null}
+      ) : (
+        <></>
+      )}
     </div>
   );
 };
