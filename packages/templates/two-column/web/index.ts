@@ -1,4 +1,4 @@
-import { TwoColumn, TwoColumnSchema, TwoColumnLayout } from '../src';
+import { TwoColumn, TwoColumnSchema, TwoColumnSchemaProps } from '../src';
 
 window.TwoColumn = TwoColumn;
-window.TwoColumnSchema = TwoColumnSchema as TwoColumnLayout;
+window.TwoColumnSchema = TwoColumnSchema as TwoColumnSchemaProps;

@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  TemplateSchemaMeta,
   TemplateCommons,
   InputTextboxProps,
   InputFieldsetProps,
@@ -9,7 +10,7 @@ import {
 } from '@scrowl/template-core';
 
 export interface TwoColumnContentBgImage extends InputFieldsetProps {
-  fields: {
+  content: {
     alt: InputTextboxProps;
     url: InputAssetProps;
     bg: InputCheckboxProps;
@@ -17,7 +18,7 @@ export interface TwoColumnContentBgImage extends InputFieldsetProps {
 }
 
 export interface TwoColumnContentOptions extends InputFieldsetProps {
-  fields: {
+  content: {
     alignment: InputSelectProps;
     showProgress: InputCheckboxProps;
   };
@@ -28,26 +29,29 @@ export type ColumnOptions = {
   stackOnMobile: boolean;
 };
 
-export type TwoColumnLayout = {
-  leftColumn: {
-    textLeft: InputTextboxProps;
-    headingLeft?: InputTextboxProps;
+export type TwoColumnSchemaProps = {
+  meta: TemplateSchemaMeta;
+  content: {
+    leftColumn: {
+      textLeft: InputTextboxProps;
+      headingLeft?: InputTextboxProps;
+    };
+    rightColumn: {
+      textRight: InputTextboxProps;
+      headingRight?: InputTextboxProps;
+    };
+    middleColumn?: {
+      textMiddle: InputTextboxProps;
+      headingMiddle?: InputTextboxProps;
+    };
+    columnOptions: ColumnOptions;
+    bgImage?: TwoColumnContentBgImage;
+    options: TwoColumnContentOptions;
   };
-  rightColumn: {
-    textRight: InputTextboxProps;
-    headingRight?: InputTextboxProps;
-  };
-  middleColumn?: {
-    textMiddle: InputTextboxProps;
-    headingMiddle?: InputTextboxProps;
-  };
-  columnOptions: ColumnOptions;
-  bgImage?: TwoColumnContentBgImage;
-  options: TwoColumnContentOptions;
 };
 
 export interface TwoColumnCommons extends TemplateCommons {
-  layout: TwoColumnLayout;
+  schema: TwoColumnSchemaProps;
 }
 
 export type TwoColumnProps = TwoColumnCommons &

@@ -1,10 +1,6 @@
-import {
-  TemplateContent,
-  LAYOUT_INPUT_TYPE,
-  MIGRATION_HINT,
-} from '@scrowl/template-core';
+import { TwoColumnSchemaProps } from './two-column.types';
 
-export const TwoColumnSchema: TemplateContent = {
+export const TwoColumnSchema: TwoColumnSchemaProps = {
   meta: {
     version: '1.0.0',
     label: 'Two Column',
@@ -18,10 +14,10 @@ export const TwoColumnSchema: TemplateContent = {
         label: 'Left Heading',
         value: 'Left Heading',
         placeholder: 'Left Heading',
-        multiline: true,
+        multiLine: true,
         lines: 5,
         autoGrow: 10,
-        allowLineBreaks: true,
+        allowLinebreaks: true,
       },
       textLeft: {
         type: 'Textbox',
@@ -41,10 +37,10 @@ export const TwoColumnSchema: TemplateContent = {
         label: 'Right Heading',
         value: 'Right Heading',
         placeholder: 'Right Heading',
-        multiline: true,
+        multiLine: true,
         lines: 5,
         autoGrow: 10,
-        allowLineBreaks: true,
+        allowLinebreaks: true,
       },
       textRight: {
         type: 'Textbox',
@@ -64,10 +60,10 @@ export const TwoColumnSchema: TemplateContent = {
         label: 'Middle Heading',
         value: 'Middle Heading',
         placeholder: 'Middle Heading',
-        multiline: true,
+        multiLine: true,
         lines: 5,
         autoGrow: 10,
-        allowLineBreaks: true,
+        allowLinebreaks: true,
       },
       textMiddle: {
         type: 'Textbox',

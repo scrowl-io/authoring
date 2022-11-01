@@ -1,8 +1,8 @@
-import { TwoColumnProps, TwoColumnLayout } from '../src';
+import { TwoColumnProps, TwoColumnSchemaProps } from '../src';
 
 declare global {
   interface Window {
     TwoColumn: (props: TwoColumnProps) => JSX.Element;
-    TwoColumnSchema: TwoColumnLayout;
+    TwoColumnSchema: TwoColumnSchemaProps;
   }
 }

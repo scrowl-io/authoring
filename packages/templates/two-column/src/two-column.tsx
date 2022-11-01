@@ -20,7 +20,7 @@ export const TwoColumn = ({ schema, ...props }: TwoColumnProps) => {
 
   let stackOnMobile = schema.content.columnOptions.stackOnMobile;
 
-  let useImageAsBG = schema.content.bgImage.content.bg.value;
+  let useImageAsBG = schema.content.bgImage?.content.bg.value;
   let alignment = schema.content.options.content.alignment.value;
   let showProgressBar = schema.content.options.content.showProgress.value;
   const slideDuration = showProgressBar ? 1000 : 0;
