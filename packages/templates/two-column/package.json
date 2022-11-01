@@ -1,10 +1,10 @@
 {
-  "name": "@scrowl/template-block-text",
+  "name": "@scrowl/template-two-column",
   "version": "1.0.0",
   "meta": {
-    "label": "Text Block",
-    "component": "BlockText",
-    "filename": "block-text"
+    "label": "Two Column",
+    "component": "TwoColumn",
+    "filename": "two-column"
   },
   "description": "",
   "license": "MIT",
@@ -15,27 +15,37 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/scrowl-io/authoring.git",
-    "directory": "packages/template/block-text"
+    "directory": "packages/template/two-column"
   },
   "bugs": {
     "url": "https://github.com/scrowl-io/scrowl/issues"
   },
-  "homepage": "https://github.com/scrowl-io/authoring/packages/template/block-text#readme",
+  "homepage": "https://github.com/scrowl-io/authoring/packages/template/two-column#readme",
   "scripts": {
     "clean": "rimraf ../../../.parcel-cache",
     "prestart": "yarn run clean && rimraf dev/dist",
     "start": "cd dev && parcel serve --no-cache --open",
     "prebuild": "yarn run clean && rimraf dist",
-    "build": "webpack --config webpack.config.js"
+    "build": "parcel build --no-cache",
+    "build:schema": "cd schema && parcel build --no-cache",
+    "postbuild": "webpack --config webpack.config.js && yarn run build:schema"
   },
+  "source": "./src/index.ts",
+  "main": "./lib/scrowl.template-two-column.js",
+  "module": "./lib/scrowl.template-two-column.module.js",
+  "types": "./lib/scrowl.template-two-column.d.ts",
   "exports": {
     ".": {
-      "require": "./dist/scrowl.template-block-text.js",
-      "default": "./dist/scrowl.template-block-text.js",
-      "import": "./src/index.ts"
+      "require": "./lib/scrowl.template-two-column.js",
+      "default": "./lib/scrowl.template-two-column.js",
+      "import": "./lib/scrowl.template-two-column.module.js"
     },
-    "./src": "./src/index.ts",
-    "./web": "./dist/scrowl.template-block-text.js"
+    "./web": "./dist/scrowl.template-two-column.js",
+    "./schema": {
+      "require": "./lib/schema.js",
+      "default": "./lib/schema.js",
+      "import": "./lib/schema.module.js"
+    }
   },
   "eslintConfig": {
     "extends": "@scrowl/config"

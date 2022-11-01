@@ -3,26 +3,26 @@ import Scrowl from '@scrowl/template-core';
 import * as css from './_index.scss';
 import { TwoColumnProps } from './two-column.types';
 
-export const TwoColumn = ({ layout, ...props }: TwoColumnProps) => {
+export const TwoColumn = ({ schema, ...props }: TwoColumnProps) => {
   let classes = `${css.templateBlockText} `;
   const editMode = props.editMode ? true : false;
   const focusElement = editMode ? props.focusElement : null;
   const scrollScenes: any = React.useRef([]);
   const timeline: any = React.useRef();
 
-  let layoutTextLeft = layout.leftColumn.textLeft.value;
-  let layoutTextRight = layout.rightColumn.textRight.value;
-  let layoutTextMiddle = layout.middleColumn?.textMiddle.value;
-  let headingLeft = layout.leftColumn.headingLeft?.value;
-  let headingRight = layout.rightColumn.headingRight?.value;
-  let headingMiddle = layout.middleColumn?.headingMiddle?.value;
-  let numberOfColumns = layout.columnOptions.numberOfColumns;
+  let layoutTextLeft = schema.content.leftColumn.textLeft.value;
+  let layoutTextRight = schema.content.rightColumn.textRight.value;
+  let layoutTextMiddle = schema.content.middleColumn?.textMiddle.value;
+  let headingLeft = schema.content.leftColumn.headingLeft?.value;
+  let headingRight = schema.content.rightColumn.headingRight?.value;
+  let headingMiddle = schema.content.middleColumn?.headingMiddle?.value;
+  let numberOfColumns = schema.content.columnOptions.numberOfColumns;
 
-  let stackOnMobile = layout.columnOptions.stackOnMobile;
+  let stackOnMobile = schema.content.columnOptions.stackOnMobile;
 
-  let useImageAsBG = layout.bgImage?.fields.bg.value;
-  let alignment = layout.options.fields.alignment.value;
-  let showProgressBar = layout.options.fields.showProgress.value;
+  let useImageAsBG = schema.content.bgImage.content.bg.value;
+  let alignment = schema.content.options.content.alignment.value;
+  let showProgressBar = schema.content.options.content.showProgress.value;
   const slideDuration = showProgressBar ? 1000 : 0;
 
   if (showProgressBar) {
@@ -183,14 +183,14 @@ export const TwoColumn = ({ layout, ...props }: TwoColumnProps) => {
         <div
           id={getId('pinned-body')}
           className="hero"
-          aria-label={useImageAsBG ? layout['bgImage.alt'] : ''}
+          aria-label={useImageAsBG ? schema['bgImage.alt'] : ''}
           style={
-            useImageAsBG && layout['bgImage.url']
+            useImageAsBG && schema['bgImage.url']
               ? {
                   width: '100vw',
                   height: '100vh',
                   backgroundImage:
-                    'url("./course/assets/' + layout['bgImage.url'] + '")',
+                    'url("./course/assets/' + schema['bgImage.url'] + '")',
                 }
               : {}
           }
@@ -204,7 +204,7 @@ export const TwoColumn = ({ layout, ...props }: TwoColumnProps) => {
           {useImageAsBG ? null : (
             <div
               role="img"
-              aria-label={layout['hero_image.alt']}
+              aria-label={schema['hero_image.alt']}
               className={
                 'img ' +
                 (alignment === 'right' ? ' right' : '') +
@@ -217,10 +217,10 @@ export const TwoColumn = ({ layout, ...props }: TwoColumnProps) => {
                 }
               }}
               style={
-                layout['bgImage.url']
+                schema['bgImage.url']
                   ? {
                       backgroundImage:
-                        'url("./course/assets/' + layout['bgImage.url'] + '")',
+                        'url("./course/assets/' + schema['bgImage.url'] + '")',
                     }
                   : {}
               }
@@ -230,7 +230,7 @@ export const TwoColumn = ({ layout, ...props }: TwoColumnProps) => {
       </div>
     </Scrowl.core.Template>
   );
-};;;;;;;;;;
+};
 
 export default {
   TwoColumn,
