@@ -8,73 +8,71 @@ export const TwoColumnSchema: TwoColumnSchemaProps = {
     filename: 'two-column',
   },
   content: {
-    headingLeft: {
+    firstColumnHeading: {
       type: 'Textbox',
-      label: 'Left Heading',
-      value: 'Left Heading',
-      placeholder: 'Left Heading',
+      label: 'First Column Heading',
+      value: 'First',
+      placeholder: 'First ',
       multiLine: true,
       lines: 5,
       autoGrow: 10,
       allowLinebreaks: true,
     },
-    textLeft: {
+    firstColumnText: {
       type: 'Textbox',
-      label: 'Left Content',
+      label: 'First Column Text',
       value:
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-      placeholder: 'Write content here...',
+      placeholder: 'Write text content here...',
       multiLine: true,
       lines: 10,
       autoGrow: 10,
       allowLinebreaks: true,
     },
-    headingRight: {
+    secondColumnHeading: {
       type: 'Textbox',
-      label: 'Right Heading',
-      value: 'Right Heading',
-      placeholder: 'Right Heading',
+      label: 'Second Column Heading',
+      value: 'Second',
+      placeholder: 'Second',
       multiLine: true,
       lines: 5,
       autoGrow: 10,
       allowLinebreaks: true,
     },
-    textRight: {
+    secondColumnText: {
       type: 'Textbox',
-      label: 'Right Content',
+      label: 'Second Column Text',
       value:
-        'RIGHT DIFFERENT TEXT ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-      placeholder: 'Write content here...',
+        'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.',
+      placeholder: 'Write text content here...',
       multiLine: true,
       lines: 10,
       autoGrow: 10,
       allowLinebreaks: true,
     },
-    headingMiddle: {
+    thirdColumnHeading: {
       type: 'Textbox',
-      label: 'Middle Heading',
-      value: 'Middle Heading',
-      placeholder: 'Middle Heading',
+      label: 'Third Column Heading',
+      value: 'Third',
+      placeholder: 'Third',
       multiLine: true,
       lines: 5,
       autoGrow: 10,
       allowLinebreaks: true,
     },
-    textMiddle: {
+    thirdColumnText: {
       type: 'Textbox',
-      label: 'Middle Content',
+      label: 'Third Column Text',
       value:
-        'This is the middle text... ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-      placeholder: 'Write content here...',
+        'Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Ut tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.',
+      placeholder: 'Write text content here...',
       multiLine: true,
       lines: 10,
       autoGrow: 10,
       allowLinebreaks: true,
     },
-    columnOptions: {
-      numberOfColumns: 3,
-      stackOnMobile: true,
-    },
+    numberOfColumns: 3,
+    stackOnMobile: true,
     bgImage: {
       type: 'Fieldset',
       label: 'Background Image',

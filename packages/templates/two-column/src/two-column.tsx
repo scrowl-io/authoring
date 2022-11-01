@@ -10,15 +10,16 @@ export const TwoColumn = ({ schema, ...props }: TwoColumnProps) => {
   const scrollScenes: any = React.useRef([]);
   const timeline: any = React.useRef();
 
-  let layoutTextLeft = schema.content.textLeft.value;
-  let layoutTextRight = schema.content.textRight.value;
-  let layoutTextMiddle = schema.content.textMiddle.value;
-  let headingLeft = schema.content.headingLeft?.value;
-  let headingRight = schema.content.headingRight?.value;
-  let headingMiddle = schema.content.headingMiddle?.value;
-  let numberOfColumns = schema.content.columnOptions.numberOfColumns;
+  let firstColumnText = schema.content.firstColumnText.value;
+  let secondColumnText = schema.content.secondColumnText?.value;
+  let thirdColumnText = schema.content.thirdColumnText?.value;
 
-  let stackOnMobile = schema.content.columnOptions.stackOnMobile;
+  let firstColumnHeading = schema.content.firstColumnHeading?.value;
+  let secondColumnHeading = schema.content.secondColumnHeading?.value;
+  let thirdColumnHeading = schema.content.thirdColumnHeading?.value;
+  let numberOfColumns = schema.content.numberOfColumns;
+
+  let stackOnMobile = schema.content.stackOnMobile;
 
   let useImageAsBG = schema.content.bgImage?.content.bg.value;
   let alignment = schema.content.options.content.alignment.value;
@@ -107,11 +108,13 @@ export const TwoColumn = ({ schema, ...props }: TwoColumnProps) => {
             ? 'stacked-view-wide'
             : stackOnMobile && numberOfColumns === 2
             ? 'stacked-view-narrow'
+            : stackOnMobile && numberOfColumns === 1
+            ? 'stacked-view-single'
             : ''
         }`}
       >
-        <div className="left">
-          <h2>{headingLeft}</h2>
+        <div className="first-column">
+          <h2>{firstColumnHeading}</h2>
           {/* <hr
             id={getId('bar')}
             style={{ width: showProgressBar ? '0%' : '100%' }}
@@ -124,12 +127,12 @@ export const TwoColumn = ({ schema, ...props }: TwoColumnProps) => {
               }
             }}
           >
-            <Scrowl.core.Markdown children={layoutTextLeft} />
+            <Scrowl.core.Markdown children={firstColumnText} />
           </p>
         </div>
-        {numberOfColumns === 2 ? null : (
-          <div className="middle">
-            <h2>{headingMiddle}</h2>
+        {numberOfColumns < 2 ? null : (
+          <div className="second-column">
+            <h2>{secondColumnHeading}</h2>
             {/* <hr
               id={getId('bar')}
               style={{ width: showProgressBar ? '0%' : '100%' }}
@@ -144,28 +147,31 @@ export const TwoColumn = ({ schema, ...props }: TwoColumnProps) => {
                 }
               }}
             >
-              <Scrowl.core.Markdown children={layoutTextMiddle} />
+              <Scrowl.core.Markdown children={secondColumnText} />
             </p>
           </div>
         )}
-
-        <div className="right">
-          <h2>{headingRight}</h2>
-          {/* <hr
-            id={getId('bar')}
-            style={{ width: showProgressBar ? '0%' : '100%' }}
-          /> */}
-          <p
-            className={'can-focus ' + (focusElement === 'text' && ' has-focus')}
-            onMouseDown={() => {
-              if (editMode) {
-                // Scrowl.focusOnlayout('text');
+        {numberOfColumns < 3 ? null : (
+          <div className="third-column">
+            <h2>{thirdColumnHeading}</h2>
+            {/* <hr
+              id={getId('bar')}
+              style={{ width: showProgressBar ? '0%' : '100%' }}
+            /> */}
+            <p
+              className={
+                'can-focus ' + (focusElement === 'text' && ' has-focus')
               }
-            }}
-          >
-            <Scrowl.core.Markdown children={layoutTextRight} />
-          </p>
-        </div>
+              onMouseDown={() => {
+                if (editMode) {
+                  // Scrowl.focusOnlayout('text');
+                }
+              }}
+            >
+              <Scrowl.core.Markdown children={thirdColumnText} />
+            </p>
+          </div>
+        )}
       </div>
     );
   };

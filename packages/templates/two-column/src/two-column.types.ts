@@ -24,21 +24,23 @@ export interface TwoColumnContentOptions extends InputFieldsetProps {
   };
 }
 
-export type ColumnOptions = {
-  numberOfColumns: 1 | 2 | 3;
-  stackOnMobile: boolean;
-};
+// export type ColumnOptions = {
+//   numberOfColumns: 1 | 2 | 3;
+//   stackOnMobile: boolean;
+// };
 
 export type TwoColumnSchemaProps = {
   meta: TemplateSchemaMeta;
   content: {
-    textLeft: InputTextboxProps;
-    headingLeft?: InputTextboxProps;
-    textRight: InputTextboxProps;
-    headingRight?: InputTextboxProps;
-    textMiddle: InputTextboxProps;
-    headingMiddle?: InputTextboxProps;
-    columnOptions: ColumnOptions;
+    firstColumnText: InputTextboxProps;
+    firstColumnHeading?: InputTextboxProps;
+    secondColumnText?: InputTextboxProps;
+    secondColumnHeading?: InputTextboxProps;
+    thirdColumnText?: InputTextboxProps;
+    thirdColumnHeading?: InputTextboxProps;
+    // columnOptions: ColumnOptions;
+    numberOfColumns: 1 | 2 | 3;
+    stackOnMobile: boolean;
     bgImage?: TwoColumnContentBgImage;
     options: TwoColumnContentOptions;
   };
