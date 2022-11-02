@@ -80,9 +80,6 @@ export const load = (ev: rq.RequestEvent, template: TemplateSchema) => {
         templateComponent: template.meta.component,
         templateContent: JSON.stringify(template.content),
       };
-      console.log('\n');
-      console.log('projectDest', projectDest, renderData);
-      console.log('\n');
       const canvasFrameRenders = [
         fs.copy(PathTemplateAssetsProject, projectDest, projectCopyOpts),
         fs.copy(templatePath, projectDest),

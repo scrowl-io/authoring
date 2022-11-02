@@ -20,7 +20,7 @@
     "clean": "rimraf ../../../.parcel-cache",
     "prebuild": "yarn run clean && rimraf dist && rimraf lib",
     "build": "parcel build --no-cache",
-    "postbuild": "webpack --config webpack.config.js"
+    "postbuild": "webpack --config webpack.config.js --stats-error-details"
   },
   "source": "./src/index.ts",
   "main": "./lib/scrowl.template-core.js",
