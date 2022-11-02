@@ -46,6 +46,31 @@ export const resetWorkspace = () => {
   processor.dispatch(fn());
 };
 
+export const useContentFocus = () => {
+  return useSelector((data: stateManager.RootState) => {
+    return data.workspace.contentFocus;
+  });
+};
+
+export const setContentFocus = (data) => {
+  if (!processor.dispatch) {
+    console.warn('workspace processor not ready');
+    return;
+  }
+
+  processor.dispatch(state.workspace.setContentFocus(data));
+};
+
+export const resetContentFocus = () => {
+  if (!processor.dispatch) {
+    console.warn('workspace processor not ready');
+    return;
+  }
+
+  const fn = state.workspace.resetContentFocus as ActionCreatorWithoutPayload;
+  processor.dispatch(fn());
+};
+
 export const useActiveSlide = (prop?: string) => {
   return useSelector((data: stateManager.RootState) => {
     if (!prop) {
@@ -128,22 +153,6 @@ export const setActiveTemplateContent = (data) => {
   processor.dispatch(state.activeSlide.setTemplateContent(data));
 };
 
-let frameTransmitter;
-let framePort;
-
-export const sendFrameMessage = (message: any) => {
-  if (!frameTransmitter || !framePort) {
-    return;
-  }
-
-  frameTransmitter(message, '*', [framePort]);
-};
-
-export const setFrameTransmitter = (transmitter, port) => {
-  frameTransmitter = transmitter;
-  framePort = port;
-};
-
 export default {
   useProcessor,
   useWorkspace,
@@ -156,6 +165,7 @@ export default {
   setActiveTemplate,
   useActiveTemplateContent,
   setActiveTemplateContent,
-  frameTransmitter,
-  setFrameTransmitter,
+  useContentFocus,
+  setContentFocus,
+  resetContentFocus,
 };

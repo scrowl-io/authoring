@@ -20,15 +20,7 @@ export const Fieldset = ({
   const fields = Object.keys(content);
 
   const chainFields = (inputField) => {
-    let fieldset = [field];
-
-    if (typeof inputField === 'string') {
-      fieldset.push(inputField);
-    } else if (Array.isArray(inputField)) {
-      fieldset = fieldset.concat(inputField);
-    }
-
-    return fieldset;
+    return inputField.split('.');
   };
 
   const handleFieldOnChange = (inputField, val) => {
@@ -68,10 +60,11 @@ export const Fieldset = ({
       <legend className="col-form-label">{label}</legend>
       <div className="fields">
         {fields.map((fieldKey, idx) => {
+          const inputField = `${field}.${fieldKey}`;
           return (
             <InputFactory
               key={idx}
-              field={fieldKey}
+              field={inputField}
               content={content[fieldKey]}
               onChange={handleFieldOnChange}
               onValidate={handleFieldOnValidate}

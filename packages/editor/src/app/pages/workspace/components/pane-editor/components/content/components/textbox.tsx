@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { InputTextboxProps } from '../../../pane-editor.types';
 import { GroupElement } from './group-element';
 import { render } from './templater';
+import { useContentFocus } from '../../../../../page-workspace-hooks';
 
 function autoSizeTextArea(textarea, minLines, maxLines) {
   const computedStyle = getComputedStyle(textarea);
@@ -47,9 +48,10 @@ export const Textbox = ({
   focusRange,
   ...props
 }: InputTextboxProps) => {
-  const inputRef: any = React.useRef();
+  const contentFocus = useContentFocus();
+  const isFocused = contentFocus === field;
+  const inputRef = React.useRef<HTMLInputElement>(null);
   const [revertValue, setRevertValue]: any = React.useState(null);
-  const lastFocusState: any = React.useRef(false);
   const isChecked = value ? !value.startsWith('disabled::') : false;
   const isInvalid =
     validationError !== null &&
@@ -57,23 +59,21 @@ export const Textbox = ({
     validationError.length;
   const isDisabled = disabled || (checkbox && !isChecked);
 
-  React.useEffect(() => {
+  useEffect(() => {
     multiLine && autoSizeTextArea(inputRef.current, lines, lines);
   }, [lines, multiLine]);
 
-  if (inputRef.current && lastFocusState.current !== focus) {
-    lastFocusState.current = focus;
-
-    if (focus) {
+  useEffect(() => {
+    if (inputRef.current && isFocused) {
       inputRef.current.focus();
     }
-  }
+  }, [contentFocus, inputRef]);
 
   let cleanVal: string | number | undefined = value;
 
-  if (cleanVal && cleanVal.startsWith('disabled::')) {
-    cleanVal = cleanVal.substring(10);
-  }
+  // if (cleanVal && cleanVal.startsWith('disabled::')) {
+  //   cleanVal = cleanVal.substring(10);
+  // }
 
   if (revertValue === null) {
     if (cleanVal && template) {
@@ -200,10 +200,10 @@ export const Textbox = ({
               className="form-check-input form-check-input-sm"
               type="checkbox"
               onChange={(ev: React.FormEvent<HTMLInputElement>) => {
-                let cleanVal = inputRef.current.value;
-                if (cleanVal.startsWith('disabled::')) {
-                  cleanVal = cleanVal.substring(10);
-                }
+                // let cleanVal = inputRef.current.value;
+                // if (cleanVal.startsWith('disabled::')) {
+                //   cleanVal = cleanVal.substring(10);
+                // }
 
                 if (onChange) {
                   if (isChecked) {

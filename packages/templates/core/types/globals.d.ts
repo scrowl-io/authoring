@@ -1,6 +1,6 @@
 import Anime from 'animejs';
 import ScrollMagic from 'scrollmagic';
-import { TemplateProps } from '../src';
+import { TemplateProps, HostProps } from '../src';
 
 declare global {
   interface Window {
@@ -8,6 +8,7 @@ declare global {
       core: {
         Template: (props: TemplateProps) => JSX.Element;
         Markdown: (props: any) => JSX.Element;
+        host: HostProps,
         anime: Anime;
         scroll: ScrollMagic;
       }

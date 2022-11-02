@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Slide, SlideCommons } from '@scrowl/player/src/components';
 import * as css from '../_canvas.scss';
-import { useActiveSlide } from '../../../';
+import { useActiveSlide, setContentFocus, resetContentFocus } from '../../../';
 import { rq } from '../../../../../services';
 import { Templates } from '../../../../../models';
 
 export const CanvasFrame = () => {
   const data = useActiveSlide();
-  const slideIdx = data.slideIdx;
+  const slideIdx: number = data.slideIdx;
+  const hasSlide = slideIdx !== -1;
   const slideTemplate = data.template.meta.component;
   const prevSlideIdx = useRef(-1);
   const prevSlideTemplate = useRef('');
@@ -29,6 +30,16 @@ export const CanvasFrame = () => {
   };
 
   const handleFrameMessage = (ev) => {
+    if (!frameUrl) {
+      return;
+    }
+
+    const frameOrigin = new URL(frameUrl).origin;
+
+    if (ev.origin && ev.origin !== frameOrigin) {
+      return;
+    }
+
     switch (ev.data.type) {
       case 'connection':
         setConnection(true);
@@ -36,8 +47,20 @@ export const CanvasFrame = () => {
       case 'update':
         console.log('update complete');
         break;
+      case 'focus':
+        setContentFocus(ev.data.field);
+        break;
     }
   };
+
+  window.addEventListener('message', handleFrameMessage);
+
+  // clean up events, so we dont get multiple handlers for a single event;
+  useEffect(() => {
+    return () => {
+      window.removeEventListener('message', handleFrameMessage);
+    };
+  });
 
   useEffect(() => {
     if (slideIdx === -1) {
@@ -54,7 +77,6 @@ export const CanvasFrame = () => {
         const channel = new MessageChannel();
 
         channel.port1.onmessage = handleFrameMessage;
-        prevContent.current = data.template.content;
 
         if (isConnected && frameRef.current) {
           frameRef.current.contentWindow?.postMessage(
@@ -62,6 +84,7 @@ export const CanvasFrame = () => {
             '*',
             [channel.port2]
           );
+          prevContent.current = data.template.content;
         }
       }
       return;
@@ -70,12 +93,10 @@ export const CanvasFrame = () => {
     prevSlideIdx.current = slideIdx;
     prevSlideTemplate.current = slideTemplate;
     prevContent.current = data.template.content;
+    resetContentFocus();
     Templates.load(data.template).then(updateFrameUrl);
+    return;
   }, [slideIdx, isConnected, data]);
-
-  if (slideIdx === -1) {
-    return <></>;
-  }
 
   const connect = (ev: React.SyntheticEvent) => {
     const channel = new MessageChannel();
@@ -92,21 +113,30 @@ export const CanvasFrame = () => {
   };
 
   return (
-    <div className={css.canvasBody}>
-      <Slide options={slideOpts} className="aspect-ratio aspect-ratio--16x9">
-        <iframe
-          ref={frameRef}
-          onLoad={connect}
-          src={frameUrl}
-          title="Scrowl Editor Canvas"
-          referrerPolicy="unsafe-url"
-          sandbox="allow-same-origin allow-scripts"
-          height="100%"
-          width="100%"
-          id="template-iframe"
-        ></iframe>
-      </Slide>
-    </div>
+    <>
+      {!hasSlide ? (
+        <></>
+      ) : (
+        <div className={css.canvasBody}>
+          <Slide
+            options={slideOpts}
+            className="aspect-ratio aspect-ratio--16x9"
+          >
+            <iframe
+              ref={frameRef}
+              onLoad={connect}
+              src={frameUrl}
+              title="Scrowl Editor Canvas"
+              referrerPolicy="unsafe-url"
+              sandbox="allow-same-origin allow-scripts"
+              height="100%"
+              width="100%"
+              id="template-iframe"
+            ></iframe>
+          </Slide>
+        </div>
+      )}
+    </>
   );
 };
 

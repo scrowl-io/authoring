@@ -33,6 +33,7 @@ class App extends React.Component {
       if (!isConnected) {
         transmitter.postMessage({ type: 'connection' });
         setConnection(true);
+        Scrowl.core.host.connect();
         return;
       }
 
@@ -47,6 +48,7 @@ class App extends React.Component {
       {{data.templateComponent}},
       {
         id: 'canvas-template',
+        editMode: true,
         templateKey: '{{data.templateComponent}}@1.0.0',
         duration: 0,
         controller,

@@ -1,7 +1,10 @@
 import React from 'react';
 import { InputAssetProps } from '../../../pane-editor.types';
 import { Projects } from '../../../../../../../models';
-import { setWorkspace } from '../../../../../page-workspace-hooks';
+import {
+  setWorkspace,
+  useContentFocus,
+} from '../../../../../page-workspace-hooks';
 
 export const ImageAsset = ({
   field,
@@ -20,6 +23,8 @@ export const ImageAsset = ({
   assetType,
   ...props
 }: InputAssetProps) => {
+  const contentFocus = useContentFocus();
+  const isFocused = contentFocus === field;
   const inputRef: any = React.useRef();
   const lastFocusState: any = React.useRef(false);
   const assets = Projects.useAssets();
