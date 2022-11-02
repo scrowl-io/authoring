@@ -71,8 +71,6 @@ export const TwoColumnSchema: TwoColumnSchemaProps = {
       autoGrow: 10,
       allowLinebreaks: true,
     },
-    numberOfColumns: 3,
-    stackOnMobile: true,
     bgImage: {
       type: 'Fieldset',
       label: 'Background Image',
@@ -121,6 +119,34 @@ export const TwoColumnSchema: TwoColumnSchemaProps = {
           type: 'Checkbox',
           label: 'Show Progress Bar',
           value: false,
+        },
+        numberOfColumns: {
+          type: 'Select',
+          label: 'Number of Columns',
+          value: 3,
+          options: [
+            {
+              name: '1',
+              value: 1,
+              icon: 'number_of_columns_1',
+            },
+            {
+              name: '2',
+              value: 2,
+              icon: 'number_of_columns_2',
+            },
+            {
+              name: '1',
+              value: 1,
+              icon: 'number_of_columns_3',
+            },
+          ],
+          iconFromValue: true,
+        },
+        stackOnMobile: {
+          type: 'Checkbox',
+          label: 'Stack On Mobile',
+          value: true,
         },
       },
     },

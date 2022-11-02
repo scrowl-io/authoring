@@ -17,9 +17,9 @@ export const TwoColumn = ({ schema, ...props }: TwoColumnProps) => {
   let firstColumnHeading = schema.content.firstColumnHeading?.value;
   let secondColumnHeading = schema.content.secondColumnHeading?.value;
   let thirdColumnHeading = schema.content.thirdColumnHeading?.value;
-  let numberOfColumns = schema.content.numberOfColumns;
 
-  let stackOnMobile = schema.content.stackOnMobile;
+  let numberOfColumns = schema.content.options.content.numberOfColumns.value;
+  let stackOnMobile = schema.content.options.content.stackOnMobile.value;
 
   let useImageAsBG = schema.content.bgImage?.content.bg.value;
   let alignment = schema.content.options.content.alignment.value;

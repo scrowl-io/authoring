@@ -21,13 +21,10 @@ export interface TwoColumnContentOptions extends InputFieldsetProps {
   content: {
     alignment: InputSelectProps;
     showProgress: InputCheckboxProps;
+    numberOfColumns: InputSelectProps;
+    stackOnMobile: InputCheckboxProps;
   };
 }
-
-// export type ColumnOptions = {
-//   numberOfColumns: 1 | 2 | 3;
-//   stackOnMobile: boolean;
-// };
 
 export type TwoColumnSchemaProps = {
   meta: TemplateSchemaMeta;
@@ -38,9 +35,6 @@ export type TwoColumnSchemaProps = {
     secondColumnHeading?: InputTextboxProps;
     thirdColumnText?: InputTextboxProps;
     thirdColumnHeading?: InputTextboxProps;
-    // columnOptions: ColumnOptions;
-    numberOfColumns: 1 | 2 | 3;
-    stackOnMobile: boolean;
     bgImage?: TwoColumnContentBgImage;
     options: TwoColumnContentOptions;
   };

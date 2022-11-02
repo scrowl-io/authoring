@@ -17,12 +17,14 @@ export const CanvasFrame = () => {
   });
 
   const updateFrameUrl = (res: rq.ApiResult) => {
-    if (res.error) {
+    if (res && res.error) {
       console.error(res.message);
       return;
     }
 
-    setFrameUrl(res.data.url);
+    if (res && res.data && res.data.url) {
+      setFrameUrl(res.data.url);
+    }
   };
 
   useEffect(() => {
