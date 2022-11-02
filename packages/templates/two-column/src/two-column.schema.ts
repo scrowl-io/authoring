@@ -136,12 +136,12 @@ export const TwoColumnSchema: TwoColumnSchemaProps = {
               icon: 'number_of_columns_2',
             },
             {
-              name: '1',
-              value: 1,
+              name: '3',
+              value: 3,
               icon: 'number_of_columns_3',
             },
           ],
-          iconFromValue: true,
+          iconFromValue: false,
         },
         stackOnMobile: {
           type: 'Checkbox',
