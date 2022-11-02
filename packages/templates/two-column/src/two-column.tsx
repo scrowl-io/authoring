@@ -130,7 +130,7 @@ export const TwoColumn = ({ schema, ...props }: TwoColumnProps) => {
             <Scrowl.core.Markdown children={firstColumnText} />
           </p>
         </div>
-        {numberOfColumns < 2 ? null : (
+        {numberOfColumns && numberOfColumns < 2 ? null : (
           <div className="second-column">
             <h2>{secondColumnHeading}</h2>
             {/* <hr
@@ -151,7 +151,7 @@ export const TwoColumn = ({ schema, ...props }: TwoColumnProps) => {
             </p>
           </div>
         )}
-        {numberOfColumns < 3 ? null : (
+        {numberOfColumns && numberOfColumns < 3 ? null : (
           <div className="third-column">
             <h2>{thirdColumnHeading}</h2>
             {/* <hr
