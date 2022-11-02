@@ -7,14 +7,41 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      connected: false,
       schema: {
         content: {{{data.templateContent}}}
       }
     };
   }
+  setSchema = (data) => {
+    this.setState({ schema: { content: data } });
+  }
+  setConnection = (data) => {
+    this.setState({ connected: data });
+  }
   render() {
+    let transmitter;
     const controller = new Scrowl.core.scroll.Controller();
     const schema = this.state.schema;
+    const isConnected = this.state.connected;
+    const setConnection = this.setConnection;
+    const setSchema = this.setSchema;
+
+    window.addEventListener('message', (ev) => {
+      transmitter = ev.ports[0];
+
+      if (!isConnected) {
+        transmitter.postMessage({ type: 'connection' });
+        setConnection(true);
+        return;
+      }
+
+      switch (ev.data.type) {
+        case 'update':
+          setSchema(ev.data.data);
+          break;
+      }
+    });
 
     return e(
       {{data.templateComponent}},
