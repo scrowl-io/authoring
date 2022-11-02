@@ -64,6 +64,25 @@ export interface InputSelectProps extends BaseInputProps {
   iconFromValue?: boolean;
 }
 
+export interface InputRadioProps extends BaseInputProps {
+  type: 'Radio';
+  value: string | number;
+  options: {
+    label?: string;
+    value: string | number;
+    icon?: string;
+    inputControls?: string | string[];
+  }[];
+  valueControls?: {
+    inputs: boolean;
+    effect: {
+      style: {
+        display: string;
+      };
+    };
+  };
+}
+
 /*
 - radio input - selected value: hides/shows other inputs  
   radio: {

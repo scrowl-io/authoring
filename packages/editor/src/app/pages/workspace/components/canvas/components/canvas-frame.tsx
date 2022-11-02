@@ -20,14 +20,12 @@ export const CanvasFrame = () => {
   });
 
   const updateFrameUrl = (res: rq.ApiResult) => {
-    if (res && res.error) {
+    if (res.error) {
       console.error(res.message);
       return;
     }
 
-    if (res && res.data && res.data.url) {
-      setFrameUrl(res.data.url);
-    }
+    setFrameUrl(res.data.url);
   };
 
   const handleFrameMessage = (ev) => {

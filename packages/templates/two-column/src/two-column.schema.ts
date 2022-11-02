@@ -8,6 +8,47 @@ export const TwoColumnSchema: TwoColumnSchemaProps = {
     filename: 'two-column',
   },
   content: {
+    options: {
+      type: 'Fieldset',
+      label: 'Options',
+      content: {
+        showProgress: {
+          type: 'Checkbox',
+          label: 'Show Progress Bar',
+          value: false,
+        },
+        numberOfColumns: {
+          type: 'Radio',
+          label: 'Number of Columns',
+          value: 3,
+          options: [
+            {
+              label: '1',
+              value: 1,
+              icon: 'number_of_columns_1',
+              inputControls: ['1', '2'],
+            },
+            {
+              label: '2',
+              value: 2,
+              icon: 'number_of_columns_2',
+              inputControls: ['2'],
+            },
+            {
+              label: '3',
+              value: 3,
+              icon: 'number_of_columns_3',
+              inputControls: [''],
+            },
+          ],
+        },
+        stackOnMobile: {
+          type: 'Checkbox',
+          label: 'Stack On Mobile',
+          value: true,
+        },
+      },
+    },
     firstColumnHeading: {
       type: 'Textbox',
       label: 'First Column Heading',
@@ -89,64 +130,6 @@ export const TwoColumnSchema: TwoColumnSchemaProps = {
           type: 'Checkbox',
           label: 'Use as Background',
           value: false,
-        },
-      },
-    },
-    options: {
-      type: 'Fieldset',
-      label: 'Options',
-      content: {
-        alignment: {
-          type: 'Select',
-          hint: 'BodyAlignment',
-          label: 'Alignment',
-          value: 'left',
-          options: [
-            {
-              name: 'Align Left',
-              value: 'left',
-              icon: 'align_horizontal_left',
-            },
-            {
-              name: 'Align Right',
-              value: 'right',
-              icon: 'align_horizontal_right',
-            },
-          ],
-          iconFromValue: true,
-        },
-        showProgress: {
-          type: 'Checkbox',
-          label: 'Show Progress Bar',
-          value: false,
-        },
-        numberOfColumns: {
-          type: 'Select',
-          label: 'Number of Columns',
-          value: 3,
-          options: [
-            {
-              name: '1',
-              value: 1,
-              icon: 'number_of_columns_1',
-            },
-            {
-              name: '2',
-              value: 2,
-              icon: 'number_of_columns_2',
-            },
-            {
-              name: '3',
-              value: 3,
-              icon: 'number_of_columns_3',
-            },
-          ],
-          iconFromValue: false,
-        },
-        stackOnMobile: {
-          type: 'Checkbox',
-          label: 'Stack On Mobile',
-          value: true,
         },
       },
     },
