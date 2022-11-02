@@ -103,14 +103,18 @@ export const BlockText = ({ schema, ...props }: BlockTextProps) => {
         <div
           id={getId('pinned-body')}
           className="hero"
-          aria-label={useImageAsBG ? schema['bgImage.alt'] : ''}
+          aria-label={
+            useImageAsBG ? schema.content.bgImage.content.alt.value : ''
+          }
           style={
-            useImageAsBG && schema['bgImage.url']
+            useImageAsBG && schema.content.bgImage.content.url.value
               ? {
                   width: '100vw',
                   height: '100vh',
                   backgroundImage:
-                    'url("./course/assets/' + schema['bgImage.url'] + '")',
+                    'url("./assets/' +
+                    schema.content.bgImage.content.url.value +
+                    '")',
                 }
               : {}
           }
@@ -141,7 +145,7 @@ export const BlockText = ({ schema, ...props }: BlockTextProps) => {
           {useImageAsBG ? null : (
             <div
               role="img"
-              aria-label={schema['hero_image.alt']}
+              aria-label={schema.content.bgImage.content.alt.value}
               className={
                 'img ' +
                 (alignment === 'right' ? ' right' : '') +
@@ -154,10 +158,12 @@ export const BlockText = ({ schema, ...props }: BlockTextProps) => {
                 }
               }}
               style={
-                schema['bgImage.url']
+                schema.content.bgImage.content.url.value
                   ? {
                       backgroundImage:
-                        'url("./course/assets/' + schema['bgImage.url'] + '")',
+                        'url("./assets/' +
+                        schema.content.bgImage.content.url.value +
+                        '")',
                     }
                   : {}
               }

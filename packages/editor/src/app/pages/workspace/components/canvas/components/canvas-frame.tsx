@@ -11,7 +11,10 @@ export const CanvasFrame = () => {
   const slideTemplate = data.template.meta.component;
   const prevSlideIdx = useRef(-1);
   const prevSlideTemplate = useRef('');
+  const prevContent = useRef(data.template.content);
+  const frameRef = useRef<HTMLIFrameElement>(null);
   const [frameUrl, setFrameUrl] = useState('');
+  const [isConnected, setConnection] = useState(false);
   const [slideOpts, setSlideOpts] = useState<SlideCommons>({
     aspect: '16:9',
   });
@@ -27,6 +30,17 @@ export const CanvasFrame = () => {
     }
   };
 
+  const handleFrameMessage = (ev) => {
+    switch (ev.data.type) {
+      case 'connection':
+        setConnection(true);
+        break;
+      case 'update':
+        console.log('update complete');
+        break;
+    }
+  };
+
   useEffect(() => {
     if (slideIdx === -1) {
       return;
@@ -36,22 +50,55 @@ export const CanvasFrame = () => {
     const hasTemplateChanged = prevSlideTemplate.current !== slideTemplate;
 
     if (!hasSlideChanged && !hasTemplateChanged) {
+      const hasContentChanged = data.template.content !== prevContent.current;
+
+      if (hasContentChanged) {
+        const channel = new MessageChannel();
+
+        channel.port1.onmessage = handleFrameMessage;
+        prevContent.current = data.template.content;
+
+        if (isConnected && frameRef.current) {
+          frameRef.current.contentWindow?.postMessage(
+            { type: 'update', data: data.template.content },
+            '*',
+            [channel.port2]
+          );
+        }
+      }
       return;
     }
 
     prevSlideIdx.current = slideIdx;
     prevSlideTemplate.current = slideTemplate;
-    Templates.load(slideTemplate).then(updateFrameUrl);
-  }, [slideIdx]);
+    prevContent.current = data.template.content;
+    Templates.load(data.template).then(updateFrameUrl);
+  }, [slideIdx, isConnected, data]);
 
   if (slideIdx === -1) {
     return <></>;
   }
 
+  const connect = (ev: React.SyntheticEvent) => {
+    const channel = new MessageChannel();
+
+    channel.port1.onmessage = handleFrameMessage;
+
+    if (!frameRef.current) {
+      return;
+    }
+
+    frameRef.current.contentWindow?.postMessage({ type: 'connection' }, '*', [
+      channel.port2,
+    ]);
+  };
+
   return (
     <div className={css.canvasBody}>
       <Slide options={slideOpts} className="aspect-ratio aspect-ratio--16x9">
         <iframe
+          ref={frameRef}
+          onLoad={connect}
           src={frameUrl}
           title="Scrowl Editor Canvas"
           referrerPolicy="unsafe-url"

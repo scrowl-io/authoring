@@ -1,6 +1,38 @@
 import fs from './utils/file-system.mjs';
 
 const config = {
+  'node_modules/react/umd/react.production.min.js': {
+    dest: './src/main/assets/project/react.production.min.js',
+    includePaths: ['../../'],
+  },
+  'node_modules/react-dom/umd/react-dom.production.min.js': {
+    dest: './src/main/assets/project/react-dom.production.min.js',
+    includePaths: ['../../'],
+  },
+  'node_modules/react-router/dist/umd/react-router.production.min.js': {
+    dest: './src/main/assets/project/react-router.production.min.js',
+    includePaths: ['../../'],
+  },
+  'node_modules/react-router-dom/dist/react-router-dom.production.min.js': {
+    dest: './src/main/assets/project/react-router-dom.production.min.js',
+    includePaths: ['../../'],
+  },
+  'node_modules/react-bootstrap/dist/react-bootstrap.min.js': {
+    dest: './src/main/assets/project/react-bootstrap.min.js',
+    includePaths: ['../../'],
+  },
+  'node_modules/@owlui/lib/dist': {
+    dest: './src/main/assets/project',
+    includePaths: ['../../'],
+    options: {
+      overwrite: true,
+      filter: source => {
+        return (
+          source.indexOf('.d.ts') === -1 && source.indexOf('owl.lib.module.js') === -1
+        );
+      },
+    },
+  },
   'node_modules/@scrowl/runtime/dist': {
     dest: './src/main/assets/project',
     includePaths: ['../../'],

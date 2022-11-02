@@ -16,7 +16,7 @@ export const Template = ({
   children,
   ...props
 }: TemplateProps) => {
-  let classes = css.slideContainer;
+  let classes = `${css.slideContainer}`;
   const [slideDuration, setSlideDiration] = useState(
     duration + window.innerHeight * 2
   );
@@ -40,12 +40,14 @@ export const Template = ({
     const windowHeight = window.innerHeight;
     let lastStageName = '';
     let slideVisible = false;
+
     const setSlideVisible = (visible: boolean) => {
       if (visible === slideVisible) {
         return;
       }
       slideVisible = visible;
     };
+
     const sceneTrigger = new ScrollMagic.Scene({
       triggerElement: '#' + id,
       duration: slideDuration,
@@ -131,7 +133,7 @@ export const Template = ({
     return () => {
       controller.removeScene(sceneTrigger);
     };
-  }, [duration, slideDuration, id]);
+  });
 
   const handleResize = () => {
     setSlideDiration(duration + window.innerHeight * 2);
@@ -140,8 +142,10 @@ export const Template = ({
   window.addEventListener('resize', handleResize);
 
   return (
-    <div id={id} className={classes} style={styles} {...props}>
-      {children}
+    <div className={css.sldHost}>
+      <section id={id} className={classes} style={styles} {...props}>
+        {children}
+      </section>
     </div>
   );
 };

@@ -128,6 +128,22 @@ export const setActiveTemplateContent = (data) => {
   processor.dispatch(state.activeSlide.setTemplateContent(data));
 };
 
+let frameTransmitter;
+let framePort;
+
+export const sendFrameMessage = (message: any) => {
+  if (!frameTransmitter || !framePort) {
+    return;
+  }
+
+  frameTransmitter(message, '*', [framePort]);
+};
+
+export const setFrameTransmitter = (transmitter, port) => {
+  frameTransmitter = transmitter;
+  framePort = port;
+};
+
 export default {
   useProcessor,
   useWorkspace,
@@ -140,4 +156,6 @@ export default {
   setActiveTemplate,
   useActiveTemplateContent,
   setActiveTemplateContent,
+  frameTransmitter,
+  setFrameTransmitter,
 };

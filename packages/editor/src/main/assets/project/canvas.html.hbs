@@ -1,0 +1,20 @@
+{{#with . as | data |}}
+<html lang="en" dir="ltr">
+<head>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <title>Scrowl Canvas</title>
+  <link rel="stylesheet" href="./owl.lib.css">
+  <link rel="stylesheet" href="./scrowl.template-core.css">
+  <link rel="stylesheet" href="{{data.templateCss}}">
+  <script type="text/javascript" src="./react.production.min.js"></script>
+  <script type="text/javascript" src="./react-dom.production.min.js"></script>
+  <script type="text/javascript" src="./react-bootstrap.min.js"></script>
+</head>
+<body>
+  <div id="app"></div>
+  <script type="text/javascript" src="./scrowl.template-core.js"></script>
+  <script type="text/javascript" src="{{data.templateJs}}"></script>
+  <script type="text/javascript" src="{{data.canvasJs}}"></script>
+</body>
+</html>
+{{/with}}

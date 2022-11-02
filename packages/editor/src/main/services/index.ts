@@ -4,3 +4,4 @@ export * as fs from './file-system';
 export * as rq from './requester';
 export * as mu from './menu';
 export * as log from './logger';
+export * as tmpr from './templater';
