@@ -1,0 +1,34 @@
+{{#with . as | data |}}
+const domContainer = document.querySelector('#app');
+const root = ReactDOM.createRoot(domContainer);
+const e = React.createElement;
+
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      schema: {
+        content: {{{data.templateContent}}}
+      }
+    };
+  }
+  render() {
+    const controller = new Scrowl.core.scroll.Controller();
+    const schema = this.state.schema;
+
+    return e(
+      {{data.templateComponent}},
+      {
+        id: 'canvas-template',
+        templateKey: '{{data.templateComponent}}@1.0.0',
+        duration: 0,
+        controller,
+        schema,
+      },
+      null
+    );
+  }
+}
+
+root.render(e(App));
+{{/with}}

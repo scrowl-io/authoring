@@ -281,6 +281,54 @@ export const fileWrite = (pathname: string, contents: unknown) => {
   });
 };
 
+export const copy = (source: string, dest: string, opts?: fs.CopyOptions) => {
+  return new Promise<FSResult>(resolve => {
+    if (!source) {
+      resolve(
+        createResultError('Unable to copy temp to source: source required')
+      );
+      return;
+    }
+
+    if (!dest) {
+      resolve(
+        createResultError('Unable to copy temp to source: destination required')
+      );
+      return;
+    }
+
+    try {
+      if (!fs.pathExistsSync(source)) {
+        resolve({
+          error: true,
+          message: `Unable to copy ${source}: path does not exist`,
+          data: {
+            source,
+            dest,
+          },
+        });
+        return;
+      }
+
+      fs.copy(source, dest, opts)
+        .then(() => {
+          resolve({
+            error: false,
+            data: {
+              source,
+              dest,
+            },
+          });
+        })
+        .catch(e => {
+          resolve(createResultError(`Unable to copy ${source} to ${dest}`, e));
+        });
+    } catch (e) {
+      resolve(createResultError(`Unable to copy ${source} to ${dest}`, e));
+    }
+  });
+};
+
 export default {
   normalizePath,
   isJSON,
@@ -294,5 +342,6 @@ export default {
   fileReadSync,
   fileRead,
   fileWriteSync,
-  fileWrite
+  fileWrite,
+  copy,
 };

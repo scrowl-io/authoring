@@ -39,7 +39,7 @@ export const CanvasFrame = () => {
 
     prevSlideIdx.current = slideIdx;
     prevSlideTemplate.current = slideTemplate;
-    Templates.load(slideTemplate).then(updateFrameUrl);
+    Templates.load(data.template).then(updateFrameUrl);
   }, [slideIdx]);
 
   if (slideIdx === -1) {

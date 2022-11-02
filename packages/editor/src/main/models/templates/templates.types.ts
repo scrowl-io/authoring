@@ -33,7 +33,7 @@ export interface TemplatesApiLoad
 }
 
 export type TemplatesApi = Partial<{
-  load: TemplatesApiLoad['name'];
+  load: TemplatesApiLoad;
 }>;
 
 export type TemplatesEndpoints = {
