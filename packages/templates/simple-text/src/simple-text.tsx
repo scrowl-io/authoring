@@ -13,12 +13,8 @@ export const SimpleText = ({ schema, ...props }: SimpleTextProps) => {
   let schemaText = schema.content.text.value;
   let useImageAsBG = schema.content.bgImage.content.bg.value;
   let alignment = schema.content.options.content.alignment.value;
-  let showProgressBar = schema.content.options.content.showProgress.value;
-  const slideDuration = showProgressBar ? 1000 : 0;
-
-  if (showProgressBar) {
-    classes += ' show-progress';
-  }
+  let animateLists = schema.content.animateLists?.value;
+  const slideDuration = animateLists ? 2000 : 0;
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   function getId(id?: String) {
@@ -43,8 +39,8 @@ export const SimpleText = ({ schema, ...props }: SimpleTextProps) => {
   };
 
   React.useEffect(() => {
-    if (!showProgressBar) {
-      return () => {};
+    if (!animateLists) {
+      return;
     }
 
     scrollScenes.current.push(
@@ -59,36 +55,75 @@ export const SimpleText = ({ schema, ...props }: SimpleTextProps) => {
         .enabled(false)
     );
 
+    let selectors: any = [];
+
+    switch (animateLists) {
+      case 'all':
+        selectors.push('#' + getId('pinned-body') + ' li');
+        selectors.push('#' + getId('pinned-body') + ' p');
+        selectors.push('#' + getId('pinned-body') + ' hr');
+        selectors.push('#' + getId('pinned-body') + ' blockquote');
+        break;
+    }
+
+    if (!selectors.length) {
+      return;
+    }
+
+    const listItems: any = (document as any).querySelectorAll(
+      selectors.join(', ')
+    );
+
+    if (!listItems) {
+      return;
+    }
+
     timeline.current = Scrowl.core.anime.timeline({
       easing: 'easeInOutQuad',
       autoplay: false,
     });
     const currentTimeline = timeline.current;
+
+    [...listItems].map((item: any) => {
+      item.style.opacity = 0;
+      item.style.transform = 'translateX(200px)';
+      const target = {
+        targets: item,
+        opacity: '1',
+        translateX: '0',
+        duration: 50,
+      };
+
+      currentTimeline.add(target);
+
+      return null as any;
+    });
+
     const target = {
-      targets: '#' + getId('bar'),
-      width: '100%',
-      duration: slideDuration,
+      duration: 100,
     };
 
     currentTimeline.add(target);
 
+    const frozenListItems = selectors.join(', ');
     return () => {
-      scrollScenes.current.forEach((scene) => {
-        scene.destroy(true);
-        props.controller.removeScene(scene);
-      });
-
-      scrollScenes.current = [];
-
       currentTimeline.children.map((child: any) => {
-        child.remove(target);
+        child.remove();
         child.reset();
         currentTimeline.remove(child);
       });
-
       currentTimeline.reset();
+
+      const listItems: any = (document as any).querySelectorAll(
+        frozenListItems
+      );
+      [...listItems].map((item: any) => {
+        item.style.opacity = 1;
+        item.style.transform = '';
+        return null;
+      });
     };
-  }, [showProgressBar]);
+  }, [animateLists]);
 
   return (
     <Scrowl.core.Template
@@ -121,12 +156,21 @@ export const SimpleText = ({ schema, ...props }: SimpleTextProps) => {
         >
           {useImageAsBG ? <div className="overlay" /> : null}
 
-          <div className={'text ' + (alignment === 'right' ? ' right' : '')}>
+          <div
+            className={
+              'text ' +
+              (alignment === 'right'
+                ? 'right'
+                : alignment === 'left'
+                ? 'left'
+                : alignment === 'center'
+                ? 'center'
+                : alignment === 'justify'
+                ? 'justify'
+                : '')
+            }
+          >
             <div className="wrapper">
-              <hr
-                id={getId('bar')}
-                style={{ width: showProgressBar ? '0%' : '100%' }}
-              />
               <p
                 className={
                   'can-focus ' + (focusElement === 'text' && ' has-focus')

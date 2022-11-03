@@ -38,17 +38,12 @@
 
     .text {
       margin: 0 5%;
-      position: absolute;
       top: 0;
       left: 0;
       bottom: 0;
       z-index: 5;
-      width: 50%;
-      // min-width: 250px;
-
       display: flex;
-      flex-flow: column;
-      justify-content: center;
+      align-items: center;
       height: 100vh;
 
       font-size: min(3.5vw, 24px);
@@ -57,9 +52,18 @@
       line-height: min(4.1vw, 3rem);
       // line-height: 3rem;
 
+      &.center {
+        justify-content: center;
+        text-align: center;
+      }
+
       &.right {
-        left: initial;
-        right: 0;
+        justify-content: flex-end;
+        text-align: right;
+      }
+
+      &.justify {
+        text-align: justify;
       }
 
       .wrapper {

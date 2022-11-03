@@ -20,7 +20,6 @@ export interface SimpleTextContentBgImage extends InputFieldsetProps {
 export interface SimpleTextContentOptions extends InputFieldsetProps {
   content: {
     alignment: InputSelectProps;
-    showProgress: InputCheckboxProps;
   };
 }
 
@@ -30,6 +29,7 @@ export type SimpleTextSchemaProps = {
     text: InputTextboxProps;
     bgImage: SimpleTextContentBgImage;
     options: SimpleTextContentOptions;
+    animateLists?: any;
   };
 };
 
