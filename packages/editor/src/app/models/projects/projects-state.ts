@@ -109,10 +109,28 @@ export const config: stateManager.StateConfig = {
       state.data.slides.splice(action.payload.idx);
     },
     addGlossaryItem: (state, action) => {
+      const lastIdx = state.data.glossary.length;
+
+      if (lastIdx === 0) {
+        action.payload.id = 0;
+      } else {
+        action.payload.id = state.data.glossary[(lastIdx - 1)].id + 1;
+      }
+
       state.data.glossary.push(action.payload);
     },
     setGlossaryItem: (state, action) => {
-      
+      let lookup;
+      const ln = state.data.glossary.length;
+
+      for (let i = 0; i < ln; i++) {
+        lookup = state.data.glossary[i];
+
+        if (lookup.id === action.payload.id) {
+          state.data.glossary[i] = action.payload;
+          break;
+        }
+      }
     },
     removeGlossaryItem: (state, action) => {
       state.data.glossary.splice(action.payload.idx);

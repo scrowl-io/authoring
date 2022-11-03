@@ -58,7 +58,7 @@ export const createProject = () => {
       createSlide('Slide 3', 0, 0, 'blockText'),
     ],
     glossary: [
-      { id: 0, word: 'Test', description: 'Description text' }
+      { id: 0, word: 'Test', definition: 'Definition text' }
     ],
     resources: [],
     assets: [],

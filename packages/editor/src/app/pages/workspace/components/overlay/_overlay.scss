@@ -9,6 +9,24 @@
   }
 }
 
+.left-overlay-panel {
+  footer {
+    bottom: 0;
+    right: calc(2 * var(--bs-offcanvas-padding-y));
+    position: absolute;
+  }
+
+  .offcanvas-body {
+    flex-grow: initial;
+    height: calc(100vh - 125px);
+    overflow: auto;
+  }
+
+  .owl-offcanvas-form {
+    margin: 0;
+  }
+}
+
 .right-overlay-panel {
   z-index: 1050;
 
@@ -107,5 +125,26 @@
     bottom: 0;
     right: calc(2 * var(--bs-offcanvas-padding-y));
     position: absolute;
+  }
+}
+
+.owl-offcanvas-form__textarea {
+  display: flex;
+  flex-direction: column;
+
+  textarea {
+    flex-grow: 1;
+
+    .form-control {
+      min-height: calc(1.4em + 0.75em + 2px);
+    }
+
+    .form-control-sm {
+      min-height: calc(1.4em + 0.75em + 2px);
+    }
+
+    .form-control-lg {
+      min-height: calc(1.4em + 0.75em + 2px);
+    }
   }
 }

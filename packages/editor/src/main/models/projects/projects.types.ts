@@ -97,7 +97,7 @@ export type ProjectSlide = {
 export type ProjectGlossaryItem = {
   id: number;
   word: string;
-  description: string;
+  definition: string;
 };
 
 export type ProjectResource = {

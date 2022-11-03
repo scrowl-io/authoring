@@ -1,23 +1,19 @@
 import React from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { Settings } from '../../../../models';
-import { GlossaryEditor } from './components';
-import { AssetBrowser as AssetOverlay } from './components';
+import { AssetBrowser as AB, GlossaryOverlay as GO } from './components';
 
-export const AssetBrowser = AssetOverlay;
+export const AssetBrowser = AB;
+export const GlossaryOverlay = GO;
 
 export const Overlay = () => {
   const animationSettings = Settings.useAnimation();
   const isAnimated = !animationSettings.reducedAnimations;
 
-  return (
-    <AnimatePresence>
-      <GlossaryEditor isAnimated={isAnimated} />
-    </AnimatePresence>
-  );
+  return <AnimatePresence></AnimatePresence>;
 };
 
 export default {
-  Overlay,
   AssetBrowser,
+  GlossaryOverlay,
 };
