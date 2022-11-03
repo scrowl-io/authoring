@@ -101,8 +101,10 @@ export type ProjectGlossaryItem = {
 };
 
 export type ProjectResource = {
-  name: string;
-  location: string;
+  id: number;
+  filename: string;
+  title: string;
+  description?: string;
 };
 
 export type ProjectData = {
