@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { DrawerProps, DrawerOpts, DrawerStyles } from './overlay.types';
+import { DrawerProps, DrawerOpts, DrawerStyles } from '../overlay.types';
 
 export const Drawer = ({
   isAnimated,
@@ -9,6 +9,7 @@ export const Drawer = ({
   children,
   className,
   style,
+  onClick,
 }: DrawerProps) => {
   let classes = 'offcanvas show support-high-contrast';
   const direction = slideFrom === 'right' ? 'right' : 'left';
@@ -70,6 +71,7 @@ export const Drawer = ({
 
   return (
     <motion.div
+      onClick={onClick}
       className={classes}
       style={styles}
       initial={opts.initial}

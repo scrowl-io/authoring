@@ -5,7 +5,7 @@ import { Backdrop, Drawer } from '.';
 import { Settings } from '../../../../../models';
 
 const GlossaryFormElement = (
-  { isOpen, onClose, onSubmit, term, ...props },
+  { className, isOpen, onClose, onSubmit, term, ...props },
   ref
 ) => {
   const animationSettings = Settings.useAnimation();
@@ -39,97 +39,113 @@ const GlossaryFormElement = (
     });
   };
 
+  const handlePreventBubbling = (ev: React.MouseEvent) => {
+    ev.bubbles = false;
+    ev.stopPropagation();
+    ev.preventDefault();
+  };
+
   useEffect(() => {
-    if (termWord !== term.word) {
+    if (term && termWord !== term.word) {
       setTermWord(term.word);
       setTermDefinition(term.definition);
     }
   }, [term, isOpen]);
 
   return (
-    <div ref={ref}>
-      <Drawer isAnimated={isAnimated} isOpen={isOpen}>
-        <div className="offcanvas-header">
-          <h4 className="offcanvas-title mb-0">{title} Glossary Term</h4>
-          <button type="button" className="btn-close" onClick={handleClose} />
-        </div>
+    <div className={className} ref={ref}>
+      <AnimatePresence>
+        {isOpen && (
+          <Backdrop
+            className="glossary-form-overlay-backdrop"
+            onClick={handleClose}
+          >
+            <Drawer
+              isAnimated={isAnimated}
+              isOpen={isOpen}
+              onClick={handlePreventBubbling}
+            >
+              <div className="owlui-offcanvas-header">
+                <h4 className="owlui-offcanvas-title mb-0">
+                  {title} Glossary Term
+                </h4>
+                <button
+                  type="button"
+                  className="btn-close"
+                  onClick={handleClose}
+                />
+              </div>
 
-        <div className="offcanvas-body content-form">
-          <form className="owl-offcanvas-form">
-            <div className="mb-2">
-              <label htmlFor="term-word" className="form-label">
-                Term
-              </label>
-              <input
-                id="term-word"
-                autoFocus
-                type="text"
-                className={
-                  'form-control ' +
-                  (isDirty && termWord.trim() === '' ? 'error' : '')
-                }
-                placeholder="Enter Term"
-                value={termWord}
-                onChange={(e) => {
-                  setTermWord(e.target.value);
-                }}
-              />
-            </div>
+              <div className="owlui-offcanvas-body content-form">
+                <form className="owlui-offcanvas-form">
+                  <div className="mb-2">
+                    <label htmlFor="term-word" className="form-label">
+                      Term
+                    </label>
+                    <input
+                      id="term-word"
+                      autoFocus
+                      type="text"
+                      className={
+                        'owlui-form-control ' +
+                        (isDirty && termWord.trim() === '' ? 'error' : '')
+                      }
+                      placeholder="Enter Term"
+                      value={termWord}
+                      onChange={(e) => {
+                        setTermWord(e.target.value);
+                      }}
+                    />
+                  </div>
 
-            <div className="mb-2 owl-offcanvas-form__textarea">
-              <label htmlFor="termAdd2" className="form-label">
-                Definition
-              </label>
-              <textarea
-                className={
-                  'form-control ' +
-                  (isDirty && termDefinition.trim() === '' ? 'error' : '')
-                }
-                placeholder="Define the term"
-                style={{ resize: 'none' }}
-                value={termDefinition}
-                onChange={(e) => {
-                  setTermDefinition(e.target.value);
-                }}
-              />
-            </div>
+                  <div className="mb-2 owlui-offcanvas-form__textarea">
+                    <label htmlFor="glossary-definition" className="form-label">
+                      Definition
+                    </label>
+                    <textarea
+                      id="glossary-definition"
+                      className={
+                        'owlui-form-control form-control-lg ' +
+                        (isDirty && termDefinition.trim() === '' ? 'error' : '')
+                      }
+                      placeholder="Define the term"
+                      style={{ resize: 'none' }}
+                      value={termDefinition}
+                      onChange={(e) => {
+                        setTermDefinition(e.target.value);
+                      }}
+                    />
+                  </div>
 
-            <footer className="d-flex justify-content-end my-3">
-              <button
-                type="button"
-                className="btn btn-link"
-                onClick={handleClose}
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="btn btn-success"
-                onClick={handleSubmit}
-              >
-                Save
-              </button>
-            </footer>
-          </form>
-        </div>
-      </Drawer>
-      {isOpen ? (
-        <Backdrop
-          className="glossary-overlay-backdrop"
-          isAnimated={isAnimated}
-          onClick={onClose}
-          {...props}
-        />
-      ) : (
-        <></>
-      )}
+                  <footer className="d-flex justify-content-end my-3">
+                    <button
+                      type="button"
+                      className="btn btn-link"
+                      onClick={handleClose}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      className="btn btn-success"
+                      onClick={handleSubmit}
+                    >
+                      Save
+                    </button>
+                  </footer>
+                </form>
+              </div>
+            </Drawer>
+          </Backdrop>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
 
 export const GlossaryForm = forwardRef(GlossaryFormElement);
 
-export const GlossaryOverlay = (props) => {
+export const GlossaryOverlay = ({ isOpen, ...props }) => {
   const overlayRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -138,13 +154,9 @@ export const GlossaryOverlay = (props) => {
     if (appNode && overlayRef.current) {
       appNode.appendChild(overlayRef.current);
     }
-  }, [overlayRef]);
+  }, [overlayRef, isOpen]);
 
-  return (
-    <AnimatePresence>
-      <GlossaryForm ref={overlayRef} {...props} />
-    </AnimatePresence>
-  );
+  return <GlossaryForm ref={overlayRef} isOpen={isOpen} {...props} />;
 };
 
 export default {

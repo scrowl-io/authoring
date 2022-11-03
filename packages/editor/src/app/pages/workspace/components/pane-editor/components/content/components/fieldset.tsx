@@ -21,25 +21,25 @@ export const Fieldset = ({
 
   const handleFieldOnChange = (inputField, val) => {
     if (onChange) {
-      onChange(inputField, val);
+      onChange(inputField.split('.'), val);
     }
   };
 
   const handleFieldOnValidate = (inputField, val) => {
     if (onValidate) {
-      onValidate(inputField, val);
+      onValidate(inputField.split('.'), val);
     }
   };
 
   const handleFieldOnFocus = (inputField, val) => {
     if (onFocus) {
-      onFocus(inputField, val);
+      onFocus(inputField.split('.'), val);
     }
   };
 
   const handleFieldOnBlur = (inputField, val) => {
     if (onBlur) {
-      onBlur(inputField, val);
+      onBlur(inputField.split('.'), val);
     }
   };
 

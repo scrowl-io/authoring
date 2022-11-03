@@ -4,6 +4,7 @@ import * as css from '../_pane-details.scss';
 import { Projects } from '../../../../../models';
 import { Elem } from '../../../../../utils';
 import { menu } from '../../../../../services';
+import { ResourceOverlay } from '../../overlay';
 
 export const Resources = () => {
   const [isOpenResourceBrowser, setIsOpenResourceBrowser] = useState(false);
@@ -132,6 +133,12 @@ export const Resources = () => {
           </button>
         </div>
       </div>
+      <ResourceOverlay
+        isOpen={isOpenResourceBrowser}
+        onClose={handleCloseResourceBrowser}
+        onSubmit={handleSubmitResource}
+        resource={selectedResource.current}
+      />
     </>
   );
 };
