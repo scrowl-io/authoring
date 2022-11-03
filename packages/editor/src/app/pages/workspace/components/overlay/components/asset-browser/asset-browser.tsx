@@ -3,6 +3,7 @@ import { AnimatePresence } from 'framer-motion';
 import { Backdrop } from '../backdrop';
 import { Drawer } from '..';
 import { Projects, Settings } from '../../../../../../models';
+import { menu } from '../../../../../../services';
 import '../../_overlay.scss';
 import { AssetSearch } from './asset-search';
 import { AssetFolder } from './asset-folder';
@@ -244,6 +245,14 @@ export const AssetDrawerElement = (
       });
     };
   }, [isCopying]);
+
+  useEffect(() => {
+    if (isOpen) {
+      menu.API.disableProjectActions();
+    } else {
+      menu.API.enableProjectActions();
+    }
+  }, [isOpen]);
 
   return (
     <div className={className} ref={ref}>
