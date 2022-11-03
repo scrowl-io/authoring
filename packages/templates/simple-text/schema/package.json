@@ -1,0 +1,23 @@
+{
+  "name": "@scrowl/template-simple-text-schema",
+  "version": "1.0.0",
+  "description": "",
+  "license": "MIT",
+  "keywords": [],
+  "author": {
+    "name": "OSG"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/scrowl-io/authoring.git",
+    "directory": "packages/template/simple-text"
+  },
+  "bugs": {
+    "url": "https://github.com/scrowl-io/scrowl/issues"
+  },
+  "homepage": "https://github.com/scrowl-io/authoring/packages/template/simple-text#readme",
+  "source": "../src/simple-text.schema.ts",
+  "main": "../lib/schema.js",
+  "module": "../lib/schema.module.js",
+  "types": "../lib/schema.d.ts"
+}

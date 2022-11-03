@@ -1,12 +1,19 @@
 import { ProjectData } from './projects.types';
 import { TemplateSchema } from '../templates/templates.types';
 import { BlockTextSchema } from '@scrowl/template-block-text/schema';
+import { SimpleTextSchema } from '@scrowl/template-simple-text/schema';
 
 const TEMPLATES = {
   blockText: JSON.stringify(BlockTextSchema),
+  simpleText: JSON.stringify(SimpleTextSchema),
 };
 
-const createSlide = (name: string, mIdx: number, lIdx: number, type: keyof typeof TEMPLATES) => {
+const createSlide = (
+  name: string,
+  mIdx: number,
+  lIdx: number,
+  type: keyof typeof TEMPLATES
+) => {
   const template: TemplateSchema = JSON.parse(TEMPLATES[type]);
 
   return {
@@ -15,51 +22,50 @@ const createSlide = (name: string, mIdx: number, lIdx: number, type: keyof typeo
     lessonIdx: lIdx,
     template,
   };
-}
+};
 
 export const createProject = () => {
   const data: ProjectData = {
     meta: {
-      id: "",
-      name: "",
-      blueprint: "",
+      id: '',
+      name: '',
+      blueprint: '',
       version: 0,
-      createdBy: "",
-      folder: "",
+      createdBy: '',
+      folder: '',
       tags: [],
-      scrowlVer: "",
-      dateCreated: "",
-      lastSaved: "",
+      scrowlVer: '',
+      dateCreated: '',
+      lastSaved: '',
     },
     scorm: {
-      name: "",
-      description: "",
-      authors: "",
-      organization: "",
-      reportStatus: "Passed/Incomplete",
-      lmsIdentifier: "",
-      outputFormat: "SCORM 2004",
-      optomizeMedia: "Recommended",
+      name: '',
+      description: '',
+      authors: '',
+      organization: '',
+      reportStatus: 'Passed/Incomplete',
+      lmsIdentifier: '',
+      outputFormat: 'SCORM 2004',
+      optomizeMedia: 'Recommended',
     },
     modules: [
       {
-        name: 'Module 1'
-      }
+        name: 'Module 1',
+      },
     ],
     lessons: [
       {
         moduleIdx: 0,
-        name: 'Lesson 1'
-      }
+        name: 'Lesson 1',
+      },
     ],
     slides: [
       createSlide('Slide 1', 0, 0, 'blockText'),
       createSlide('Slide 2', 0, 0, 'blockText'),
       createSlide('Slide 3', 0, 0, 'blockText'),
+      createSlide('Slide 4', 0, 0, 'simpleText'),
     ],
-    glossary: [
-      { id: 0, word: 'Test', definition: 'Definition text' }
-    ],
+    glossary: [{ id: 0, word: 'Test', definition: 'Definition text' }],
     resources: [],
     assets: [],
   };
