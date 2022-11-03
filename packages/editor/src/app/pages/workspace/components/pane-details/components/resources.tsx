@@ -122,7 +122,13 @@ export const Resources = () => {
             }}
           >
             <span className="txt-placeholder">Add a new resource...</span>
-            <Icon display="rounded" icon="attach_file" opsz={20} filled />
+            <Icon
+              display="rounded"
+              icon="attach_file"
+              opsz={20}
+              filled
+              pxScale="Lg"
+            />
           </button>
         </div>
       </div>

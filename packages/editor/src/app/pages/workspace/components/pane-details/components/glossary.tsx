@@ -152,7 +152,13 @@ export const Glossary = () => {
             }}
           >
             <span className="txt-placeholder">Add a new glossary term...</span>
-            <Icon display="rounded" icon="add_circle" opsz={20} filled />
+            <Icon
+              display="rounded"
+              icon="add_circle"
+              opsz={20}
+              filled
+              pxScale="Lg"
+            />
           </button>
         </div>
       </div>
