@@ -16,14 +16,18 @@
     position: absolute;
   }
 
-  .offcanvas-body {
+  .owlui-offcanvas-body {
     flex-grow: initial;
     height: calc(100vh - 125px);
     overflow: auto;
   }
 
-  .owl-offcanvas-form {
+  .owlui-offcanvas-form {
     margin: 0;
+    display: grid;
+    min-height: 100%;
+    grid-auto-flow: row;
+    grid-template-rows: auto 1fr;
   }
 }
 
@@ -128,7 +132,7 @@
   }
 }
 
-.owl-offcanvas-form__textarea {
+.owlui-offcanvas-form__textarea {
   display: flex;
   flex-direction: column;
 

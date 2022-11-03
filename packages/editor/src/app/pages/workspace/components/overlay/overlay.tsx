@@ -1,10 +1,15 @@
 import React from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { Settings } from '../../../../models';
-import { AssetBrowser as AB, GlossaryOverlay as GO } from './components';
+import {
+  AssetBrowser as AB,
+  GlossaryOverlay as GO,
+  ResourceOverlay as RO,
+} from './components';
 
 export const AssetBrowser = AB;
 export const GlossaryOverlay = GO;
+export const ResourceOverlay = RO;
 
 export const Overlay = () => {
   const animationSettings = Settings.useAnimation();
@@ -16,4 +21,5 @@ export const Overlay = () => {
 export default {
   AssetBrowser,
   GlossaryOverlay,
+  ResourceOverlay,
 };
