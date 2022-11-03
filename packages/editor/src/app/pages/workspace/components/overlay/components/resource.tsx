@@ -6,7 +6,7 @@ import { Backdrop, Drawer, AssetBrowser } from '.';
 import { Settings } from '../../../../../models';
 
 const ResourceFormElement = (
-  { isOpen, onClose, onSubmit, resource, ...props },
+  { className, isOpen, onClose, onSubmit, resource, ...props },
   ref
 ) => {
   const animationSettings = Settings.useAnimation();
@@ -49,6 +49,12 @@ const ResourceFormElement = (
     console.log('asset browse selected');
   };
 
+  const handlePreventBubbling = (ev: React.MouseEvent) => {
+    ev.bubbles = false;
+    ev.stopPropagation();
+    ev.preventDefault();
+  };
+
   useEffect(() => {
     if (resourceTitle !== resource.title) {
       setResourceTitle(resource.title);
@@ -57,83 +63,102 @@ const ResourceFormElement = (
   }, [resource, isOpen]);
 
   return (
-    <div ref={ref}>
-      <Drawer isAnimated={isAnimated} isOpen={isOpen}>
-        <div className="owlui-offcanvas-header">
-          <h4 className="owlui-offcanvas-title mb-0">{title} Resource</h4>
-          <button type="button" className="btn-close" onClick={handleClose} />
-        </div>
-
-        <div className="owlui-offcanvas-body content-form">
-          <form className="owlui-offcanvas-form">
-            <div className="owlui-input-group mb-2">
-              <input
-                type="text"
-                readOnly={true}
-                className="owlui-form-control owlui-read-only"
-                placeholder="File attachment"
-                aria-label="File attachment"
-                value={resourceTitle}
-              />
-              <div className="owlui-input-group-append">
-                <Button variant="outline-primary" onClick={handleAssetBrowse}>
-                  Browse
-                </Button>
+    <div className={className} ref={ref}>
+      <AnimatePresence>
+        {isOpen && (
+          <Backdrop
+            className="resource-form-overlay-backdrop"
+            onClick={handleClose}
+          >
+            <Drawer
+              isAnimated={isAnimated}
+              isOpen={isOpen}
+              onClick={handlePreventBubbling}
+            >
+              <div className="owlui-offcanvas-header">
+                <h4 className="owlui-offcanvas-title mb-0">{title} Resource</h4>
+                <button
+                  type="button"
+                  className="btn-close"
+                  onClick={handleClose}
+                />
               </div>
-            </div>
 
-            <div className="mb-2 owlui-offcanvas-form__textarea">
-              <label htmlFor="resource-description" className="form-label">
-                Description
-              </label>
-              <textarea
-                id="resource-description"
-                className="owlui-form-control form-control-lg"
-                placeholder="Describe the resource"
-                style={{ resize: 'none' }}
-                value={resourceDescription}
-                onChange={(e) => {
-                  setResourceDescription(e.target.value);
-                }}
-              />
-            </div>
+              <div className="owlui-offcanvas-body content-form">
+                <form className="owlui-offcanvas-form">
+                  <div className="owlui-input-group mb-2">
+                    <input
+                      type="text"
+                      readOnly={true}
+                      className="owlui-form-control owlui-read-only"
+                      placeholder="File attachment"
+                      aria-label="File attachment"
+                      value={resourceTitle}
+                    />
+                    <div className="owlui-input-group-append">
+                      <Button
+                        variant="outline-primary"
+                        onClick={handleAssetBrowse}
+                      >
+                        Browse
+                      </Button>
+                    </div>
+                  </div>
 
-            <footer className="d-flex justify-content-end my-3">
-              <button
-                type="button"
-                className="btn btn-link"
-                onClick={handleClose}
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="btn btn-success"
-                onClick={handleSubmit}
-              >
-                Save
-              </button>
-            </footer>
-          </form>
-        </div>
-      </Drawer>
-      {isOpen ? (
-        <Backdrop
-          className="glossary-overlay-backdrop"
-          isAnimated={isAnimated}
-          onClick={onClose}
-          {...props}
-        />
-      ) : (
-        <></>
-      )}
+                  <div className="mb-2 owlui-offcanvas-form__textarea">
+                    <label
+                      htmlFor="resource-description"
+                      className="form-label"
+                    >
+                      Description
+                    </label>
+                    <textarea
+                      id="resource-description"
+                      className="owlui-form-control form-control-lg"
+                      placeholder="Describe the resource"
+                      style={{ resize: 'none' }}
+                      value={resourceDescription}
+                      onChange={(e) => {
+                        setResourceDescription(e.target.value);
+                      }}
+                    />
+                  </div>
+
+                  <footer className="d-flex justify-content-end my-3">
+                    <button
+                      type="button"
+                      className="btn btn-link"
+                      onClick={handleClose}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      className="btn btn-success"
+                      onClick={handleSubmit}
+                    >
+                      Save
+                    </button>
+                  </footer>
+                </form>
+              </div>
+            </Drawer>
+            <AssetBrowser
+              className="resource-asset-browser"
+              isOpen={isOpenAssetBrowser}
+              onClose={handleAssetClose}
+              onSelected={handleAssetSelected}
+            />
+          </Backdrop>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
 
 export const ResourceForm = forwardRef(ResourceFormElement);
 
-export const ResourceOverlay = (props) => {
+export const ResourceOverlay = ({ isOpen, ...props }) => {
   const overlayRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -142,13 +167,9 @@ export const ResourceOverlay = (props) => {
     if (appNode && overlayRef.current) {
       appNode.appendChild(overlayRef.current);
     }
-  }, [overlayRef]);
+  }, [overlayRef, isOpen]);
 
-  return (
-    <AnimatePresence>
-      <ResourceForm ref={overlayRef} {...props} />
-    </AnimatePresence>
-  );
+  return <ResourceForm ref={overlayRef} isOpen={isOpen} {...props} />;
 };
 
 export default {

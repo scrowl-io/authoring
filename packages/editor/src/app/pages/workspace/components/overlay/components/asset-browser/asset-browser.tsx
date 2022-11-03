@@ -9,7 +9,7 @@ import { AssetFolder } from './asset-folder';
 import { AssetEntry } from './asset-entry';
 
 export const AssetDrawerElement = (
-  { isOpen, onClose, onSelected, ...props },
+  { className, isOpen, onClose, onSelected, ...props },
   ref
 ) => {
   const assets = Projects.useAssets();
@@ -45,7 +45,6 @@ export const AssetDrawerElement = (
   const [expandedFolders, setExpandedFolders] = useState([]);
   const [searchTerm, setSearchTerm] = useState();
   const searchTermLower = searchTerm ? (searchTerm as any).toLowerCase() : '';
-
   const assetList: any = [];
   const folderList: any = [];
   let sortKey = 'name';
@@ -212,6 +211,10 @@ export const AssetDrawerElement = (
     }
   });
 
+  const handleClose = () => {
+    onClose();
+  };
+
   const handleSubmit = (ev: React.MouseEvent<Element, MouseEvent>) => {
     ev.preventDefault();
     console.log('file selected');
@@ -222,148 +225,157 @@ export const AssetDrawerElement = (
     console.log('adding file');
   };
 
-  const handleBlockEvents = (ev) => {
-    ev.preventDefault();
+  const handlePreventBubbling = (ev) => {
+    ev.bubbles = false;
     ev.stopPropagation();
+    ev.preventDefault();
   };
 
   useEffect(() => {
     if (isCopying) {
-      window.addEventListener('keydown', handleBlockEvents, { capture: true });
+      window.addEventListener('keydown', handlePreventBubbling, {
+        capture: true,
+      });
     }
 
     return () => {
-      window.removeEventListener('keydown', handleBlockEvents, {
+      window.removeEventListener('keydown', handlePreventBubbling, {
         capture: true,
       });
     };
   }, [isCopying]);
 
   return (
-    <div ref={ref}>
-      <Drawer
-        isAnimated={isAnimated}
-        isOpen={isOpen}
-        slideFrom="right"
-        style={styles}
-      >
-        <div className="offcanvas-header">
-          <h4 className="offcanvas-title mb-0">Project Files</h4>
-          <button type="button" className="btn-close" onClick={onClose} />
-        </div>
+    <div className={className} ref={ref}>
+      <AnimatePresence>
+        {isOpen && (
+          <Backdrop
+            className="asset-browser-overlay-backdrop"
+            onClick={handleClose}
+          >
+            <Drawer
+              onClick={handlePreventBubbling}
+              isAnimated={isAnimated}
+              isOpen={isOpen}
+              slideFrom="right"
+              style={styles}
+            >
+              <div className="offcanvas-header">
+                <h4 className="offcanvas-title mb-0">Project Files</h4>
+                <button type="button" className="btn-close" onClick={onClose} />
+              </div>
 
-        {isCopying ? (
-          <>
-            <div className="copy-assets-progress-blocker"></div>
+              {isCopying ? (
+                <>
+                  <div className="copy-assets-progress-blocker"></div>
 
-            <div className="copy-assets-progress">
-              <div className="progress-container">
-                <b>Adding Files...</b>
-                <div className="mb-2 file-name">{copyProgress.fileName}</div>
-                <div className="progress">
-                  <div
-                    className="progress-bar"
-                    role="progressbar"
-                    aria-label="Basic example"
-                    style={{ width: copyProgress.totalProgress + '%' }}
-                    aria-valuenow={50}
-                    aria-valuemin={0}
-                    aria-valuemax={100}
-                  />
+                  <div className="copy-assets-progress">
+                    <div className="progress-container">
+                      <b>Adding Files...</b>
+                      <div className="mb-2 file-name">
+                        {copyProgress.fileName}
+                      </div>
+                      <div className="progress">
+                        <div
+                          className="progress-bar"
+                          role="progressbar"
+                          aria-label="Basic example"
+                          style={{ width: copyProgress.totalProgress + '%' }}
+                          aria-valuenow={50}
+                          aria-valuemin={0}
+                          aria-valuemax={100}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <></>
+              )}
+
+              <div className="offcanvas-body">
+                <div className="owl-offcanvas-form">
+                  <div className="asset-browser-body">
+                    <AssetSearch
+                      onChange={(value) => {
+                        const searchTerm = value.trim();
+                        setSearchTerm(searchTerm);
+                      }}
+                    />
+                    <div className="mt-2 asset-list">
+                      <table className="table">
+                        <thead>
+                          <tr>
+                            <th scope="col">Name</th>
+                            <th
+                              scope="col"
+                              style={{
+                                width: '65px',
+                                maxWidth: '65px',
+                              }}
+                            >
+                              Type
+                            </th>
+                            <th
+                              scope="col"
+                              style={{
+                                width: '80px',
+                                maxWidth: '80px',
+                              }}
+                            >
+                              Size
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>{rootComponents}</tbody>
+                      </table>
+                      {rootComponents.length === 0 && searchTerm ? (
+                        <div style={{ textAlign: 'center' }} className="mt-3">
+                          No Search Results Found
+                        </div>
+                      ) : (
+                        <></>
+                      )}
+
+                      {rootComponents.length === 0 && !searchTerm ? (
+                        <div style={{ textAlign: 'center' }} className="mt-3">
+                          No Project Files or Folders
+                        </div>
+                      ) : (
+                        <></>
+                      )}
+                    </div>
+                  </div>
+
+                  <footer className="d-flex justify-content-end my-3">
+                    <button
+                      type="button"
+                      className="btn btn-link"
+                      onClick={onClose}
+                    >
+                      Close
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-success"
+                      onClick={handleAddFile}
+                    >
+                      Add New File
+                    </button>
+                  </footer>
                 </div>
               </div>
-            </div>
-          </>
-        ) : (
-          <></>
+            </Drawer>
+          </Backdrop>
         )}
-
-        <div className="offcanvas-body">
-          <div className="owl-offcanvas-form">
-            <div className="asset-browser-body">
-              <AssetSearch
-                onChange={(value) => {
-                  const searchTerm = value.trim();
-                  setSearchTerm(searchTerm);
-                }}
-              />
-              <div className="mt-2 asset-list">
-                <table className="table">
-                  <thead>
-                    <tr>
-                      <th scope="col">Name</th>
-                      <th
-                        scope="col"
-                        style={{
-                          width: '65px',
-                          maxWidth: '65px',
-                        }}
-                      >
-                        Type
-                      </th>
-                      <th
-                        scope="col"
-                        style={{
-                          width: '80px',
-                          maxWidth: '80px',
-                        }}
-                      >
-                        Size
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>{rootComponents}</tbody>
-                </table>
-                {rootComponents.length === 0 && searchTerm ? (
-                  <div style={{ textAlign: 'center' }} className="mt-3">
-                    No Search Results Found
-                  </div>
-                ) : (
-                  <></>
-                )}
-
-                {rootComponents.length === 0 && !searchTerm ? (
-                  <div style={{ textAlign: 'center' }} className="mt-3">
-                    No Project Files or Folders
-                  </div>
-                ) : (
-                  <></>
-                )}
-              </div>
-            </div>
-
-            <footer className="d-flex justify-content-end my-3">
-              <button type="button" className="btn btn-link" onClick={onClose}>
-                Close
-              </button>
-              <button
-                type="button"
-                className="btn btn-success"
-                onClick={handleAddFile}
-              >
-                Add New File
-              </button>
-            </footer>
-          </div>
-        </div>
-      </Drawer>
-      {isOpen ? (
-        <Backdrop
-          className="asset-browser-overlay-backdrop"
-          isAnimated={isAnimated}
-          onClick={onClose}
-          {...props}
-        />
-      ) : (
-        <></>
-      )}
+      </AnimatePresence>
     </div>
   );
 };
 
 export const AssetDrawer = forwardRef(AssetDrawerElement);
 
-export const AssetBrowser = (props) => {
+export const AssetBrowser = ({ isOpen, ...props }) => {
   const overlayRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -372,13 +384,9 @@ export const AssetBrowser = (props) => {
     if (appNode && overlayRef.current) {
       appNode.appendChild(overlayRef.current);
     }
-  }, [overlayRef]);
+  }, [overlayRef, isOpen]);
 
-  return (
-    <AnimatePresence>
-      <AssetDrawer {...props} ref={overlayRef} />
-    </AnimatePresence>
-  );
+  return <AssetDrawer {...props} isOpen={isOpen} ref={overlayRef} />;
 };
 
 export default {

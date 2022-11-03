@@ -9,6 +9,7 @@ export const Drawer = ({
   children,
   className,
   style,
+  onClick,
 }: DrawerProps) => {
   let classes = 'offcanvas show support-high-contrast';
   const direction = slideFrom === 'right' ? 'right' : 'left';
@@ -70,6 +71,7 @@ export const Drawer = ({
 
   return (
     <motion.div
+      onClick={onClick}
       className={classes}
       style={styles}
       initial={opts.initial}

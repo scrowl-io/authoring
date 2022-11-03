@@ -1,3 +1,7 @@
+.offcanvas-backdrop {
+  background-color: #343a4069;
+}
+
 .pane {
   & .right-overlay-panel + .overlay-backdrop {
     left: -100vw;
