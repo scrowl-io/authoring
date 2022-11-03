@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { InputAssetProps } from '../../../pane-editor.types';
-import {
-  setWorkspace,
-  useContentFocus,
-} from '../../../../../page-workspace-hooks';
+import { useContentFocus } from '../../../../../page-workspace-hooks';
 import { AssetBrowser } from '../../../../../components';
 
 export const ImageAsset = ({
