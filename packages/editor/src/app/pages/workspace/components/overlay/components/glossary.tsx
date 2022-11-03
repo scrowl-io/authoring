@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef, forwardRef } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import '../_overlay.scss';
 import { Backdrop, Drawer } from '.';
 import { Settings } from '../../../../../models';
 
-export const GlossaryForm = ({ isOpen, onClose, onSubmit, term, ...props }) => {
+const GlossaryFormElement = (
+  { isOpen, onClose, onSubmit, term, ...props },
+  ref
+) => {
   const animationSettings = Settings.useAnimation();
   const isAnimated = !animationSettings.reducedAnimations;
   const isNewTerm = term === undefined || term.id === -1;
@@ -44,7 +47,7 @@ export const GlossaryForm = ({ isOpen, onClose, onSubmit, term, ...props }) => {
   }, [term, isOpen]);
 
   return (
-    <>
+    <div ref={ref}>
       <Drawer isAnimated={isAnimated} isOpen={isOpen}>
         <div className="offcanvas-header">
           <h4 className="offcanvas-title mb-0">{title} Glossary Term</h4>
@@ -120,14 +123,26 @@ export const GlossaryForm = ({ isOpen, onClose, onSubmit, term, ...props }) => {
       ) : (
         <></>
       )}
-    </>
+    </div>
   );
 };
 
+export const GlossaryForm = forwardRef(GlossaryFormElement);
+
 export const GlossaryOverlay = (props) => {
+  const overlayRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const appNode = document.getElementById('app');
+
+    if (appNode && overlayRef.current) {
+      appNode.appendChild(overlayRef.current);
+    }
+  }, [overlayRef]);
+
   return (
     <AnimatePresence>
-      <GlossaryForm {...props} />
+      <GlossaryForm ref={overlayRef} {...props} />
     </AnimatePresence>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef, forwardRef } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { Backdrop } from '../backdrop';
 import { Drawer } from '..';
@@ -8,7 +8,10 @@ import { AssetSearch } from './asset-search';
 import { AssetFolder } from './asset-folder';
 import { AssetEntry } from './asset-entry';
 
-export const AssetDrawer = ({ isOpen, onClose, onSelected, ...props }) => {
+export const AssetDrawerElement = (
+  { isOpen, onClose, onSelected, ...props },
+  ref
+) => {
   const assets = Projects.useAssets();
   const [isCopying, setIsCopying] = useState(false);
   const [copyProgress, setCopyProgress] = useState({
@@ -237,7 +240,7 @@ export const AssetDrawer = ({ isOpen, onClose, onSelected, ...props }) => {
   }, [isCopying]);
 
   return (
-    <>
+    <div ref={ref}>
       <Drawer
         isAnimated={isAnimated}
         isOpen={isOpen}
@@ -354,14 +357,26 @@ export const AssetDrawer = ({ isOpen, onClose, onSelected, ...props }) => {
       ) : (
         <></>
       )}
-    </>
+    </div>
   );
 };
 
+export const AssetDrawer = forwardRef(AssetDrawerElement);
+
 export const AssetBrowser = (props) => {
+  const overlayRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const appNode = document.getElementById('app');
+
+    if (appNode && overlayRef.current) {
+      appNode.appendChild(overlayRef.current);
+    }
+  }, [overlayRef]);
+
   return (
     <AnimatePresence>
-      <AssetDrawer {...props} />
+      <AssetDrawer {...props} ref={overlayRef} />
     </AnimatePresence>
   );
 };
