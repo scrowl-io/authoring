@@ -8,10 +8,12 @@ class App extends React.Component {
     super(props);
     this.state = {
       connected: false,
+      focusElement: '',
       schema: {
         content: {{{data.templateContent}}}
       }
     };
+    this.onMessage = this.onMessage.bind(this);
   }
   setSchema = (data) => {
     this.setState({ schema: { content: data } });
@@ -19,30 +21,42 @@ class App extends React.Component {
   setConnection = (data) => {
     this.setState({ connected: data });
   }
+  setFocusElement = (data) => {
+    this.setState({ focusElement: data });
+  }
+  onMessage(ev) {
+    const isConnected = this.state.connected;
+    const setConnection = this.setConnection;
+    const setSchema = this.setSchema;
+    const setFocusElement = this.setFocusElement;
+
+    if (!isConnected) {
+      ev.ports[0].postMessage({ type: 'connection' });
+      setConnection(true);
+      Scrowl.core.host.connect();
+      return;
+    }
+
+    switch (ev.data.type) {
+      case 'update':
+        setSchema(ev.data.data);
+        break;
+      case 'focus':
+        setFocusElement(ev.data.field);
+        break;
+    }
+  }
+  componentDidMount() {
+    window.addEventListener('message', this.onMessage, false);
+  }
+  componentWillUnmount() {
+    window.removeEventListener('message', this.onMessage, false);
+  }
   render() {
     let transmitter;
     const controller = new Scrowl.core.scroll.Controller();
     const schema = this.state.schema;
-    const isConnected = this.state.connected;
-    const setConnection = this.setConnection;
-    const setSchema = this.setSchema;
-
-    window.addEventListener('message', (ev) => {
-      transmitter = ev.ports[0];
-
-      if (!isConnected) {
-        transmitter.postMessage({ type: 'connection' });
-        setConnection(true);
-        Scrowl.core.host.connect();
-        return;
-      }
-
-      switch (ev.data.type) {
-        case 'update':
-          setSchema(ev.data.data);
-          break;
-      }
-    });
+    const focusElement = this.state.focusElement;
 
     return e(
       {{data.templateComponent}},
@@ -53,6 +67,7 @@ class App extends React.Component {
         duration: 0,
         controller,
         schema,
+        focusElement,
       },
       null
     );

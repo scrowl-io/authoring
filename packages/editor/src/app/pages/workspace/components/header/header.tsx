@@ -129,6 +129,7 @@ export const Header = () => {
       initial={motionOptsContainer.initial}
       animate={motionOptsContainer.animate}
       transition={motionOptsContainer.transition}
+      className={css.workspaceHeaderWrapper}
     >
       <Navbar fixed="top" expand="xs" className={css.workspaceHeader}>
         <div className={css.projectMeta}>

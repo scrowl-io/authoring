@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { InputAssetProps } from '../../../pane-editor.types';
-import { Projects } from '../../../../../../../models';
 import {
   setWorkspace,
   useContentFocus,
 } from '../../../../../page-workspace-hooks';
+import { AssetBrowser } from '../../../../../components';
 
 export const ImageAsset = ({
   field,
@@ -25,60 +25,45 @@ export const ImageAsset = ({
 }: InputAssetProps) => {
   const contentFocus = useContentFocus();
   const isFocused = contentFocus === field;
-  const inputRef: any = React.useRef();
-  const lastFocusState: any = React.useRef(false);
-  const assets = Projects.useAssets();
+  const inputRef = React.useRef<HTMLInputElement>(null);
+  const [assetName, setAssetName] = useState(value);
+  const [isOpenAssetBrowser, setIsOpenAssetBrowser] = useState(false);
   const isInvalid =
     validationError !== null &&
     validationError !== undefined &&
     validationError.length;
 
   const showAssetBrowser = () => {
-    if (onFocus) {
-      onFocus();
-    }
-    setWorkspace({ isOpenAssetBrowser: true });
-    // ::TODO:: fix this state
-    // dispatch(
-    //   uiActions.showOverlay({
-    //     type: "AssetBrowser",
-    //     data: { filter: props.assetType || "" },
-    //     callback: (params) => {
-    //       if (typeof params === "object") {
-    //         const { asset } = params;
-    //         // Handle Asset Browser Results
+    setIsOpenAssetBrowser(true);
 
-    //         window.requestAnimationFrame(() => {
-    //           props.onChange(asset);
-    //           props.onValidate(asset);
-    //           props.onBlur();
-    //         });
-    //       } else {
-    //         window.requestAnimationFrame(() => {
-    //           props.onBlur();
-    //         });
-    //       }
-    //     },
-    //   })
-    // );
+    if (onFocus) {
+      onFocus(field);
+    }
   };
 
-  if (inputRef.current && lastFocusState.current !== focus) {
-    lastFocusState.current = focus;
+  const closeAssetBrowser = () => {
+    setIsOpenAssetBrowser(false);
 
-    if (focus) {
-      // requestAnimationFrame fixes a state update bug
-      window.requestAnimationFrame(() => {
-        showAssetBrowser();
-      });
+    if (onBlur) {
+      onBlur(field);
     }
-  }
+  };
 
-  const valueHash = value ? value.split('.').shift() : '';
-  const assetName = '';
-  // const assetName = assets.reduce((a, p) => {
-  //   return p.fileHash === valueHash ? p.fileName : a;
-  // }, '');
+  const handleAssetSelected = (data) => {
+    setAssetName(data.name);
+  };
+
+  const handleAssetFocus = () => {
+    showAssetBrowser();
+  };
+
+  const handleButtonFocus = (ev: React.MouseEvent<HTMLButtonElement>) => {
+    ev.currentTarget.blur();
+
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  };
 
   let inputClasses = 'form-control form-control-sm';
 
@@ -88,22 +73,15 @@ export const ImageAsset = ({
 
   const inputProps: any = {
     type: 'text',
+    ref: inputRef,
     className: inputClasses,
     style: { cursor: 'pointer', overflow: 'hidden', textOverflow: 'ellipsis' },
     value: assetName,
     placeholder: placeholder,
     disabled: disabled,
+    readOnly: true,
     tabIndex: '-1',
-
-    onChange: (ev: React.FormEvent<HTMLInputElement>) => {},
-    onFocus: (ev: React.FocusEvent<HTMLInputElement>) => {
-      ev.preventDefault();
-      ev.target.blur();
-    },
-
-    onClick: (ev: React.MouseEvent) => {
-      showAssetBrowser();
-    },
+    onFocus: handleAssetFocus,
   };
 
   let controlClasses = 'control-asset mb-2 template-content-input';
@@ -117,73 +95,61 @@ export const ImageAsset = ({
     groupClasses += ' is-invalid';
   }
 
+  useEffect(() => {
+    if (inputRef.current && isFocused) {
+      inputRef.current.focus();
+    }
+  }, [contentFocus, inputRef]);
+
   return (
-    <div className={controlClasses}>
-      <label className="form-label">{label}</label>
-      <div className={groupClasses}>
-        {assetName ? (
+    <>
+      <div className={controlClasses}>
+        <label className="form-label">{label}</label>
+        <div className={groupClasses}>
+          {assetName ? (
+            <button
+              style={{ width: '26px', paddingLeft: '5px' }}
+              className="btn btn-outline-primary post"
+              type="button"
+              disabled={disabled}
+              onClick={handleButtonFocus}
+            >
+              <span
+                style={{
+                  fontSize: '15px',
+                }}
+                className="material-symbols-sharp"
+              >
+                close
+              </span>
+            </button>
+          ) : null}
+
+          <input {...inputProps} />
+
           <button
-            style={{ width: '26px', paddingLeft: '5px' }}
+            style={{ width: '25%', maxWidth: '75px' }}
             className="btn btn-outline-primary post"
             type="button"
             disabled={disabled}
-            onClick={(e: any) => {
-              if (onChange) {
-                onChange(field, '');
-              }
-              if (onValidate) {
-                onValidate(field, '');
-              }
-            }}
-            onMouseUp={(e: any) => {
-              e.target.blur();
-            }}
-            onBlur={() => {
-              if (onBlur) {
-                onBlur(field, '');
-              }
-            }}
+            onFocus={handleAssetFocus}
+            onClick={handleButtonFocus}
           >
-            <span
-              style={{
-                fontSize: '15px',
-              }}
-              className="material-symbols-sharp"
-            >
-              close
-            </span>
+            Select
           </button>
-        ) : null}
-
-        <input {...inputProps} />
-
-        <button
-          ref={inputRef}
-          style={{ width: '25%', maxWidth: '75px' }}
-          className="btn btn-outline-primary post"
-          type="button"
-          disabled={disabled}
-          onClick={(ev: React.MouseEvent<HTMLButtonElement>) => {
-            showAssetBrowser();
-          }}
-          onMouseUp={(ev: React.MouseEvent<HTMLButtonElement>) => {
-            ev.currentTarget.blur();
-          }}
-          onBlur={(ev: React.FocusEvent<HTMLButtonElement>) => {
-            if (onBlur) {
-              onBlur(field, '');
-            }
-          }}
-        >
-          Select
-        </button>
+        </div>
+        {isInvalid ? (
+          <div className="invalid-feedback">{validationError}</div>
+        ) : (
+          <></>
+        )}
       </div>
-      {isInvalid ? (
-        <div className="invalid-feedback">{validationError}</div>
-      ) : (
-        <></>
-      )}
-    </div>
+      <AssetBrowser
+        isOpen={isOpenAssetBrowser}
+        onClose={closeAssetBrowser}
+        onSelected={handleAssetSelected}
+      />
+    </>
   );
 };
 

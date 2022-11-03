@@ -57,6 +57,9 @@ export const createProject = () => {
       createSlide('Slide 2', 0, 0, 'blockText'),
       createSlide('Slide 3', 0, 0, 'blockText'),
     ],
+    glossary: [],
+    resources: [],
+    assets: [],
   };
 
   return data;

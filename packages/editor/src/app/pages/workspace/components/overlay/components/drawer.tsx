@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { DrawerProps, DrawerOpts, DrawerStyles } from './components.types';
+import { DrawerProps, DrawerOpts, DrawerStyles } from './overlay.types';
 
 export const Drawer = ({
   isAnimated,
@@ -8,10 +8,16 @@ export const Drawer = ({
   slideFrom,
   children,
   className,
+  style,
 }: DrawerProps) => {
-  let classes = 'offcanvas offcanvas-start show support-high-contrast';
+  let classes = 'offcanvas show support-high-contrast';
   const direction = slideFrom === 'right' ? 'right' : 'left';
-  const styles: DrawerStyles = {};
+  let offcanvasWidth = 400;
+  let offcanvasOffset = -1 * offcanvasWidth;
+  let styles: DrawerStyles = {
+    maxWidth: offcanvasWidth,
+    width: offcanvasWidth,
+  };
   const opts: DrawerOpts = {
     initial: {},
     animate: {},
@@ -25,34 +31,38 @@ export const Drawer = ({
     classes += ' ' + className;
   }
 
+  if (style) {
+    styles = Object.assign(styles, style);
+    offcanvasWidth = styles.width;
+    offcanvasOffset = -1 * offcanvasWidth;
+  }
+
   switch (direction) {
     case 'left':
-      classes += ' left-overlay-panel';
+      classes += ' left-overlay-panel offcanvas-start';
       styles.left = 0;
 
       if (!isAnimated) {
         opts.initial.left = 0;
       } else {
-        opts.initial.left = 'calc(-1 * var(--bs-offcanvas-width))';
-        opts.animate.left = isOpen ? 0 : 'calc(-1 * var(--bs-offcanvas-width))';
+        opts.initial.left = offcanvasOffset;
+        opts.animate.left = isOpen ? 0 : offcanvasOffset;
         opts.exit.transition.left = { duration: 0.15 };
-        opts.exit.left = 'calc(-1 * var(--bs-offcanvas-width))';
+        opts.exit.left = offcanvasOffset;
         opts.transition.left = { duration: 0.25 };
       }
       break;
     case 'right':
-      classes += ' right-overlay-panel';
-      styles.right = 0;
-      opts.initial.right = 'calc(-1 * var(--bs-offcanvas-width))';
-      opts.animate.right = isOpen
-        ? '0px'
-        : 'calc(-1 * var(--bs-offcanvas-width))';
-      opts.exit.transition.right = { duration: 0.15 };
-      opts.exit.right = 'calc(-1 * var(--bs-offcanvas-width))';
+      classes += ' right-overlay-panel offcanvas-end';
+      styles.right = offcanvasOffset;
 
       if (!isAnimated) {
-        opts.transition.right = { duration: 0 };
+        opts.initial.right = offcanvasOffset;
       } else {
+        opts.initial.right = offcanvasOffset;
+        opts.animate.right = isOpen ? 0 : offcanvasOffset;
+        opts.exit.transition.right = { duration: 0.15 };
+        opts.exit.right = offcanvasOffset;
         opts.transition.right = { duration: 0.25 };
       }
       break;
@@ -61,6 +71,7 @@ export const Drawer = ({
   return (
     <motion.div
       className={classes}
+      style={styles}
       initial={opts.initial}
       animate={opts.animate}
       exit={opts.exit}

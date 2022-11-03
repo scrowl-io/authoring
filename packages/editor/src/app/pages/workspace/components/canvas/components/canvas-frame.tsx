@@ -1,7 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Slide, SlideCommons } from '@scrowl/player/src/components';
 import * as css from '../_canvas.scss';
-import { useActiveSlide, setContentFocus, resetContentFocus } from '../../../';
+import {
+  useActiveSlide,
+  useContentFocus,
+  setContentFocus,
+  resetContentFocus,
+} from '../../../';
 import { rq } from '../../../../../services';
 import { Templates } from '../../../../../models';
 
@@ -14,6 +19,7 @@ export const CanvasFrame = () => {
   const prevSlideTemplate = useRef('');
   const prevContent = useRef(data.template.content);
   const frameRef = useRef<HTMLIFrameElement>(null);
+  const contentFocus = useContentFocus();
   const [frameUrl, setFrameUrl] = useState('');
   const [isConnected, setConnection] = useState(false);
   const [slideOpts, setSlideOpts] = useState<SlideCommons>({
@@ -27,6 +33,18 @@ export const CanvasFrame = () => {
     }
 
     setFrameUrl(res.data.url);
+  };
+
+  const sendMessage = (message) => {
+    const channel = new MessageChannel();
+
+    channel.port1.onmessage = handleFrameMessage;
+
+    if (!frameRef.current) {
+      return;
+    }
+
+    frameRef.current.contentWindow?.postMessage(message, '*', [channel.port2]);
   };
 
   const handleFrameMessage = (ev) => {
@@ -53,14 +71,17 @@ export const CanvasFrame = () => {
     }
   };
 
-  window.addEventListener('message', handleFrameMessage);
-
-  // clean up events, so we dont get multiple handlers for a single event;
   useEffect(() => {
+    window.addEventListener('message', handleFrameMessage);
+
     return () => {
       window.removeEventListener('message', handleFrameMessage);
     };
   });
+
+  useEffect(() => {
+    sendMessage({ type: 'focus', field: contentFocus });
+  }, [contentFocus]);
 
   useEffect(() => {
     if (slideIdx === -1) {
@@ -99,17 +120,7 @@ export const CanvasFrame = () => {
   }, [slideIdx, isConnected, data]);
 
   const connect = (ev: React.SyntheticEvent) => {
-    const channel = new MessageChannel();
-
-    channel.port1.onmessage = handleFrameMessage;
-
-    if (!frameRef.current) {
-      return;
-    }
-
-    frameRef.current.contentWindow?.postMessage({ type: 'connection' }, '*', [
-      channel.port2,
-    ]);
+    sendMessage({ type: 'connection' });
   };
 
   return (

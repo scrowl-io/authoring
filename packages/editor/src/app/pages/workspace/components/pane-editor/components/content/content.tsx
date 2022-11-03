@@ -3,6 +3,7 @@ import * as css from '../../_pane-editor.scss';
 import {
   useActiveTemplateContent,
   setActiveTemplateContent,
+  setContentFocus,
   resetContentFocus,
 } from '../../../../page-workspace-hooks';
 import { FormBuilder } from './components';
@@ -19,12 +20,11 @@ export const Content = () => {
   };
 
   const handleContentFocus = (field, value) => {
-    // console.log('content focus', field, value);
+    setContentFocus(field);
   };
 
   const handleContentBlur = (field, value) => {
     resetContentFocus();
-    // console.log('content blur', field, value);
   };
 
   return (

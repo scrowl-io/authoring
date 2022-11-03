@@ -19,39 +19,27 @@ export const Fieldset = ({
 }: InputFieldsetProps) => {
   const fields = Object.keys(content);
 
-  const chainFields = (inputField) => {
-    return inputField.split('.');
-  };
-
   const handleFieldOnChange = (inputField, val) => {
-    let fieldset = chainFields(inputField);
-
     if (onChange) {
-      onChange(fieldset, val);
+      onChange(inputField, val);
     }
   };
 
   const handleFieldOnValidate = (inputField, val) => {
-    let fieldset = chainFields(inputField);
-
     if (onValidate) {
-      onValidate(fieldset, val);
+      onValidate(inputField, val);
     }
   };
 
   const handleFieldOnFocus = (inputField, val) => {
-    let fieldset = chainFields(inputField);
-
     if (onFocus) {
-      onFocus(fieldset, val);
+      onFocus(inputField, val);
     }
   };
 
   const handleFieldOnBlur = (inputField, val) => {
-    let fieldset = chainFields(inputField);
-
     if (onBlur) {
-      onBlur(fieldset, val);
+      onBlur(inputField, val);
     }
   };
 

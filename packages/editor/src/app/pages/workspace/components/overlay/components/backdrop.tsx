@@ -1,8 +1,13 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import * as css from '../_overlay.scss';
 
 export const Backdrop = ({ className, isAnimated, ...props }) => {
-  const classes = `offcanvas-backdrop fade show ${className ? className : ''}`;
+  let classes = `offcanvas-backdrop fade show ${css.overlayBackdrop}`;
+
+  if (className) {
+    classes += ` ${className}`;
+  }
 
   if (!isAnimated) {
     return <motion.div className={classes} {...props} />;
