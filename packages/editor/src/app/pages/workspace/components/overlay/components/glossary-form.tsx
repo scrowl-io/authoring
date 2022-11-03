@@ -1,7 +1,7 @@
 import React from 'react';
 import { Backdrop } from './backdrop';
-import { useWorkspace, setWorkspace } from '../../../';
-import { Drawer } from './';
+import { useWorkspace, setWorkspace } from '../../..';
+import { Drawer } from '.';
 
 export const GlossaryEditor = (props) => {
   const isOpen = useWorkspace('isOpenGlossaryEditor');
