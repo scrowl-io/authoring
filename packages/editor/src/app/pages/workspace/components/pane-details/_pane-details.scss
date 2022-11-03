@@ -75,12 +75,8 @@
         background: var(--owl-chatbox-bg-hover);
       }
 
-      span[class^='material-symbols'] {
+      span[class*='owlui-icons'] {
         color: var(--owl-input-placeholder-color);
-      }
-
-      .owlui-icons {
-        font-size: 1.65em;
       }
     }
   }
