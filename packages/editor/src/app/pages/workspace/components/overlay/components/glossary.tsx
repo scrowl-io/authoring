@@ -49,13 +49,13 @@ const GlossaryFormElement = (
   return (
     <div ref={ref}>
       <Drawer isAnimated={isAnimated} isOpen={isOpen}>
-        <div className="offcanvas-header">
-          <h4 className="offcanvas-title mb-0">{title} Glossary Term</h4>
+        <div className="owlui-offcanvas-header">
+          <h4 className="owlui-offcanvas-title mb-0">{title} Glossary Term</h4>
           <button type="button" className="btn-close" onClick={handleClose} />
         </div>
 
-        <div className="offcanvas-body content-form">
-          <form className="owl-offcanvas-form">
+        <div className="owlui-offcanvas-body content-form">
+          <form className="owlui-offcanvas-form">
             <div className="mb-2">
               <label htmlFor="term-word" className="form-label">
                 Term
@@ -65,7 +65,7 @@ const GlossaryFormElement = (
                 autoFocus
                 type="text"
                 className={
-                  'form-control ' +
+                  'owlui-form-control ' +
                   (isDirty && termWord.trim() === '' ? 'error' : '')
                 }
                 placeholder="Enter Term"
@@ -76,13 +76,14 @@ const GlossaryFormElement = (
               />
             </div>
 
-            <div className="mb-2 owl-offcanvas-form__textarea">
-              <label htmlFor="termAdd2" className="form-label">
+            <div className="mb-2 owlui-offcanvas-form__textarea">
+              <label htmlFor="glossary-definition" className="form-label">
                 Definition
               </label>
               <textarea
+                id="glossary-definition"
                 className={
-                  'form-control ' +
+                  'owlui-form-control form-control-lg ' +
                   (isDirty && termDefinition.trim() === '' ? 'error' : '')
                 }
                 placeholder="Define the term"
