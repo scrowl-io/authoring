@@ -26,9 +26,10 @@ const config = {
     includePaths: ['../../'],
     options: {
       overwrite: true,
-      filter: source => {
+      filter: (source) => {
         return (
-          source.indexOf('.d.ts') === -1 && source.indexOf('owl.lib.module.js') === -1
+          source.indexOf('.d.ts') === -1 &&
+          source.indexOf('owl.lib.module.js') === -1
         );
       },
     },
@@ -43,6 +44,13 @@ const config = {
   },
   'node_modules/@scrowl/template-block-text/dist': {
     dest: './src/main/assets/templates/block-text',
+    includePaths: ['../../'],
+    options: {
+      overwrite: true,
+    },
+  },
+  'node_modules/@scrowl/template-lesson-intro/dist': {
+    dest: './src/main/assets/templates/lesson-intro',
     includePaths: ['../../'],
     options: {
       overwrite: true,
