@@ -87,7 +87,7 @@ export const CourseSettings = ({ data, onChange }) => {
       </div>
       <div className="mb-2">
         <label htmlFor="course-settings-organization" className="form-label">
-          Authors
+          Organization
         </label>
         <input
           id="course-settings-organization"

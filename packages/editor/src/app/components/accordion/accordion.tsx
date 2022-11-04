@@ -30,6 +30,10 @@ export const Accordion = ({ title, children, ...props }) => {
           type="button"
           aria-expanded={isExpanded ? 'true' : 'false'}
           onClick={() => {
+            if (props.disableCollapse) {
+              return;
+            }
+
             setIsExpanded(!isExpanded);
           }}
         >

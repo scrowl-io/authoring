@@ -205,6 +205,20 @@
   }
 }
 
+.publish-course-overview__item {
+  dt {
+    font-weight: 500;
+  }
+
+  dd {
+    font-size: 1.5em;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    color: var(--bs-primary);
+    line-height: 1;
+  }
+}
+
 .owlui-modal {
   height: auto;
   width: auto;
@@ -234,4 +248,8 @@
   z-index: -1;
   user-select: none;
   pointer-events: none;
+}
+
+.collapse-disabled .accordion-button::after {
+  content: none;
 }

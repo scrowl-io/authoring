@@ -25,7 +25,7 @@ export const ExportOptions = ({ data, onChange }) => {
   };
 
   return (
-    <Accordion title="Reporting & Tracking">
+    <Accordion title="Export Options">
       <div className="row mb-2">
         <label
           htmlFor="export-options-output-format"
