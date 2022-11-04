@@ -43,6 +43,7 @@ export const TemplateSelector = () => {
         isOpen={isOpenTemplateBrowser}
         onClose={handleTemplateBrowserClose}
         onSubmit={handleTemplateBrowserSubmit}
+        activeTemplate={templateMeta}
       />
     </div>
   );
