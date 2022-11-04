@@ -2,33 +2,44 @@
 @use '@owlui/lib/src/theme/global/bootstrap' as *;
 
 .canvas {
+  --workspace-canvas-height: calc(
+    100vh - 224px - var(--workspace-notes-height, 0px)
+  );
+  --workspace-canvas-width: 100%;
+  --workspace-slide-height: calc(var(--workspace-canvas-height) - 2px);
   position: relative;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
   color: var(--owl-workspace-color);
   background: var(--owl-workspace-bg);
-  overflow-y: auto;
-  z-index: 10;
+  overflow: hidden;
+  z-index: 20;
 
   &__header {
-    @extend .h2;
+    @extend .h3;
     margin: $owl-sys-space-workspace $owl-sys-space-workspace 0.25em;
     flex: 0 0 auto;
     display: flex;
     justify-content: flex-start;
     align-items: center;
+    -webkit-user-select: none;
     user-select: none;
 
     &__slide-name {
       display: inline-grid;
       align-items: center;
       position: relative;
+      font-size: 20px;
+      font-weight: 700;
 
       &::after,
       input {
+        min-width: 100px;
+        max-width: calc(
+          100vw - var(--pane-left-width) - var(--pane-right-width) - 100px
+        );
         width: auto;
-        min-width: 1em;
         grid-area: 1 / 2;
         padding: 0 $input-btn-padding-y-sm;
         font-size: inherit;
@@ -54,6 +65,16 @@
         }
       }
 
+      span {
+        white-space: nowrap;
+        position: fixed;
+        top: -10000px;
+        left: -10000px;
+        z-index: 0;
+        width: fit-content;
+        height: 50px;
+      }
+
       &::after {
         content: attr(data-value) ' ';
         visibility: hidden;
@@ -66,19 +87,123 @@
   }
 
   &__body {
-    flex: 1 1 auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    --bs-heading-color: var(--bs-gray-900);
+    --bs-body-color: var(--bs-gray-900);
+    --bs-body-bg: var(--bs-white);
+    margin: 0 1.5rem 1.5rem;
+    color: var(--bs-body-color);
+    border: var(--owl-border-width) solid var(--owl-border-color);
+    background: var(--bs-body-bg);
+    box-shadow: var(--owl-box-shadow);
+    overflow: hidden;
 
     .slide {
-      transform: scale(0.68);
-      position: absolute;
+      width: var(--workspace-canvas-width) !important;
+      height: var(--workspace-canvas-height) !important;
+
+      iframe {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        height: var(--workspace-slide-height);
+      }
     }
   }
 
   &__footer {
     flex: 0 1 auto;
-    margin: calc($owl-sys-space-workspace / 2) $owl-sys-space-workspace;
+    margin: 0.75rem $owl-sys-space-workspace;
+
+    &__link {
+      &__label {
+        margin-bottom: 0;
+        cursor: pointer;
+      }
+
+      span[class*='owlui-icons'] {
+        transform: rotate(0deg);
+      }
+
+      &.collapsed span[class*='owlui-icons'] {
+        transform: rotate(-90deg);
+      }
+    }
+
+    &__textarea {
+      resize: none;
+      padding-left: 0.75em;
+      padding-right: 0.75em;
+    }
+  }
+
+  .action-menu {
+    opacity: 1;
+
+    span[class*='owlui-icons'] {
+      padding: 0.02em;
+      font-size: 1.6em;
+    }
+  }
+
+  &__breadcrumb {
+    transform: translate(0px, 0px);
+    box-shadow: 0 5px 0 5px var(--owl-footer-bg);
+    -webkit-user-select: none;
+    user-select: none;
+    height: 2rem;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 0 0.5rem;
+    color: var(--owl-footer-color);
+    background: var(--owl-footer-bg);
+
+    &__list {
+      --bs-breadcrumb-margin-bottom: 0.25em;
+      --bs-breadcrumb-divider-color: var(--owl-footer-label-color);
+      --bs-breadcrumb-item-padding-x: 0.25em;
+      --bs-breadcrumb-item-active-color: var(--owl-footer-color);
+      flex-wrap: nowrap;
+      flex-grow: 1;
+      color: var(--owl-footer-label-color);
+
+      .breadcrumb-item {
+        flex-shrink: 0;
+
+        &__content {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          max-width: 14rem;
+          color: inherit;
+          font-size: 0.75rem;
+          font-weight: 600;
+          line-height: 1.5;
+          letter-spacing: 0.015em;
+          border: 0;
+          background: transparent;
+          box-shadow: none;
+        }
+
+        .dropdown-toggle {
+          text-decoration: underline;
+          border-radius: 0.25em;
+
+          &.active {
+            color: var(--owl-footer-color);
+          }
+
+          &:hover {
+            color: var(--owl-footer-hover-color);
+            background: var(--owl-footer-hover-bg);
+          }
+        }
+
+        span[class*='owlui-icons'] {
+          margin-right: 0.5em;
+        }
+      }
+    }
   }
 }

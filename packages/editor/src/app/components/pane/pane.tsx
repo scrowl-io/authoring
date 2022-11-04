@@ -3,13 +3,14 @@ import { motion } from 'framer-motion';
 import * as css from './_pane.scss';
 import { PaneProps } from './pane.types';
 
-export const Pane = ({ className, side, children, ...props }: PaneProps) => {
+export const Pane = ({ className, children, ...props }: PaneProps) => {
   let classes = className
     ? `${className} ${css.pane} support-high-contrast `
     : `${css.pane} support-high-contrast `;
   let grabClasses = `${css.grabHandle} `;
   const grabNode = useRef<HTMLDivElement>(null);
-  const [panelWidth, setPanelWidth] = useState(325);
+  const [paneWidth, setPaneWidth] = useState(325);
+  const side = props.side ? props.side : 'left';
 
   useEffect(() => {
     const grabElem = grabNode.current;
@@ -19,9 +20,9 @@ export const Pane = ({ className, side, children, ...props }: PaneProps) => {
       return;
     }
 
-    const panelElem = grabElem.parentElement;
+    const rootElem = document.getElementById('app');
 
-    if (!panelElem) {
+    if (!rootElem) {
       return;
     }
 
@@ -38,7 +39,7 @@ export const Pane = ({ className, side, children, ...props }: PaneProps) => {
         newWidth = minWidth;
       }
 
-      panelElem.style.setProperty('--panel-width', newWidth + 'px');
+      rootElem.style.setProperty(`--pane-${side}-width`, newWidth + 'px');
       return newWidth;
     };
 
@@ -47,7 +48,7 @@ export const Pane = ({ className, side, children, ...props }: PaneProps) => {
       const newWidth =
         side === 'right' ? window.innerWidth - ev.clientX : ev.clientX;
 
-      setPanelWidth(resizePane(newWidth));
+      setPaneWidth(resizePane(newWidth));
     };
 
     const handleGrabEnd = (ev: MouseEvent) => {
@@ -77,23 +78,25 @@ export const Pane = ({ className, side, children, ...props }: PaneProps) => {
       }
 
       winResizeTimer = setTimeout(() => {
-        // ensure that the max width of the panel is respected
+        // ensure that the max width of the pane is respected
         const newWidth = parseInt(
-          panelElem.style.getPropertyValue('--panel-width').replace('px', '')
+          rootElem.style
+            .getPropertyValue(`--pane-${side}-width`)
+            .replace('px', '')
         );
 
         if (isNaN(newWidth)) {
           return;
         }
 
-        setPanelWidth(resizePane(newWidth));
+        setPaneWidth(resizePane(newWidth));
       }, 50);
     };
 
     grabElem.addEventListener('mousedown', handleGrabStart);
     window.addEventListener('resize', handleWindowResize);
 
-    setPanelWidth(resizePane(panelWidth));
+    setPaneWidth(resizePane(paneWidth));
 
     return () => {
       if (!grabElem) {

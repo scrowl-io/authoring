@@ -4,6 +4,7 @@ import { AnimatePresence } from 'framer-motion';
 import '../_overlay.scss';
 import { Backdrop, Drawer, AssetBrowser } from '.';
 import { Settings } from '../../../../../models';
+import { menu } from '../../../../../services';
 
 const ResourceFormElement = (
   { className, isOpen, onClose, onSubmit, resource, ...props },
@@ -60,7 +61,13 @@ const ResourceFormElement = (
       setResourceTitle(resource.title);
       setResourceDescription(resource.description);
     }
-  }, [resource, isOpen]);
+
+    if (isOpen) {
+      menu.API.disableProjectActions();
+    } else {
+      menu.API.enableProjectActions();
+    }
+  }, [resource, isOpen, isOpenAssetBrowser]);
 
   return (
     <div className={className} ref={ref}>

@@ -3,6 +3,7 @@ import { AnimatePresence } from 'framer-motion';
 import '../_overlay.scss';
 import { Backdrop, Drawer } from '.';
 import { Settings } from '../../../../../models';
+import { menu } from '../../../../../services';
 
 const GlossaryFormElement = (
   { className, isOpen, onClose, onSubmit, term, ...props },
@@ -49,6 +50,12 @@ const GlossaryFormElement = (
     if (term && termWord !== term.word) {
       setTermWord(term.word);
       setTermDefinition(term.definition);
+    }
+
+    if (isOpen) {
+      menu.API.disableProjectActions();
+    } else {
+      menu.API.enableProjectActions();
     }
   }, [term, isOpen]);
 

@@ -60,8 +60,18 @@ export const setScorm = (data) => {
   processor.dispatch(state.setMeta(data));
 };
 
-export const useModules = () => {
-  return useSelector((data: stateManager.RootState) => data.projects.data.modules);
+export const useModules = (moduleIdx?: number,) => {
+  return useSelector((data: stateManager.RootState) => {
+    const hasModuleIdx = moduleIdx !== undefined && moduleIdx !== null && moduleIdx !== -1;
+
+    if (!hasModuleIdx) {
+      return data.projects.data.modules;
+    }
+    
+    return data.projects.data.modules.filter((module, idx) => {
+      return idx === moduleIdx;
+    })[0];
+  });
 };
 
 export const addModule = (data) => {
@@ -100,15 +110,24 @@ export const removeModule = (data) => {
   processor.dispatch(state.removeModule(data));
 };
 
-export const useLessons = (moduleIdx?: number) => {
+export const useLessons = (moduleIdx?: number, lessonIdx?: number) => {
   return useSelector((data: stateManager.RootState) => {
-    if (!moduleIdx) {
+    const hasModuleIdx = moduleIdx !== undefined && moduleIdx !== null && moduleIdx !== -1;
+    const hasLessonIdx = lessonIdx !== undefined && lessonIdx !== null && lessonIdx !== -1;
+
+    if (!hasModuleIdx) {
       return data.projects.data.lessons;
     }
-    
-    return data.projects.data.lessons.filter((lesson) => {
-      return lesson.moduleIdx === moduleIdx;
-    })
+
+    if (!hasLessonIdx) {
+      return data.projects.data.lessons.filter((lesson) => {
+        return lesson.moduleIdx === moduleIdx;
+      })
+    }
+
+    return data.projects.data.lessons.filter((lesson, idx) => {
+      return lesson.moduleIdx === moduleIdx && idx === lessonIdx;
+    })[0];
   });
 };
 

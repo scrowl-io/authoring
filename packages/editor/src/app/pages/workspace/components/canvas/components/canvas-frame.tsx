@@ -125,24 +125,18 @@ export const CanvasFrame = () => {
 
   return (
     <>
-      {!hasSlide ? (
-        <></>
-      ) : (
+      {hasSlide && (
         <div className={css.canvasBody}>
           <Slide
             options={slideOpts}
             className="aspect-ratio aspect-ratio--16x9"
           >
             <iframe
+              id="template-iframe"
               ref={frameRef}
               onLoad={connect}
               src={frameUrl}
               title="Scrowl Editor Canvas"
-              referrerPolicy="unsafe-url"
-              sandbox="allow-same-origin allow-scripts"
-              height="100%"
-              width="100%"
-              id="template-iframe"
             ></iframe>
           </Slide>
         </div>

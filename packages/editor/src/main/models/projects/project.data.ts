@@ -21,6 +21,7 @@ const createSlide = (
     moduleIdx: mIdx,
     lessonIdx: lIdx,
     template,
+    notes: '',
   };
 };
 
