@@ -3,6 +3,10 @@ import { AnimatePresence } from 'framer-motion';
 import '../../_overlay.scss';
 import { Backdrop, Drawer } from '../';
 import { Settings } from '../../../../../../models';
+import { CourseSettings } from './course-settings';
+import { Reporting } from './reporting';
+import { ExportOptions } from './export-options';
+import { Overview } from './overview';
 
 const PublishFormElement = (
   { className, isOpen, onClose, onSubmit, term, ...props },
@@ -10,6 +14,17 @@ const PublishFormElement = (
 ) => {
   const animationSettings = Settings.useAnimation();
   const isAnimated = !animationSettings.reducedAnimations;
+  const initialState = {
+    name: '',
+    description: '',
+    authors: '',
+    organization: '',
+    reportStatus: 'Passed/Incomplete',
+    lmsIdentifier: '',
+    outputFormat: 'scorm_2004',
+    optomizeMedia: 'recommended',
+  };
+  const [publishData, setPublishData] = useState(initialState);
 
   const handleClose = () => {
     onClose();
@@ -24,6 +39,13 @@ const PublishFormElement = (
     ev.bubbles = false;
     ev.stopPropagation();
     ev.preventDefault();
+  };
+
+  const handleUpdatePublishData = (data) => {
+    setPublishData({
+      ...publishData,
+      ...data,
+    });
   };
 
   return (
@@ -51,6 +73,21 @@ const PublishFormElement = (
 
               <div className="owlui-offcanvas-body content-form">
                 <form className="owlui-offcanvas-form">
+                  <div className="accordion">
+                    <CourseSettings
+                      data={publishData}
+                      onChange={handleUpdatePublishData}
+                    />
+                    <Reporting
+                      data={publishData}
+                      onChange={handleUpdatePublishData}
+                    />
+                    <ExportOptions
+                      data={publishData}
+                      onChange={handleUpdatePublishData}
+                    />
+                    <Overview />
+                  </div>
                   <footer className="d-flex justify-content-end my-3">
                     <button
                       type="button"

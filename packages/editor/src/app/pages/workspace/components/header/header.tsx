@@ -136,6 +136,7 @@ export const Header = () => {
 
   const handelSubmitPublish = () => {
     console.log('course published');
+    setIsOpenPublish(false);
   };
 
   return (
