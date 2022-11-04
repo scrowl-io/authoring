@@ -65,6 +65,16 @@
         }
       }
 
+      span {
+        white-space: nowrap;
+        position: fixed;
+        top: -10000px;
+        left: -10000px;
+        z-index: 0;
+        width: fit-content;
+        height: 50px;
+      }
+
       &::after {
         content: attr(data-value) ' ';
         visibility: hidden;
@@ -103,5 +113,14 @@
   &__footer {
     flex: 0 1 auto;
     margin: calc($owl-sys-space-workspace / 2) $owl-sys-space-workspace;
+  }
+
+  .action-menu {
+    opacity: 1;
+
+    span[class*='owlui-icons'] {
+      padding: 0.02em;
+      font-size: 1.6em;
+    }
   }
 }

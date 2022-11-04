@@ -517,12 +517,8 @@
 
 .action-menu {
   padding: 0;
-  margin-top: 0.3em;
-  width: 1.5em;
-  height: 1.5em;
   line-height: 1;
   color: var(--bs-body-color);
-  border-radius: var(--bs-border-radius-pill);
   border: 0;
   opacity: 0;
 
@@ -532,18 +528,22 @@
 
   &:hover,
   &:focus {
-    background: var(--owl-transparent-hover-bg);
+    span[class*='owlui-icons'] {
+      background: var(--owl-transparent-hover-bg);
+    }
   }
 
   &:active {
-    color: var(--owl-active-color);
-    background: var(--owl-active-bg);
+    span[class*='owlui-icons'] {
+      color: var(--owl-active-color);
+      background: var(--owl-active-bg);
+    }
   }
 
-  span[class^='owlui-icons'] {
-    margin-right: 0.25em;
+  span[class*='owlui-icons'] {
+    border-radius: var(--bs-border-radius-pill);
+    padding: 0.1em;
     font-size: 1.5em;
-    line-height: 0.66;
-    vertical-align: inherit;
+    line-height: 1;
   }
 }
