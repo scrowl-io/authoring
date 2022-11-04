@@ -1,14 +1,6 @@
 @use '@owlui/lib/src/theme/utils' as *;
 
 .slide {
-  margin: 0 $owl-sys-space-workspace $owl-sys-space-workspace;
-  color: var(--bs-body-color);
-  border: var(--owl-border-width) solid var(--owl-border-color);
-  background: var(--bs-body-bg);
-  box-shadow: var(--owl-box-shadow);
-  max-height: 100%;
-  max-width: 100%;
-
   // &:not(.aspect-ratio) {
   //   transform: scale(1);
   //   max-height: calc(100% - $owl-sys-space-workspace);

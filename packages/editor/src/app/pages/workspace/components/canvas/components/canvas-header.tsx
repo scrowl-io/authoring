@@ -80,7 +80,13 @@ export const CanvasHeader = () => {
       transition={animationOpts.transition}
     >
       <h1 className="visually-hidden">{name}</h1>
-      <Icon icon="rectangle" display="outlined" opsz={20} appearance="Slide" />
+      <Icon
+        icon="rectangle"
+        display="outlined"
+        opsz={20}
+        appearance="Slide"
+        pxScale="H3"
+      />
       <div className={css.canvasHeaderSlideName}>
         <input
           name="slideName"

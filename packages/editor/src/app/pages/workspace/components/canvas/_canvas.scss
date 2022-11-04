@@ -2,33 +2,44 @@
 @use '@owlui/lib/src/theme/global/bootstrap' as *;
 
 .canvas {
+  --workspace-canvas-height: calc(
+    100vh - 224px - var(--workspace-notes-height, 0px)
+  );
+  --workspace-canvas-width: 100%;
+  --workspace-slide-height: calc(var(--workspace-canvas-height) - 2px);
   position: relative;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
   color: var(--owl-workspace-color);
   background: var(--owl-workspace-bg);
-  overflow-y: auto;
+  overflow: hidden;
   z-index: 10;
 
   &__header {
-    @extend .h2;
+    @extend .h3;
     margin: $owl-sys-space-workspace $owl-sys-space-workspace 0.25em;
     flex: 0 0 auto;
     display: flex;
     justify-content: flex-start;
     align-items: center;
+    -webkit-user-select: none;
     user-select: none;
 
     &__slide-name {
       display: inline-grid;
       align-items: center;
       position: relative;
+      font-size: 20px;
+      font-weight: 700;
 
       &::after,
       input {
+        min-width: 100px;
+        max-width: calc(
+          100vw - var(--pane-left-width) - var(--pane-right-width) - 100px
+        );
         width: auto;
-        min-width: 1em;
         grid-area: 1 / 2;
         padding: 0 $input-btn-padding-y-sm;
         font-size: inherit;
@@ -66,14 +77,26 @@
   }
 
   &__body {
-    flex: 1 1 auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    --bs-heading-color: var(--bs-gray-900);
+    --bs-body-color: var(--bs-gray-900);
+    --bs-body-bg: var(--bs-white);
+    margin: 0 1.5rem 1.5rem;
+    color: var(--bs-body-color);
+    border: var(--owl-border-width) solid var(--owl-border-color);
+    background: var(--bs-body-bg);
+    box-shadow: var(--owl-box-shadow);
+    overflow: hidden;
 
     .slide {
-      transform: scale(0.68);
-      position: absolute;
+      width: var(--workspace-canvas-width) !important;
+      height: var(--workspace-canvas-height) !important;
+
+      iframe {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        height: var(--workspace-slide-height);
+      }
     }
   }
 
