@@ -1,2 +1,2 @@
 export * from './overlay.types';
-export * from './overlay';
+export * from './components';
