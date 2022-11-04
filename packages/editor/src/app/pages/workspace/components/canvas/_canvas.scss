@@ -14,7 +14,7 @@
   color: var(--owl-workspace-color);
   background: var(--owl-workspace-bg);
   overflow: hidden;
-  z-index: 10;
+  z-index: 20;
 
   &__header {
     @extend .h3;
@@ -112,7 +112,7 @@
 
   &__footer {
     flex: 0 1 auto;
-    margin: $owl-sys-space-workspace $owl-sys-space-workspace 0.25em;
+    margin: 0.75rem $owl-sys-space-workspace;
 
     &__link {
       &__label {
@@ -142,6 +142,68 @@
     span[class*='owlui-icons'] {
       padding: 0.02em;
       font-size: 1.6em;
+    }
+  }
+
+  &__breadcrumb {
+    transform: translate(0px, 0px);
+    box-shadow: 0 5px 0 5px var(--owl-footer-bg);
+    -webkit-user-select: none;
+    user-select: none;
+    height: 2rem;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 0 0.5rem;
+    color: var(--owl-footer-color);
+    background: var(--owl-footer-bg);
+
+    &__list {
+      --bs-breadcrumb-margin-bottom: 0.25em;
+      --bs-breadcrumb-divider-color: var(--owl-footer-label-color);
+      --bs-breadcrumb-item-padding-x: 0.25em;
+      --bs-breadcrumb-item-active-color: var(--owl-footer-color);
+      flex-wrap: nowrap;
+      flex-grow: 1;
+      color: var(--owl-footer-label-color);
+
+      .breadcrumb-item {
+        flex-shrink: 0;
+
+        &__content {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          max-width: 14rem;
+          color: inherit;
+          font-size: 0.75rem;
+          font-weight: 600;
+          line-height: 1.5;
+          letter-spacing: 0.015em;
+          border: 0;
+          background: transparent;
+          box-shadow: none;
+        }
+
+        .dropdown-toggle {
+          text-decoration: underline;
+          border-radius: 0.25em;
+
+          &.active {
+            color: var(--owl-footer-color);
+          }
+
+          &:hover {
+            color: var(--owl-footer-hover-color);
+            background: var(--owl-footer-hover-bg);
+          }
+        }
+
+        span[class*='owlui-icons'] {
+          margin-right: 0.5em;
+        }
+      }
     }
   }
 }

@@ -19,7 +19,7 @@ export const CanvasNotes = () => {
     '--workspace-notes-height',
     isShow ? '75px' : ''
   );
-  console.log('css', css);
+
   return (
     <motion.div
       initial={{ opacity: reducedAnimations ? 1 : 0 }}

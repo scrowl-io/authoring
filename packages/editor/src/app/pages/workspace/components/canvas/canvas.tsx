@@ -1,6 +1,11 @@
 import React from 'react';
 import * as css from './_canvas.scss';
-import { CanvasHeader, CanvasFrame, CanvasNotes } from './components';
+import {
+  CanvasHeader,
+  CanvasFrame,
+  CanvasNotes,
+  CanvasBreadcrumb,
+} from './components';
 
 export const Canvas = () => {
   return (
@@ -8,6 +13,7 @@ export const Canvas = () => {
       <CanvasHeader />
       <CanvasFrame />
       <CanvasNotes />
+      <CanvasBreadcrumb />
     </div>
   );
 };
