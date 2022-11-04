@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Button, Icon } from '@owlui/lib';
 import * as css from '../_pane-editor.scss';
 import { useActiveTemplate } from '../../../page-workspace-hooks';
+import { TemplateBrowser } from '../../overlay';
 
 export const TemplateSelector = () => {
   const templateMeta = useActiveTemplate('meta');
@@ -38,6 +39,11 @@ export const TemplateSelector = () => {
           Change Template
         </Button>
       </div>
+      <TemplateBrowser
+        isOpen={isOpenTemplateBrowser}
+        onClose={handleTemplateBrowserClose}
+        onSubmit={handleTemplateBrowserSubmit}
+      />
     </div>
   );
 };

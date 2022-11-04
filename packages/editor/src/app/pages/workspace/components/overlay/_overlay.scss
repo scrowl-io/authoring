@@ -253,3 +253,11 @@
 .collapse-disabled .accordion-button::after {
   content: none;
 }
+
+.template-browser-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)) !important;
+  gap: 1.5rem;
+  background-color: var(--owl-template-browser-bg);
+  padding: 1rem;
+}
