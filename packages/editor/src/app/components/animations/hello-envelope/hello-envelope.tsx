@@ -1,0 +1,16 @@
+import React from 'react';
+import animationData from './data.json';
+import { Error } from '../../error';
+import { Lottie } from '../lottie';
+
+export const HelloEnvelope = (props) => {
+  return (
+    <Error>
+      <Lottie animationData={animationData} {...props} />
+    </Error>
+  );
+};
+
+export default {
+  HelloEnvelope,
+};

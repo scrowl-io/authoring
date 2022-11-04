@@ -96,6 +96,12 @@ export const InputFactory = ({
           onFocus={onFocus}
         />
       );
+    default:
+      return (
+        <div>
+          Unable to create input - field type of "{field}" not supported
+        </div>
+      );
   }
 };
 

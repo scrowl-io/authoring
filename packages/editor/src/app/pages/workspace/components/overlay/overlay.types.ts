@@ -13,6 +13,8 @@ export type DrawerProps = DrawerCommons & React.HTMLAttributes<HTMLDivElement>;
 export type DrawerStyles = {
   left?: DrawerUnit;
   right?: DrawerUnit;
+  maxWidth: number;
+  width: number;
 };
 
 export interface DrawerTransition {
@@ -28,15 +30,24 @@ export type DrawerOpts = {
   initial: {
     left?: DrawerUnit;
     right?: DrawerUnit;
+    transform?: string;
   };
   animate: {
     left?: DrawerUnit;
     right?: DrawerUnit;
+    transform?: string;
   };
   exit: {
     left?: DrawerUnit;
     right?: DrawerUnit;
+    transform?: string;
     transition: DrawerTransition;
   };
   transition: DrawerTransition;
 };
+
+export interface BackdropCommons {
+  isAnimated: boolean;
+}
+
+export type BackdropProps = BackdropCommons & React.AllHTMLAttributes<HTMLDivElement>;

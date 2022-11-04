@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import * as styles from './page-welcome.scss';
-import { HelloEnvelope } from './components';
+import { animations } from '../../components';
 import { Projects } from '../../models';
 import { menu } from '../../services';
 
@@ -122,7 +122,7 @@ export const Page = () => {
           onClick={() => handleCreateCourse()}
           exit={{ transform: 'translate(0,50vh)', transition: { delay: 0.3 } }}
         >
-          <HelloEnvelope />
+          <animations.HelloEnvelope />
         </motion.div>
       </div>
     </motion.div>

@@ -1,9 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Icon } from '@owlui/lib';
+import { Button, Icon } from '@owlui/lib';
 import * as css from '../_canvas.scss';
 import { useActiveSlide, setActiveSlide } from '../../../';
 import { Settings, Projects } from '../../../../../models';
+import { Elem } from '../../../../../utils';
+import { menu } from '../../../../../services';
 
 export const CanvasHeader = () => {
   const name = useActiveSlide('name');
@@ -11,8 +13,8 @@ export const CanvasHeader = () => {
   const isDirty = useRef(false);
   const prevName = useRef(name);
   const prevSlideIdx = useRef(slideIdx);
-  let nameLn = name.length;
-  const [nameSize, setNameSize] = useState(nameLn - 3 < 13 ? 13 : nameLn - 3);
+  const nameRef = useRef<HTMLSpanElement>(null);
+  const [nameWidth, setNameWidth] = useState(0);
   const animationSettings = Settings.useAnimation();
   const isAnimated = !animationSettings.reducedAnimations;
   const animationDelay = animationSettings.animationDelay;
@@ -21,12 +23,28 @@ export const CanvasHeader = () => {
     animate: !isAnimated ? {} : { opacity: 1 },
     transition: !isAnimated ? {} : { delay: animationDelay + 0.1 },
   };
+  const slideMenu: Array<menu.ContextMenuItem> = [
+    {
+      label: 'Duplicate Slide',
+      click: () => {
+        console.log('duplicate slide');
+      },
+    },
+    { type: 'separator' },
+    {
+      label: 'Delete Slide',
+      click: () => {
+        console.log('remove Slide');
+      },
+    },
+  ];
+  const inputStyles = {
+    width: nameWidth,
+  };
 
   const handleNameChange = (ev: React.FormEvent<HTMLInputElement>) => {
     const val = ev.currentTarget.value;
 
-    nameLn = val.length;
-    setNameSize(nameLn - 3 < 13 ? 13 : nameLn - 3);
     setActiveSlide({ name: val });
     isDirty.current = true;
   };
@@ -58,6 +76,18 @@ export const CanvasHeader = () => {
     }
   };
 
+  const handelOpenSlideMenu = (ev: React.MouseEvent) => {
+    ev.preventDefault();
+
+    const target = ev.target as HTMLElement;
+    const position = Elem.getPosition(target);
+
+    menu.API.contextMenu(slideMenu, position).then((result) => {
+      console.log('menu close', result);
+      target.blur();
+    });
+  };
+
   useEffect(() => {
     if (!isDirty.current || prevSlideIdx.current !== slideIdx) {
       prevName.current = name;
@@ -68,9 +98,23 @@ export const CanvasHeader = () => {
     };
   }, [name, isDirty]);
 
-  if (slideIdx === -1) {
-    return <></>;
-  }
+  useEffect(() => {
+    if (!nameRef.current) {
+      return;
+    }
+
+    let newWidth = nameRef.current.offsetWidth;
+
+    if (slideIdx === -1) {
+      newWidth = 150;
+    } else if (nameWidth === newWidth) {
+      return;
+    } else {
+      newWidth += 32;
+    }
+
+    setNameWidth(newWidth);
+  }, [name, nameRef]);
 
   return (
     <motion.div
@@ -80,20 +124,41 @@ export const CanvasHeader = () => {
       transition={animationOpts.transition}
     >
       <h1 className="visually-hidden">{name}</h1>
-      <Icon icon="rectangle" display="outlined" opsz={20} appearance="Slide" />
+      <Icon
+        icon="rectangle"
+        display="outlined"
+        opsz={20}
+        appearance="Slide"
+        pxScale="H3"
+      />
       <div className={css.canvasHeaderSlideName}>
+        <span ref={nameRef}>{name}</span>
         <input
           name="slideName"
           id="slideNameInput"
+          style={inputStyles}
           className="owlui-form-control"
           value={name}
           placeholder="Untitled Slide"
           onKeyDown={handleNameInput}
           onChange={handleNameChange}
           onBlur={handleNameUpdate}
-          size={nameSize}
         />
       </div>
+      <Button
+        className={css.actionMenu}
+        variant="ghost"
+        onClick={handelOpenSlideMenu}
+        onContextMenu={handelOpenSlideMenu}
+      >
+        <Icon
+          display="rounded"
+          icon="more_vert"
+          opsz={20}
+          filled
+          pxScale="H4"
+        />
+      </Button>
     </motion.div>
   );
 };

@@ -1,20 +1,17 @@
 @use '@owlui/lib/src/theme/utils' as *;
 
 .pane {
-  --panel-width: 325px;
   position: relative;
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
   flex-shrink: 0;
   min-width: $owl-sys-size-sidebar-minwidth;
-  width: var(--panel-width);
   color: var(--owl-sidebar-color);
   background: var(--owl-sidebar-bg);
   padding-top: 0.5rem;
-  overflow-y: auto;
-  overflow-x: hidden;
   height: calc(100% - 50px);
+  z-index: 10;
 
   &__header {
     flex: 0 1 auto;
@@ -29,10 +26,12 @@
 
   &--left {
     border-right: var(--owl-border-width) var(--owl-border-color) solid;
+    width: var(--pane-left-width);
   }
 
   &--right {
     border-left: var(--owl-border-width) var(--owl-border-color) solid;
+    width: var(--pane-right-width);
   }
 
   &__heading {

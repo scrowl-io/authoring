@@ -7,3 +7,13 @@
   outline: 1px var(--bs-primary) solid;
   outline-offset: 2px;
 }
+
+.owlui {
+  &-input-group {
+    &-append {
+      margin-left: -1px;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+  }
+}

@@ -1,5 +1,5 @@
 import { rq } from '../../services';
-import { TemplateManifest } from '../templates';
+import { TemplateSchema } from '../templates';
 
 export interface ProjectsApiCreate
   extends Omit<rq.RegisterEndpoint, 'name'> {
@@ -91,17 +91,20 @@ export type ProjectSlide = {
   name: string;
   moduleIdx: number;
   lessonIdx: number;
-  template: TemplateManifest;
+  template: TemplateSchema;
 };
 
 export type ProjectGlossaryItem = {
-  term: string;
-  description: string;
+  id: number;
+  word: string;
+  definition: string;
 };
 
 export type ProjectResource = {
-  name: string;
-  location: string;
+  id: number;
+  filename: string;
+  title: string;
+  description?: string;
 };
 
 export type ProjectData = {

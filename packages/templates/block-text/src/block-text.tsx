@@ -133,7 +133,10 @@ export const BlockText = ({ schema, ...props }: BlockTextProps) => {
                 }
                 onMouseDown={() => {
                   if (editMode) {
-                    // Scrowl.focusOnschema('text');
+                    Scrowl.core.host.sendMessage({
+                      type: 'focus',
+                      field: 'text',
+                    });
                   }
                 }}
               >
@@ -154,7 +157,10 @@ export const BlockText = ({ schema, ...props }: BlockTextProps) => {
               }
               onMouseDown={() => {
                 if (editMode) {
-                  // Scrowl.focusOnschema('bgImage.url');
+                  Scrowl.core.host.sendMessage({
+                    type: 'focus',
+                    field: 'bgImage.url',
+                  });
                 }
               }}
               style={

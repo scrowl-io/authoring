@@ -21,6 +21,7 @@ const createSlide = (
     moduleIdx: mIdx,
     lessonIdx: lIdx,
     template,
+    notes: '',
   };
 };
 
@@ -65,6 +66,11 @@ export const createProject = () => {
       createSlide('Slide 3', 0, 0, 'blockText'),
       createSlide('Slide 4', 0, 0, 'twoColumn'),
     ],
+    glossary: [
+      { id: 0, word: 'Test', definition: 'Definition text' }
+    ],
+    resources: [],
+    assets: [],
   };
 
   return data;

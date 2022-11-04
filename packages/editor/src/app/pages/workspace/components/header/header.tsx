@@ -8,6 +8,7 @@ import { Projects, Settings } from '../../../../models';
 import { menu } from '../../../../services';
 import { Path as startPath } from '../../../start';
 import { Logo } from '../../../../components';
+import { PublishOverlay, ConfirmationOverlay } from '../overlay';
 
 export enum PREVIEW_MODE {
   default = 'default',
@@ -25,6 +26,8 @@ export const Header = () => {
     projectNameLn - 3 < 13 ? 13 : projectNameLn - 3
   );
   const [previewMode, setPreviewMode] = useState(PREVIEW_MODE.project);
+  const [isOpenPublish, setIsOpenPublish] = useState(false);
+  const [isOpenConfirmation, setIsOpenConfirmation] = useState(false);
   const animationSettings = Settings.useAnimation();
   const isAnimated = !animationSettings.reducedAnimations;
   const animationDelay = animationSettings.animationDelay;
@@ -124,79 +127,115 @@ export const Header = () => {
     console.log('opening preview mode');
   };
 
+  const handleOpenPublish = () => {
+    setIsOpenPublish(true);
+  };
+
+  const handleCLosePublish = () => {
+    setIsOpenPublish(false);
+  };
+
+  const handelSubmitPublish = () => {
+    console.log('course published');
+    setIsOpenPublish(false);
+    setIsOpenConfirmation(true);
+  };
+
+  const handleCloseConfirmation = () => {
+    setIsOpenConfirmation(false);
+  };
+
   return (
-    <motion.div
-      initial={motionOptsContainer.initial}
-      animate={motionOptsContainer.animate}
-      transition={motionOptsContainer.transition}
-    >
-      <Navbar fixed="top" expand="xs" className={css.workspaceHeader}>
-        <div className={css.projectMeta}>
-          <Logo
-            href={startPath}
-            sizing="sm"
-            isAnimated={isAnimated}
-            animationDelay={animationDelay}
-          />
-
-          <motion.div
-            className={css.projectName}
-            initial={motionOptsProjectName.initial}
-            animate={motionOptsProjectName.animate}
-            transition={motionOptsProjectName.transition}
-          >
-            <input
-              className="form-control"
-              value={projectName}
-              onChange={handleSetProjectName}
-              onBlur={handleProjectUpdate}
-              onKeyDown={handleProjectInput}
-              placeholder="Untitled Project"
-              size={projectNameSize}
+    <>
+      <motion.div
+        initial={motionOptsContainer.initial}
+        animate={motionOptsContainer.animate}
+        transition={motionOptsContainer.transition}
+        className={css.workspaceHeaderWrapper}
+      >
+        <Navbar fixed="top" expand="xs" className={css.workspaceHeader}>
+          <div className={css.projectMeta}>
+            <Logo
+              href={startPath}
+              sizing="sm"
+              isAnimated={isAnimated}
+              animationDelay={animationDelay}
             />
-          </motion.div>
-        </div>
 
-        <Nav className={`${css.projectActions} align-items-center`}>
-          <Nav.Item>
-            <Dropdown as={ButtonGroup}>
+            <motion.div
+              className={css.projectName}
+              initial={motionOptsProjectName.initial}
+              animate={motionOptsProjectName.animate}
+              transition={motionOptsProjectName.transition}
+            >
+              <input
+                className="form-control"
+                value={projectName}
+                onChange={handleSetProjectName}
+                onBlur={handleProjectUpdate}
+                onKeyDown={handleProjectInput}
+                placeholder="Untitled Project"
+                size={projectNameSize}
+              />
+            </motion.div>
+          </div>
+
+          <Nav className={`${css.projectActions} align-items-center`}>
+            <Nav.Item>
+              <Dropdown as={ButtonGroup}>
+                <Button
+                  className={`ms-3 ${css.projectActionsBtn}`}
+                  variant="ghost"
+                  size="sm"
+                  onClick={handlePreviewProject}
+                  onContextMenu={(ev: React.MouseEvent) => {
+                    handleOpenPreviewMenu(ev, 102);
+                  }}
+                >
+                  <Icon icon="interests" filled display="sharp" opsz={20} />
+                  Preview
+                </Button>
+
+                <Button
+                  className="dropdown-toggle dropdown-toggle-split"
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleOpenPreviewMenu}
+                  onContextMenu={handleOpenPreviewMenu}
+                >
+                  <Icon
+                    icon="arrow_drop_down"
+                    filled
+                    display="sharp"
+                    opsz={20}
+                  />
+                </Button>
+              </Dropdown>
+            </Nav.Item>
+            <Nav.Item>
               <Button
                 className={`ms-3 ${css.projectActionsBtn}`}
-                variant="ghost"
+                variant="primary"
                 size="sm"
-                onClick={handlePreviewProject}
-                onContextMenu={(ev: React.MouseEvent) => {
-                  handleOpenPreviewMenu(ev, 102);
-                }}
+                onClick={handleOpenPublish}
               >
-                <Icon icon="interests" filled display="sharp" opsz={20} />
-                Preview
+                <Icon icon="rocket_launch" filled display="sharp" opsz={20} />
+                Publish
               </Button>
-
-              <Button
-                className="dropdown-toggle dropdown-toggle-split"
-                variant="ghost"
-                size="sm"
-                onClick={handleOpenPreviewMenu}
-                onContextMenu={handleOpenPreviewMenu}
-              >
-                <Icon icon="arrow_drop_down" filled display="sharp" opsz={20} />
-              </Button>
-            </Dropdown>
-          </Nav.Item>
-          <Nav.Item>
-            <Button
-              className={`ms-3 ${css.projectActionsBtn}`}
-              variant="primary"
-              size="sm"
-            >
-              <Icon icon="rocket_launch" filled display="sharp" opsz={20} />
-              Publish
-            </Button>
-          </Nav.Item>
-        </Nav>
-      </Navbar>
-    </motion.div>
+            </Nav.Item>
+          </Nav>
+        </Navbar>
+      </motion.div>
+      <PublishOverlay
+        isOpen={isOpenPublish}
+        onClose={handleCLosePublish}
+        onSubmit={handelSubmitPublish}
+      />
+      <ConfirmationOverlay
+        isOpen={isOpenConfirmation}
+        onClose={handleCloseConfirmation}
+      />
+    </>
   );
 };
 

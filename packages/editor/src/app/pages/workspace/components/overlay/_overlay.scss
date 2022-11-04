@@ -1,0 +1,255 @@
+.offcanvas-backdrop {
+  background-color: #343a4069;
+}
+
+.modal-backdrop {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pane {
+  & .right-overlay-panel + .overlay-backdrop {
+    left: -100vw;
+    top: -50px;
+  }
+
+  & .right-overlay-panel {
+    top: -50px;
+  }
+}
+
+.left-overlay-panel {
+  footer {
+    bottom: 0;
+    right: calc(2 * var(--bs-offcanvas-padding-y));
+    position: absolute;
+  }
+
+  .owlui-offcanvas-body {
+    flex-grow: initial;
+    height: calc(100vh - 125px);
+    overflow: auto;
+  }
+
+  .owlui-offcanvas-form {
+    margin: 0;
+    display: grid;
+    min-height: 100%;
+    grid-auto-flow: row;
+    grid-template-rows: auto 1fr;
+  }
+}
+
+.right-overlay-panel {
+  z-index: 1050;
+
+  .owlui-offcanvas-body {
+    flex-grow: initial;
+    height: calc(100vh - 125px);
+    overflow: auto;
+  }
+
+  .owlui-offcanvas-form {
+    margin: 0;
+    display: grid;
+    min-height: 100%;
+    grid-auto-flow: row;
+    grid-template-rows: auto 1fr;
+  }
+
+  &.asset-browser {
+    max-width: 50vw;
+    min-width: 400px;
+    width: 450px;
+
+    table {
+      margin: 0;
+    }
+    .asset-list {
+      height: calc(100vh - 185px);
+      overflow: auto;
+      margin-right: -10px;
+      padding-right: 10px;
+    }
+  }
+
+  td {
+    &.truncate {
+      white-space: nowrap;
+      overflow: hidden;
+      max-width: 0;
+      text-overflow: ellipsis;
+    }
+  }
+
+  .asset-browser-body {
+    font-weight: 400;
+
+    span.size-unit {
+      font-size: 10px;
+      font-weight: 300;
+      opacity: 0.9;
+      margin-left: 1px;
+    }
+    button.action {
+      font-size: 14px;
+      padding: 0;
+      margin: 0;
+      margin-right: 5px;
+      line-height: 0;
+      height: 16px;
+      padding-top: 1px;
+
+      border-color: #aaa;
+      color: #888;
+
+      span {
+        padding: 0;
+        margin: 0 -3px;
+      }
+
+      &:hover,
+      &:active,
+      &:focus {
+        color: white;
+      }
+    }
+    .asset-list {
+      font-size: 0.75rem;
+      font-weight: 400;
+
+      table {
+        font-size: inherit;
+
+        thead {
+          background: #eee;
+          border: none; //1px solid rgb(206, 212, 218);
+          box-shadow: 0 1px 0 0 rgb(206, 212, 218);
+          border-color: transparent;
+          position: sticky;
+          top: 0px;
+          z-index: 100;
+
+          tr {
+            background-color: #eee;
+
+            th {
+              padding-top: 0.3rem;
+              padding-bottom: 0.1rem;
+              font-weight: 500;
+            }
+          }
+        }
+
+        td {
+          padding: 0;
+        }
+      }
+    }
+  }
+
+  footer {
+    bottom: 0;
+    right: calc(2 * var(--bs-offcanvas-padding-y));
+    position: absolute;
+  }
+
+  textarea {
+    resize: none;
+  }
+
+  .accordion-button {
+    font-weight: 600;
+    font-size: 0.875rem;
+    letter-spacing: 0.0125em;
+  }
+}
+
+.owlui-offcanvas-form__textarea {
+  display: flex;
+  flex-direction: column;
+
+  textarea {
+    flex-grow: 1;
+
+    .form-control {
+      min-height: calc(1.4em + 0.75em + 2px);
+    }
+
+    .form-control-sm {
+      min-height: calc(1.4em + 0.75em + 2px);
+    }
+
+    .form-control-lg {
+      min-height: calc(1.4em + 0.75em + 2px);
+    }
+  }
+}
+
+.publish-course-overview {
+  border: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  margin-bottom: 0.5rem;
+
+  &__item {
+    margin-bottom: 1rem;
+    flex: 1 0 33%;
+    text-align: center;
+    display: flex;
+    flex-direction: column-reverse;
+    font-size: 0.875em;
+  }
+}
+
+.publish-course-overview__item {
+  dt {
+    font-weight: 500;
+  }
+
+  dd {
+    font-size: 1.5em;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    color: var(--bs-primary);
+    line-height: 1;
+  }
+}
+
+.owlui-modal {
+  height: auto;
+  width: auto;
+  position: relative;
+
+  .owlui-offcanvas-header {
+    padding: 0.5rem 1rem;
+  }
+
+  .owlui-offcanvas-form {
+    margin-bottom: 0;
+  }
+
+  footer {
+    border-top: var(--owl-border-color) solid var(--bs-border-width);
+    margin-top: 0 !important;
+    background-color: var(--bs-modal-bg);
+    padding: 0.5rem;
+  }
+}
+
+.overlay-publish-confirmation {
+  text-align: center;
+  height: auto;
+  max-height: calc(100vh - 225px);
+  overflow: hidden;
+  z-index: -1;
+  user-select: none;
+  pointer-events: none;
+}
+
+.collapse-disabled .accordion-button::after {
+  content: none;
+}
