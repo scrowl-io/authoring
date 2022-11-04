@@ -103,4 +103,5 @@ dist
 # Build Output
 .parcel-cache
  
-packages/templates/core/.DS_Store
+# Mac
+.DS_Store

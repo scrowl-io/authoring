@@ -1,6 +1,7 @@
 import React from 'react';
-import { useLottie } from 'lottie-react';
 import animationData from './data.json';
+import { Error } from '../../error';
+import { Lottie } from '../lottie';
 
 export const DrawnArrow = (props) => {
   let config = props.config
@@ -44,15 +45,10 @@ export const DrawnArrow = (props) => {
     styles = Object.assign(styles, props.style);
   }
 
-  const animation = useLottie({
-    animationData,
-    loop: props.loop === false ? false : true,
-  }).View;
-
   return (
-    <div style={styles} {...props}>
-      {animation}
-    </div>
+    <Error>
+      <Lottie animationData={animationData} {...props} />
+    </Error>
   );
 };
 

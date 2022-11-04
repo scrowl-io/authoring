@@ -214,10 +214,15 @@
     padding: 0.5rem 1rem;
   }
 
+  .owlui-offcanvas-form {
+    margin-bottom: 0;
+  }
+
   footer {
     border-top: var(--owl-border-color) solid var(--bs-border-width);
     margin-top: 0 !important;
     background-color: var(--bs-modal-bg);
+    padding: 0.5rem;
   }
 }
 

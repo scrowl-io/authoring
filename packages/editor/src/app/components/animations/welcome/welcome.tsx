@@ -1,14 +1,14 @@
 import React from 'react';
-import { useLottie } from 'lottie-react';
 import animationData from './data.json';
+import { Error } from '../../error';
+import { Lottie } from '../lottie';
 
 export const Welcome = (props) => {
-  const animation = useLottie({
-    animationData,
-    loop: props.loop === false ? false : true,
-  }).View;
-
-  return <div {...props}>{animation}</div>;
+  return (
+    <Error>
+      <Lottie animationData={animationData} {...props} />
+    </Error>
+  );
 };
 
 export default {
