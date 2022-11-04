@@ -2,6 +2,12 @@
   background-color: #343a4069;
 }
 
+.modal-backdrop {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .pane {
   & .right-overlay-panel + .overlay-backdrop {
     left: -100vw;
@@ -197,4 +203,30 @@
     flex-direction: column-reverse;
     font-size: 0.875em;
   }
+}
+
+.owlui-modal {
+  height: auto;
+  width: auto;
+  position: relative;
+
+  .owlui-offcanvas-header {
+    padding: 0.5rem 1rem;
+  }
+
+  footer {
+    border-top: var(--owl-border-color) solid var(--bs-border-width);
+    margin-top: 0 !important;
+    background-color: var(--bs-modal-bg);
+  }
+}
+
+.overlay-publish-confirmation {
+  text-align: center;
+  height: auto;
+  max-height: calc(100vh - 225px);
+  overflow: hidden;
+  z-index: -1;
+  user-select: none;
+  pointer-events: none;
 }

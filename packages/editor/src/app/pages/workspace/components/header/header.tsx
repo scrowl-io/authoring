@@ -8,7 +8,7 @@ import { Projects, Settings } from '../../../../models';
 import { menu } from '../../../../services';
 import { Path as startPath } from '../../../start';
 import { Logo } from '../../../../components';
-import { PublishOverlay } from '../overlay';
+import { PublishOverlay, ConfirmationOverlay } from '../overlay';
 
 export enum PREVIEW_MODE {
   default = 'default',
@@ -27,6 +27,7 @@ export const Header = () => {
   );
   const [previewMode, setPreviewMode] = useState(PREVIEW_MODE.project);
   const [isOpenPublish, setIsOpenPublish] = useState(false);
+  const [isOpenConfirmation, setIsOpenConfirmation] = useState(false);
   const animationSettings = Settings.useAnimation();
   const isAnimated = !animationSettings.reducedAnimations;
   const animationDelay = animationSettings.animationDelay;
@@ -137,6 +138,11 @@ export const Header = () => {
   const handelSubmitPublish = () => {
     console.log('course published');
     setIsOpenPublish(false);
+    setIsOpenConfirmation(true);
+  };
+
+  const handleCloseConfirmation = () => {
+    setIsOpenConfirmation(false);
   };
 
   return (
@@ -224,6 +230,10 @@ export const Header = () => {
         isOpen={isOpenPublish}
         onClose={handleCLosePublish}
         onSubmit={handelSubmitPublish}
+      />
+      <ConfirmationOverlay
+        isOpen={isOpenConfirmation}
+        onClose={handleCloseConfirmation}
       />
     </>
   );
