@@ -9,9 +9,10 @@ export const initialState = {
   name: '',
   template: {
     meta: {
-      name: '',
+      label: '',
       filename: '',
       component: '',
+      version: '',
     },
     content: {},
   },

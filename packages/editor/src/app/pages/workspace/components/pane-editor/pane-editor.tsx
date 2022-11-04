@@ -1,9 +1,10 @@
 import React from 'react';
 import { Tabs } from '@owlui/lib';
+import * as css from './_pane-editor.scss';
 import { useActiveTemplate } from '../../';
 import { Pane } from '../../../../components';
 import { Settings } from '../../../../models';
-import { Content } from './components';
+import { Content, TemplateSelector } from './components';
 
 export const PaneEditor = () => {
   const data = useActiveTemplate();
@@ -47,7 +48,10 @@ export const PaneEditor = () => {
       animate={animationOpts.animate}
       side="right"
     >
-      <Tabs items={tabs} pxScale="Sm" transition={false} />
+      <TemplateSelector />
+      <div className={css.paneEditorTabs}>
+        <Tabs items={tabs} pxScale="Sm" transition={false} />
+      </div>
     </Pane>
   );
 };
