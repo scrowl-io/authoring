@@ -132,7 +132,8 @@ export interface InputFieldsetProps extends BaseInputProps {
       | InputNumberSpinnerProps
       | InputSelectProps
       | InputTextboxProps
-    };
+      | InputRadioProps;
+  };
 }
 
 export type InputProps =
