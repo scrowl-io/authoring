@@ -112,7 +112,28 @@
 
   &__footer {
     flex: 0 1 auto;
-    margin: calc($owl-sys-space-workspace / 2) $owl-sys-space-workspace;
+    margin: $owl-sys-space-workspace $owl-sys-space-workspace 0.25em;
+
+    &__link {
+      &__label {
+        margin-bottom: 0;
+        cursor: pointer;
+      }
+
+      span[class*='owlui-icons'] {
+        transform: rotate(0deg);
+      }
+
+      &.collapsed span[class*='owlui-icons'] {
+        transform: rotate(-90deg);
+      }
+    }
+
+    &__textarea {
+      resize: none;
+      padding-left: 0.75em;
+      padding-right: 0.75em;
+    }
   }
 
   .action-menu {

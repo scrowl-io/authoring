@@ -14,7 +14,8 @@ export const initialState = {
       component: '',
     },
     content: {},
-  }
+  },
+  notes: '',
 };
 
 export const config: stateManager.StateConfig = {

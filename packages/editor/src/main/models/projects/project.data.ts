@@ -14,6 +14,7 @@ const createSlide = (name: string, mIdx: number, lIdx: number, type: keyof typeo
     moduleIdx: mIdx,
     lessonIdx: lIdx,
     template,
+    notes: '',
   };
 }
 
