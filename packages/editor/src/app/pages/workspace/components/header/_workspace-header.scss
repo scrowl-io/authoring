@@ -80,6 +80,15 @@
 
   .owlui-btn-ghost {
     border-color: var(--bs-btn-hover-border-color);
+    color: var(--owl-color-default);
+
+    &:hover,
+    &:hover + .dropdown-toggle-split {
+      color: #fff;
+      text-decoration: none;
+      background-color: #006295;
+      border-color: #006295;
+    }
   }
 
   .owlui-btn-ghost:first-child {
@@ -91,6 +100,13 @@
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
     border-left: none;
+  }
+
+  span[class*='owlui-icons'] {
+    margin-right: 0.25em;
+    font-size: 1.5em;
+    line-height: 0.66;
+    vertical-align: inherit;
   }
 }
 
