@@ -390,7 +390,7 @@ export const AssetBrowser = ({ isOpen, ...props }) => {
   useEffect(() => {
     const appNode = document.getElementById('app');
 
-    if (appNode && overlayRef.current) {
+    if (appNode && overlayRef.current && isOpen) {
       appNode.appendChild(overlayRef.current);
     }
   }, [overlayRef, isOpen]);
