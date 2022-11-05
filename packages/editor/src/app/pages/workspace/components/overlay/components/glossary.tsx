@@ -40,12 +40,6 @@ const GlossaryFormElement = (
     });
   };
 
-  const handlePreventBubbling = (ev: React.MouseEvent) => {
-    ev.bubbles = false;
-    ev.stopPropagation();
-    ev.preventDefault();
-  };
-
   useEffect(() => {
     if (term && termWord !== term.word) {
       setTermWord(term.word);

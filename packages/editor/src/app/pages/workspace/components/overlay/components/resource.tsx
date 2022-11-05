@@ -50,12 +50,6 @@ const ResourceFormElement = (
     console.log('asset browse selected');
   };
 
-  const handlePreventBubbling = (ev: React.MouseEvent) => {
-    ev.bubbles = false;
-    ev.stopPropagation();
-    ev.preventDefault();
-  };
-
   useEffect(() => {
     if (resourceTitle !== resource.title) {
       setResourceTitle(resource.title);
