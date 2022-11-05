@@ -54,6 +54,7 @@ export const TemplateBrowser = ({
             selectedTemplate.meta.component === template.meta.component;
           return (
             <button
+              type="button"
               id={`template-${template.meta.component}`}
               key={idx}
               className={`${css.templateBrowserItem}${

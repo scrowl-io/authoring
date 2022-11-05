@@ -26,12 +26,6 @@ const ModalElement = (
     classes += ` ${className}`;
   }
 
-  const handlePreventBubbling = (ev: React.MouseEvent) => {
-    ev.bubbles = false;
-    ev.stopPropagation();
-    ev.preventDefault();
-  };
-
   return (
     <div ref={ref}>
       <AnimatePresence>
@@ -40,7 +34,6 @@ const ModalElement = (
             <Backdrop onClick={onClose}></Backdrop>
             <motion.div
               className="overlay-content support-high-contrast"
-              onClick={handlePreventBubbling}
               style={{ display: 'block' }}
               variants={animation}
               initial="hidden"
