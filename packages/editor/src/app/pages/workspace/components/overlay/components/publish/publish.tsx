@@ -49,19 +49,15 @@ const PublishFormElement = (
   };
 
   return (
-    <div className={className} ref={ref}>
+    <div ref={ref}>
       <AnimatePresence>
         {isOpen && (
-          <Backdrop
-            className="glossary-form-overlay-backdrop"
-            onClick={handleClose}
-          >
-            <Drawer
-              isAnimated={isAnimated}
-              isOpen={isOpen}
-              onClick={handlePreventBubbling}
-              slideFrom="right"
-            >
+          <div className={className}>
+            <Backdrop
+              className="glossary-form-overlay-backdrop"
+              onClick={handleClose}
+            />
+            <Drawer isAnimated={isAnimated} isOpen={isOpen} slideFrom="right">
               <div className="owlui-offcanvas-header">
                 <h4 className="owlui-offcanvas-title mb-0">Publish Course</h4>
                 <button
@@ -107,7 +103,7 @@ const PublishFormElement = (
                 </form>
               </div>
             </Drawer>
-          </Backdrop>
+          </div>
         )}
       </AnimatePresence>
     </div>
