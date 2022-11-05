@@ -2,33 +2,21 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import * as css from '../_overlay.scss';
 
-export const Backdrop = ({ className, onClick, children }) => {
-  let classes = `offcanvas-backdrop fade show ${css.overlayBackdrop}`;
+export const Backdrop = ({ onClick, ...props }) => {
+  let classes = `${css.overlayBackdrop}`;
 
-  if (className) {
-    classes += ` ${className}`;
+  if (props.className) {
+    classes += ` ${props.className}`;
   }
-
-  const handleClose = (ev: React.MouseEvent) => {
-    const target = ev.target as HTMLElement;
-
-    if (!ev.currentTarget.isSameNode(target)) {
-      return;
-    }
-
-    onClick(ev);
-  };
 
   return (
     <motion.div
       className={classes}
-      onClick={handleClose}
+      onClick={onClick}
       initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
+      animate={{ opacity: 0.5 }}
       exit={{ opacity: 0 }}
-    >
-      {children}
-    </motion.div>
+    />
   );
 };
 
