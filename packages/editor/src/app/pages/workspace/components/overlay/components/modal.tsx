@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Backdrop } from '.';
 import * as css from '../_overlay.scss';
 import { Error } from '../../../../../components';
+import { menu } from '../../../../../services';
 
 export const Modal = ({
   className,
@@ -29,6 +30,14 @@ export const Modal = ({
   if (className) {
     classes += ` ${className}`;
   }
+
+  useEffect(() => {
+    if (isOpen) {
+      menu.API.disableProjectActions();
+    } else {
+      menu.API.enableProjectActions();
+    }
+  }, [isOpen]);
 
   return (
     <div>
