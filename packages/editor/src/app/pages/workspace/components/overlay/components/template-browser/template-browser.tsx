@@ -16,6 +16,9 @@ export const TemplateBrowser = ({
   const [templateList, setTemplateList] = useState<
     Array<Templates.TemplateSchema>
   >([]);
+  const [selectedTemplate, setSelectedTemplate] = useState(
+    activeTemplate.component
+  );
 
   const handleSubmit = () => {
     console.log('template selected');
@@ -38,19 +41,26 @@ export const TemplateBrowser = ({
     }
   }, [inProgress]);
 
+  useEffect(() => {
+    setSelectedTemplate(activeTemplate.component);
+  }, [activeTemplate]);
+
   return (
     <ModalOverlay title={title} isOpen={isOpen} onClose={onClose}>
       <div className={css.templateBrowserContainer}>
         {templateList.map((template, idx) => {
-          console.log('template.meta', template.meta);
-          const isActive = activeTemplate.component !== template.meta.component;
+          const isActive = activeTemplate.component === template.meta.component;
+          const isSelected = selectedTemplate === template.meta.component;
           return (
             <button
               id={`template-${template.meta.component}`}
               key={idx}
               className={`${css.templateBrowserItem}${
                 isActive ? ' active' : ''
-              }`}
+              }${isSelected ? ' selected' : ''}`}
+              onClick={() => {
+                setSelectedTemplate(template.meta.component);
+              }}
             >
               {template.meta.icon && (
                 <span className={css.templateBrowserItemBg}>
@@ -80,8 +90,7 @@ export const TemplateBrowser = ({
                 <span className={css.templateBrowserItemActive}>
                   <Icon
                     icon="check_circle"
-                    display="rounded"
-                    filled={true}
+                    display="outlined"
                     grad={200}
                     opsz={20}
                   />
@@ -93,7 +102,7 @@ export const TemplateBrowser = ({
       </div>
       <footer className="d-flex justify-content-end">
         <Button variant="link" onClick={onClose}>
-          Close
+          Cancel
         </Button>
         <Button variant="success" onClick={handleSubmit}>
           Select Template

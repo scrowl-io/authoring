@@ -19,6 +19,12 @@
     background: var(--owl-template-browser-item-bg);
     box-shadow: var(--owl-box-shadow);
 
+    &:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: var(--owl-box-shadow-active);
+      transition: box-shadow 0.1s ease-in-out, transform 0.1s ease-in-out;
+    }
+
     &.selected {
       font-weight: 600;
       color: var(--owl-template-browser-active-color);
@@ -35,6 +41,10 @@
       color: rgb(212, 212, 212);
       font-size: 95px;
       text-align: center;
+
+      span {
+        font-size: inherit;
+      }
     }
 
     &__type {
@@ -45,6 +55,11 @@
       border-top-left-radius: 0.25em;
       border-bottom-right-radius: 0.25em;
       background: var(--owl-dropdown-bg);
+
+      span {
+        margin: 0.25rem;
+        color: var(--owl-color-template);
+      }
     }
 
     label {
