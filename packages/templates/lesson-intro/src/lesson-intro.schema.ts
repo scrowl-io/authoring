@@ -8,18 +8,44 @@ export const LessonIntroSchema: LessonIntroSchemaProps = {
     filename: 'block-text',
   },
   content: {
-    text: {
+    lessonTitle: {
       type: 'Textbox',
-      label: 'Lesson Title',
-      value:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-      placeholder: 'Write content here...',
+      label: 'Title',
+      value: 'Enter Your New Title',
+      placeholder: 'Title',
+      multiLine: false,
+      autoGrow: 10,
+      allowLinebreaks: true,
+    },
+    lessonSubtitle: {
+      type: 'Textbox',
+      label: 'Subtitle',
+      value: 'Subtitle',
+      placeholder: 'Subtitle',
       multiLine: true,
       lines: 10,
       autoGrow: 10,
       allowLinebreaks: true,
     },
-    bgImage: {
+    lessonTime: {
+      type: 'Textbox',
+      label: 'Time',
+      value: 'Time',
+      placeholder: 'Time',
+      multiLine: false,
+      autoGrow: 10,
+      allowLinebreaks: true,
+    },
+    startLabel: {
+      type: 'Textbox',
+      label: 'Start Label',
+      value: 'START',
+      placeholder: 'Start Label',
+      multiLine: false,
+      autoGrow: 10,
+      allowLinebreaks: true,
+    },
+    heroImage: {
       type: 'Fieldset',
       label: 'Background Image',
       content: {

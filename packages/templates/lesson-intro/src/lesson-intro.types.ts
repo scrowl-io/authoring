@@ -27,8 +27,11 @@ export interface LessonIntroContentOptions extends InputFieldsetProps {
 export type LessonIntroSchemaProps = {
   meta: TemplateSchemaMeta;
   content: {
-    text: InputTextboxProps;
-    bgImage: LessonIntroContentBgImage;
+    lessonTitle: InputTextboxProps;
+    lessonSubtitle: InputTextboxProps;
+    lessonTime: InputTextboxProps;
+    startLabel: InputTextboxProps;
+    heroImage: LessonIntroContentBgImage;
     options: LessonIntroContentOptions;
   };
 };

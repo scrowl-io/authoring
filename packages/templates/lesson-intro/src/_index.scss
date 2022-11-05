@@ -37,18 +37,19 @@
     }
 
     .text {
-      margin: 0 5%;
-      position: absolute;
+      // margin: 0 5%;
+      // position: absolute;
       top: 0;
       left: 0;
       bottom: 0;
       z-index: 5;
-      width: 50%;
-      // min-width: 250px;
+      overflow: hidden;
 
+      // min-width: 250px;
       display: flex;
-      flex-flow: column;
-      justify-content: center;
+      flex-direction: column;
+      // justify-content: center;
+      align-items: center;
       height: 100vh;
 
       font-size: min(3.5vw, 24px);
@@ -63,10 +64,15 @@
       }
 
       .wrapper {
+        margin-top: 5em;
         background-color: rgba(251, 251, 251, 0.9);
         padding: 2rem;
         max-height: calc(100vh - 32px);
         overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
 
         hr {
           width: 0%;

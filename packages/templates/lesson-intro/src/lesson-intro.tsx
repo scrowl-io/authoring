@@ -10,8 +10,12 @@ export const LessonIntro = ({ schema, ...props }: LessonIntroProps) => {
   const scrollScenes: any = React.useRef([]);
   const timeline: any = React.useRef();
 
-  let schemaText = schema.content.text.value;
-  let useImageAsBG = schema.content.bgImage.content.bg.value;
+  let lessonTitle = schema.content.lessonTitle.value;
+  let lessonSubtitle = schema.content.lessonSubtitle.value;
+  let lessonTime = schema.content.lessonTime.value;
+  let startLabel = schema.content.startLabel.value;
+
+  let useImageAsBG = schema.content.heroImage.content.bg.value;
   let alignment = schema.content.options.content.alignment.value;
   let showProgressBar = schema.content.options.content.showProgress.value;
   const slideDuration = showProgressBar ? 1000 : 0;
@@ -104,16 +108,16 @@ export const LessonIntro = ({ schema, ...props }: LessonIntroProps) => {
           id={getId('pinned-body')}
           className="hero"
           aria-label={
-            useImageAsBG ? schema.content.bgImage.content.alt.value : ''
+            useImageAsBG ? schema.content.heroImage.content.alt.value : ''
           }
           style={
-            useImageAsBG && schema.content.bgImage.content.url.value
+            useImageAsBG && schema.content.heroImage.content.url.value
               ? {
                   width: '100vw',
                   height: '100vh',
                   backgroundImage:
                     'url("./assets/' +
-                    schema.content.bgImage.content.url.value +
+                    schema.content.heroImage.content.url.value +
                     '")',
                 }
               : {}
@@ -123,10 +127,36 @@ export const LessonIntro = ({ schema, ...props }: LessonIntroProps) => {
 
           <div className={'text ' + (alignment === 'right' ? ' right' : '')}>
             <div className="wrapper">
-              <hr
-                id={getId('bar')}
-                style={{ width: showProgressBar ? '0%' : '100%' }}
-              />
+              <h1
+                className={
+                  'can-focus ' + (focusElement === 'text' && ' has-focus')
+                }
+                onMouseDown={() => {
+                  if (editMode) {
+                    Scrowl.core.host.sendMessage({
+                      type: 'focus',
+                      field: 'text',
+                    });
+                  }
+                }}
+              >
+                {lessonTitle}
+              </h1>
+              <h2
+                className={
+                  'can-focus ' + (focusElement === 'text' && ' has-focus')
+                }
+                onMouseDown={() => {
+                  if (editMode) {
+                    Scrowl.core.host.sendMessage({
+                      type: 'focus',
+                      field: 'text',
+                    });
+                  }
+                }}
+              >
+                {lessonSubtitle}
+              </h2>
               <p
                 className={
                   'can-focus ' + (focusElement === 'text' && ' has-focus')
@@ -140,15 +170,31 @@ export const LessonIntro = ({ schema, ...props }: LessonIntroProps) => {
                   }
                 }}
               >
-                <Scrowl.core.Markdown children={schemaText} />
+                {lessonTime}
               </p>
+              <a
+                href="#"
+                className={
+                  'can-focus ' + (focusElement === 'text' && ' has-focus')
+                }
+                onMouseDown={() => {
+                  if (editMode) {
+                    Scrowl.core.host.sendMessage({
+                      type: 'focus',
+                      field: 'text',
+                    });
+                  }
+                }}
+              >
+                {startLabel}
+              </a>
             </div>
           </div>
 
           {useImageAsBG ? null : (
             <div
               role="img"
-              aria-label={schema.content.bgImage.content.alt.value}
+              aria-label={schema.content.heroImage.content.alt.value}
               className={
                 'img ' +
                 (alignment === 'right' ? ' right' : '') +
@@ -164,11 +210,11 @@ export const LessonIntro = ({ schema, ...props }: LessonIntroProps) => {
                 }
               }}
               style={
-                schema.content.bgImage.content.url.value
+                schema.content.heroImage.content.url.value
                   ? {
                       backgroundImage:
                         'url("./assets/' +
-                        schema.content.bgImage.content.url.value +
+                        schema.content.heroImage.content.url.value +
                         '")',
                     }
                   : {}
