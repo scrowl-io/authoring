@@ -8,7 +8,7 @@ import { Projects, Settings } from '../../../../models';
 import { menu } from '../../../../services';
 import { Path as startPath } from '../../../start';
 import { Logo } from '../../../../components';
-import { PublishOverlay, ConfirmationOverlay } from '../overlay';
+import { PublishOverlay, Confirmation } from '../overlay';
 
 export enum PREVIEW_MODE {
   default = 'default',
@@ -231,7 +231,7 @@ export const Header = () => {
         onClose={handleCLosePublish}
         onSubmit={handelSubmitPublish}
       />
-      <ConfirmationOverlay
+      <Confirmation
         isOpen={isOpenConfirmation}
         onClose={handleCloseConfirmation}
       />

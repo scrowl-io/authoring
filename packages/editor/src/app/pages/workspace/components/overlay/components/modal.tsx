@@ -1,13 +1,17 @@
-import React, { useEffect, useRef, forwardRef } from 'react';
+import React from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Backdrop } from '.';
 import * as css from '../_overlay.scss';
 import { Error } from '../../../../../components';
 
-const ModalElement = (
-  { className, isOpen, onClose, title, children, ...props },
-  ref
-) => {
+export const Modal = ({
+  className,
+  isOpen,
+  onClose,
+  title,
+  children,
+  ...props
+}) => {
   let classes = css.overlayContainer;
   const modalSize = props.modalSize ? props.modalSize : 'md';
   const animation = {
@@ -27,7 +31,7 @@ const ModalElement = (
   }
 
   return (
-    <div ref={ref}>
+    <div>
       <AnimatePresence>
         {isOpen && (
           <div className={classes}>
@@ -71,23 +75,6 @@ const ModalElement = (
   );
 };
 
-export const Modal = forwardRef(ModalElement);
-
-export const ModalOverlay = ({ isOpen, ...props }) => {
-  const overlayRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const appNode = document.getElementById('app');
-
-    if (appNode && overlayRef.current) {
-      appNode.appendChild(overlayRef.current);
-    }
-  }, [overlayRef, isOpen]);
-
-  return <Modal ref={overlayRef} isOpen={isOpen} {...props} />;
-};
-
 export default {
   Modal,
-  ModalOverlay,
 };

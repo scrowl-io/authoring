@@ -153,6 +153,32 @@ export const setActiveTemplateContent = (data) => {
   processor.dispatch(state.activeSlide.setTemplateContent(data));
 };
 
+export const useTemplateBrowser = () => {
+  return useSelector((data: stateManager.RootState) => {
+    return data.workspace.isOpenTemplateBrowser;
+  });
+};
+
+export const openTemplateBrowser = () => {
+  if (!processor.dispatch) {
+    console.warn('workspace processor not ready');
+    return;
+  }
+
+  const fn = state.workspace.openTemplateBrowser as ActionCreatorWithoutPayload;
+  processor.dispatch(fn());
+};
+
+export const closeTemplateBrowser = () => {
+  if (!processor.dispatch) {
+    console.warn('workspace processor not ready');
+    return;
+  }
+
+  const fn = state.workspace.closeTemplateBrowser as ActionCreatorWithoutPayload;
+  processor.dispatch(fn());
+};
+
 export default {
   useProcessor,
   useWorkspace,
@@ -168,4 +194,7 @@ export default {
   useContentFocus,
   setContentFocus,
   resetContentFocus,
+  useTemplateBrowser,
+  openTemplateBrowser,
+  closeTemplateBrowser,
 };

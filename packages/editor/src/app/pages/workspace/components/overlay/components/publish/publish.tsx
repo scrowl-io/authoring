@@ -35,12 +35,6 @@ const PublishFormElement = (
     onSubmit();
   };
 
-  const handlePreventBubbling = (ev: React.MouseEvent) => {
-    ev.bubbles = false;
-    ev.stopPropagation();
-    ev.preventDefault();
-  };
-
   const handleUpdatePublishData = (data) => {
     setPublishData({
       ...publishData,

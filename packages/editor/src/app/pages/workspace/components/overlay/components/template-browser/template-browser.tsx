@@ -1,28 +1,33 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, Icon } from '@owlui/lib';
 import * as css from './_template-browser.scss';
-import { ModalOverlay } from '../modal';
+import { Modal } from '../modal';
 import { Templates } from '../../../../../../models';
+import {
+  useActiveTemplate,
+  useTemplateBrowser,
+  closeTemplateBrowser,
+} from '../../../../page-workspace-hooks';
 
-export const TemplateBrowser = ({
-  isOpen,
-  onClose,
-  onSubmit,
-  activeTemplate,
-  ...props
-}) => {
+export const TemplateBrowser = () => {
   const title = 'Template Browser';
   const inProgress = useRef(false);
   const [templateList, setTemplateList] = useState<
     Array<Templates.TemplateSchema>
   >([]);
+  const activeTemplate = useActiveTemplate();
+  const isOpen = useTemplateBrowser();
   const [selectedTemplate, setSelectedTemplate] = useState({
     meta: activeTemplate,
   });
 
+  const handelClose = () => {
+    closeTemplateBrowser();
+  };
+
   const handleSubmit = () => {
     console.log('template selected');
-    onSubmit(selectedTemplate);
+    closeTemplateBrowser();
   };
 
   const updateTemplateList = (res) => {
@@ -41,12 +46,13 @@ export const TemplateBrowser = ({
     }
   }, [inProgress]);
 
-  useEffect(() => {
-    setSelectedTemplate({ meta: activeTemplate });
-  }, [activeTemplate]);
-
   return (
-    <ModalOverlay title={title} isOpen={isOpen} onClose={onClose}>
+    <Modal
+      className="modal-template-browser"
+      title={title}
+      isOpen={isOpen}
+      onClose={handelClose}
+    >
       <div className={css.templateBrowserContainer}>
         {templateList.map((template, idx) => {
           const isActive = activeTemplate.component === template.meta.component;
@@ -103,14 +109,14 @@ export const TemplateBrowser = ({
         })}
       </div>
       <footer className="d-flex justify-content-end">
-        <Button variant="link" onClick={onClose}>
+        <Button variant="link" onClick={handelClose}>
           Cancel
         </Button>
         <Button variant="success" onClick={handleSubmit}>
           Select Template
         </Button>
       </footer>
-    </ModalOverlay>
+    </Modal>
   );
 };
 
