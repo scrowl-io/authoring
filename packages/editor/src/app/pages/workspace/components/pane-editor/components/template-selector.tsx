@@ -11,7 +11,6 @@ export const TemplateSelector = () => {
   const hasTemplate = templateMeta.component;
 
   const handleOpen = () => {
-    console.log('opening template browser');
     openTemplateBrowser();
   };
 
