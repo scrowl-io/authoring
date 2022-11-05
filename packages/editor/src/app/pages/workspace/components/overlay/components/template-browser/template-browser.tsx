@@ -16,13 +16,13 @@ export const TemplateBrowser = ({
   const [templateList, setTemplateList] = useState<
     Array<Templates.TemplateSchema>
   >([]);
-  const [selectedTemplate, setSelectedTemplate] = useState(
-    activeTemplate.component
-  );
+  const [selectedTemplate, setSelectedTemplate] = useState({
+    meta: activeTemplate,
+  });
 
   const handleSubmit = () => {
     console.log('template selected');
-    onSubmit();
+    onSubmit(selectedTemplate);
   };
 
   const updateTemplateList = (res) => {
@@ -42,7 +42,7 @@ export const TemplateBrowser = ({
   }, [inProgress]);
 
   useEffect(() => {
-    setSelectedTemplate(activeTemplate.component);
+    setSelectedTemplate({ meta: activeTemplate });
   }, [activeTemplate]);
 
   return (
@@ -50,7 +50,8 @@ export const TemplateBrowser = ({
       <div className={css.templateBrowserContainer}>
         {templateList.map((template, idx) => {
           const isActive = activeTemplate.component === template.meta.component;
-          const isSelected = selectedTemplate === template.meta.component;
+          const isSelected =
+            selectedTemplate.meta.component === template.meta.component;
           return (
             <button
               id={`template-${template.meta.component}`}
@@ -59,7 +60,7 @@ export const TemplateBrowser = ({
                 isActive ? ' active' : ''
               }${isSelected ? ' selected' : ''}`}
               onClick={() => {
-                setSelectedTemplate(template.meta.component);
+                setSelectedTemplate(template);
               }}
             >
               {template.meta.icon && (

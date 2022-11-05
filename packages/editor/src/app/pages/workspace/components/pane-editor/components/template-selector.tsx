@@ -17,8 +17,14 @@ export const TemplateSelector = () => {
     setIsOpenTemplateBrowser(true);
   };
 
-  const handleTemplateBrowserSubmit = () => {
-    console.log('template selected');
+  const handleTemplateBrowserSubmit = (selectedTemplate) => {
+    setIsOpenTemplateBrowser(false);
+
+    if (templateMeta.component === selectedTemplate.meta.component) {
+      return;
+    }
+
+    console.log('template changed', selectedTemplate);
   };
 
   return (
