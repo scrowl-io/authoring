@@ -178,7 +178,13 @@ export const OutlineSlideItem = ({
   }, [isActive, activeSlide.slideIdx, slideIdx]);
 
   return (
-    <div className={css.outlineSlide} {...props}>
+    <div
+      className={css.outlineSlide}
+      {...props}
+      data-module-idx={slide.moduleIdx}
+      data-lesson-idx={slide.lessonIdx}
+      data-slide-idx={slideIdx}
+    >
       <div className={classes}>
         <Button
           className={css.outlineItem}

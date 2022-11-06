@@ -64,9 +64,6 @@ export const config: stateManager.StateConfig = {
 
       updateObj(modules[moduleIdx], data);
     },
-    moveModule: (state, action) => {
-      
-    },
     removeModule: (state, action) => {
       state.data.modules.splice(action.payload.idx);
     },
@@ -82,9 +79,6 @@ export const config: stateManager.StateConfig = {
       }
 
       updateObj(lessons[lessonIdx], data);
-    },
-    moveLesson: (state, action) => {
-      
     },
     removeLesson: (state, action) => {
       state.data.lessons.splice(action.payload.idx);
@@ -102,11 +96,29 @@ export const config: stateManager.StateConfig = {
 
       updateObj(slides[slideIdx], data);
     },
-    moveSlide: (state, action) => {
-      
-    },
     removeSlide: (state, action) => {
       state.data.slides.splice(action.payload.idx);
+    },
+    moveOutlineItem: (state, action) => {
+      let outlineList;
+      let outlineData;
+      let movePosition = -1;
+      const { type, ...moveFrom } = action.payload.moveFrom;
+      const moveTo = action.payload.moveTo;
+
+      switch (type) {
+        case 'slide':
+          outlineList = state.data.slides;
+          movePosition = moveTo.slideIdx;
+          outlineData = {
+            ...outlineList.splice(moveFrom.slideIdx, 1)[0],
+            moduleIdx: moveTo.moduleIdx,
+            lessonIdx: moveTo.lessonIdx,
+          };
+          break;
+      }
+
+      outlineList.splice(movePosition, 0, outlineData);
     },
     addGlossaryItem: (state, action) => {
       const lastIdx = state.data.glossary.length;
@@ -165,16 +177,14 @@ export const {
   setScorm,
   addModule,
   setModule,
-  moveModule,
   removeModule,
   addLesson,
   setLesson,
-  moveLesson,
   removeLesson,
   addSlide,
   setSlide,
-  moveSlide,
   removeSlide,
+  moveOutlineItem,
   addGlossaryItem,
   setGlossaryItem,
   removeGlossaryItem,

@@ -90,6 +90,18 @@ export const OutlineLessonItem = ({
     setIsEdit(false);
   };
 
+  const getContainer = (target: HTMLElement | null, classTest: string) => {
+    if (!target) {
+      return;
+    }
+
+    if (!target.classList.contains(classTest)) {
+      return getContainer(target.parentElement, classTest);
+    }
+
+    return target;
+  };
+
   const handleDragStart = (ev: React.DragEvent<HTMLDivElement>) => {
     ev.dataTransfer.setData(
       'text/plain',
@@ -110,43 +122,39 @@ export const OutlineLessonItem = ({
   };
 
   const handleDragDrop = (ev: React.DragEvent<HTMLDivElement>) => {
-    const data = JSON.parse(ev.dataTransfer.getData('text/plain'));
-    if (data.type !== 'slide') {
+    const moveFrom = JSON.parse(ev.dataTransfer.getData('text/plain'));
+    if (moveFrom.type !== 'slide') {
       return;
     }
 
     ev.preventDefault();
 
-    console.log('data', data);
     const target = ev.target as HTMLDivElement;
-    const container = getContainer(target, css.outlineSlide);
+    const container = getContainer(target, css.outlineSlide) as HTMLDivElement;
 
-    if (container) {
-      container.classList.remove(css.draggableIndicatorSlide);
-    }
-    // console.log('ev.currentTarget', ev.currentTarget); -> drop container
-    // console.log('ev.target', ev.target); -> drop target
-  };
-
-  const getContainer = (target: HTMLElement | null, classTest: string) => {
-    if (!target) {
+    if (!container) {
       return;
     }
 
-    if (!target.classList.contains(classTest)) {
-      return getContainer(target.parentElement, classTest);
-    }
+    container.classList.remove(css.draggableIndicatorSlide);
+    const moveTo = {
+      moduleIdx: parseInt(container.dataset.moduleIdx || ''),
+      lessonIdx: parseInt(container.dataset.lessonIdx || ''),
+      slideIdx: parseInt(container.dataset.slideIdx || ''),
+    };
 
-    return target;
+    Projects.moveOutlineItem({
+      moveFrom,
+      moveTo,
+    });
   };
 
   const handleDragEnter = (ev: React.DragEvent) => {
     const target = ev.target as HTMLDivElement;
     const container = getContainer(target, css.outlineSlide);
 
-    ev.preventDefault();
-
     if (container) {
+      ev.preventDefault();
       container.classList.add(css.draggableIndicatorSlide);
       draggable.current = container;
     }

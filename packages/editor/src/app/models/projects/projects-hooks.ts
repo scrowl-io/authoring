@@ -92,15 +92,6 @@ export const setModule = (data) => {
   processor.dispatch(state.setModule(data));
 };
 
-export const moveModule = (data) => {
-  if (!processor.dispatch) {
-    console.warn('projects processor not ready');
-    return;
-  }
-
-  processor.dispatch(state.moveModule(data));
-};
-
 export const removeModule = (data) => {
   if (!processor.dispatch) {
     console.warn('projects processor not ready');
@@ -149,15 +140,6 @@ export const setLesson = (data) => {
   processor.dispatch(state.setLesson(data));
 };
 
-export const moveLesson = (data) => {
-  if (!processor.dispatch) {
-    console.warn('projects processor not ready');
-    return;
-  }
-
-  processor.dispatch(state.moveLesson(data));
-};
-
 export const removeLesson = (data) => {
   if (!processor.dispatch) {
     console.warn('projects processor not ready');
@@ -197,15 +179,6 @@ export const setSlide = (data) => {
   processor.dispatch(state.setSlide(data));
 };
 
-export const moveSlide = (data) => {
-  if (!processor.dispatch) {
-    console.warn('projects processor not ready');
-    return;
-  }
-
-  processor.dispatch(state.moveSlide(data));
-};
-
 export const removeSlide = (data) => {
   if (!processor.dispatch) {
     console.warn('projects processor not ready');
@@ -213,6 +186,15 @@ export const removeSlide = (data) => {
   }
 
   processor.dispatch(state.removeSlide(data));
+};
+
+export const moveOutlineItem = (data) => {
+  if (!processor.dispatch) {
+    console.warn('projects processor not ready');
+    return;
+  }
+
+  processor.dispatch(state.moveOutlineItem(data));
 };
 
 export const useGlossary = () => {
@@ -368,18 +350,16 @@ export default {
   useModules,
   addModule,
   setModule,
-  moveModule,
   removeModule,
   useLessons,
   addLesson,
   setLesson,
-  moveLesson,
   removeLesson,
   useSlides,
   addSlide,
   setSlide,
-  moveSlide,
   removeSlide,
+  moveOutlineItem,
   useGlossary,
   addGlossaryItem,
   setGlossaryItem,
