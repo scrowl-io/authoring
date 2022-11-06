@@ -35,6 +35,22 @@ export const initialState = {
   },
 };
 
+const generateNewId = (list) => {
+  const lastIdx = list.length - 1;
+
+  return list.slice().sort((a, b) => {
+    let result = 0;
+    const valA = a.id;
+    const valB = b.id;
+
+    if (valA === valB) {
+      return 0;
+    }
+
+    return result = valA < valB ? -1 : 1;
+})[lastIdx].id + 1;
+}
+
 export const config: stateManager.StateConfig = {
   name: 'projects',
   initialState,
@@ -81,7 +97,7 @@ export const config: stateManager.StateConfig = {
       lastIdx = outlineList.length - 1;
 
       if (lastIdx !== -1) {
-        id = outlineList[lastIdx].id + 1;
+        id = generateNewId(outlineList);
       }
 
       outlineList.push({
@@ -137,6 +153,33 @@ export const config: stateManager.StateConfig = {
       }
 
       outlineList.splice(movePosition, 0, outlineData);
+    },
+    duplicateOutlineItem: (state, action) => {
+      let outlineList;
+      let outlineData;
+      let lastIdx = -1;
+      let dupPosition = -1;
+      let newId = -1;
+      const { type, id, ...data } = action.payload;
+      const name = data.name + ' copy';
+
+      switch (type) {
+        case 'slide':
+          outlineList = state.data.slides;
+          dupPosition = List.indexBy(outlineList, 'id', id) + 1;
+          break;
+      }
+
+      lastIdx = outlineList.length - 1;
+      newId = generateNewId(outlineList);
+
+      outlineData = {
+        ...data,
+        name,
+        id: newId,
+      };
+
+      outlineList.splice(dupPosition, 0, outlineData)
     },
     removeOutlineItem: (state, action) => {
       const { type, ...data } = action.payload;
@@ -214,6 +257,7 @@ export const {
   addOutlineItem,
   setOutlineItem,
   moveOutlineItem,
+  duplicateOutlineItem,
   removeOutlineItem,
   addGlossaryItem,
   setGlossaryItem,

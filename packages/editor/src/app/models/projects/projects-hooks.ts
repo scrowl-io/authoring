@@ -98,6 +98,18 @@ export const setModule = (data) => {
   }));
 };
 
+export const duplicateModule = (data) => {
+  if (!processor.dispatch) {
+    console.warn('projects processor not ready');
+    return;
+  }
+
+  processor.dispatch(state.duplicateOutlineItem({
+    ...data,
+    type: 'module',
+  }));
+};
+
 export const removeModule = (data) => {
   if (!processor.dispatch) {
     console.warn('projects processor not ready');
@@ -150,6 +162,18 @@ export const setLesson = (data) => {
   }
 
   processor.dispatch(state.setOutlineItem({
+    ...data,
+    type: 'lesson',
+  }));
+};
+
+export const duplicateLesson = (data) => {
+  if (!processor.dispatch) {
+    console.warn('projects processor not ready');
+    return;
+  }
+
+  processor.dispatch(state.duplicateOutlineItem({
     ...data,
     type: 'lesson',
   }));
@@ -214,6 +238,18 @@ export const setSlide = (data) => {
   }
 
   processor.dispatch(state.setOutlineItem({
+    ...data,
+    type: 'slide',
+  }));
+};
+
+export const duplicateSlide = (data) => {
+  if (!processor.dispatch) {
+    console.warn('projects processor not ready');
+    return;
+  }
+
+  processor.dispatch(state.duplicateOutlineItem({
     ...data,
     type: 'slide',
   }));
@@ -393,14 +429,17 @@ export default {
   useModules,
   addModule,
   setModule,
+  duplicateModule,
   removeModule,
   useLessons,
   addLesson,
   setLesson,
+  duplicateLesson,
   removeLesson,
   useSlides,
   addSlide,
   setSlide,
+  duplicateSlide,
   removeSlide,
   moveOutlineItem,
   useGlossary,

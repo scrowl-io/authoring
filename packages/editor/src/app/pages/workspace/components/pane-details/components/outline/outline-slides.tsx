@@ -29,7 +29,7 @@ export const OutlineSlideItem = ({
     {
       label: 'Duplicate Slide',
       click: () => {
-        console.log('duplicate slide');
+        Projects.duplicateSlide(slide);
       },
     },
     {
