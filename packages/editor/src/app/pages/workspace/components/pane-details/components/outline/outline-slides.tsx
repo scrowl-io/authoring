@@ -3,17 +3,21 @@ import { Button, Icon } from '@owlui/lib';
 import { OutlineSlidesProps, OutlineSlideItemProps } from './outline.types';
 import * as css from '../../_pane-details.scss';
 import { Projects } from '../../../../../../models';
-import { useActiveSlide, setActiveSlide } from '../../../../';
+import { useActiveSlide, setActiveSlide, resetActiveSlide } from '../../../../';
 import { Elem } from '../../../../../../utils';
 import { menu } from '../../../../../../services';
 import { InputInlineText } from './input-inline-text';
 
 export const OutlineSlideItem = ({
   slide,
+  moduleIdx,
+  lessonIdx,
+  idx,
   className,
   ...props
 }: OutlineSlideItemProps) => {
   const activeSlide = useActiveSlide();
+  const isFirstItem = moduleIdx === 0 && lessonIdx === 0 && idx === 0;
   const isActive =
     slide.moduleId === activeSlide.moduleId &&
     slide.lessonId === activeSlide.lessonId &&
@@ -45,7 +49,8 @@ export const OutlineSlideItem = ({
     {
       label: 'Delete Slide',
       click: () => {
-        console.log('remove Slide');
+        resetActiveSlide();
+        Projects.removeSlide(slide);
       },
     },
   ];
@@ -166,10 +171,10 @@ export const OutlineSlideItem = ({
       }, 250);
     };
 
-    if (activeSlide.id === -1 && slide.id === 0) {
+    if (activeSlide.id === -1 && isFirstItem) {
       selectCurrentSlide();
     }
-  }, [isActive, activeSlide.id, slide.id]);
+  }, [isActive, activeSlide.id, isFirstItem]);
 
   return (
     <div
@@ -218,7 +223,9 @@ export const OutlineSlideItem = ({
 
 export const OutlineSlides = ({
   moduleId,
+  moduleIdx,
   lessonId,
+  lessonIdx,
   className,
   ...props
 }: OutlineSlidesProps) => {
@@ -236,7 +243,15 @@ export const OutlineSlides = ({
   return (
     <div className={classes} {...props}>
       {slides.map((slide, idx) => {
-        return <OutlineSlideItem key={idx} slide={slide} />;
+        return (
+          <OutlineSlideItem
+            key={idx}
+            slide={slide}
+            moduleIdx={moduleIdx}
+            lessonIdx={lessonIdx}
+            idx={idx}
+          />
+        );
       })}
       <Button
         variant="link"

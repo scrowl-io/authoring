@@ -4,6 +4,7 @@ import { Collapse } from 'react-bootstrap';
 import { OutlineModulesProps, OutlineModuleItemProps } from './outline.types';
 import * as css from '../../_pane-details.scss';
 import { OutlineLessons } from './outline-lessons';
+import { resetActiveSlide } from '../../../../';
 import { Projects } from '../../../../../../models';
 import { Elem } from '../../../../../../utils';
 import { menu } from '../../../../../../services';
@@ -11,6 +12,7 @@ import { InputInlineText } from './input-inline-text';
 
 export const OutlineModuleItem = ({
   module,
+  idx,
   className,
   ...props
 }: OutlineModuleItemProps) => {
@@ -48,7 +50,8 @@ export const OutlineModuleItem = ({
     {
       label: 'Delete Module',
       click: () => {
-        console.log('remove module');
+        resetActiveSlide();
+        Projects.removeModule(module);
       },
     },
   ];
@@ -171,6 +174,7 @@ export const OutlineModuleItem = ({
           <OutlineLessons
             id={menuId}
             moduleId={module.id}
+            moduleIdx={idx}
             onDrop={handleDragDrop}
           />
         </div>
@@ -188,7 +192,7 @@ export const OutlineModules = ({ ...props }: OutlineModulesProps) => {
   return (
     <div {...props}>
       {modules.map((module, idx) => {
-        return <OutlineModuleItem key={idx} module={module} />;
+        return <OutlineModuleItem key={idx} module={module} idx={idx} />;
       })}
       <Button
         variant="link"

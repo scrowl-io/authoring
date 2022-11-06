@@ -4,6 +4,7 @@ import { Collapse } from 'react-bootstrap';
 import { OutlineLessonsProps, OutlineLessonItemProps } from './outline.types';
 import * as css from '../../_pane-details.scss';
 import { OutlineSlides } from './outline-slides';
+import { resetActiveSlide } from '../../../../';
 import { Projects } from '../../../../../../models';
 import { Elem } from '../../../../../../utils';
 import { menu } from '../../../../../../services';
@@ -11,6 +12,8 @@ import { InputInlineText } from './input-inline-text';
 
 export const OutlineLessonItem = ({
   lesson,
+  moduleIdx,
+  idx,
   className,
   ...props
 }: OutlineLessonItemProps) => {
@@ -49,7 +52,8 @@ export const OutlineLessonItem = ({
     {
       label: 'Delete Lesson',
       click: () => {
-        console.log('remove lesson');
+        resetActiveSlide();
+        Projects.removeLesson(lesson);
       },
     },
   ];
@@ -237,7 +241,9 @@ export const OutlineLessonItem = ({
           <OutlineSlides
             id={menuId}
             moduleId={lesson.moduleId}
+            moduleIdx={moduleIdx}
             lessonId={lesson.id}
+            lessonIdx={idx}
             onDrop={handleDragDrop}
             onDragEnter={handleDragEnter}
           />
@@ -249,6 +255,7 @@ export const OutlineLessonItem = ({
 
 export const OutlineLessons = ({
   moduleId,
+  moduleIdx,
   className,
   ...props
 }: OutlineLessonsProps) => {
@@ -265,7 +272,14 @@ export const OutlineLessons = ({
   return (
     <div className={classes} {...props}>
       {lessons.map((lesson, idx) => {
-        return <OutlineLessonItem key={idx} lesson={lesson} />;
+        return (
+          <OutlineLessonItem
+            key={idx}
+            lesson={lesson}
+            moduleIdx={moduleIdx}
+            idx={idx}
+          />
+        );
       })}
       <Button
         variant="link"

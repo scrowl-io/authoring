@@ -143,16 +143,16 @@ export const config: stateManager.StateConfig = {
 
       switch (type) {
         case 'module':
-          state.data.modules = List.filterBy(state.data.modules, 'id', data.id);
-          state.data.lessons = List.filterBy(state.data.lessons, 'moduleid', data.id);
-          state.data.slides = List.filterBy(state.data.slides, 'moduleId', data.id);
+          state.data.modules = List.filterBy(state.data.modules, 'id', data.id, 'NE');
+          state.data.lessons = List.filterBy(state.data.lessons, 'moduleid', data.id, 'NE');
+          state.data.slides = List.filterBy(state.data.slides, 'moduleId', data.id, 'NE');
           break;
         case 'lesson':
-          state.data.lessons = List.filterBy(state.data.lessons, 'id', data.id);
-          state.data.slides = List.filterBy(state.data.slides, 'lessonId', data.id);
+          state.data.lessons = List.filterBy(state.data.lessons, 'id', data.id, 'NE');
+          state.data.slides = List.filterBy(state.data.slides, 'lessonId', data.id, 'NE');
           break;
         case 'slide':
-          state.data.slides = List.filterBy(state.data.slides, 'id', data.id);
+          state.data.slides = List.filterBy(state.data.slides, 'id', data.id, 'NE');
           break;
       }
     },

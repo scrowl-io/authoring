@@ -1,12 +1,19 @@
 import { hasProp } from './obj';
 
-export const filterBy = (list: Array<{}>, prop: string, value: any) => {
+export type OperatorType = 'EQ' | 'NE';
+
+export const filterBy = (list: Array<{}>, prop: string, value: any, op?: OperatorType) => {
   return list.filter((item) => {
     if (!hasProp(item, prop)) {
       return false;
     }
 
-    return item[prop] === value;
+    switch (op) {
+      case 'NE':
+        return item[prop] !== value;
+      default:
+        return item[prop] === value;
+    }
   })
 };
 

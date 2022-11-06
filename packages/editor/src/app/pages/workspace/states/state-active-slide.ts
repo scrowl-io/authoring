@@ -33,7 +33,7 @@ export const config: stateManager.StateConfig = {
       updateObj(state, props);
     },
     resetData: (state) => {
-      state = initialState;
+      updateObj(state, initialState);
     },
     setTemplate: (state, action) => {
       updateObj(state.template, action.payload);
