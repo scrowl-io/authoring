@@ -46,7 +46,7 @@ export const InputInlineText = ({
   };
 
   const handleControls = (ev: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    switch (ev.key) {
+    switch (ev.code) {
       case 'Enter':
         ev.currentTarget.blur();
         break;
@@ -54,6 +54,11 @@ export const InputInlineText = ({
         onChange(prevText.current);
         isDirty.current = false;
         ev.currentTarget.blur();
+        break;
+      case 'Space':
+        ev.stopPropagation();
+        ev.preventDefault();
+        ev.currentTarget.value += ' ';
         break;
     }
 
@@ -91,7 +96,6 @@ export const InputInlineText = ({
       inputRef.current.style.height = `${2 + inputRef.current.scrollHeight}px`;
       inputRef.current.focus();
       inputRef.current.select();
-      console.log('inputRef.current.style', inputRef.current.style);
     }
   }, [isEdit, inputRef]);
 

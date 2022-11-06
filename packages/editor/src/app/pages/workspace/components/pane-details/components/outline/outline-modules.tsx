@@ -7,6 +7,7 @@ import { OutlineLessons } from './outline-lessons';
 import { Projects } from '../../../../../../models';
 import { Elem } from '../../../../../../utils';
 import { menu } from '../../../../../../services';
+import { InputInlineText } from './input-inline-text';
 
 export const OutlineModuleItem = ({
   module,
@@ -17,6 +18,7 @@ export const OutlineModuleItem = ({
   let classes = `${css.outlineHeader} `;
   const [isOpen, setOpen] = useState(true);
   const menuId = `module-menu-${moduleIdx}`;
+  const [isEdit, setIsEdit] = useState(false);
   const moduleMenuItems: Array<menu.ContextMenuItem> = [
     {
       label: 'Add Lesson',
@@ -40,7 +42,7 @@ export const OutlineModuleItem = ({
     {
       label: 'Rename',
       click: () => {
-        console.log('rename module');
+        setIsEdit(true);
       },
     },
     { type: 'separator' },
@@ -73,6 +75,20 @@ export const OutlineModuleItem = ({
     });
   };
 
+  const handleNameChange = (val) => {
+    const updateData = {
+      ...module,
+      name: val,
+      moduleIdx,
+    };
+
+    Projects.setModule(updateData);
+  };
+
+  const handleNameClose = () => {
+    setIsEdit(false);
+  };
+
   return (
     <div className={css.outlineModule} {...props}>
       <div className={classes}>
@@ -102,7 +118,12 @@ export const OutlineModuleItem = ({
                 opsz={20}
               />
             </span>
-            <span className={css.outlineItemLabel}>{module.name}</span>
+            <InputInlineText
+              isEdit={isEdit}
+              text={module.name}
+              onChange={handleNameChange}
+              onBlur={handleNameClose}
+            />
           </div>
         </Button>
         <Button
