@@ -30,7 +30,7 @@ export const OutlineModuleItem = ({
     {
       label: 'Duplicate Module',
       click: () => {
-        console.log('duplicate module');
+        Projects.duplicateModule(module);
       },
     },
     {

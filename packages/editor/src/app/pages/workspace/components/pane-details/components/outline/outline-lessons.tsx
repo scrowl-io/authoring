@@ -32,7 +32,7 @@ export const OutlineLessonItem = ({
     {
       label: 'Duplicate Lesson',
       click: () => {
-        console.log('duplicate lesson');
+        Projects.duplicateLesson(lesson);
       },
     },
     {

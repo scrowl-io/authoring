@@ -39,17 +39,40 @@ const generateNewId = (list) => {
   const lastIdx = list.length - 1;
 
   return list.slice().sort((a, b) => {
-    let result = 0;
-    const valA = a.id;
-    const valB = b.id;
+      const valA = a.id;
+      const valB = b.id;
 
-    if (valA === valB) {
-      return 0;
-    }
+      if (valA === valB) {
+        return 0;
+      }
 
-    return result = valA < valB ? -1 : 1;
-})[lastIdx].id + 1;
+      return valA < valB ? -1 : 1;
+  })[lastIdx].id + 1;
 }
+
+const copyListItems = (list, field, fromId, toId) => {
+  const copy: Array<{[key: string]: any}> = List.filterBy(list, field, fromId);
+
+  if (!copy.length) {
+    return;
+  }
+
+  let newId = -1;
+  let newName = '';
+
+  copy.forEach(({ name, ...item }) => {
+    newId = generateNewId(list);
+    newName = `${name} copy`;
+    const itemCopy = {
+      ...item,
+      name: newName,
+      id: newId,
+    };
+
+    itemCopy[field] = toId;
+    list.push(itemCopy);
+  });
+};
 
 export const config: stateManager.StateConfig = {
   name: 'projects',
@@ -157,7 +180,6 @@ export const config: stateManager.StateConfig = {
     duplicateOutlineItem: (state, action) => {
       let outlineList;
       let outlineData;
-      let lastIdx = -1;
       let dupPosition = -1;
       let newId = -1;
       const { type, id, ...data } = action.payload;
@@ -166,11 +188,16 @@ export const config: stateManager.StateConfig = {
       switch (type) {
         case 'slide':
           outlineList = state.data.slides;
-          dupPosition = List.indexBy(outlineList, 'id', id) + 1;
+          break;
+        case 'lesson':
+          outlineList = state.data.lessons;
+          break;
+        case 'module':
+          outlineList = state.data.modules
           break;
       }
 
-      lastIdx = outlineList.length - 1;
+      dupPosition = List.indexBy(outlineList, 'id', id) + 1;
       newId = generateNewId(outlineList);
 
       outlineData = {
@@ -178,6 +205,40 @@ export const config: stateManager.StateConfig = {
         name,
         id: newId,
       };
+
+      switch (type) {
+        case 'lesson':
+          copyListItems(state.data.slides, 'lessonId', id, newId);
+          break;
+        case 'module':
+          const copyLessons = List.filterBy(state.data.lessons, 'moduleId', id);
+          
+          copyLessons.forEach((lesson: { [key: string]: any }) => {
+            const lessonData = {
+              ...lesson,
+              moduleId: newId,
+              name: `${lesson.name} copy`,
+              id: generateNewId(state.data.lessons),
+            };
+
+            const copySlides = List.filterBy(state.data.slides, 'lessonId', lesson.id);
+            
+            copySlides.forEach((slide: { [key: string]: any }) => {
+              const slideData = {
+                ...slide,
+                moduleId: newId,
+                lessonId: lessonData.id,
+                name: `${slide.name} copy`,
+                id: generateNewId(state.data.slides),
+              };
+
+              state.data.slides.push(slideData);
+            });
+
+            state.data.lessons.push(lessonData);
+          });
+          break;
+      }
 
       outlineList.splice(dupPosition, 0, outlineData)
     },

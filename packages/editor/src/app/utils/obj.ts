@@ -43,7 +43,7 @@ export const setObjField = (obj, pointer, value) => {
 };
 
 export const objPointer = (obj, pointer) => {
-  let result;
+  let result = obj;
   let field;
 
   try {
