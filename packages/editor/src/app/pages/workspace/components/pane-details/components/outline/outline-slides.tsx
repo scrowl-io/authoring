@@ -6,6 +6,7 @@ import { Projects } from '../../../../../../models';
 import { useActiveSlide, setActiveSlide } from '../../../../';
 import { Elem } from '../../../../../../utils';
 import { menu } from '../../../../../../services';
+import { InputInlineText } from './input-inline-text';
 
 export const OutlineSlideItem = ({
   slide,
@@ -19,7 +20,7 @@ export const OutlineSlideItem = ({
     slide.lessonIdx === activeSlide.lessonIdx &&
     slideIdx === activeSlide.slideIdx;
   let classes = `${css.outlineHeader}`;
-  const [slideName, setSlideName] = useState(slide.name);
+  const [isEdit, setIsEdit] = useState(false);
   const slideMenuItems: Array<menu.ContextMenuItem> = [
     {
       label: 'Duplicate Slide',
@@ -37,7 +38,7 @@ export const OutlineSlideItem = ({
     {
       label: 'Rename',
       click: () => {
-        console.log('rename slide');
+        setIsEdit(true);
       },
     },
     { type: 'separator' },
@@ -77,11 +78,22 @@ export const OutlineSlideItem = ({
     });
   };
 
-  useEffect(() => {
-    if (isActive) {
-      setSlideName(activeSlide.name);
-    }
+  const handleNameChange = (val) => {
+    const updateData = {
+      ...slide,
+      name: val,
+      slideIdx,
+    };
 
+    setActiveSlide(updateData);
+    Projects.setSlide(updateData);
+  };
+
+  const handleNameClose = () => {
+    setIsEdit(false);
+  };
+
+  useEffect(() => {
     const selectCurrentSlide = () => {
       setTimeout(() => {
         setActiveSlide({
@@ -114,7 +126,12 @@ export const OutlineSlideItem = ({
               appearance="Slide"
             />
           </span>
-          <span>{slideName}</span>
+          <InputInlineText
+            isEdit={isEdit}
+            text={slide.name}
+            onChange={handleNameChange}
+            onBlur={handleNameClose}
+          />
         </Button>
         <Button
           className={css.actionMenu}
