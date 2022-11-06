@@ -7,8 +7,8 @@ import { Settings } from '../../../../../models';
 
 export const CanvasNotes = () => {
   const notes = useActiveSlide('notes');
-  const slideIdx = useActiveSlide('slideIdx');
-  const hasSlide = slideIdx !== -1;
+  const slideId = useActiveSlide('id');
+  const hasSlide = slideId !== -1;
   const animationSettings = Settings.useAnimation();
   const reducedAnimations = animationSettings.reducedAnimations;
   const animationDelay = animationSettings.animationDelay;

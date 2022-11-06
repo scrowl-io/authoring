@@ -11,13 +11,12 @@ import { InputInlineText } from './input-inline-text';
 
 export const OutlineLessonItem = ({
   lesson,
-  lessonIdx,
   className,
   ...props
 }: OutlineLessonItemProps) => {
   let classes = `${css.outlineHeader} `;
   const [isOpen, setOpen] = useState(true);
-  const menuId = `module-${lesson.moduleIdx}-lesson-menu-${lessonIdx}`;
+  const menuId = `module-${lesson.moduleId}-lesson-menu-${lesson.id}`;
   const [isEdit, setIsEdit] = useState(false);
   const draggable = useRef<HTMLDivElement | undefined>();
   const lessonMenuItems: Array<menu.ContextMenuItem> = [
@@ -80,7 +79,6 @@ export const OutlineLessonItem = ({
     const updateData = {
       ...lesson,
       name: val,
-      lessonIdx,
     };
 
     Projects.setLesson(updateData);
@@ -107,8 +105,8 @@ export const OutlineLessonItem = ({
       'text/plain',
       JSON.stringify({
         type: 'lesson',
-        moduleIdx: lesson.moduleIdx,
-        lessonIdx,
+        moduleId: lesson.moduleId,
+        id: lesson.id,
       })
     );
     ev.dataTransfer.effectAllowed = 'link';
@@ -117,8 +115,8 @@ export const OutlineLessonItem = ({
   const inputContainerProps = {
     draggable: true,
     onDragStart: handleDragStart,
-    'data-module-idx': lesson.moduleIdx,
-    'data-lesson-idx': lessonIdx,
+    'data-module-id': lesson.moduleId,
+    'data-lesson-id': lesson.id,
   };
 
   const handleDragDrop = (ev: React.DragEvent<HTMLDivElement>) => {
@@ -138,9 +136,9 @@ export const OutlineLessonItem = ({
 
     container.classList.remove(css.draggableIndicatorSlide);
     const moveTo = {
-      moduleIdx: parseInt(container.dataset.moduleIdx || ''),
-      lessonIdx: parseInt(container.dataset.lessonIdx || ''),
-      slideIdx: parseInt(container.dataset.slideIdx || ''),
+      moduleId: parseInt(container.dataset.moduleId || ''),
+      lessonId: parseInt(container.dataset.lessonId || ''),
+      id: parseInt(container.dataset.slideId || ''),
     };
 
     Projects.moveOutlineItem({
@@ -238,8 +236,8 @@ export const OutlineLessonItem = ({
         <div>
           <OutlineSlides
             id={menuId}
-            moduleIdx={lesson.moduleIdx}
-            lessonIdx={lessonIdx}
+            moduleId={lesson.moduleId}
+            lessonId={lesson.id}
             onDrop={handleDragDrop}
             onDragEnter={handleDragEnter}
           />
@@ -250,11 +248,11 @@ export const OutlineLessonItem = ({
 };
 
 export const OutlineLessons = ({
-  moduleIdx,
+  moduleId,
   className,
   ...props
 }: OutlineLessonsProps) => {
-  const lessons = Projects.useLessons(moduleIdx);
+  const lessons = Projects.useLessons(moduleId);
   let classes = `nav flex-column `;
   const handleAddLesson = () => {
     console.log('add lesson');
@@ -267,7 +265,7 @@ export const OutlineLessons = ({
   return (
     <div className={classes} {...props}>
       {lessons.map((lesson, idx) => {
-        return <OutlineLessonItem key={idx} lesson={lesson} lessonIdx={idx} />;
+        return <OutlineLessonItem key={idx} lesson={lesson} />;
       })}
       <Button
         variant="link"

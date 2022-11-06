@@ -79,18 +79,21 @@ export type ProjectAsset = {
 };
 
 export type ProjectModule = {
+  id: number;
   name: string;
 };
 
 export type ProjectLesson = {
   name: string;
-  moduleIdx: number;
+  moduleId: number;
+  id: number;
 };
 
 export type ProjectSlide = {
   name: string;
-  moduleIdx: number;
-  lessonIdx: number;
+  moduleId: number;
+  lessonId: number;
+  id: number;
   template: TemplateSchema;
 };
 

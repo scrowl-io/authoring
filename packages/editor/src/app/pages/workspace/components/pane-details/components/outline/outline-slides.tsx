@@ -10,15 +10,14 @@ import { InputInlineText } from './input-inline-text';
 
 export const OutlineSlideItem = ({
   slide,
-  slideIdx,
   className,
   ...props
 }: OutlineSlideItemProps) => {
   const activeSlide = useActiveSlide();
   const isActive =
-    slide.moduleIdx === activeSlide.moduleIdx &&
-    slide.lessonIdx === activeSlide.lessonIdx &&
-    slideIdx === activeSlide.slideIdx;
+    slide.moduleId === activeSlide.moduleId &&
+    slide.lessonId === activeSlide.lessonId &&
+    slide.id === activeSlide.id;
   let classes = `${css.outlineHeader}`;
   const draggable = useRef<HTMLDivElement | undefined>();
   const [isEdit, setIsEdit] = useState(false);
@@ -61,10 +60,7 @@ export const OutlineSlideItem = ({
 
   const handleSetActiveSlide = (ev: React.MouseEvent) => {
     ev.preventDefault();
-    setActiveSlide({
-      slide,
-      slideIdx,
-    });
+    setActiveSlide(slide);
   };
 
   const handleOpenSlideMenu = (ev: React.MouseEvent) => {
@@ -83,7 +79,6 @@ export const OutlineSlideItem = ({
     const updateData = {
       ...slide,
       name: val,
-      slideIdx,
     };
 
     setActiveSlide(updateData);
@@ -99,9 +94,9 @@ export const OutlineSlideItem = ({
       'text/plain',
       JSON.stringify({
         type: 'slide',
-        moduleIdx: slide.moduleIdx,
-        lessonIdx: slide.lessonIdx,
-        slideIdx,
+        moduleId: slide.moduleId,
+        lessonId: slide.lessonId,
+        id: slide.id,
       })
     );
     ev.dataTransfer.effectAllowed = 'link';
@@ -157,9 +152,9 @@ export const OutlineSlideItem = ({
     onDragOver: handleValidDragTarget,
     onDragEnter: handleValidDragTarget,
     onDragEnd: handleDragEnd,
-    'data-module-idx': slide.moduleIdx,
-    'data-lesson-idx': slide.lessonIdx,
-    'data-slide-idx': slideIdx,
+    'data-module-id': slide.moduleId,
+    'data-lesson-id': slide.lessonId,
+    'data-slide-id': slide.id,
   };
 
   useEffect(() => {
@@ -167,23 +162,22 @@ export const OutlineSlideItem = ({
       setTimeout(() => {
         setActiveSlide({
           slide,
-          slideIdx,
         });
       }, 250);
     };
 
-    if (activeSlide.slideIdx === -1 && slideIdx === 0) {
+    if (activeSlide.id === -1 && slide.id === 0) {
       selectCurrentSlide();
     }
-  }, [isActive, activeSlide.slideIdx, slideIdx]);
+  }, [isActive, activeSlide.id, slide.id]);
 
   return (
     <div
       className={css.outlineSlide}
       {...props}
-      data-module-idx={slide.moduleIdx}
-      data-lesson-idx={slide.lessonIdx}
-      data-slide-idx={slideIdx}
+      data-module-id={slide.moduleId}
+      data-lesson-id={slide.lessonId}
+      data-slide-id={slide.id}
     >
       <div className={classes}>
         <Button
@@ -223,13 +217,14 @@ export const OutlineSlideItem = ({
 };
 
 export const OutlineSlides = ({
-  moduleIdx,
-  lessonIdx,
+  moduleId,
+  lessonId,
   className,
   ...props
 }: OutlineSlidesProps) => {
-  const slides = Projects.useSlides(moduleIdx, lessonIdx);
+  const slides = Projects.useSlides(moduleId, lessonId);
   let classes = `nav flex-column outline-list-slide`;
+
   const handleAddSlide = () => {
     console.log('add slide');
   };
@@ -241,7 +236,7 @@ export const OutlineSlides = ({
   return (
     <div className={classes} {...props}>
       {slides.map((slide, idx) => {
-        return <OutlineSlideItem key={idx} slide={slide} slideIdx={idx} />;
+        return <OutlineSlideItem key={idx} slide={slide} />;
       })}
       <Button
         variant="link"

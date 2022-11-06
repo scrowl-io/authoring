@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { stateManager } from '../../services';
-import { updateObj } from '../../utils';
+import { updateObj, List } from '../../utils';
 
 export const initialState = {
   data: {
@@ -51,74 +51,110 @@ export const config: stateManager.StateConfig = {
     setScorm: (state, action) => {
       updateObj(state.data.scorm, action.payload);
     },
-    addModule: (state, action) => {
-      state.data.modules.push(action.payload);
-    },
-    setModule: (state, action) => {
-      const modules = state.data.modules;
-      const { moduleIdx, ...data } = action.payload;
-
-      if (moduleIdx === null || moduleIdx === undefined || !modules[moduleIdx]) {
-        return;
-      }
-
-      updateObj(modules[moduleIdx], data);
-    },
     removeModule: (state, action) => {
       state.data.modules.splice(action.payload.idx);
-    },
-    addLesson: (state, action) => {
-      state.data.lessons.push(action.payload);
-    },
-    setLesson: (state, action) => {
-      const lessons = state.data.lessons;
-      const { lessonIdx, ...data } = action.payload;
-
-      if (lessonIdx === null || lessonIdx === undefined || !lessons[lessonIdx]) {
-        return;
-      }
-
-      updateObj(lessons[lessonIdx], data);
     },
     removeLesson: (state, action) => {
       state.data.lessons.splice(action.payload.idx);
     },
-    addSlide: (state, action) => {
-      state.data.slides.push(action.payload);
-    },
-    setSlide: (state, action) => {
-      const slides = state.data.slides;
-      const { slideIdx, ...data } = action.payload;
-
-      if (slideIdx === null || slideIdx === undefined || !slides[slideIdx]) {
-        return;
-      }
-
-      updateObj(slides[slideIdx], data);
-    },
     removeSlide: (state, action) => {
       state.data.slides.splice(action.payload.idx);
+    },
+    addOutlineItem: (state, action) => {
+      let outlineList;
+      let lastIdx = -1;
+      let id = 0;
+      const { type, ...data } = action.payload;
+
+      switch (type) {
+        case 'module':
+          outlineList = state.data.modules;
+          break;
+        case 'lesson':
+          outlineList = state.data.lessons;
+          break;
+        case 'slide':
+          outlineList = state.data.slides;
+          break;
+      }
+
+      lastIdx = outlineList.length - 1;
+
+      if (lastIdx !== -1) {
+        id = outlineList[lastIdx].id + 1;
+      }
+
+      outlineList.push({
+        ...data,
+        id,
+      });
+    },
+    setOutlineItem: (state, action) => {
+      let outlineList;
+      let listLn = -1;
+      const { type, id, ...data } = action.payload;
+
+      switch (type) {
+        case 'module':
+          outlineList = state.data.modules;
+          break;
+        case 'lesson':
+          outlineList = state.data.lessons;
+          break;
+        case 'slide':
+          outlineList = state.data.slides;
+          break;
+      }
+
+      listLn = outlineList.length;
+
+      for (let i = 0; i < listLn; i++) {
+        if (id === outlineList[i].id) {
+          updateObj(outlineList[i], data);
+          break;
+        }
+      }
     },
     moveOutlineItem: (state, action) => {
       let outlineList;
       let outlineData;
       let movePosition = -1;
+      let fromPosition = -1;
       const { type, ...moveFrom } = action.payload.moveFrom;
       const moveTo = action.payload.moveTo;
 
       switch (type) {
         case 'slide':
           outlineList = state.data.slides;
-          movePosition = moveTo.slideIdx;
+          movePosition = List.indexBy(outlineList, 'id', moveTo.id);
+          fromPosition = List.indexBy(outlineList, 'id', moveFrom.id);
           outlineData = {
-            ...outlineList.splice(moveFrom.slideIdx, 1)[0],
-            moduleIdx: moveTo.moduleIdx,
-            lessonIdx: moveTo.lessonIdx,
+            ...outlineList.splice(fromPosition, 1)[0],
+            moduleId: moveTo.moduleId,
+            lessonId: moveTo.lessonId,
           };
           break;
       }
 
       outlineList.splice(movePosition, 0, outlineData);
+    },
+    removeOutlineItem: (state, action) => {
+      const { type, ...data } = action.payload;
+
+      switch (type) {
+        case 'module':
+          state.data.modules = List.filterBy(state.data.modules, 'id', data.id);
+          state.data.lessons = List.filterBy(state.data.lessons, 'moduleid', data.id);
+          state.data.slides = List.filterBy(state.data.slides, 'moduleId', data.id);
+          break;
+        case 'lesson':
+          state.data.lessons = List.filterBy(state.data.lessons, 'id', data.id);
+          state.data.slides = List.filterBy(state.data.slides, 'lessonId', data.id);
+          break;
+        case 'slide':
+          state.data.slides = List.filterBy(state.data.slides, 'id', data.id);
+          break;
+      }
     },
     addGlossaryItem: (state, action) => {
       const lastIdx = state.data.glossary.length;
@@ -175,16 +211,10 @@ export const {
   setData,
   setMeta,
   setScorm,
-  addModule,
-  setModule,
-  removeModule,
-  addLesson,
-  setLesson,
-  removeLesson,
-  addSlide,
-  setSlide,
-  removeSlide,
+  addOutlineItem,
+  setOutlineItem,
   moveOutlineItem,
+  removeOutlineItem,
   addGlossaryItem,
   setGlossaryItem,
   removeGlossaryItem,

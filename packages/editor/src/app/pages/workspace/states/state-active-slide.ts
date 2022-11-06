@@ -3,9 +3,9 @@ import { stateManager } from '../../../services'
 import { updateObj, setObjField } from '../../../utils';
 
 export const initialState = {
-  moduleIdx: -1,
-  lessonIdx: -1,
-  slideIdx: -1,
+  moduleId: -1,
+  lessonId: -1,
+  id: -1,
   name: '',
   template: {
     meta: {

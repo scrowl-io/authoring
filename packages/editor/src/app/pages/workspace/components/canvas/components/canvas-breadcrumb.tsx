@@ -7,9 +7,9 @@ import { Settings, Projects } from '../../../../../models';
 
 export const CanvasBreadcrumb = () => {
   const slide = useActiveSlide();
-  const hasSlide = slide.slideIdx !== -1;
-  const module = Projects.useModules(slide.moduleIdx);
-  const lesson = Projects.useLessons(slide.moduleIdx, slide.lessonIdx);
+  const hasSlide = slide.id !== -1;
+  const module = Projects.useModules(slide.moduleId);
+  const lesson = Projects.useLessons(slide.moduleId, slide.lessonId);
   const animationSettings = Settings.useAnimation();
   const reducedAnimations = animationSettings.reducedAnimations;
   const animationDelay = animationSettings.animationDelay;

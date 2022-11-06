@@ -11,13 +11,12 @@ import { InputInlineText } from './input-inline-text';
 
 export const OutlineModuleItem = ({
   module,
-  moduleIdx,
   className,
   ...props
 }: OutlineModuleItemProps) => {
   let classes = `${css.outlineHeader} `;
   const [isOpen, setOpen] = useState(true);
-  const menuId = `module-menu-${moduleIdx}`;
+  const menuId = `module-menu-${module.id}`;
   const [isEdit, setIsEdit] = useState(false);
   const moduleMenuItems: Array<menu.ContextMenuItem> = [
     {
@@ -79,7 +78,6 @@ export const OutlineModuleItem = ({
     const updateData = {
       ...module,
       name: val,
-      moduleIdx,
     };
 
     Projects.setModule(updateData);
@@ -94,7 +92,7 @@ export const OutlineModuleItem = ({
       'text/plain',
       JSON.stringify({
         type: 'module',
-        moduleIdx,
+        id: module.id,
       })
     );
     ev.dataTransfer.effectAllowed = 'link';
@@ -118,7 +116,7 @@ export const OutlineModuleItem = ({
   const inputContainerProps = {
     draggable: true,
     onDragStart: handleDragStart,
-    'data-module-idx': moduleIdx,
+    'data-module-id': module.id,
   };
 
   return (
@@ -172,7 +170,7 @@ export const OutlineModuleItem = ({
         <div>
           <OutlineLessons
             id={menuId}
-            moduleIdx={moduleIdx}
+            moduleId={module.id}
             onDrop={handleDragDrop}
           />
         </div>
@@ -190,7 +188,7 @@ export const OutlineModules = ({ ...props }: OutlineModulesProps) => {
   return (
     <div {...props}>
       {modules.map((module, idx) => {
-        return <OutlineModuleItem key={idx} module={module} moduleIdx={idx} />;
+        return <OutlineModuleItem key={idx} module={module} />;
       })}
       <Button
         variant="link"
