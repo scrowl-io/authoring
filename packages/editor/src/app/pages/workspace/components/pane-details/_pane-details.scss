@@ -592,3 +592,34 @@
     }
   }
 }
+
+.draggable {
+  &__outline__item {
+    position: absolute;
+    top: -100vh;
+    left: -100vw;
+    padding: 6px 8px 4px 21px;
+    margin: 0;
+    line-height: 1.6;
+    color: inherit;
+    font-size: 0.75rem;
+    text-decoration: none;
+    text-align: left;
+    max-width: var(--pane-left-width);
+    background: var(--owl-sidebar-hover-bg);
+  }
+
+  &__indicator {
+    &--slide {
+      box-shadow: 10px -2px 0 0px #d8752c;
+    }
+
+    &--lesson {
+      box-shadow: 10px -2px 0 0px #893bf4;
+    }
+
+    &--module {
+      box-shadow: 10px -2px 0 0px #6e757c;
+    }
+  }
+}

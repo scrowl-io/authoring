@@ -5,6 +5,7 @@ export interface InputInlineTextCommon {
   text: string;
   isEdit: boolean;
   onChange: (value: string) => void;
+  containerProps?: React.AllHTMLAttributes<HTMLDivElement>;
 }
 
 export type InputInlineTextProps = InputInlineTextCommon &
@@ -16,6 +17,7 @@ export const InputInlineText = ({
   onChange,
   onBlur,
   onKeyDown,
+  containerProps,
   ...props
 }: InputInlineTextProps) => {
   const isDirty = useRef(false);
@@ -100,7 +102,7 @@ export const InputInlineText = ({
   }, [isEdit, inputRef]);
 
   return (
-    <div className={classes}>
+    <div className={classes} {...containerProps}>
       <div className={css.inlineInputDisplay}>{text}</div>
       <textarea
         ref={inputRef}

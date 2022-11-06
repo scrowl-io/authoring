@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button, Icon } from '@owlui/lib';
 import { OutlineSlidesProps, OutlineSlideItemProps } from './outline.types';
 import * as css from '../../_pane-details.scss';
@@ -20,6 +20,7 @@ export const OutlineSlideItem = ({
     slide.lessonIdx === activeSlide.lessonIdx &&
     slideIdx === activeSlide.slideIdx;
   let classes = `${css.outlineHeader}`;
+  const draggable = useRef<HTMLDivElement | undefined>();
   const [isEdit, setIsEdit] = useState(false);
   const slideMenuItems: Array<menu.ContextMenuItem> = [
     {
@@ -93,6 +94,74 @@ export const OutlineSlideItem = ({
     setIsEdit(false);
   };
 
+  const handleDragStart = (ev: React.DragEvent<HTMLDivElement>) => {
+    ev.dataTransfer.setData(
+      'text/plain',
+      JSON.stringify({
+        type: 'slide',
+        moduleIdx: slide.moduleIdx,
+        lessonIdx: slide.lessonIdx,
+        slideIdx,
+      })
+    );
+    ev.dataTransfer.effectAllowed = 'link';
+    const target = ev.target as HTMLDivElement;
+    const ghostElm = target.cloneNode(true) as HTMLDivElement;
+    const appNode = document.getElementById('app');
+
+    if (!appNode) {
+      return;
+    }
+
+    ghostElm.classList.add(css.draggableOutlineItem);
+    appNode.appendChild(ghostElm);
+    ghostElm.style.width = window.getComputedStyle(target).width;
+    draggable.current = ghostElm;
+    ev.dataTransfer.setDragImage(ghostElm, 0, 0);
+  };
+
+  const handleDragEnd = (ev: React.DragEvent<HTMLDivElement>) => {
+    if (!draggable.current) {
+      return;
+    }
+
+    draggable.current.remove();
+    draggable.current = undefined;
+  };
+
+  const getListContainer = (target: HTMLElement | null, classTest: string) => {
+    if (!target) {
+      return;
+    }
+
+    if (!target.classList.contains(classTest)) {
+      return getListContainer(target.parentElement, classTest);
+    }
+
+    return target;
+  };
+
+  const handleValidDragTarget = (ev: React.DragEvent<HTMLDivElement>) => {
+    const target = ev.target as HTMLDivElement;
+    const container = getListContainer(target, 'outline-list-slide');
+
+    if (container) {
+      ev.preventDefault();
+      container.classList.add(css.draggableIndicatorSlide);
+    }
+  };
+
+  const inputContainerProps = {
+    draggable: true,
+    onDragStart: handleDragStart,
+    onDragOver: handleValidDragTarget,
+    onDragEnter: handleValidDragTarget,
+    onDragEnd: handleDragEnd,
+    'data-module-idx': slide.moduleIdx,
+    'data-lesson-idx': slide.lessonIdx,
+    'data-slide-idx': slideIdx,
+  };
+
   useEffect(() => {
     const selectCurrentSlide = () => {
       setTimeout(() => {
@@ -131,6 +200,7 @@ export const OutlineSlideItem = ({
             text={slide.name}
             onChange={handleNameChange}
             onBlur={handleNameClose}
+            containerProps={inputContainerProps}
           />
         </Button>
         <Button
@@ -153,7 +223,7 @@ export const OutlineSlides = ({
   ...props
 }: OutlineSlidesProps) => {
   const slides = Projects.useSlides(moduleIdx, lessonIdx);
-  let classes = `nav flex-column `;
+  let classes = `nav flex-column outline-list-slide`;
   const handleAddSlide = () => {
     console.log('add slide');
   };

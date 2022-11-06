@@ -89,6 +89,38 @@ export const OutlineModuleItem = ({
     setIsEdit(false);
   };
 
+  const handleDragStart = (ev: React.DragEvent<HTMLDivElement>) => {
+    ev.dataTransfer.setData(
+      'text/plain',
+      JSON.stringify({
+        type: 'module',
+        moduleIdx,
+      })
+    );
+    ev.dataTransfer.effectAllowed = 'link';
+  };
+
+  const handleDragDrop = (ev: React.DragEvent<HTMLDivElement>) => {
+    const data = JSON.parse(ev.dataTransfer.getData('text/plain'));
+
+    if (data.type !== 'lesson') {
+      return;
+    }
+
+    ev.preventDefault();
+    ev.stopPropagation();
+
+    console.log('data', data);
+    // console.log('ev.currentTarget', ev.currentTarget); -> drop container
+    // console.log('ev.target', ev.target); -> drop target
+  };
+
+  const inputContainerProps = {
+    draggable: true,
+    onDragStart: handleDragStart,
+    'data-module-idx': moduleIdx,
+  };
+
   return (
     <div className={css.outlineModule} {...props}>
       <div className={classes}>
@@ -123,6 +155,7 @@ export const OutlineModuleItem = ({
               text={module.name}
               onChange={handleNameChange}
               onBlur={handleNameClose}
+              containerProps={inputContainerProps}
             />
           </div>
         </Button>
@@ -137,7 +170,11 @@ export const OutlineModuleItem = ({
       </div>
       <Collapse in={isOpen}>
         <div>
-          <OutlineLessons id={menuId} moduleIdx={moduleIdx} />
+          <OutlineLessons
+            id={menuId}
+            moduleIdx={moduleIdx}
+            onDrop={handleDragDrop}
+          />
         </div>
       </Collapse>
     </div>
