@@ -7,6 +7,7 @@ import { OutlineSlides } from './outline-slides';
 import { Projects } from '../../../../../../models';
 import { Elem } from '../../../../../../utils';
 import { menu } from '../../../../../../services';
+import { InputInlineText } from './input-inline-text';
 
 export const OutlineLessonItem = ({
   lesson,
@@ -17,6 +18,7 @@ export const OutlineLessonItem = ({
   let classes = `${css.outlineHeader} `;
   const [isOpen, setOpen] = useState(true);
   const menuId = `module-${lesson.moduleIdx}-lesson-menu-${lessonIdx}`;
+  const [isEdit, setIsEdit] = useState(false);
   const lessonMenuItems: Array<menu.ContextMenuItem> = [
     {
       label: 'Add Slide',
@@ -40,7 +42,7 @@ export const OutlineLessonItem = ({
     {
       label: 'Rename',
       click: () => {
-        console.log('rename lesson');
+        setIsEdit(true);
       },
     },
     { type: 'separator' },
@@ -73,6 +75,20 @@ export const OutlineLessonItem = ({
     });
   };
 
+  const handleNameChange = (val) => {
+    const updateData = {
+      ...lesson,
+      name: val,
+      lessonIdx,
+    };
+
+    Projects.setLesson(updateData);
+  };
+
+  const handleNameClose = () => {
+    setIsEdit(false);
+  };
+
   return (
     <div className={css.outlineLesson} {...props}>
       <div className={classes}>
@@ -102,7 +118,12 @@ export const OutlineLessonItem = ({
                 opsz={20}
               />
             </span>
-            <span className={css.outlineItemLabel}>{lesson.name}</span>
+            <InputInlineText
+              isEdit={isEdit}
+              text={lesson.name}
+              onChange={handleNameChange}
+              onBlur={handleNameClose}
+            />
           </div>
         </Button>
         <Button
