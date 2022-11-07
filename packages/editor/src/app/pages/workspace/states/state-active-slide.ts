@@ -1,6 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { stateManager } from '../../../services'
 import { updateObj, setObjField } from '../../../utils';
+import { Projects } from '../../../models';
+import { hasProp } from '../../../utils';
 
 export const initialState = {
   moduleId: -1,
@@ -44,6 +46,21 @@ export const config: stateManager.StateConfig = {
 
       pointer += '.value';
       setObjField(state.template.content, pointer, value);
+    },
+  },
+  extraReducers: {
+    [Projects.state.moveOutlineItem.type]: (state, action) => {
+      const { updateActiveSlide } = action.payload;
+
+      if (updateActiveSlide) {
+        if (hasProp(updateActiveSlide, 'moduleId')) {
+          state.moduleId = updateActiveSlide.moduleId;
+        }
+
+        if (hasProp(updateActiveSlide, 'lessonId')) {
+          state.lessonId = updateActiveSlide.lessonId;
+        }
+      }
     },
   },
 };

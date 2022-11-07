@@ -1,12 +1,14 @@
 import React, { useRef } from 'react';
 import * as css from '../../_pane-details.scss';
 import { Projects } from '../../../../../../models';
+import { useActiveSlide } from '../../../../page-workspace-hooks';
 import { OutlineModules } from './';
 import { getContainer } from './utils';
 
 export const Outline = () => {
   const draggable = useRef<HTMLDivElement>();
   const defaultId = '-1';
+  const activeSlide = useActiveSlide();
 
   const handleDragStart = (ev: React.DragEvent<HTMLDivElement>) => {
     const appNode = document.getElementById('app');
@@ -209,16 +211,31 @@ export const Outline = () => {
       lessonId?: number;
       moduleId?: number;
     } = {};
+    let updateActiveSlide: boolean | { [key: string]: number } = false;
 
     switch (moveFrom.type) {
       case 'slide':
         moveTo.id = parseInt(moveTarget.dataset.slideId || defaultId);
         moveTo.lessonId = parseInt(moveTarget.dataset.lessonId || defaultId);
         moveTo.moduleId = parseInt(moveTarget.dataset.moduleId || defaultId);
+        updateActiveSlide =
+          activeSlide.moduleId === moveFrom.moduleId &&
+          activeSlide.lessonId === moveFrom.lessonId &&
+          activeSlide.id === moveFrom.id &&
+          (activeSlide.moduleId !== moveTo.moduleId ||
+            activeSlide.lessonId !== moveTo.lessonId)
+            ? { moduleId: moveTo.moduleId, lessonId: moveTo.lessonId }
+            : false;
         break;
       case 'lesson':
         moveTo.id = parseInt(moveTarget.dataset.lessonId || defaultId);
         moveTo.moduleId = parseInt(moveTarget.dataset.moduleId || defaultId);
+        updateActiveSlide =
+          activeSlide.moduleId === moveFrom.moduleId &&
+          activeSlide.lessonId === moveFrom.id &&
+          activeSlide.moduleId !== moveTo.moduleId
+            ? { moduleId: moveTo.moduleId }
+            : false;
         break;
       case 'module':
         moveTo.id = parseInt(moveTarget.dataset.moduleId || defaultId);
@@ -234,6 +251,7 @@ export const Outline = () => {
     Projects.moveOutlineItem({
       moveFrom,
       moveTo,
+      updateActiveSlide,
     });
   };
 
