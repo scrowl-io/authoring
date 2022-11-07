@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Button, Icon } from '@owlui/lib';
 import { Collapse } from 'react-bootstrap';
 import { OutlineModulesProps, OutlineModuleItemProps } from './outline.types';
@@ -9,6 +9,7 @@ import { Projects } from '../../../../../../models';
 import { Elem } from '../../../../../../utils';
 import { menu } from '../../../../../../services';
 import { InputInlineText } from './input-inline-text';
+import { getContainer } from './utils';
 
 export const OutlineModuleItem = ({
   module,
@@ -16,10 +17,11 @@ export const OutlineModuleItem = ({
   className,
   ...props
 }: OutlineModuleItemProps) => {
-  let classes = `${css.outlineHeader} `;
+  let classes = `${css.outlineHeader}`;
   const [isOpen, setOpen] = useState(true);
   const menuId = `module-menu-${module.id}`;
   const [isEdit, setIsEdit] = useState(false);
+  const draggable = useRef<HTMLDivElement | undefined>();
   const moduleMenuItems: Array<menu.ContextMenuItem> = [
     {
       label: 'Add Lesson',
@@ -106,29 +108,80 @@ export const OutlineModuleItem = ({
     ev.dataTransfer.effectAllowed = 'link';
   };
 
-  const handleDragDrop = (ev: React.DragEvent<HTMLDivElement>) => {
-    const data = JSON.parse(ev.dataTransfer.getData('text/plain'));
-
-    if (data.type !== 'lesson') {
-      return;
-    }
-
-    ev.preventDefault();
-    ev.stopPropagation();
-
-    console.log('data', data);
-    // console.log('ev.currentTarget', ev.currentTarget); -> drop container
-    // console.log('ev.target', ev.target); -> drop target
-  };
-
   const inputContainerProps = {
     draggable: true,
     onDragStart: handleDragStart,
     'data-module-id': module.id,
   };
 
+  const handleDragDrop = (ev: React.DragEvent<HTMLDivElement>) => {
+    const moveFrom = JSON.parse(ev.dataTransfer.getData('text/plain'));
+    console.log('droppping', moveFrom);
+    if (moveFrom.type !== 'lesson') {
+      return;
+    }
+
+    ev.preventDefault();
+
+    const target = ev.target as HTMLDivElement;
+    const container = getContainer(target, css.outlineLesson) as HTMLDivElement;
+
+    if (!container) {
+      return;
+    }
+
+    container.classList.remove(css.draggableIndicatorLesson);
+
+    const moveTo = {
+      moduleId: parseInt(container.dataset.moduleId || ''),
+      id: parseInt(container.dataset.lessonId || ''),
+    };
+
+    Projects.moveOutlineItem({
+      moveFrom,
+      moveTo,
+    });
+  };
+
+  const handleDragEnter = (ev: React.DragEvent) => {
+    const target = ev.target as HTMLDivElement;
+    const container = getContainer(target, css.outlineLesson);
+
+    if (container) {
+      ev.preventDefault();
+      container.classList.add(css.draggableIndicatorLesson);
+      draggable.current = container;
+    }
+  };
+
+  const handleDragLeave = (ev: React.DragEvent) => {
+    const target = ev.target as HTMLDivElement;
+    const containerLesson = getContainer(target, css.outlineLesson);
+
+    if (!containerLesson) {
+      const indicator = document.getElementsByClassName(
+        css.draggableIndicatorLesson
+      )[0];
+
+      if (!indicator) {
+        return;
+      }
+      indicator.classList.remove(css.draggableIndicatorLesson);
+      return;
+    }
+
+    if (
+      containerLesson &&
+      !containerLesson.isSameNode(draggable.current) &&
+      containerLesson.contains(target)
+    ) {
+      containerLesson.classList.remove(css.draggableIndicatorLesson);
+      return;
+    }
+  };
+
   return (
-    <div className={css.outlineModule} {...props}>
+    <div className={css.outlineModule} {...props} onDragLeave={handleDragLeave}>
       <div className={classes}>
         <Button
           aria-expanded={isOpen}
@@ -181,6 +234,7 @@ export const OutlineModuleItem = ({
             moduleId={module.id}
             moduleIdx={idx}
             onDrop={handleDragDrop}
+            onDragEnter={handleDragEnter}
           />
         </div>
       </Collapse>
@@ -188,16 +242,25 @@ export const OutlineModuleItem = ({
   );
 };
 
-export const OutlineModules = ({ ...props }: OutlineModulesProps) => {
+export const OutlineModules = ({
+  className,
+  ...props
+}: OutlineModulesProps) => {
   const modules = Projects.useModules();
+  let classes = `outline-list-module`;
+
   const handleAddModule = () => {
     Projects.addModule({
       id: -1,
     });
   };
 
+  if (className) {
+    classes += ` ${className}`;
+  }
+
   return (
-    <div {...props}>
+    <div className={classes} {...props}>
       {modules.map((module, idx) => {
         return <OutlineModuleItem key={idx} module={module} idx={idx} />;
       })}

@@ -12,6 +12,7 @@ import {
 import { Elem } from '../../../../../../utils';
 import { menu } from '../../../../../../services';
 import { InputInlineText } from './input-inline-text';
+import { getContainer } from './utils';
 
 export const OutlineSlideItem = ({
   slide,
@@ -115,6 +116,7 @@ export const OutlineSlideItem = ({
       })
     );
     ev.dataTransfer.effectAllowed = 'link';
+
     const target = ev.target as HTMLDivElement;
     const ghostElm = target.cloneNode(true) as HTMLDivElement;
     const appNode = document.getElementById('app');
@@ -139,21 +141,13 @@ export const OutlineSlideItem = ({
     draggable.current = undefined;
   };
 
-  const getListContainer = (target: HTMLElement | null, classTest: string) => {
-    if (!target) {
+  const handleValidDragTarget = (ev: React.DragEvent<HTMLDivElement>) => {
+    if (!draggable.current) {
       return;
     }
 
-    if (!target.classList.contains(classTest)) {
-      return getListContainer(target.parentElement, classTest);
-    }
-
-    return target;
-  };
-
-  const handleValidDragTarget = (ev: React.DragEvent<HTMLDivElement>) => {
     const target = ev.target as HTMLDivElement;
-    const container = getListContainer(target, 'outline-list-slide');
+    const container = getContainer(target, 'outline-list-slide');
 
     if (container) {
       ev.preventDefault();
@@ -251,7 +245,7 @@ export const OutlineSlides = ({
   };
 
   if (className) {
-    classes += `${className} `;
+    classes += ` ${className}`;
   }
 
   return (

@@ -9,6 +9,7 @@ import { Projects } from '../../../../../../models';
 import { Elem } from '../../../../../../utils';
 import { menu } from '../../../../../../services';
 import { InputInlineText } from './input-inline-text';
+import { getContainer } from './utils';
 
 export const OutlineLessonItem = ({
   lesson,
@@ -17,7 +18,7 @@ export const OutlineLessonItem = ({
   className,
   ...props
 }: OutlineLessonItemProps) => {
-  let classes = `${css.outlineHeader} `;
+  let classes = `${css.outlineHeader}`;
   const [isOpen, setOpen] = useState(true);
   const menuId = `module-${lesson.moduleId}-lesson-menu-${lesson.id}`;
   const [isEdit, setIsEdit] = useState(false);
@@ -99,18 +100,6 @@ export const OutlineLessonItem = ({
     setIsEdit(false);
   };
 
-  const getContainer = (target: HTMLElement | null, classTest: string) => {
-    if (!target) {
-      return;
-    }
-
-    if (!target.classList.contains(classTest)) {
-      return getContainer(target.parentElement, classTest);
-    }
-
-    return target;
-  };
-
   const handleDragStart = (ev: React.DragEvent<HTMLDivElement>) => {
     ev.dataTransfer.setData(
       'text/plain',
@@ -121,11 +110,51 @@ export const OutlineLessonItem = ({
       })
     );
     ev.dataTransfer.effectAllowed = 'link';
+
+    const target = ev.target as HTMLDivElement;
+    const ghostElm = target.cloneNode(true) as HTMLDivElement;
+    const appNode = document.getElementById('app');
+
+    if (!appNode) {
+      return;
+    }
+
+    ghostElm.classList.add(css.draggableOutlineItem);
+    appNode.appendChild(ghostElm);
+    ghostElm.style.width = window.getComputedStyle(target).width;
+    draggable.current = ghostElm;
+    ev.dataTransfer.setDragImage(ghostElm, 0, 0);
+  };
+
+  const handleDragEnd = (ev: React.DragEvent<HTMLDivElement>) => {
+    if (!draggable.current) {
+      return;
+    }
+
+    draggable.current.remove();
+    draggable.current = undefined;
+  };
+
+  const handleValidDragTarget = (ev: React.DragEvent<HTMLDivElement>) => {
+    if (!draggable.current) {
+      return;
+    }
+
+    const target = ev.target as HTMLDivElement;
+    const container = getContainer(target, 'outline-list-lesson');
+
+    if (container) {
+      ev.preventDefault();
+      container.classList.add(css.draggableIndicatorLesson);
+    }
   };
 
   const inputContainerProps = {
     draggable: true,
     onDragStart: handleDragStart,
+    onDragOver: handleValidDragTarget,
+    onDragEnter: handleValidDragTarget,
+    onDragEnd: handleDragEnd,
     'data-module-id': lesson.moduleId,
     'data-lesson-id': lesson.id,
   };
@@ -159,6 +188,10 @@ export const OutlineLessonItem = ({
   };
 
   const handleDragEnter = (ev: React.DragEvent) => {
+    if (draggable.current) {
+      return;
+    }
+
     const target = ev.target as HTMLDivElement;
     const container = getContainer(target, css.outlineSlide);
 
@@ -197,7 +230,13 @@ export const OutlineLessonItem = ({
   };
 
   return (
-    <div className={css.outlineLesson} {...props} onDragLeave={handleDragLeave}>
+    <div
+      className={css.outlineLesson}
+      {...props}
+      data-module-id={lesson.moduleId}
+      data-lesson-id={lesson.id}
+      onDragLeave={handleDragLeave}
+    >
       <div className={classes}>
         <Button
           aria-expanded={isOpen}
@@ -253,6 +292,7 @@ export const OutlineLessonItem = ({
             lessonIdx={idx}
             onDrop={handleDragDrop}
             onDragEnter={handleDragEnter}
+            onDragOver={handleValidDragTarget}
           />
         </div>
       </Collapse>
@@ -267,7 +307,7 @@ export const OutlineLessons = ({
   ...props
 }: OutlineLessonsProps) => {
   const lessons = Projects.useLessons(moduleId);
-  let classes = `nav flex-column `;
+  let classes = `nav flex-column outline-list-lesson`;
   const handleAddLesson = () => {
     Projects.addLesson({
       id: -1,

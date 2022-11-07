@@ -210,6 +210,23 @@ export const config: stateManager.StateConfig = {
             lessonId: moveTo.lessonId,
           };
           break;
+        case 'lesson':
+          outlineList = state.data.lessons;
+          movePosition = List.indexBy(outlineList, 'id', moveTo.id);
+          fromPosition = List.indexBy(outlineList, 'id', moveFrom.id);
+          outlineData = {
+            ...outlineList.splice(fromPosition, 1)[0],
+            moduleId: moveTo.moduleId,
+          };
+
+          if (moveTo.moduleId !== moveFrom.moduleId) {
+            state.data.slides.forEach((slide) => {
+              if (slide.lessonId === moveFrom.id) {
+                slide.moduleId = moveTo.moduleId;
+              }
+            });
+          }
+          break;
       }
 
       outlineList.splice(movePosition, 0, outlineData);
