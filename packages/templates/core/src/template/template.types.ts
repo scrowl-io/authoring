@@ -11,6 +11,8 @@ export type TemplateSchemaMeta = {
   version: string;
   component: string;
   filename: string;
+  tags?: Array<string>;
+  icon?: string;
 };
 
 export type TemplateSchema = {

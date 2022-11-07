@@ -7,9 +7,9 @@ import { Settings, Projects } from '../../../../../models';
 
 export const CanvasBreadcrumb = () => {
   const slide = useActiveSlide();
-  const hasSlide = slide.slideIdx !== -1;
-  const module = Projects.useModules(slide.moduleIdx);
-  const lesson = Projects.useLessons(slide.moduleIdx, slide.lessonIdx);
+  const hasSlide = slide.id !== -1;
+  const module = Projects.useModules(slide.moduleId);
+  const lesson = Projects.useLessons(slide.moduleId, slide.lessonId);
   const animationSettings = Settings.useAnimation();
   const reducedAnimations = animationSettings.reducedAnimations;
   const animationDelay = animationSettings.animationDelay;
@@ -47,7 +47,7 @@ export const CanvasBreadcrumb = () => {
                   opsz={20}
                   appearance="Module"
                 />
-                {module.name}
+                {module && module.name}
               </button>
             </li>
             <li className="breadcrumb-item">
@@ -60,7 +60,7 @@ export const CanvasBreadcrumb = () => {
                   opsz={20}
                   appearance="Lesson"
                 />
-                {lesson.name}
+                {lesson && lesson.name}
               </button>
             </li>
             <li className="breadcrumb-item active dropup" aria-current="page">
@@ -76,7 +76,7 @@ export const CanvasBreadcrumb = () => {
                   grad={200}
                   appearance="Slide"
                 />
-                {slide.name}
+                {slide && slide.name}
               </button>
             </li>
           </>

@@ -32,10 +32,17 @@ export interface TemplatesApiLoad
   name: '/templates/load';
 }
 
+export interface TemplatesApiGet
+  extends Omit<rq.RegisterEndpoint, 'name'> {
+  name: '/templates/get';
+}
+
 export type TemplatesApi = Partial<{
   load: TemplatesApiLoad;
+  get: TemplatesApiGet;
 }>;
 
 export type TemplatesEndpoints = {
   load: TemplatesApiLoad['name'];
+  get: TemplatesApiGet['name'];
 };

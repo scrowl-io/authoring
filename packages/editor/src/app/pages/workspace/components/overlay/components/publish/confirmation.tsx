@@ -1,14 +1,18 @@
-import React from 'react';
+import React, { useEffect, useRef, forwardRef } from 'react';
 import { animations } from '../../../../../../components';
-import { ModalOverlay } from '../modal';
-import { Error } from '../../../../../../components';
+import { Modal } from '../modal';
 
-export const ConfirmationOverlay = ({ isOpen, onClose, ...props }) => {
+const ConfirmationElement = ({ isOpen, onClose, ...props }, ref) => {
   const title = 'Course Published';
 
   return (
-    <Error>
-      <ModalOverlay title={title} isOpen={isOpen} onClose={onClose}>
+    <div ref={ref}>
+      <Modal
+        className="modal-publish-confirmation"
+        title={title}
+        isOpen={isOpen}
+        onClose={onClose}
+      >
         <div className="overlay-publish-confirmation">
           <h4 className="mt-4">🌟 Congratulations 🌟</h4>
           <h5 className="mt-4">You Published Your First Course</h5>
@@ -27,11 +31,27 @@ export const ConfirmationOverlay = ({ isOpen, onClose, ...props }) => {
             Close
           </button>
         </footer>
-      </ModalOverlay>
-    </Error>
+      </Modal>
+    </div>
   );
 };
 
+const ConfirmationRef = forwardRef(ConfirmationElement);
+
+export const Confirmation = ({ isOpen, ...props }) => {
+  const overlayRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const appNode = document.getElementById('app');
+
+    if (appNode && overlayRef.current) {
+      appNode.appendChild(overlayRef.current);
+    }
+  }, [overlayRef, isOpen]);
+
+  return <ConfirmationRef ref={overlayRef} isOpen={isOpen} {...props} />;
+};
+
 export default {
-  ConfirmationOverlay,
+  Confirmation,
 };

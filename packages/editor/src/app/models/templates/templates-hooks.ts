@@ -7,6 +7,13 @@ export const load = (template) => {
   });
 };
 
+export const get = () => {
+  return new Promise<rq.ApiResult>((resolve) => {
+    API.get().then(resolve);
+  });
+};
+
 export default {
   load,
+  get,
 };
