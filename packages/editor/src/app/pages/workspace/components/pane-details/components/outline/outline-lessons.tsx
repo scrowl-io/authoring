@@ -42,7 +42,10 @@ export const OutlineLessonItem = ({
     {
       label: 'Add New Lesson After',
       click: () => {
-        console.log('add lesson after');
+        Projects.addLesson({
+          id: lesson.id,
+          moduleId: lesson.moduleId,
+        });
       },
     },
     { type: 'separator' },
@@ -266,7 +269,10 @@ export const OutlineLessons = ({
   const lessons = Projects.useLessons(moduleId);
   let classes = `nav flex-column `;
   const handleAddLesson = () => {
-    console.log('add lesson');
+    Projects.addLesson({
+      id: -1,
+      moduleId,
+    });
   };
 
   if (className) {

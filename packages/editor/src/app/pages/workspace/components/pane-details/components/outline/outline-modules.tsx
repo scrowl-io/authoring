@@ -24,7 +24,10 @@ export const OutlineModuleItem = ({
     {
       label: 'Add Lesson',
       click: () => {
-        console.log('add lesson');
+        Projects.addLesson({
+          id: -1,
+          moduleId: module.id,
+        });
       },
     },
     {
