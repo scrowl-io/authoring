@@ -10,7 +10,9 @@
     "build:runtime": "yarn workspace @scrowl/runtime run build",
     "update": "yarn build:runtime && yarn build:player && yarn workspace @scrowl/editor run copy:assets",
     "start": "yarn workspace @scrowl/editor run start",
-    "build": ""
+    "prebuild": "yarn run update",
+    "build": "yarn workspace @scrowl/editor run build",
+    "test": "yarn workspace @scrowl/editor run build:test"
   },
   "workspaces": [
     "config",

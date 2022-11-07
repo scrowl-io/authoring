@@ -7,14 +7,19 @@ import {
 import installExtension, {
   REACT_DEVELOPER_TOOLS,
 } from 'electron-devtools-installer';
-import { getAppPath, getSourcePath } from './locate';
+import { getAppPath, getSourcePath, getAssetPath } from './locate';
 import { Models } from '../models';
 import { Services } from '../services';
+import { log } from '../services';
 
 export const init = () => {
+  log.info('application starting');
   const appPath = getAppPath('app.html');
-  const preloadPath = getSourcePath('dist', 'preload.js');
-  const iconPath = getSourcePath('assets', 'icon.png');
+  log.info(`RESOURCE_PATH: ${appPath}`);
+  const preloadPath = getSourcePath('preload.js');
+  log.info(`RESOURCE_PATH: ${preloadPath}`);
+  const iconPath = getAssetPath('icon.png');
+  log.info(`RESOURCE_PATH: ${iconPath}`);
   const isDARWIN = process.platform === 'darwin';
   const isDevEnv = process.env.NODE_ENV === 'development';
   let mainWindow: BrowserWindow | null = null;
@@ -48,21 +53,26 @@ export const init = () => {
       }
 
       mainWindow = new BrowserWindow(config);
-
+      
       if (!mainWindow) {
+        log.error(`Failed to launch application window`);
         throw 'Unable to create App window';
       }
 
       mainWindow.loadURL(appPath);
+      log.info(`application attached to window`);
 
       mainWindow.on('ready-to-show', () => {
         if (!mainWindow) {
+          log.error(`Failed to show application window`);
           throw new Error('"mainWindow" is not defined');
         }
 
         if (process.env.START_MINIMIZED) {
+          log.info(`starting minimized`);
           mainWindow.minimize();
         } else {
+          log.info(`starting`);
           mainWindow.show();
         }
 
@@ -130,9 +140,13 @@ export const init = () => {
   app
     .whenReady()
     .then(() => {
+      log.info('application ready');
       Models.init();
+      log.info('models initialized');
       Services.init();
+      log.info('services initialized');
       create();
+      log.info('application initialized');
 
       app.on('activate', () => {
         // On macOS it's common to re-create a window in the app when the
@@ -140,7 +154,7 @@ export const init = () => {
         if (mainWindow === null) create();
       });
     })
-    .catch(console.log);
+    .catch(log.error);
 };
 
 export default {

@@ -2,6 +2,8 @@ import { URL } from 'url';
 import { app } from 'electron';
 import { fs } from '../services';
 
+const __rootDir = fs.joinPath(__dirname, '../../../', 'dist');
+
 export const getAppPath = (filename: string) => {
   const isDevEnv = process.env.NODE_ENV === 'development';
 
@@ -12,14 +14,18 @@ export const getAppPath = (filename: string) => {
     url.pathname = filename;
     return url.href;
   } else {
-    return fs.joinPath(fs.getAssetPath('dist'), filename);
+    return `file://${getSourcePath(filename)}`;
   }
 };
 
-export const getSourcePath = (...paths: string[]) => {
-  const RESOURCES_PATH = app.isPackaged ? process.resourcesPath : process.cwd();
+export const getAssetPath = (...paths) => {
+  return app.isPackaged
+  ? fs.joinPath(process.resourcesPath, 'assets', ...paths)
+  : fs.joinPath(__dirname, '../../../assets', ...paths);
+};
 
-  return fs.joinPath(RESOURCES_PATH, ...paths);
+export const getSourcePath = (...paths) => {
+  return fs.joinPath(__rootDir, ...paths);
 };
 
 export default {
