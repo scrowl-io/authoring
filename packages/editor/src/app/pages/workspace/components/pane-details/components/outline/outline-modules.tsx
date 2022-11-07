@@ -106,17 +106,57 @@ export const OutlineModuleItem = ({
       })
     );
     ev.dataTransfer.effectAllowed = 'link';
+
+    const target = ev.target as HTMLDivElement;
+    const ghostElm = target.cloneNode(true) as HTMLDivElement;
+    const appNode = document.getElementById('app');
+
+    if (!appNode) {
+      return;
+    }
+
+    ghostElm.classList.add(css.draggableOutlineItem);
+    appNode.appendChild(ghostElm);
+    ghostElm.style.width = window.getComputedStyle(target).width;
+    draggable.current = ghostElm;
+    ev.dataTransfer.setDragImage(ghostElm, 0, 0);
+  };
+
+  const handleDragEnd = (ev: React.DragEvent<HTMLDivElement>) => {
+    if (!draggable.current) {
+      return;
+    }
+
+    draggable.current.remove();
+    draggable.current = undefined;
+  };
+
+  const handleValidDragTarget = (ev: React.DragEvent<HTMLDivElement>) => {
+    if (!draggable.current) {
+      return;
+    }
+
+    const target = ev.target as HTMLDivElement;
+    const container = getContainer(target, 'outline-list-module');
+
+    if (container) {
+      ev.preventDefault();
+      container.classList.add(css.draggableIndicatorModule);
+    }
   };
 
   const inputContainerProps = {
     draggable: true,
     onDragStart: handleDragStart,
+    onDragOver: handleValidDragTarget,
+    onDragEnter: handleValidDragTarget,
+    onDragEnd: handleDragEnd,
     'data-module-id': module.id,
   };
 
   const handleDragDrop = (ev: React.DragEvent<HTMLDivElement>) => {
     const moveFrom = JSON.parse(ev.dataTransfer.getData('text/plain'));
-    console.log('droppping', moveFrom);
+
     if (moveFrom.type !== 'lesson') {
       return;
     }
@@ -181,7 +221,12 @@ export const OutlineModuleItem = ({
   };
 
   return (
-    <div className={css.outlineModule} {...props} onDragLeave={handleDragLeave}>
+    <div
+      className={css.outlineModule}
+      {...props}
+      data-module-id={module.id}
+      onDragLeave={handleDragLeave}
+    >
       <div className={classes}>
         <Button
           aria-expanded={isOpen}
@@ -235,6 +280,7 @@ export const OutlineModuleItem = ({
             moduleIdx={idx}
             onDrop={handleDragDrop}
             onDragEnter={handleDragEnter}
+            onDragOver={handleValidDragTarget}
           />
         </div>
       </Collapse>

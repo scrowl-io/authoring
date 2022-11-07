@@ -199,6 +199,14 @@ export const config: stateManager.StateConfig = {
       const { type, ...moveFrom } = action.payload.moveFrom;
       const moveTo = action.payload.moveTo;
 
+      const moveSlides = (moduleId, pointer, val) => {
+        state.data.slides.forEach((slide) => {
+          if (slide[pointer] === val) {
+            slide.moduleId = moduleId;
+          }
+        });
+      };
+
       switch (type) {
         case 'slide':
           outlineList = state.data.slides;
@@ -220,16 +228,22 @@ export const config: stateManager.StateConfig = {
           };
 
           if (moveTo.moduleId !== moveFrom.moduleId) {
-            state.data.slides.forEach((slide) => {
-              if (slide.lessonId === moveFrom.id) {
-                slide.moduleId = moveTo.moduleId;
-              }
-            });
+            moveSlides(moveTo.moduleId, 'lessonId', moveFrom.id);
           }
           break;
+          case 'module':
+            // outlineList = state.data.modules;
+            // movePosition = List.indexBy(outlineList, 'id', moveTo.id);
+            // fromPosition = List.indexBy(outlineList, 'id', moveFrom.id);
+            // outlineData = {
+            //   ...outlineList.splice(fromPosition, 1)[0],
+            // };
+            break;
       }
 
-      outlineList.splice(movePosition, 0, outlineData);
+      if (outlineList) {
+        outlineList.splice(movePosition, 0, outlineData);
+      }
     },
     duplicateOutlineItem: (state, action) => {
       let outlineList;
