@@ -1,6 +1,8 @@
 import React from 'react';
 import * as css from '../../_pane-editor.scss';
+import { Projects } from '../../../../../../models';
 import {
+  useActiveSlide,
   useActiveTemplateContent,
   setActiveTemplateContent,
   setContentFocus,
@@ -10,6 +12,7 @@ import { FormBuilder } from './components';
 
 export const Content = () => {
   const templateContent = useActiveTemplateContent();
+  const activeSlide = useActiveSlide();
 
   const handleContentUpdate = (field, value) => {
     setActiveTemplateContent({ field, value });
@@ -25,6 +28,7 @@ export const Content = () => {
 
   const handleContentBlur = (field, value) => {
     resetContentFocus();
+    Projects.setSlide(activeSlide);
   };
 
   return (

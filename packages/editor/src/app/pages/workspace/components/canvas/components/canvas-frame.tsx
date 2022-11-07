@@ -12,10 +12,10 @@ import { Templates } from '../../../../../models';
 
 export const CanvasFrame = () => {
   const data = useActiveSlide();
-  const slideIdx: number = data.slideIdx;
-  const hasSlide = slideIdx !== -1;
+  const slideId: number = data.id;
+  const hasSlide = slideId !== -1;
   const slideTemplate = data.template.meta.component;
-  const prevSlideIdx = useRef(-1);
+  const prevslideId = useRef(-1);
   const prevSlideTemplate = useRef('');
   const prevContent = useRef(data.template.content);
   const frameRef = useRef<HTMLIFrameElement>(null);
@@ -84,11 +84,11 @@ export const CanvasFrame = () => {
   }, [contentFocus]);
 
   useEffect(() => {
-    if (slideIdx === -1) {
+    if (slideId === -1) {
       return;
     }
 
-    const hasSlideChanged = prevSlideIdx.current !== slideIdx;
+    const hasSlideChanged = prevslideId.current !== slideId;
     const hasTemplateChanged = prevSlideTemplate.current !== slideTemplate;
 
     if (!hasSlideChanged && !hasTemplateChanged) {
@@ -111,13 +111,13 @@ export const CanvasFrame = () => {
       return;
     }
 
-    prevSlideIdx.current = slideIdx;
+    prevslideId.current = slideId;
     prevSlideTemplate.current = slideTemplate;
     prevContent.current = data.template.content;
     resetContentFocus();
     Templates.load(data.template).then(updateFrameUrl);
     return;
-  }, [slideIdx, isConnected, data]);
+  }, [slideId, isConnected, data]);
 
   const connect = (ev: React.SyntheticEvent) => {
     sendMessage({ type: 'connection' });

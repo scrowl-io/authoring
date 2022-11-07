@@ -1,80 +1,89 @@
-import React, { useEffect, useRef, forwardRef } from 'react';
-import { AnimatePresence } from 'framer-motion';
+import React, { useEffect } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { Backdrop } from '.';
+import * as css from '../_overlay.scss';
 import { Error } from '../../../../../components';
+import { menu } from '../../../../../services';
 
-const ModalElement = (
-  { className, isOpen, onClose, title, children, ...props },
-  ref
-) => {
+export const Modal = ({
+  className,
+  isOpen,
+  onClose,
+  title,
+  children,
+  ...props
+}) => {
+  let classes = css.overlayContainer;
   const modalSize = props.modalSize ? props.modalSize : 'md';
-
-  const handlePreventBubbling = (ev: React.MouseEvent) => {
-    ev.bubbles = false;
-    ev.stopPropagation();
-    ev.preventDefault();
+  const animation = {
+    hidden: {
+      opacity: 0,
+    },
+    visible: {
+      opacity: 1,
+    },
+    exit: {
+      opacity: 0,
+    },
   };
 
+  if (className) {
+    classes += ` ${className}`;
+  }
+
+  useEffect(() => {
+    if (isOpen) {
+      menu.API.disableProjectActions();
+    } else {
+      menu.API.enableProjectActions();
+    }
+  }, [isOpen]);
+
   return (
-    <div className={className} ref={ref}>
-      <Error>
-        <AnimatePresence>
-          {isOpen && (
-            <Backdrop className="modal-backdrop" onClick={onClose}>
+    <div>
+      <AnimatePresence>
+        {isOpen && (
+          <div className={classes}>
+            <Backdrop onClick={onClose}></Backdrop>
+            <motion.div
+              className="overlay-content support-high-contrast"
+              style={{ display: 'block' }}
+              variants={animation}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+            >
               <div
-                className="owlui-modal fade show support-high-contrast"
-                onClick={handlePreventBubbling}
-                style={{ display: 'block' }}
+                className={`owlui-modal-dialog owlui-modal-dialog-centered ${modalSize}`}
               >
-                <div
-                  className={`owlui-modal-dialog owlui-modal-dialog-centered ${modalSize}`}
-                >
-                  <div className="owlui-modal-content">
-                    {title && (
-                      <div className="owlui-offcanvas-header">
-                        <h5 className="owlui-offcanvas-title mb-0">
-                          {typeof title === 'string' ? title : ''}
-                        </h5>
-                        <button
-                          type="button"
-                          className="btn-close"
-                          onClick={onClose}
-                        />
-                      </div>
-                    )}
-                    <div className="owlui-offcanvas-body">
-                      <Error>
-                        <form className="owlui-offcanvas-form">{children}</form>
-                      </Error>
+                <div className="owlui-modal-content">
+                  {title && (
+                    <div className="owlui-offcanvas-header">
+                      <h5 className="owlui-offcanvas-title mb-0">
+                        {typeof title === 'string' ? title : ''}
+                      </h5>
+                      <button
+                        type="button"
+                        className="btn-close"
+                        onClick={onClose}
+                      />
                     </div>
+                  )}
+                  <div className="owlui-offcanvas-body">
+                    <Error>
+                      <form className="owlui-offcanvas-form">{children}</form>
+                    </Error>
                   </div>
                 </div>
               </div>
-            </Backdrop>
-          )}
-        </AnimatePresence>
-      </Error>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
 
-export const Modal = forwardRef(ModalElement);
-
-export const ModalOverlay = ({ isOpen, ...props }) => {
-  const overlayRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const appNode = document.getElementById('app');
-
-    if (appNode && overlayRef.current) {
-      appNode.appendChild(overlayRef.current);
-    }
-  }, [overlayRef, isOpen]);
-
-  return <Modal ref={overlayRef} isOpen={isOpen} {...props} />;
-};
-
 export default {
   Modal,
-  ModalOverlay,
 };

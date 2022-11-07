@@ -4,50 +4,64 @@ import { Collapse } from 'react-bootstrap';
 import { OutlineModulesProps, OutlineModuleItemProps } from './outline.types';
 import * as css from '../../_pane-details.scss';
 import { OutlineLessons } from './outline-lessons';
+import { resetActiveSlide } from '../../../../';
 import { Projects } from '../../../../../../models';
 import { Elem } from '../../../../../../utils';
 import { menu } from '../../../../../../services';
+import { InputInlineText } from './input-inline-text';
 
 export const OutlineModuleItem = ({
   module,
-  moduleIdx,
+  idx,
   className,
   ...props
 }: OutlineModuleItemProps) => {
-  let classes = `${css.outlineHeader} `;
+  let classes = `${css.outlineHeader} outline-item__module`;
   const [isOpen, setOpen] = useState(true);
-  const menuId = `module-menu-${moduleIdx}`;
+  const menuId = `module-menu-${module.id}`;
+  const [isEdit, setIsEdit] = useState(false);
+  const inputContainerProps = {
+    draggable: true,
+    'data-outline-type': 'module',
+    'data-module-id': module.id,
+  };
   const moduleMenuItems: Array<menu.ContextMenuItem> = [
     {
       label: 'Add Lesson',
       click: () => {
-        console.log('add lesson');
+        Projects.addLesson({
+          id: -1,
+          moduleId: module.id,
+        });
       },
     },
     {
       label: 'Duplicate Module',
       click: () => {
-        console.log('duplicate module');
+        Projects.duplicateModule(module);
       },
     },
     {
       label: 'Add New Module After',
       click: () => {
-        console.log('add module after');
+        Projects.addModule({
+          id: module.id,
+        });
       },
     },
     { type: 'separator' },
     {
       label: 'Rename',
       click: () => {
-        console.log('rename module');
+        setIsEdit(true);
       },
     },
     { type: 'separator' },
     {
       label: 'Delete Module',
       click: () => {
-        console.log('remove module');
+        resetActiveSlide();
+        Projects.removeModule(module);
       },
     },
   ];
@@ -73,8 +87,21 @@ export const OutlineModuleItem = ({
     });
   };
 
+  const handleNameChange = (val) => {
+    const updateData = {
+      ...module,
+      name: val,
+    };
+
+    Projects.setModule(updateData);
+  };
+
+  const handleNameClose = () => {
+    setIsEdit(false);
+  };
+
   return (
-    <div className={css.outlineModule} {...props}>
+    <div className={css.outlineModule} {...props} data-module-id={module.id}>
       <div className={classes}>
         <Button
           aria-expanded={isOpen}
@@ -102,7 +129,13 @@ export const OutlineModuleItem = ({
                 opsz={20}
               />
             </span>
-            <span className={css.outlineItemLabel}>{module.name}</span>
+            <InputInlineText
+              isEdit={isEdit}
+              text={module.name}
+              onChange={handleNameChange}
+              onBlur={handleNameClose}
+              containerProps={inputContainerProps}
+            />
           </div>
         </Button>
         <Button
@@ -116,28 +149,41 @@ export const OutlineModuleItem = ({
       </div>
       <Collapse in={isOpen}>
         <div>
-          <OutlineLessons id={menuId} moduleIdx={moduleIdx} />
+          <OutlineLessons id={menuId} moduleId={module.id} moduleIdx={idx} />
         </div>
       </Collapse>
     </div>
   );
 };
 
-export const OutlineModules = ({ ...props }: OutlineModulesProps) => {
+export const OutlineModules = ({
+  className,
+  ...props
+}: OutlineModulesProps) => {
   const modules = Projects.useModules();
+  let classes = `outline-list-module`;
+  let addClasses = `${css.outlineAdd} outline-item__module`;
+
   const handleAddModule = () => {
-    console.log('add module');
+    Projects.addModule({
+      id: -1,
+    });
   };
 
+  if (className) {
+    classes += ` ${className}`;
+  }
+
   return (
-    <div {...props}>
+    <div className={classes} {...props}>
       {modules.map((module, idx) => {
-        return <OutlineModuleItem key={idx} module={module} moduleIdx={idx} />;
+        return <OutlineModuleItem key={idx} module={module} idx={idx} />;
       })}
       <Button
         variant="link"
-        className={css.outlineAdd}
+        className={addClasses}
         onClick={handleAddModule}
+        data-module-id={-1}
       >
         <Icon icon="add" display="outlined" />
         <span>Add New Module</span>

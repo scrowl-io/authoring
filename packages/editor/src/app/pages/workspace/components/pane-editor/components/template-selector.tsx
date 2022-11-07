@@ -1,24 +1,17 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Button, Icon } from '@owlui/lib';
 import * as css from '../_pane-editor.scss';
-import { useActiveTemplate } from '../../../page-workspace-hooks';
-import { TemplateBrowser } from '../../overlay';
+import {
+  useActiveTemplate,
+  openTemplateBrowser,
+} from '../../../page-workspace-hooks';
 
 export const TemplateSelector = () => {
   const templateMeta = useActiveTemplate('meta');
   const hasTemplate = templateMeta.component;
-  const [isOpenTemplateBrowser, setIsOpenTemplateBrowser] = useState(false);
 
-  const handleTemplateBrowserClose = () => {
-    setIsOpenTemplateBrowser(false);
-  };
-
-  const handleTemplateBrowserOpen = () => {
-    setIsOpenTemplateBrowser(true);
-  };
-
-  const handleTemplateBrowserSubmit = () => {
-    console.log('template selected');
+  const handleOpen = () => {
+    openTemplateBrowser();
   };
 
   return (
@@ -34,16 +27,11 @@ export const TemplateSelector = () => {
           className={css.slideEditorHeaderAction}
           variant="link"
           disabled={!hasTemplate}
-          onClick={handleTemplateBrowserOpen}
+          onClick={handleOpen}
         >
           Change Template
         </Button>
       </div>
-      <TemplateBrowser
-        isOpen={isOpenTemplateBrowser}
-        onClose={handleTemplateBrowserClose}
-        onSubmit={handleTemplateBrowserSubmit}
-      />
     </div>
   );
 };

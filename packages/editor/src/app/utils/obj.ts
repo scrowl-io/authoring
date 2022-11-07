@@ -42,9 +42,37 @@ export const setObjField = (obj, pointer, value) => {
   }
 };
 
+export const objPointer = (obj, pointer) => {
+  let result = obj;
+  let field;
+
+  try {
+    let pointerPaths = pointer.split('.');
+
+    if (pointerPaths.length === 0) {
+      pointerPaths = [pointer];
+    }
+
+    while (pointerPaths.length > 0) {
+      field = pointerPaths.shift();
+  
+      if (!field) {
+        return;
+      }
+
+      result = result[field];
+    }
+
+    return result;
+  } catch (e) {
+    console.error('Failed to find pointer', e);
+  }
+};
+
 export default {
   hasProp,
   cleanCopy,
   updateObj,
   setObjField,
+  objPointer,
 };

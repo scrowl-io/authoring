@@ -1,11 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { stateManager } from '../../../services'
 import { updateObj, setObjField } from '../../../utils';
+import { Projects } from '../../../models';
+import { hasProp } from '../../../utils';
 
 export const initialState = {
-  moduleIdx: -1,
-  lessonIdx: -1,
-  slideIdx: -1,
+  moduleId: -1,
+  lessonId: -1,
+  id: -1,
   name: '',
   template: {
     meta: {
@@ -33,7 +35,7 @@ export const config: stateManager.StateConfig = {
       updateObj(state, props);
     },
     resetData: (state) => {
-      state = initialState;
+      updateObj(state, initialState);
     },
     setTemplate: (state, action) => {
       updateObj(state.template, action.payload);
@@ -44,6 +46,21 @@ export const config: stateManager.StateConfig = {
 
       pointer += '.value';
       setObjField(state.template.content, pointer, value);
+    },
+  },
+  extraReducers: {
+    [Projects.state.moveOutlineItem.type]: (state, action) => {
+      const { updateActiveSlide } = action.payload;
+
+      if (updateActiveSlide) {
+        if (hasProp(updateActiveSlide, 'moduleId')) {
+          state.moduleId = updateActiveSlide.moduleId;
+        }
+
+        if (hasProp(updateActiveSlide, 'lessonId')) {
+          state.lessonId = updateActiveSlide.lessonId;
+        }
+      }
     },
   },
 };

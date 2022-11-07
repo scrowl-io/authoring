@@ -9,10 +9,10 @@ import { menu } from '../../../../../services';
 
 export const CanvasHeader = () => {
   const name = useActiveSlide('name');
-  const slideIdx = useActiveSlide('slideIdx');
+  const slideId = useActiveSlide('id');
   const isDirty = useRef(false);
   const prevName = useRef(name);
-  const prevSlideIdx = useRef(slideIdx);
+  const prevslideId = useRef(slideId);
   const nameRef = useRef<HTMLSpanElement>(null);
   const [nameWidth, setNameWidth] = useState(0);
   const animationSettings = Settings.useAnimation();
@@ -69,7 +69,7 @@ export const CanvasHeader = () => {
 
     if (isDirty.current) {
       Projects.setSlide({
-        slideIdx,
+        id: slideId,
         name: val,
       });
       isDirty.current = false;
@@ -89,12 +89,12 @@ export const CanvasHeader = () => {
   };
 
   useEffect(() => {
-    if (!isDirty.current || prevSlideIdx.current !== slideIdx) {
+    if (!isDirty.current || prevslideId.current !== slideId) {
       prevName.current = name;
     }
 
     return () => {
-      prevSlideIdx.current = slideIdx;
+      prevslideId.current = slideId;
     };
   }, [name, isDirty]);
 
@@ -105,7 +105,7 @@ export const CanvasHeader = () => {
 
     let newWidth = nameRef.current.offsetWidth;
 
-    if (slideIdx === -1) {
+    if (slideId === -1) {
       newWidth = 150;
     } else if (nameWidth === newWidth) {
       return;

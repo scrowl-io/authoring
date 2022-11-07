@@ -2,6 +2,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { ActionCreatorWithoutPayload } from '@reduxjs/toolkit';
 import { stateManager, rq } from '../../services';
 import { API, state } from './';
+import { List } from '../../utils';
 
 const processor: stateManager.StateProcessor = {};
 
@@ -60,16 +61,16 @@ export const setScorm = (data) => {
   processor.dispatch(state.setMeta(data));
 };
 
-export const useModules = (moduleIdx?: number,) => {
+export const useModules = (moduleId?: number,) => {
   return useSelector((data: stateManager.RootState) => {
-    const hasModuleIdx = moduleIdx !== undefined && moduleIdx !== null && moduleIdx !== -1;
+    const hasModuleId = moduleId !== undefined && moduleId !== null && moduleId !== -1;
 
-    if (!hasModuleIdx) {
+    if (!hasModuleId) {
       return data.projects.data.modules;
     }
     
-    return data.projects.data.modules.filter((module, idx) => {
-      return idx === moduleIdx;
+    return data.projects.data.modules.filter((module) => {
+      return module.id === moduleId;
     })[0];
   });
 };
@@ -80,7 +81,10 @@ export const addModule = (data) => {
     return;
   }
 
-  processor.dispatch(state.addModule(data));
+  processor.dispatch(state.addOutlineItem({
+    ...data,
+    type: 'module',
+  }));
 };
 
 export const setModule = (data) => {
@@ -89,16 +93,22 @@ export const setModule = (data) => {
     return;
   }
 
-  processor.dispatch(state.setModule(data));
+  processor.dispatch(state.setOutlineItem({
+    ...data,
+    type: 'module',
+  }));
 };
 
-export const moveModule = (data) => {
+export const duplicateModule = (data) => {
   if (!processor.dispatch) {
     console.warn('projects processor not ready');
     return;
   }
 
-  processor.dispatch(state.moveModule(data));
+  processor.dispatch(state.duplicateOutlineItem({
+    ...data,
+    type: 'module',
+  }));
 };
 
 export const removeModule = (data) => {
@@ -107,26 +117,29 @@ export const removeModule = (data) => {
     return;
   }
 
-  processor.dispatch(state.removeModule(data));
+  processor.dispatch(state.removeOutlineItem({
+    ...data,
+    type: 'module'
+  }));
 };
 
-export const useLessons = (moduleIdx?: number, lessonIdx?: number) => {
+export const useLessons = (moduleId?: number, lessonId?: number) => {
   return useSelector((data: stateManager.RootState) => {
-    const hasModuleIdx = moduleIdx !== undefined && moduleIdx !== null && moduleIdx !== -1;
-    const hasLessonIdx = lessonIdx !== undefined && lessonIdx !== null && lessonIdx !== -1;
+    const hasModuleId = moduleId !== undefined && moduleId !== null && moduleId !== -1;
+    const hasLessonId = lessonId !== undefined && lessonId !== null && lessonId !== -1;
 
-    if (!hasModuleIdx) {
+    if (!hasModuleId) {
       return data.projects.data.lessons;
     }
 
-    if (!hasLessonIdx) {
+    if (!hasLessonId) {
       return data.projects.data.lessons.filter((lesson) => {
-        return lesson.moduleIdx === moduleIdx;
+        return lesson.moduleId === moduleId;
       })
     }
-
-    return data.projects.data.lessons.filter((lesson, idx) => {
-      return lesson.moduleIdx === moduleIdx && idx === lessonIdx;
+    
+    return data.projects.data.lessons.filter((lesson) => {
+      return lesson.moduleId === moduleId && lesson.id === lessonId;
     })[0];
   });
 };
@@ -137,7 +150,10 @@ export const addLesson = (data) => {
     return;
   }
 
-  processor.dispatch(state.addLesson(data));
+  processor.dispatch(state.addOutlineItem({
+    ...data,
+    type: 'lesson',
+  }));
 };
 
 export const setLesson = (data) => {
@@ -146,16 +162,22 @@ export const setLesson = (data) => {
     return;
   }
 
-  processor.dispatch(state.setLesson(data));
+  processor.dispatch(state.setOutlineItem({
+    ...data,
+    type: 'lesson',
+  }));
 };
 
-export const moveLesson = (data) => {
+export const duplicateLesson = (data) => {
   if (!processor.dispatch) {
     console.warn('projects processor not ready');
     return;
   }
 
-  processor.dispatch(state.moveLesson(data));
+  processor.dispatch(state.duplicateOutlineItem({
+    ...data,
+    type: 'lesson',
+  }));
 };
 
 export const removeLesson = (data) => {
@@ -164,18 +186,43 @@ export const removeLesson = (data) => {
     return;
   }
 
-  processor.dispatch(state.removeLesson(data));
+  processor.dispatch(state.removeOutlineItem({
+    ...data,
+    type: 'lesson'
+  }));
 };
 
-export const useSlides = (moduleIdx?: number, lessonIdx?: number) => {
+export const useSlides = (moduleId?: number, lessonId?: number, slideId?: number) => {
+  const hasModule = moduleId !== undefined && moduleId !== null && moduleId !== -1;
+  const hasLesson = lessonId !== undefined && lessonId !== null && lessonId !== -1;
+  const hasSlide = slideId !== undefined && slideId !== null && slideId !== -1;
+
   return useSelector((data: stateManager.RootState) => {
-    if (!moduleIdx || !lessonIdx) {
+    if (!hasModule) {
       return data.projects.data.slides;
     }
-    
+
+    if (!hasLesson) {
+      return data.projects.data.slides.filter((slide) => {
+        return slide.moduleId === moduleId;
+      });
+    }
+
+    if (!hasSlide) {
+      return data.projects.data.slides.filter((slide) => {
+        return slide.moduleId === moduleId && slide.lessonId === lessonId;
+      });
+    }
+
     return data.projects.data.slides.filter((slide) => {
-      return slide.moduleIdx === moduleIdx && slide.lessonIdx === lessonIdx;
-    })
+      return slide.moduleId === moduleId && slide.lessonId === lessonId && slide.id === slideId;
+    });
+  });
+};
+
+export const useLatestSlide = () => {
+  return useSelector((data: stateManager.RootState) => {
+    return List.sortBy(data.projects.data.slides.slice(), 'id', true)[0];
   });
 };
 
@@ -185,7 +232,10 @@ export const addSlide = (data) => {
     return;
   }
 
-  processor.dispatch(state.addSlide(data));
+  processor.dispatch(state.addOutlineItem({
+    ...data,
+    type: 'slide',
+  }));
 };
 
 export const setSlide = (data) => {
@@ -194,16 +244,22 @@ export const setSlide = (data) => {
     return;
   }
 
-  processor.dispatch(state.setSlide(data));
+  processor.dispatch(state.setOutlineItem({
+    ...data,
+    type: 'slide',
+  }));
 };
 
-export const moveSlide = (data) => {
+export const duplicateSlide = (data) => {
   if (!processor.dispatch) {
     console.warn('projects processor not ready');
     return;
   }
 
-  processor.dispatch(state.moveSlide(data));
+  processor.dispatch(state.duplicateOutlineItem({
+    ...data,
+    type: 'slide',
+  }));
 };
 
 export const removeSlide = (data) => {
@@ -212,7 +268,19 @@ export const removeSlide = (data) => {
     return;
   }
 
-  processor.dispatch(state.removeSlide(data));
+  processor.dispatch(state.removeOutlineItem({
+    ...data,
+    type: 'slide'
+  }));
+};
+
+export const moveOutlineItem = (data) => {
+  if (!processor.dispatch) {
+    console.warn('projects processor not ready');
+    return;
+  }
+
+  processor.dispatch(state.moveOutlineItem(data));
 };
 
 export const useGlossary = () => {
@@ -368,18 +436,20 @@ export default {
   useModules,
   addModule,
   setModule,
-  moveModule,
+  duplicateModule,
   removeModule,
   useLessons,
   addLesson,
   setLesson,
-  moveLesson,
+  duplicateLesson,
   removeLesson,
   useSlides,
+  useLatestSlide,
   addSlide,
   setSlide,
-  moveSlide,
+  duplicateSlide,
   removeSlide,
+  moveOutlineItem,
   useGlossary,
   addGlossaryItem,
   setGlossaryItem,

@@ -4,50 +4,68 @@ import { Collapse } from 'react-bootstrap';
 import { OutlineLessonsProps, OutlineLessonItemProps } from './outline.types';
 import * as css from '../../_pane-details.scss';
 import { OutlineSlides } from './outline-slides';
+import { resetActiveSlide } from '../../../../';
 import { Projects } from '../../../../../../models';
 import { Elem } from '../../../../../../utils';
 import { menu } from '../../../../../../services';
+import { InputInlineText } from './input-inline-text';
 
 export const OutlineLessonItem = ({
   lesson,
-  lessonIdx,
+  moduleIdx,
+  idx,
   className,
   ...props
 }: OutlineLessonItemProps) => {
-  let classes = `${css.outlineHeader} `;
+  let classes = `${css.outlineHeader} outline-item__lesson`;
   const [isOpen, setOpen] = useState(true);
-  const menuId = `module-${lesson.moduleIdx}-lesson-menu-${lessonIdx}`;
+  const menuId = `module-${lesson.moduleId}-lesson-menu-${lesson.id}`;
+  const [isEdit, setIsEdit] = useState(false);
+  const inputContainerProps = {
+    draggable: true,
+    'data-outline-type': 'lesson',
+    'data-lesson-id': lesson.id,
+    'data-module-id': lesson.moduleId,
+  };
   const lessonMenuItems: Array<menu.ContextMenuItem> = [
     {
       label: 'Add Slide',
       click: () => {
-        console.log('add slide');
+        Projects.addSlide({
+          id: -1,
+          lessonId: lesson.id,
+          moduleId: lesson.moduleId,
+        });
       },
     },
     {
       label: 'Duplicate Lesson',
       click: () => {
-        console.log('duplicate lesson');
+        Projects.duplicateLesson(lesson);
       },
     },
     {
       label: 'Add New Lesson After',
       click: () => {
-        console.log('add lesson after');
+        Projects.addLesson({
+          id: lesson.id,
+          moduleId: lesson.moduleId,
+        });
       },
     },
     { type: 'separator' },
     {
       label: 'Rename',
       click: () => {
-        console.log('rename lesson');
+        setIsEdit(true);
       },
     },
     { type: 'separator' },
     {
       label: 'Delete Lesson',
       click: () => {
-        console.log('remove lesson');
+        resetActiveSlide();
+        Projects.removeLesson(lesson);
       },
     },
   ];
@@ -73,8 +91,26 @@ export const OutlineLessonItem = ({
     });
   };
 
+  const handleNameChange = (val) => {
+    const updateData = {
+      ...lesson,
+      name: val,
+    };
+
+    Projects.setLesson(updateData);
+  };
+
+  const handleNameClose = () => {
+    setIsEdit(false);
+  };
+
   return (
-    <div className={css.outlineLesson} {...props}>
+    <div
+      className={css.outlineLesson}
+      {...props}
+      data-module-id={lesson.moduleId}
+      data-lesson-id={lesson.id}
+    >
       <div className={classes}>
         <Button
           aria-expanded={isOpen}
@@ -102,7 +138,13 @@ export const OutlineLessonItem = ({
                 opsz={20}
               />
             </span>
-            <span className={css.outlineItemLabel}>{lesson.name}</span>
+            <InputInlineText
+              isEdit={isEdit}
+              text={lesson.name}
+              onChange={handleNameChange}
+              onBlur={handleNameClose}
+              containerProps={inputContainerProps}
+            />
           </div>
         </Button>
         <Button
@@ -118,8 +160,10 @@ export const OutlineLessonItem = ({
         <div>
           <OutlineSlides
             id={menuId}
-            moduleIdx={lesson.moduleIdx}
-            lessonIdx={lessonIdx}
+            moduleId={lesson.moduleId}
+            moduleIdx={moduleIdx}
+            lessonId={lesson.id}
+            lessonIdx={idx}
           />
         </div>
       </Collapse>
@@ -128,14 +172,19 @@ export const OutlineLessonItem = ({
 };
 
 export const OutlineLessons = ({
+  moduleId,
   moduleIdx,
   className,
   ...props
 }: OutlineLessonsProps) => {
-  const lessons = Projects.useLessons(moduleIdx);
-  let classes = `nav flex-column `;
+  const lessons = Projects.useLessons(moduleId);
+  let classes = `nav flex-column outline-list-lesson`;
+  let addClasses = `${css.outlineAdd} outline-item__lesson .inline-input`;
   const handleAddLesson = () => {
-    console.log('add lesson');
+    Projects.addLesson({
+      id: -1,
+      moduleId,
+    });
   };
 
   if (className) {
@@ -145,12 +194,21 @@ export const OutlineLessons = ({
   return (
     <div className={classes} {...props}>
       {lessons.map((lesson, idx) => {
-        return <OutlineLessonItem key={idx} lesson={lesson} lessonIdx={idx} />;
+        return (
+          <OutlineLessonItem
+            key={idx}
+            lesson={lesson}
+            moduleIdx={moduleIdx}
+            idx={idx}
+          />
+        );
       })}
       <Button
         variant="link"
-        className={css.outlineAdd}
+        className={addClasses}
         onClick={handleAddLesson}
+        data-module-id={moduleId}
+        data-lesson-id={-1}
       >
         <Icon icon="add" display="outlined" />
         <span>Add New Lesson</span>

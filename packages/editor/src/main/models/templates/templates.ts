@@ -1,5 +1,6 @@
 import { TemplatesApi, TemplateSchema } from './templates.types';
 import { rq, fs, tmpr, log } from '../../services';
+import { list as templateList } from './default-templates';
 
 const PathTemplateWorking = fs.joinPath(fs.pathTempFolder, 'templates');
 const PathTemplateAssetsProject = fs.getAssetPath(fs.joinPath('assets', 'project'));
@@ -131,11 +132,27 @@ export const load = (ev: rq.RequestEvent, template: TemplateSchema) => {
   });
 };
 
+export const get = (ev: rq.RequestEvent) => {
+  return new Promise<rq.ApiResult>((resolve) => {
+    resolve({
+      error: false,
+      data: {
+        templates: templateList,
+      }
+    });
+  })
+};
+
 export const API: TemplatesApi = {
   load: {
     name: '/templates/load',
     type: 'invoke',
     fn: load,
+  },
+  get: {
+    name: '/templates/get',
+    type: 'invoke',
+    fn: get,
   },
 };
 
