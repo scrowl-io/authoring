@@ -242,27 +242,7 @@ export const Outline = () => {
       return;
     }
 
-    const type = draggable.current.dataset.outlineType;
-    let dropIndicatorClass;
-
-    switch (type) {
-      case 'slide':
-        dropIndicatorClass = `.${css.draggableIndicatorSlide}`;
-        break;
-      case 'lesson':
-        dropIndicatorClass = `.${css.draggableIndicatorLesson}`;
-        break;
-      case 'module':
-        dropIndicatorClass = `.${css.draggableIndicatorModule}`;
-        break;
-    }
-
-    const highlightItem = document.querySelector(dropIndicatorClass);
-
-    if (highlightItem) {
-      highlightItem.classList.remove(dropIndicatorClass.replace('.', ''));
-    }
-
+    handleDragLeave(ev);
     draggable.current.remove();
     draggable.current = undefined;
   };
