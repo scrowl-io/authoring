@@ -39,7 +39,9 @@ export const OutlineModuleItem = ({
     {
       label: 'Add New Module After',
       click: () => {
-        console.log('add module after');
+        Projects.addModule({
+          id: module.id,
+        });
       },
     },
     { type: 'separator' },
@@ -189,7 +191,9 @@ export const OutlineModuleItem = ({
 export const OutlineModules = ({ ...props }: OutlineModulesProps) => {
   const modules = Projects.useModules();
   const handleAddModule = () => {
-    console.log('add module');
+    Projects.addModule({
+      id: -1,
+    });
   };
 
   return (
