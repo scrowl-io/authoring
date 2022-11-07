@@ -179,6 +179,7 @@ export const OutlineLessons = ({
 }: OutlineLessonsProps) => {
   const lessons = Projects.useLessons(moduleId);
   let classes = `nav flex-column outline-list-lesson`;
+  let addClasses = `${css.outlineAdd} outline-item__lesson .inline-input`;
   const handleAddLesson = () => {
     Projects.addLesson({
       id: -1,
@@ -204,8 +205,10 @@ export const OutlineLessons = ({
       })}
       <Button
         variant="link"
-        className={css.outlineAdd}
+        className={addClasses}
         onClick={handleAddLesson}
+        data-module-id={moduleId}
+        data-lesson-id={-1}
       >
         <Icon icon="add" display="outlined" />
         <span>Add New Lesson</span>

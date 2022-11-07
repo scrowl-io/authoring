@@ -179,6 +179,7 @@ export const OutlineSlides = ({
 }: OutlineSlidesProps) => {
   const slides = Projects.useSlides(moduleId, lessonId);
   let classes = `nav flex-column outline-list-slide`;
+  let addClasses = `${css.outlineAdd} outline-item__slide`;
 
   const handleAddSlide = () => {
     Projects.addSlide({
@@ -207,8 +208,11 @@ export const OutlineSlides = ({
       })}
       <Button
         variant="link"
-        className={css.outlineAdd}
+        className={addClasses}
         onClick={handleAddSlide}
+        data-module-id={moduleId}
+        data-lesson-id={lessonId}
+        data-slide-id={-1}
       >
         <Icon icon="add" display="outlined" />
         <span>Add New Slide</span>

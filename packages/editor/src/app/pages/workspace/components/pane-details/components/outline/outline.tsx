@@ -146,23 +146,21 @@ export const Outline = () => {
 
     switch (type) {
       case 'slide':
-        dropIndicatorClass = css.draggableIndicatorSlide;
+        dropIndicatorClass = `.${css.draggableIndicatorSlide}`;
         break;
       case 'lesson':
-        dropIndicatorClass = css.draggableIndicatorLesson;
+        dropIndicatorClass = `.${css.draggableIndicatorLesson}`;
         break;
       case 'module':
-        dropIndicatorClass = css.draggableIndicatorModule;
+        dropIndicatorClass = `.${css.draggableIndicatorModule}`;
         break;
     }
 
-    const indicator = document.getElementsByClassName(dropIndicatorClass)[0];
+    const highlightItem = document.querySelector(dropIndicatorClass);
 
-    if (!indicator) {
-      return;
+    if (highlightItem) {
+      highlightItem.classList.remove(dropIndicatorClass.replace('.', ''));
     }
-
-    indicator.classList.remove(css.draggableIndicatorSlide);
   };
 
   const handleDragDrop = (ev: React.DragEvent<HTMLDivElement>) => {
@@ -190,9 +188,15 @@ export const Outline = () => {
         break;
     }
 
-    const moveTarget = document.querySelector(
+    let moveTarget = document.querySelector(
       `${dropIndicatorClass} .inline-input`
     ) as HTMLDivElement;
+
+    if (!moveTarget) {
+      moveTarget = document.querySelector(
+        `.${css.outlineAdd}${dropIndicatorClass}`
+      ) as HTMLDivElement;
+    }
 
     if (!container || !moveTarget) {
       return;

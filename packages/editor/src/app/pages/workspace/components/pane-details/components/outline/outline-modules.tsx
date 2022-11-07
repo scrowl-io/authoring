@@ -162,6 +162,7 @@ export const OutlineModules = ({
 }: OutlineModulesProps) => {
   const modules = Projects.useModules();
   let classes = `outline-list-module`;
+  let addClasses = `${css.outlineAdd} outline-item__module`;
 
   const handleAddModule = () => {
     Projects.addModule({
@@ -180,8 +181,9 @@ export const OutlineModules = ({
       })}
       <Button
         variant="link"
-        className={css.outlineAdd}
+        className={addClasses}
         onClick={handleAddModule}
+        data-module-id={-1}
       >
         <Icon icon="add" display="outlined" />
         <span>Add New Module</span>
