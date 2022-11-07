@@ -3,7 +3,12 @@ import { Button, Icon } from '@owlui/lib';
 import { OutlineSlidesProps, OutlineSlideItemProps } from './outline.types';
 import * as css from '../../_pane-details.scss';
 import { Projects } from '../../../../../../models';
-import { useActiveSlide, setActiveSlide, resetActiveSlide } from '../../../../';
+import {
+  useActiveSlide,
+  setActiveSlide,
+  resetActiveSlide,
+  useNewSlide,
+} from '../../../../';
 import { Elem } from '../../../../../../utils';
 import { menu } from '../../../../../../services';
 import { InputInlineText } from './input-inline-text';
@@ -25,6 +30,7 @@ export const OutlineSlideItem = ({
   let classes = `${css.outlineHeader}`;
   const draggable = useRef<HTMLDivElement | undefined>();
   const [isEdit, setIsEdit] = useState(false);
+  const isNewSlide = useNewSlide();
   const slideMenuItems: Array<menu.ContextMenuItem> = [
     {
       label: 'Duplicate Slide',
@@ -175,10 +181,10 @@ export const OutlineSlideItem = ({
       }, 250);
     };
 
-    if (activeSlide.id === -1 && isFirstItem) {
+    if (!isNewSlide && activeSlide.id === -1 && isFirstItem) {
       selectCurrentSlide();
     }
-  }, [isActive, activeSlide.id, isFirstItem]);
+  }, [isActive, activeSlide.id, isFirstItem, isNewSlide]);
 
   return (
     <div

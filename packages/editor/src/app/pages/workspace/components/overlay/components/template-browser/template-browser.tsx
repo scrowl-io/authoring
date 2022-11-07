@@ -2,11 +2,17 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Button, Icon } from '@owlui/lib';
 import * as css from './_template-browser.scss';
 import { Modal } from '../modal';
-import { Templates } from '../../../../../../models';
+import { Projects, Templates } from '../../../../../../models';
 import {
   useActiveTemplate,
   useTemplateBrowser,
+  openTemplateBrowser,
   closeTemplateBrowser,
+  useNewSlide,
+  resetNewSlide,
+  setActiveSlide,
+  resetActiveSlide,
+  setActiveTemplate,
 } from '../../../../page-workspace-hooks';
 
 export const TemplateBrowser = () => {
@@ -17,16 +23,25 @@ export const TemplateBrowser = () => {
   >([]);
   const activeTemplate = useActiveTemplate();
   const isOpen = useTemplateBrowser();
-  const [selectedTemplate, setSelectedTemplate] = useState({
-    meta: activeTemplate,
-  });
+  const [selectedTemplate, setSelectedTemplate] = useState(activeTemplate);
+  const isNewSlide = useNewSlide();
+  const latestSlide = Projects.useLatestSlide();
 
   const handelClose = () => {
     closeTemplateBrowser();
   };
 
   const handleSubmit = () => {
-    console.log('template selected');
+    if (!isNewSlide) {
+      setActiveTemplate(selectedTemplate);
+    } else {
+      setActiveSlide({
+        ...latestSlide,
+        template: selectedTemplate,
+      });
+      resetNewSlide();
+    }
+
     closeTemplateBrowser();
   };
 
@@ -46,6 +61,17 @@ export const TemplateBrowser = () => {
     }
   }, [inProgress]);
 
+  useEffect(() => {
+    setSelectedTemplate(activeTemplate);
+  }, [activeTemplate]);
+
+  useEffect(() => {
+    if (isNewSlide) {
+      openTemplateBrowser();
+      resetActiveSlide();
+    }
+  }, [isNewSlide]);
+
   return (
     <Modal
       className="modal-template-browser"
@@ -55,9 +81,11 @@ export const TemplateBrowser = () => {
     >
       <div className={css.templateBrowserContainer}>
         {templateList.map((template, idx) => {
-          const isActive = activeTemplate.component === template.meta.component;
+          const isActive =
+            activeTemplate.meta.component === template.meta.component;
           const isSelected =
             selectedTemplate.meta.component === template.meta.component;
+
           return (
             <button
               type="button"
@@ -109,9 +137,11 @@ export const TemplateBrowser = () => {
         })}
       </div>
       <footer className="d-flex justify-content-end">
-        <Button variant="link" onClick={handelClose}>
-          Cancel
-        </Button>
+        {!isNewSlide && (
+          <Button variant="link" onClick={handelClose}>
+            Cancel
+          </Button>
+        )}
         <Button variant="success" onClick={handleSubmit}>
           Select Template
         </Button>

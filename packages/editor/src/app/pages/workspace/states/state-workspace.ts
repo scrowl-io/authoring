@@ -41,9 +41,6 @@ export const config: stateManager.StateConfig = {
     [Projects.state.addOutlineItem.type]: (state) => {
       state.newSlide = true;
     },
-    [Projects.state.duplicateOutlineItem.type]: (state) => {
-      state.newSlide = true;
-    }
   },
 };
 
