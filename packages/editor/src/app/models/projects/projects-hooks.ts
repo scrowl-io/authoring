@@ -2,6 +2,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { ActionCreatorWithoutPayload } from '@reduxjs/toolkit';
 import { stateManager, rq } from '../../services';
 import { API, state } from './';
+import { List } from '../../utils';
 
 const processor: stateManager.StateProcessor = {};
 
@@ -216,6 +217,12 @@ export const useSlides = (moduleId?: number, lessonId?: number, slideId?: number
     return data.projects.data.slides.filter((slide) => {
       return slide.moduleId === moduleId && slide.lessonId === lessonId && slide.id === slideId;
     });
+  });
+};
+
+export const useLatestSlide = () => {
+  return useSelector((data: stateManager.RootState) => {
+    return List.sortBy(data.projects.data.slides.slice(), 'id', true)[0];
   });
 };
 
@@ -437,6 +444,7 @@ export default {
   duplicateLesson,
   removeLesson,
   useSlides,
+  useLatestSlide,
   addSlide,
   setSlide,
   duplicateSlide,

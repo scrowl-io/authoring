@@ -179,6 +179,22 @@ export const closeTemplateBrowser = () => {
   processor.dispatch(fn());
 };
 
+export const useNewSlide = () => {
+  return useSelector((data: stateManager.RootState) => {
+    return data.workspace.newSlide;
+  });
+};
+
+export const resetNewSlide = () => {
+  if (!processor.dispatch) {
+    console.warn('workspace processor not ready');
+    return;
+  }
+
+  const fn = state.workspace.resetNewSlide as ActionCreatorWithoutPayload;
+  processor.dispatch(fn());
+};
+
 export default {
   useProcessor,
   useWorkspace,
@@ -197,4 +213,6 @@ export default {
   useTemplateBrowser,
   openTemplateBrowser,
   closeTemplateBrowser,
+  useNewSlide,
+  resetNewSlide,
 };

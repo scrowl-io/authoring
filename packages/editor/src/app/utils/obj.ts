@@ -59,9 +59,11 @@ export const objPointer = (obj, pointer) => {
       if (!field) {
         return;
       }
-      
+
       result = result[field];
     }
+
+    return result;
   } catch (e) {
     console.error('Failed to find pointer', e);
   }

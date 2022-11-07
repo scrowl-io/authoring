@@ -31,36 +31,29 @@ export const indexBy = (list: Array<{}>, prop: string, value: any): number => {
   return idx;
 };
 
-export const sortBy = (list, fields: Array<string>, reverse: boolean = false) => {
-  const fieldsLn = fields.length;
-
+export const sortBy = (list, pointer: string, reverse: boolean = false) => {
   return list.sort((a, b) => {
     let result = 0;
     let valA: any;
     let valB: any;
 
-    console.log('a', a.id, 'b', b.id);
+    valA = objPointer(a, pointer);
+    valB = objPointer(b, pointer);
 
-    for (let i = 0; i < fieldsLn; i++) {
-      result = 0;
-      valA = objPointer(a, fields[i]);
-      valB = objPointer(b, fields[i]);
-
-      if (typeof valA === 'string') {
-        valA = valA.toLowerCase();
-      }
-
-      if (typeof valB === 'string') {
-        valB = valB.toLowerCase();
-      }
-
-      if (valA === valB) {
-        return 0;
-      }
-
-      result = valA < valB ? -1 : 1;
-      return reverse ? result * -1 : result;
+    if (typeof valA === 'string') {
+      valA = valA.toLowerCase();
     }
+
+    if (typeof valB === 'string') {
+      valB = valB.toLowerCase();
+    }
+
+    if (valA === valB) {
+      return 0;
+    }
+
+    result = valA < valB ? -1 : 1;
+    return reverse ? result * -1 : result;
   })
 };
 

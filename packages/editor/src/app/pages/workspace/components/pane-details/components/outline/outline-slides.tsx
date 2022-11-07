@@ -35,7 +35,11 @@ export const OutlineSlideItem = ({
     {
       label: 'Add New Slide After',
       click: () => {
-        console.log('add slide after');
+        Projects.addSlide({
+          id: slide.id,
+          lessonId: slide.lessonId,
+          moduleId: slide.moduleId,
+        });
       },
     },
     { type: 'separator' },

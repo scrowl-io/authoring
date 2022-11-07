@@ -100,33 +100,70 @@ export const config: stateManager.StateConfig = {
       state.data.slides.splice(action.payload.idx);
     },
     addOutlineItem: (state, action) => {
-      let outlineList;
-      let lastIdx = -1;
-      let id = 0;
-      const { type, ...data } = action.payload;
+      const createItem = (payload) => {
+        let outlineList;
+        let name;
+        const { type, id, ...data } = payload;
 
-      switch (type) {
-        case 'module':
-          outlineList = state.data.modules;
+        switch (type) {
+          case 'module':
+            name = 'Untitled Module';
+            outlineList = state.data.modules;
+            break;
+          case 'lesson':
+            name = 'Untitled Lesson';
+            outlineList = state.data.lessons;
+            break;
+          case 'slide':
+            name = 'Untitled Slide';
+            outlineList = state.data.slides;
+            break;
+        }
+
+        const newId = generateNewId(outlineList);
+        const addPosition = id !== -1 ? (List.indexBy(outlineList, 'id', id) + 1) : outlineList.length;
+        const newItem = {
+          ...data,
+          name,
+          id: newId,
+        };
+
+        outlineList.splice(addPosition , 0, newItem);
+        return newItem;
+      }
+
+      let newSlide;
+      let newLesson;
+
+      switch (action.payload.type) {
+        case 'slide':
+          newSlide = createItem(action.payload);
           break;
         case 'lesson':
-          outlineList = state.data.lessons;
+          newLesson = createItem(action.payload);
+          newSlide = createItem({
+            type: 'slide',
+            id: -1,
+            lessonId: newLesson.id,
+            moduleId: newLesson.moduleId,
+          });
           break;
-        case 'slide':
-          outlineList = state.data.slides;
+        case 'lesson':
+          const newModule = createItem(action.payload);
+
+          newLesson = createItem({
+            type: 'lesson',
+            id: -1,
+            moduleId: newModule.id,
+          });
+          newSlide = createItem({
+            type: 'slide',
+            id: -1,
+            lessonId: newLesson.id,
+            moduleId: newLesson.moduleId,
+          });
           break;
       }
-
-      lastIdx = outlineList.length - 1;
-
-      if (lastIdx !== -1) {
-        id = generateNewId(outlineList);
-      }
-
-      outlineList.push({
-        ...data,
-        id,
-      });
     },
     setOutlineItem: (state, action) => {
       let outlineList;
