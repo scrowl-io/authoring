@@ -243,7 +243,11 @@ export const OutlineSlides = ({
   let classes = `nav flex-column outline-list-slide`;
 
   const handleAddSlide = () => {
-    console.log('add slide');
+    Projects.addSlide({
+      id: -1,
+      lessonId,
+      moduleId,
+    });
   };
 
   if (className) {

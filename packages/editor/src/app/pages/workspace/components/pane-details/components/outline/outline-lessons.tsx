@@ -26,7 +26,11 @@ export const OutlineLessonItem = ({
     {
       label: 'Add Slide',
       click: () => {
-        console.log('add slide');
+        Projects.addSlide({
+          id: -1,
+          lessonId: lesson.id,
+          moduleId: lesson.moduleId,
+        });
       },
     },
     {
