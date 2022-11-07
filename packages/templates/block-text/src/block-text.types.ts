@@ -9,6 +9,16 @@ import {
   InputAssetProps
 } from '@scrowl/template-core';
 
+export type {
+  TemplateSchemaMeta,
+  TemplateCommons,
+  InputTextboxProps,
+  InputFieldsetProps,
+  InputSelectProps,
+  InputCheckboxProps,
+  InputAssetProps
+}
+
 export interface BlockTextContentBgImage extends InputFieldsetProps {
   content: {
     alt: InputTextboxProps;

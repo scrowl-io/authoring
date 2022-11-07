@@ -10,7 +10,7 @@
   color: var(--owl-sidebar-color);
   background: var(--owl-sidebar-bg);
   padding-top: 0.5rem;
-  height: calc(100% - 50px);
+  height: calc(100vh - 82px);
   z-index: 10;
 
   &__header {

@@ -1,7 +1,7 @@
 export type SlidePosition = {
-  moduleIdx: number;
-  lessonIdx: number;
-  slideIdx: number;
+  moduleId: number;
+  lessonId: number;
+  slideId: number;
 };
 
 export interface CanvasHeaderCommons {

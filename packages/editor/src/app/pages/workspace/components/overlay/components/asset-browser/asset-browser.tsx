@@ -255,15 +255,15 @@ export const AssetDrawerElement = (
   }, [isOpen]);
 
   return (
-    <div className={className} ref={ref}>
+    <div ref={ref}>
       <AnimatePresence>
         {isOpen && (
-          <Backdrop
-            className="asset-browser-overlay-backdrop"
-            onClick={handleClose}
-          >
+          <div className={className}>
+            <Backdrop
+              className="asset-browser-overlay-backdrop"
+              onClick={handleClose}
+            />
             <Drawer
-              onClick={handlePreventBubbling}
               isAnimated={isAnimated}
               isOpen={isOpen}
               slideFrom="right"
@@ -375,7 +375,7 @@ export const AssetDrawerElement = (
                 </div>
               </div>
             </Drawer>
-          </Backdrop>
+          </div>
         )}
       </AnimatePresence>
     </div>

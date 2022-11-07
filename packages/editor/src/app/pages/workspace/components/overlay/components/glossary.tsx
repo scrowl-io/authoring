@@ -40,12 +40,6 @@ const GlossaryFormElement = (
     });
   };
 
-  const handlePreventBubbling = (ev: React.MouseEvent) => {
-    ev.bubbles = false;
-    ev.stopPropagation();
-    ev.preventDefault();
-  };
-
   useEffect(() => {
     if (term && termWord !== term.word) {
       setTermWord(term.word);
@@ -60,18 +54,15 @@ const GlossaryFormElement = (
   }, [term, isOpen]);
 
   return (
-    <div className={className} ref={ref}>
+    <div ref={ref}>
       <AnimatePresence>
         {isOpen && (
-          <Backdrop
-            className="glossary-form-overlay-backdrop"
-            onClick={handleClose}
-          >
-            <Drawer
-              isAnimated={isAnimated}
-              isOpen={isOpen}
-              onClick={handlePreventBubbling}
-            >
+          <div className={className}>
+            <Backdrop
+              className="glossary-form-overlay-backdrop"
+              onClick={handleClose}
+            />
+            <Drawer isAnimated={isAnimated} isOpen={isOpen}>
               <div className="owlui-offcanvas-header">
                 <h4 className="owlui-offcanvas-title mb-0">
                   {title} Glossary Term
@@ -143,7 +134,7 @@ const GlossaryFormElement = (
                 </form>
               </div>
             </Drawer>
-          </Backdrop>
+          </div>
         )}
       </AnimatePresence>
     </div>

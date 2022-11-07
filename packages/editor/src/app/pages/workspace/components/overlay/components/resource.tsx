@@ -50,12 +50,6 @@ const ResourceFormElement = (
     console.log('asset browse selected');
   };
 
-  const handlePreventBubbling = (ev: React.MouseEvent) => {
-    ev.bubbles = false;
-    ev.stopPropagation();
-    ev.preventDefault();
-  };
-
   useEffect(() => {
     if (resourceTitle !== resource.title) {
       setResourceTitle(resource.title);
@@ -70,17 +64,18 @@ const ResourceFormElement = (
   }, [resource, isOpen, isOpenAssetBrowser]);
 
   return (
-    <div className={className} ref={ref}>
+    <div ref={ref}>
       <AnimatePresence>
         {isOpen && (
-          <Backdrop
-            className="resource-form-overlay-backdrop"
-            onClick={handleClose}
-          >
+          <div className={className}>
+            <Backdrop
+              className="resource-form-overlay-backdrop"
+              onClick={handleClose}
+            />
             <Drawer
               isAnimated={isAnimated}
               isOpen={isOpen}
-              onClick={handlePreventBubbling}
+              style={{ zIndex: isOpenAssetBrowser ? 1040 : 1045 }}
             >
               <div className="owlui-offcanvas-header">
                 <h4 className="owlui-offcanvas-title mb-0">{title} Resource</h4>
@@ -156,7 +151,7 @@ const ResourceFormElement = (
               onClose={handleAssetClose}
               onSelected={handleAssetSelected}
             />
-          </Backdrop>
+          </div>
         )}
       </AnimatePresence>
     </div>

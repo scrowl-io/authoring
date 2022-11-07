@@ -3,7 +3,12 @@
 @use '@owlui/lib/src/theme/global/bootstrap' as *;
 
 // OSG Bootstrap Theme Variables and Overrides
-//
+
+#app {
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
 
 .owlui-modal-title {
   @extend .h5;
