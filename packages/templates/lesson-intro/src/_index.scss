@@ -64,7 +64,7 @@
       }
 
       .wrapper {
-        margin-top: 5em;
+        margin-top: 3em;
         background-color: rgba(251, 251, 251, 0.9);
         padding: 2rem;
         max-height: calc(100vh - 32px);
@@ -74,13 +74,33 @@
         justify-content: center;
         align-items: center;
 
-        hr {
-          width: 0%;
-          border: none;
-          height: 0.4rem;
-          background: var(--bs-body-color);
-          padding: 0;
-          margin: 1rem 0 2rem 0;
+        .lesson-title {
+          font-size: 2em;
+        }
+
+        .lesson-subtitle {
+          font-size: 1em;
+          margin-top: 1em;
+        }
+
+        .lesson-time {
+          display: flex;
+          margin-top: 0.5em;
+
+          span {
+            color: #72727e;
+            margin-left: 0.25em;
+          }
+
+          svg {
+            width: 1em;
+            fill: #72727e;
+          }
+        }
+
+        .lesson-start-button {
+          margin-top: 1em;
+          font-weight: 600;
         }
 
         p {

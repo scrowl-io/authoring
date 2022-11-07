@@ -3,9 +3,9 @@ import { LessonIntroSchemaProps } from './lesson-intro.types';
 export const LessonIntroSchema: LessonIntroSchemaProps = {
   meta: {
     version: '1.0.0',
-    label: 'Text Block',
-    component: 'BlockText',
-    filename: 'block-text',
+    label: 'Lesson Intro',
+    component: 'LessonIntro',
+    filename: 'lesson-intro',
   },
   content: {
     lessonTitle: {
@@ -30,7 +30,7 @@ export const LessonIntroSchema: LessonIntroSchemaProps = {
     lessonTime: {
       type: 'Textbox',
       label: 'Time',
-      value: 'Time',
+      value: '40 min',
       placeholder: 'Time',
       multiLine: false,
       autoGrow: 10,

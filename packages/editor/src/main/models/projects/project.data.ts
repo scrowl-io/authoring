@@ -8,7 +8,13 @@ const TEMPLATES = {
   lessonIntro: JSON.stringify(LessonIntroSchema),
 };
 
-const createSlide = (name: string, mId: number, lId: number, id: number, type: keyof typeof TEMPLATES) => {
+const createSlide = (
+  name: string,
+  mId: number,
+  lId: number,
+  id: number,
+  type: keyof typeof TEMPLATES
+) => {
   const template: TemplateSchema = JSON.parse(TEMPLATES[type]);
 
   return {
@@ -48,24 +54,24 @@ export const createProject = () => {
     modules: [
       {
         id: 0,
-        name: 'Module 1'
+        name: 'Module 1',
       },
       {
         id: 1,
-        name: 'Module 2'
-      }
+        name: 'Module 2',
+      },
     ],
     lessons: [
       {
         moduleId: 0,
         id: 0,
-        name: 'Lesson 1.1'
+        name: 'Lesson 1.1',
       },
       {
         moduleId: 1,
         id: 1,
-        name: 'Lesson 2.1'
-      }
+        name: 'Lesson 2.1',
+      },
     ],
     slides: [
       createSlide('Slide 1.1', 0, 0, 0, 'blockText'),
