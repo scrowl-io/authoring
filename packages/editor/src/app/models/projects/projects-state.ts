@@ -232,12 +232,12 @@ export const config: stateManager.StateConfig = {
           }
           break;
           case 'module':
-            // outlineList = state.data.modules;
-            // movePosition = List.indexBy(outlineList, 'id', moveTo.id);
-            // fromPosition = List.indexBy(outlineList, 'id', moveFrom.id);
-            // outlineData = {
-            //   ...outlineList.splice(fromPosition, 1)[0],
-            // };
+            outlineList = state.data.modules;
+            movePosition = List.indexBy(outlineList, 'id', moveTo.id);
+            fromPosition = List.indexBy(outlineList, 'id', moveFrom.id);
+            outlineData = {
+              ...outlineList.splice(fromPosition, 1)[0],
+            };
             break;
       }
 

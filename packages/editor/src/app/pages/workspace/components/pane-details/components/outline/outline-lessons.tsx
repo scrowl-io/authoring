@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { Button, Icon } from '@owlui/lib';
 import { Collapse } from 'react-bootstrap';
 import { OutlineLessonsProps, OutlineLessonItemProps } from './outline.types';
@@ -9,7 +9,6 @@ import { Projects } from '../../../../../../models';
 import { Elem } from '../../../../../../utils';
 import { menu } from '../../../../../../services';
 import { InputInlineText } from './input-inline-text';
-import { getContainer } from './utils';
 
 export const OutlineLessonItem = ({
   lesson,
@@ -18,11 +17,16 @@ export const OutlineLessonItem = ({
   className,
   ...props
 }: OutlineLessonItemProps) => {
-  let classes = `${css.outlineHeader}`;
+  let classes = `${css.outlineHeader} outline-item__lesson`;
   const [isOpen, setOpen] = useState(true);
   const menuId = `module-${lesson.moduleId}-lesson-menu-${lesson.id}`;
   const [isEdit, setIsEdit] = useState(false);
-  const draggable = useRef<HTMLDivElement | undefined>();
+  const inputContainerProps = {
+    draggable: true,
+    'data-outline-type': 'lesson',
+    'data-lesson-id': lesson.id,
+    'data-module-id': lesson.moduleId,
+  };
   const lessonMenuItems: Array<menu.ContextMenuItem> = [
     {
       label: 'Add Slide',
@@ -100,142 +104,12 @@ export const OutlineLessonItem = ({
     setIsEdit(false);
   };
 
-  const handleDragStart = (ev: React.DragEvent<HTMLDivElement>) => {
-    ev.dataTransfer.setData(
-      'text/plain',
-      JSON.stringify({
-        type: 'lesson',
-        moduleId: lesson.moduleId,
-        id: lesson.id,
-      })
-    );
-    ev.dataTransfer.effectAllowed = 'link';
-
-    const target = ev.target as HTMLDivElement;
-    const ghostElm = target.cloneNode(true) as HTMLDivElement;
-    const appNode = document.getElementById('app');
-
-    if (!appNode) {
-      return;
-    }
-
-    ghostElm.classList.add(css.draggableOutlineItem);
-    appNode.appendChild(ghostElm);
-    ghostElm.style.width = window.getComputedStyle(target).width;
-    draggable.current = ghostElm;
-    ev.dataTransfer.setDragImage(ghostElm, 0, 0);
-  };
-
-  const handleDragEnd = (ev: React.DragEvent<HTMLDivElement>) => {
-    if (!draggable.current) {
-      return;
-    }
-
-    draggable.current.remove();
-    draggable.current = undefined;
-  };
-
-  const handleValidDragTarget = (ev: React.DragEvent<HTMLDivElement>) => {
-    if (!draggable.current) {
-      return;
-    }
-
-    const target = ev.target as HTMLDivElement;
-    const container = getContainer(target, 'outline-list-lesson');
-
-    if (container) {
-      ev.preventDefault();
-      container.classList.add(css.draggableIndicatorLesson);
-    }
-  };
-
-  const inputContainerProps = {
-    draggable: true,
-    onDragStart: handleDragStart,
-    onDragOver: handleValidDragTarget,
-    onDragEnter: handleValidDragTarget,
-    onDragEnd: handleDragEnd,
-    'data-module-id': lesson.moduleId,
-    'data-lesson-id': lesson.id,
-  };
-
-  const handleDragDrop = (ev: React.DragEvent<HTMLDivElement>) => {
-    const moveFrom = JSON.parse(ev.dataTransfer.getData('text/plain'));
-    if (moveFrom.type !== 'slide') {
-      return;
-    }
-
-    ev.preventDefault();
-
-    const target = ev.target as HTMLDivElement;
-    const container = getContainer(target, css.outlineSlide) as HTMLDivElement;
-
-    if (!container) {
-      return;
-    }
-
-    container.classList.remove(css.draggableIndicatorSlide);
-    const moveTo = {
-      moduleId: parseInt(container.dataset.moduleId || ''),
-      lessonId: parseInt(container.dataset.lessonId || ''),
-      id: parseInt(container.dataset.slideId || ''),
-    };
-
-    Projects.moveOutlineItem({
-      moveFrom,
-      moveTo,
-    });
-  };
-
-  const handleDragEnter = (ev: React.DragEvent) => {
-    if (draggable.current) {
-      return;
-    }
-
-    const target = ev.target as HTMLDivElement;
-    const container = getContainer(target, css.outlineSlide);
-
-    if (container) {
-      ev.preventDefault();
-      container.classList.add(css.draggableIndicatorSlide);
-      draggable.current = container;
-    }
-  };
-
-  const handleDragLeave = (ev: React.DragEvent) => {
-    const target = ev.target as HTMLDivElement;
-    const containerSlide = getContainer(target, css.outlineSlide);
-
-    if (!containerSlide) {
-      const indicator = document.getElementsByClassName(
-        css.draggableIndicatorSlide
-      )[0];
-
-      if (!indicator) {
-        return;
-      }
-
-      indicator.classList.remove(css.draggableIndicatorSlide);
-      return;
-    }
-
-    if (
-      containerSlide &&
-      !containerSlide.isSameNode(draggable.current) &&
-      containerSlide.contains(target)
-    ) {
-      containerSlide.classList.remove(css.draggableIndicatorSlide);
-      return;
-    }
-  };
-
   return (
     <div
       className={css.outlineLesson}
       {...props}
       data-module-id={lesson.moduleId}
       data-lesson-id={lesson.id}
-      onDragLeave={handleDragLeave}
     >
       <div className={classes}>
         <Button
@@ -290,9 +164,6 @@ export const OutlineLessonItem = ({
             moduleIdx={moduleIdx}
             lessonId={lesson.id}
             lessonIdx={idx}
-            onDrop={handleDragDrop}
-            onDragEnter={handleDragEnter}
-            onDragOver={handleValidDragTarget}
           />
         </div>
       </Collapse>

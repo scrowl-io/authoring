@@ -47,7 +47,7 @@ export const CanvasBreadcrumb = () => {
                   opsz={20}
                   appearance="Module"
                 />
-                {module.name}
+                {module && module.name}
               </button>
             </li>
             <li className="breadcrumb-item">
@@ -60,7 +60,7 @@ export const CanvasBreadcrumb = () => {
                   opsz={20}
                   appearance="Lesson"
                 />
-                {lesson.name}
+                {lesson && lesson.name}
               </button>
             </li>
             <li className="breadcrumb-item active dropup" aria-current="page">
@@ -76,7 +76,7 @@ export const CanvasBreadcrumb = () => {
                   grad={200}
                   appearance="Slide"
                 />
-                {slide.name}
+                {slide && slide.name}
               </button>
             </li>
           </>
