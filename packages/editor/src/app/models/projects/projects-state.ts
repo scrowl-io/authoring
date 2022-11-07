@@ -148,7 +148,7 @@ export const config: stateManager.StateConfig = {
             moduleId: newLesson.moduleId,
           });
           break;
-        case 'lesson':
+        case 'module':
           const newModule = createItem(action.payload);
 
           newLesson = createItem({
