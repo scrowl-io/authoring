@@ -68,7 +68,7 @@ export const OutlineSlideItem = ({
         sys
           .messageDialog({
             message: 'Are you sure?',
-            buttons: ['Deleted Slide', 'Cancel'],
+            buttons: ['Delete Slide', 'Cancel'],
             detail: slide.name,
           })
           .then((res) => {
