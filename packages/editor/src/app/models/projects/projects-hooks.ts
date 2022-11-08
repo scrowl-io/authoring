@@ -397,10 +397,10 @@ export const create = (): Promise<rq.ApiResult> => {
   });
 };
 
-export const importAsset = (): Promise<rq.ApiResult> => {
+export const upload = (): Promise<rq.ApiResult> => {
 
   return new Promise((resolve) => {
-    API.importAsset().then(resolve);
+    API.upload().then(resolve);
   });
 };
 
@@ -477,7 +477,7 @@ export default {
   setAsset,
   removeAsset,
   create,
-  importAsset,
+  upload,
   save,
   publish,
   list,

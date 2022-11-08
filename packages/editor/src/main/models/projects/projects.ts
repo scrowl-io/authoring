@@ -20,7 +20,7 @@ export const create = (ev: rq.RequestEvent) => {
   });
 };
 
-export const importAsset = (ev: rq.RequestEvent) => {
+export const upload = (ev: rq.RequestEvent) => {
   return new Promise<rq.ApiResult>((resolve) => {
     resolve({
       error: false,
@@ -218,10 +218,10 @@ export const API: ProjectsApi = {
     type: 'invoke',
     fn: create,
   },
-  importAsset: {
-    name: '/projects/import',
+  upload: {
+    name: '/projects/upload',
     type: 'invoke',
-    fn: importAsset,
+    fn: upload,
   },
   save: {
     name: '/projects/save',
@@ -251,7 +251,7 @@ export const init = () => {
 
 export default {
   create,
-  importAsset,
+  upload,
   save,
   publish,
   list,
