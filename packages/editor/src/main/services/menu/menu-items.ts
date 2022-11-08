@@ -1,28 +1,23 @@
 import { Menu, MenuItemConstructorOptions } from 'electron';
-import {
-  editMenuItems,
-  fileMenuItems,
-  helpMenuItems,
-  outlineMenuItems,
-  previewMenuItems,
-  publishMenuItems,
-  windowMenuItems
-} from './items';
+import { MenuItemProps } from './menu.types';
+import * as menus from './items';
 
 export const createMenu = () => {
   const isMac = process.platform === 'darwin';
   const appMenu: MenuItemConstructorOptions = { role: 'appMenu' };
-  const template = [
-    appMenu,
-    fileMenuItems(isMac),
-    editMenuItems(isMac),
-    outlineMenuItems(isMac),
-    previewMenuItems(isMac),
-    publishMenuItems(isMac),
-    windowMenuItems(isMac),
-    helpMenuItems(isMac),
-  ]
+  const menuItems = menus as {[key: string]: MenuItemProps};
+  const template = [appMenu];
 
+  for (const [menuKey, menuItem] of Object.entries(menuItems)) {
+    if (menuItem.create) {
+      template.push(menuItem.create(isMac));
+    }
+
+    if (menuItem.register) {
+      menuItem.register();
+    }
+  }
+  
   const menu = Menu.buildFromTemplate(template);
 
   Menu.setApplicationMenu(menu);

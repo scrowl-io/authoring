@@ -5,7 +5,7 @@ const ENDPOINTS:ProjectsEndpoints = {
   create: '/projects/create',
   importAsset: '/projects/import',
   save: '/projects/save',
-  publish: '/projects/pubish',
+  publish: '/projects/publish',
   list: '/projects/list',
   open: '/projects/open',
 };

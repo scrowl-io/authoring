@@ -1,6 +1,6 @@
 import { MenuItemConstructorOptions } from 'electron';
 
-export const windowMenuItems = (isMac: boolean) => {
+export const create = (isMac: boolean) => {
   const menuId = 'window-menu';
   const template: MenuItemConstructorOptions = {
     id: menuId,
@@ -15,5 +15,5 @@ export const windowMenuItems = (isMac: boolean) => {
 };
 
 export default {
-  windowMenuItems,
+  create,
 };

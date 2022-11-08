@@ -1,6 +1,11 @@
-import { ProjectsApi } from './projects.types';
+import { ProjectsApi, ProjectData } from './projects.types';
 import { createProject } from './project.data';
-import { rq } from '../../services';
+import { rq, fs } from '../../services';
+import * as utils from '../../utils';
+
+const getProjectPath = (name) => {
+  return fs.joinPath(fs.APP_PATHS.save, name);
+};
 
 export const create = (ev: rq.RequestEvent) => {
   return new Promise<rq.ApiResult>((resolve) => {
@@ -24,13 +29,48 @@ export const importAsset = (ev: rq.RequestEvent) => {
   });
 };
 
-export const save = (ev: rq.RequestEvent) => {
+export const save = (ev: rq.RequestEvent, data: ProjectData) => {
   return new Promise<rq.ApiResult>((resolve) => {
-    resolve({
-      error: false,
-      data: {
-        saved: true,
-      },
+    if (!data.meta.name) {
+      resolve({
+        error: true,
+        message: 'Unable to save project: name required',
+        data: {
+          action: 'prompt-project-name',
+        }
+      });
+      return;
+    }
+
+    const projectPath = getProjectPath(utils.str.toKebabCase(data.meta.name));
+
+    // check if folder exists
+
+    fs.archive.compress(data).then((compressedRes) => {
+      console.log('saving', projectPath);
+      console.log('data', compressedRes);
+
+      if (compressedRes.error) {
+        resolve(compressedRes);
+        return;
+      }
+
+      // get/create project
+      /*
+        versions: {
+          date: datestamp (now),
+          data: compresseddata
+        }
+      */
+
+      // write project
+
+      resolve({
+        error: false,
+        data: {
+          saved: true,
+        },
+      });
     });
   });
 };
@@ -72,27 +112,27 @@ export const API: ProjectsApi = {
   importAsset: {
     name: '/projects/import',
     type: 'invoke',
-    fn: create,
+    fn: importAsset,
   },
   save: {
     name: '/projects/save',
     type: 'invoke',
-    fn: create,
+    fn: save,
   },
   publish: {
-    name: '/projects/pubish',
+    name: '/projects/publish',
     type: 'invoke',
-    fn: create,
+    fn: publish,
   },
   list: {
     name: '/projects/list',
     type: 'invoke',
-    fn: create,
+    fn: list,
   },
   open: {
     name: '/projects/open',
     type: 'invoke',
-    fn: create,
+    fn: open,
   },
 };
 

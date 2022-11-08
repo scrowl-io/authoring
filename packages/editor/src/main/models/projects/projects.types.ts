@@ -18,7 +18,7 @@ export interface ProjectsApiSave
 
 export interface ProjectsApiPublish
   extends Omit<rq.RegisterEndpoint, 'name'> {
-  name: '/projects/pubish';
+  name: '/projects/publish';
 }
 
 export interface ProjectsApiList

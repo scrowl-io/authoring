@@ -22,7 +22,7 @@ export const resetState = () => {
   processor.dispatch(fn());
 };
 
-export const useState = () => {
+export const useData = () => {
   return useSelector((data: stateManager.RootState) => data.projects.data);
 };
 
@@ -395,9 +395,7 @@ export const importAsset = (): Promise<rq.ApiResult> => {
   });
 };
 
-export const save = (): Promise<rq.ApiResult> => {
-  const data = useSelector((data: stateManager.RootState) => data.projects.data.data);
-
+export const save = (data): Promise<rq.ApiResult> => {
   return new Promise((resolve) => {
     API.save(data).then(resolve);
   });
@@ -427,7 +425,7 @@ export const open = (): Promise<rq.ApiResult> => {
 export default {
   useProcessor,
   resetState,
-  useState,
+  useData,
   setData,
   useMeta,
   setMeta,

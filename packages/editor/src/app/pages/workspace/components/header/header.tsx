@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ButtonGroup, Dropdown, Navbar, Nav } from 'react-bootstrap';
 import { motion } from 'framer-motion';
 import { Button, Icon } from '@owlui/lib';
@@ -144,6 +144,15 @@ export const Header = () => {
   const handleCloseConfirmation = () => {
     setIsOpenConfirmation(false);
   };
+
+  useEffect(() => {
+    if (projectMeta.name !== projectName) {
+      const nameLn = projectMeta.name.length;
+
+      setProjectName(projectMeta.name);
+      setProjectNameSize(nameLn - 3 < 13 ? 13 : nameLn - 3);
+    }
+  }, [projectMeta.name]);
 
   return (
     <>
