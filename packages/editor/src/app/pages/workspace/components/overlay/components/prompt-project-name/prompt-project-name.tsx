@@ -3,6 +3,7 @@ import { Button } from '@owlui/lib';
 import * as css from './_prompt-project-name.scss';
 import { Modal } from '../modal';
 import { Projects } from '../../../../../../models';
+import { sys } from '../../../../../../services';
 import {
   usePromptProjectName,
   closePromptProjectName,
@@ -40,6 +41,12 @@ const PromptProjectNameElement = ({ isOpen, ...props }, ref) => {
     Projects.save(projectData).then((res) => {
       if (res.error) {
         console.error(res);
+
+        if (!res.data.action) {
+          sys.messageDialog({
+            message: res.message,
+          });
+        }
         return;
       }
 

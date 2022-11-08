@@ -24,7 +24,7 @@ export const compress = (data) => {
       resolve({
         error: false,
         data: {
-          data: zippedData,
+          data: zippedData.toString('utf-8'),
         },
       });
     })

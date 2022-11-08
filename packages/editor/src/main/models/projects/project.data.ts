@@ -20,18 +20,16 @@ const createSlide = (name: string, mId: number, lId: number, id: number, type: k
 }
 
 export const createProject = () => {
+  const now = new Date().toISOString();
+
   const data: ProjectData = {
     meta: {
-      id: "",
-      name: "",
-      blueprint: "",
-      version: 0,
-      createdBy: "",
-      folder: "",
+      id: '',
+      name: '',
+      filename: '',
+      createdAt: now,
+      updatedAt: now,
       tags: [],
-      scrowlVer: "",
-      dateCreated: "",
-      lastSaved: "",
     },
     scorm: {
       name: "",
@@ -61,7 +59,6 @@ export const createProject = () => {
     ],
     glossary: [],
     resources: [],
-    assets: [],
   };
 
   return data;

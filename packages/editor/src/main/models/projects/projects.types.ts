@@ -52,14 +52,12 @@ export type ProjectsEndpoints = {
 export type ProjectMeta = {
   id: string;
   name: string;
-  blueprint: string;
-  version: number;
-  createdBy: string;
-  folder: string;
+  filename: string;
+  createdAt: string;
+  updatedAt: string;
   tags: Array<string>;
-  scrowlVer: string;
-  dateCreated: string;
-  lastSaved: string;
+  blueprint?: string;
+  createdBy?: string;
 };
 
 export type ProjectScorm = {
@@ -76,6 +74,7 @@ export type ProjectScorm = {
 export type ProjectAsset = {
   name: string;
   location: string;
+  isDeleted?: boolean;
 };
 
 export type ProjectModule = {
@@ -113,10 +112,22 @@ export type ProjectResource = {
 export type ProjectData = {
   meta: Partial<ProjectMeta>,
   scorm: Partial<ProjectScorm>;
-  assets?: Array<ProjectAsset>;
   modules?: Array<ProjectModule>;
   lessons?: Array<ProjectLesson>;
   slides?: Array<ProjectSlide>;
   glossary?: Array<ProjectGlossaryItem>;
   resources?: Array<ProjectResource>;
+};
+
+export type ProjectFile = {
+  createdAt: string;
+  openedAt: string;
+  updatedAt: string;
+  assets: Array<ProjectAsset>;
+  versions: Array<
+    {
+      createdAt: string;
+      filename: string;
+    }
+  >
 };

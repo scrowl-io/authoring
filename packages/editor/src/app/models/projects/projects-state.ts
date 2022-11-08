@@ -3,6 +3,9 @@ import { stateManager } from '../../services';
 import { updateObj, List } from '../../utils';
 
 export const initialState = {
+  isDirty: false, // true if the user has made any change
+  isUncommitted: false, // true if the user has any unsaved change
+  assets: [],
   data: {
     meta: {
       id: null,
@@ -26,7 +29,6 @@ export const initialState = {
       outputFormat: "SCORM 2004",
       optomizeMedia: "Recommended",
     },
-    assets: [],
     modules: [],
     lessons: [],
     slides: [],
@@ -81,23 +83,36 @@ export const config: stateManager.StateConfig = {
     resetState: (state) => {
       state = initialState
     },
+    resetIsUncommitted: (state) => {
+      state.isUncommitted = false;
+    },
     setData: (state, action) => {
       state.data = action.payload;
     },
     setMeta: (state, action) => {
       updateObj(state.data.meta, action.payload);
+      state.isDirty = true;
+      state.isUncommitted = true;
     },
     setScorm: (state, action) => {
       updateObj(state.data.scorm, action.payload);
+      state.isDirty = true;
+      state.isUncommitted = true;
     },
     removeModule: (state, action) => {
       state.data.modules.splice(action.payload.idx);
+      state.isDirty = true;
+      state.isUncommitted = true;
     },
     removeLesson: (state, action) => {
       state.data.lessons.splice(action.payload.idx);
+      state.isDirty = true;
+      state.isUncommitted = true;
     },
     removeSlide: (state, action) => {
       state.data.slides.splice(action.payload.idx);
+      state.isDirty = true;
+      state.isUncommitted = true;
     },
     addOutlineItem: (state, action) => {
       const createItem = (payload) => {
@@ -164,6 +179,9 @@ export const config: stateManager.StateConfig = {
           });
           break;
       }
+
+      state.isDirty = true;
+      state.isUncommitted = true;
     },
     setOutlineItem: (state, action) => {
       let outlineList;
@@ -190,6 +208,9 @@ export const config: stateManager.StateConfig = {
           break;
         }
       }
+
+      state.isDirty = true;
+      state.isUncommitted = true;
     },
     moveOutlineItem: (state, action) => {
       let outlineList;
@@ -244,6 +265,9 @@ export const config: stateManager.StateConfig = {
       if (outlineList) {
         outlineList.splice(movePosition, 0, outlineData);
       }
+
+      state.isDirty = true;
+      state.isUncommitted = true;
     },
     duplicateOutlineItem: (state, action) => {
       let outlineList;
@@ -308,7 +332,10 @@ export const config: stateManager.StateConfig = {
           break;
       }
 
-      outlineList.splice(dupPosition, 0, outlineData)
+      outlineList.splice(dupPosition, 0, outlineData);
+
+      state.isDirty = true;
+      state.isUncommitted = true;
     },
     removeOutlineItem: (state, action) => {
       const { type, ...data } = action.payload;
@@ -327,6 +354,9 @@ export const config: stateManager.StateConfig = {
           state.data.slides = List.filterBy(state.data.slides, 'id', data.id, 'NE');
           break;
       }
+
+      state.isDirty = true;
+      state.isUncommitted = true;
     },
     addGlossaryItem: (state, action) => {
       const lastIdx = state.data.glossary.length;
@@ -338,6 +368,9 @@ export const config: stateManager.StateConfig = {
       }
 
       state.data.glossary.push(action.payload);
+
+      state.isDirty = true;
+      state.isUncommitted = true;
     },
     setGlossaryItem: (state, action) => {
       let lookup;
@@ -351,21 +384,33 @@ export const config: stateManager.StateConfig = {
           break;
         }
       }
+
+      state.isDirty = true;
+      state.isUncommitted = true;
     },
     removeGlossaryItem: (state, action) => {
       state.data.glossary.splice(action.payload.idx);
+
+      state.isDirty = true;
+      state.isUncommitted = true;
     },
     addResourceItem: (state, action) => {
       state.data.resources.push(action.payload);
+
+      state.isDirty = true;
+      state.isUncommitted = true;
     },
     setResourceItem: (state, action) => {
       
     },
     removeResourceItem: (state, action) => {
       state.data.resources.splice(action.payload.idx);
+
+      state.isDirty = true;
+      state.isUncommitted = true;
     },
     addAssetItem: (state, action) => {
-      state.data.assets.push(action.payload);
+      state.assets.push(action.payload);
     },
     setAssetItem: (state, action) => {
       
@@ -397,6 +442,7 @@ export const {
   addAssetItem,
   setAssetItem,
   removeAssetItem,
+  resetIsUncommitted,
 } = slice.actions;
 
 export const reducer = slice.reducer;

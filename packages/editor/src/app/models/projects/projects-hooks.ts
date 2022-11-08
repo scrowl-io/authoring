@@ -22,6 +22,15 @@ export const resetState = () => {
   processor.dispatch(fn());
 };
 
+export const useInteractions = () => {
+  return useSelector((data: stateManager.RootState) => {
+    return {
+      isDirty: data.projects.isDirty,
+      isUncommitted: data.projects.isUncommitted, 
+    };
+  });
+};
+
 export const useData = () => {
   return useSelector((data: stateManager.RootState) => data.projects.data);
 };
@@ -346,7 +355,7 @@ export const removeResourceItem = (data) => {
 };
 
 export const useAssets = () => {
-  return useSelector((data: stateManager.RootState) => data.projects.data.assets);
+  return useSelector((data: stateManager.RootState) => data.projects.assets);
 }
 
 export const addAsset = (data) => {
@@ -397,7 +406,14 @@ export const importAsset = (): Promise<rq.ApiResult> => {
 
 export const save = (data): Promise<rq.ApiResult> => {
   return new Promise((resolve) => {
-    API.save(data).then(resolve);
+    API.save(data).then((res) => {
+      if (processor.dispatch) {
+        const fn = state.resetIsUncommitted as ActionCreatorWithoutPayload;
+        processor.dispatch(fn());
+      }
+
+      resolve(res);
+    });
   });
 };
 
