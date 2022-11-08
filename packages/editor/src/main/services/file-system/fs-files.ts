@@ -3,7 +3,8 @@ import path from 'path';
 import { URL } from 'url';
 import { app } from 'electron';
 import fs from 'fs-extra';
-import { FileDataResult, FileExistsResult, FSResult } from './fs.types';
+import { rq } from '../';
+import { FileDataResult, FileExistsResult } from './fs.types';
 
 export const APP_PATHS = {
   root: path.join(__dirname, '../../../../'),
@@ -41,7 +42,7 @@ export const getDistPath = (...paths) => {
   return joinPath(APP_PATHS.root, 'dist', ...paths);
 };
 
-const createResultError = (message: string, error?: unknown): FSResult => {
+const createResultError = (message: string, error?: unknown): rq.ApiResult => {
   if (error === undefined) {
     return {
       error: true,
@@ -82,7 +83,7 @@ export const getBasename = (pathname: string, ext?: string) => {
   return path.basename(pathname, ext);
 };
 
-export const fileExistsSync = (pathname: string): FSResult => {
+export const fileExistsSync = (pathname: string): rq.ApiResult => {
   try {
     return {
       error: false,
@@ -104,7 +105,7 @@ export const fileExistsSync = (pathname: string): FSResult => {
 };
 
 export const fileExists = (pathname: string) => {
-  return new Promise<FSResult>(resolve => {
+  return new Promise<rq.ApiResult>(resolve => {
     try {
       fs.pathExists(pathname)
         .then(exists => {
@@ -177,7 +178,7 @@ export const fileReadSync = (
 };
 
 export const fileRead = (pathname: string) => {
-  return new Promise<FSResult>(resolve => {
+  return new Promise<rq.ApiResult>(resolve => {
     if (!pathname) {
       resolve(createResultError('Unable to read file: path required'));
       return;
@@ -264,7 +265,7 @@ export const fileWriteSync = (
 };
 
 export const fileWrite = (pathname: string, contents: unknown) => {
-  return new Promise<FSResult>((resolve, reject) => {
+  return new Promise<rq.ApiResult>((resolve, reject) => {
     if (!pathname) {
       resolve(createResultError('Unable to write file: path required'));
       return;
@@ -302,7 +303,7 @@ export const fileWrite = (pathname: string, contents: unknown) => {
 };
 
 export const copy = (source: string, dest: string, opts?: fs.CopyOptions) => {
-  return new Promise<FSResult>(resolve => {
+  return new Promise<rq.ApiResult>(resolve => {
     if (!source) {
       resolve(
         createResultError('Unable to copy temp to source: source required')

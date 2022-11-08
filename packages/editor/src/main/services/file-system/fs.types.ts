@@ -3,14 +3,18 @@ import {
   OpenDialogReturnValue,
   SaveDialogReturnValue,
 } from 'electron';
+import { rq } from '..';
 import {
   ApiResultSuccess,
   ApiResultError,
-  ApiResult,
   JsonResult,
 } from '../requester';
 
 export { Dirent } from 'fs-extra';
+
+export type {
+  MessageBoxOptions as SystemMessageDialogOptions
+} from 'electron';
 
 export interface FileFilters {
   [key: string]: FileFilter;
@@ -76,4 +80,14 @@ export interface DialogOpenResultSuccess
 
 export type DialogOpenResult = DialogOpenResultSuccess | ApiResultError;
 
-export type FSResult = ApiResult;
+export interface FSApiMessage extends Omit<rq.RegisterEndpoint, 'name'> {
+  name: '/system/message';
+}
+
+export type FSApi = Partial<{
+  message: FSApiMessage;
+}>;
+
+export type FSEndpoints = {
+  message: FSApiMessage['name'];
+};
