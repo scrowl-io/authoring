@@ -142,7 +142,6 @@ export const config: stateManager.StateConfig = {
           name,
           id: newId,
         };
-
         outlineList.splice(addPosition , 0, newItem);
         return newItem;
       }
@@ -204,7 +203,10 @@ export const config: stateManager.StateConfig = {
 
       for (let i = 0; i < listLn; i++) {
         if (id === outlineList[i].id) {
-          updateObj(outlineList[i], data);
+          outlineList[i] = {
+            ...data,
+            id,
+          };
           break;
         }
       }
@@ -418,7 +420,7 @@ export const config: stateManager.StateConfig = {
     removeAssetItem: (state, action) => {
       state.data.assets.splice(action.payload.idx);
     },
-  }
+  },
 };
 
 export const slice = createSlice(config);
