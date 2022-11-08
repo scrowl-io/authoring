@@ -3,7 +3,7 @@ import path from 'path';
 import { URL } from 'url';
 import { app } from 'electron';
 import fs from 'fs-extra';
-import { FileDataResult, FileExistsResult, FSResult } from './service-fs.types';
+import { FileDataResult, FileExistsResult, FSResult } from './fs.types';
 
 export const APP_PATHS = {
   root: path.join(__dirname, '../../../../'),
