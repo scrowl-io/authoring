@@ -1,12 +1,45 @@
 
 import path from 'path';
+import { URL } from 'url';
 import { app } from 'electron';
 import fs from 'fs-extra';
 import { FileDataResult, FileExistsResult, FSResult } from './service-fs.types';
 
-export const pathSaveFolder = app.getPath('userData');
-export const pathTempFolder = path.join(app.getPath('temp'), 'scrowl');
-export const pathDownloadsFolder = app.getPath('downloads');
+export const APP_PATHS = {
+  root: path.join(__dirname, '../../../../'),
+  save: path.join(app.getPath('documents'), 'scrowl'),
+  temp: path.join(app.getPath('temp'), 'scrowl'),
+};
+
+export const getAppPath = (filename: string) => {
+  const isDevEnv = process.env.NODE_ENV === 'development';
+
+  if (isDevEnv) {
+    const port = process.env.PORT || 1234;
+    const url = new URL(`http://localhost:${port}`);
+
+    url.pathname = filename;
+    return url.href;
+  } else {
+    return `file://${getSrcPath(filename)}`;
+  }
+};
+
+export const getAssetPath = (...paths) => {
+  return app.isPackaged
+  ? joinPath(process.resourcesPath, 'assets', ...paths)
+  : joinPath(APP_PATHS.root, 'assets', ...paths);
+};
+
+export const getSrcPath = (...paths) => {
+  return app.isPackaged
+  ? joinPath(process.resourcesPath, '../src', 'main', ...paths)
+  : joinPath(APP_PATHS.root, 'src', 'main', ...paths);
+}
+
+export const getDistPath = (...paths) => {
+  return joinPath(APP_PATHS.root, 'dist', ...paths);
+};
 
 const createResultError = (message: string, error?: unknown): FSResult => {
   if (error === undefined) {
@@ -47,19 +80,6 @@ export const getDirname = (pathname: string) => {
 
 export const getBasename = (pathname: string, ext?: string) => {
   return path.basename(pathname, ext);
-};
-
-export const getAssetPath = (sourceDir: string) => {
-  const assetPath = __dirname.replace(
-    joinPath('services', 'file-system'),
-    sourceDir
-  );
-
-  if (process.env.NODE_ENV === 'development') {
-    return assetPath;
-  }
-
-  return assetPath.replace('Resources/app.asar/', '');
 };
 
 export const fileExistsSync = (pathname: string): FSResult => {
@@ -330,6 +350,7 @@ export const copy = (source: string, dest: string, opts?: fs.CopyOptions) => {
 };
 
 export default {
+  APP_PATHS,
   normalizePath,
   isJSON,
   joinPath,

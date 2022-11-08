@@ -7,18 +7,17 @@ import {
 import installExtension, {
   REACT_DEVELOPER_TOOLS,
 } from 'electron-devtools-installer';
-import { getAppPath, getSourcePath, getAssetPath } from './locate';
 import { Models } from '../models';
-import { Services } from '../services';
+import { Services, fs } from '../services';
 import { log } from '../services';
 
 export const init = () => {
   log.info('application starting');
-  const appPath = getAppPath('app.html');
+  const appPath = fs.getAppPath('app.html');
   log.info(`RESOURCE_PATH: ${appPath}`);
-  const preloadPath = getSourcePath('preload.js');
+  const preloadPath = fs.getDistPath('preload.js');
   log.info(`RESOURCE_PATH: ${preloadPath}`);
-  const iconPath = getAssetPath('icon.png');
+  const iconPath = fs.getAssetPath('icon.png');
   log.info(`RESOURCE_PATH: ${iconPath}`);
   const isDARWIN = process.platform === 'darwin';
   const isDevEnv = process.env.NODE_ENV === 'development';

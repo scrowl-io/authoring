@@ -1,5 +1,5 @@
 import log from 'electron-log';
-import { joinPath, pathSaveFolder } from '../file-system';
+import { joinPath, APP_PATHS } from '../file-system';
 
 const addLeadZero = (val: number | string) => {
   return `0${val}`.slice(-2);
@@ -18,10 +18,8 @@ const getTimestamp = () => {
 };
 
 log.transports.file.resolvePath = () => {
-  // logs can be found on macOS at
-  // dev: Users/[username]/Library/Application Support/Electron/logs
-  // prod: Users/[username]/Library/Application Support/scrowl-authoring/logs
-  return joinPath(pathSaveFolder, 'logs', `main.${getTimestamp()}.log`);
+  // dev: 
+  return joinPath(APP_PATHS.save, 'logs', `main.${getTimestamp()}.log`);
 };
 
 export const info = (...args: unknown[]) => {
