@@ -1,9 +1,11 @@
 import { ProjectData } from './projects.types';
 import { TemplateSchema } from '../templates/templates.types';
 import { BlockTextSchema } from '@scrowl/template-block-text/schema';
+import { SimpleTextSchema } from '@scrowl/template-simple-text/schema';
 
 const TEMPLATES = {
   blockText: JSON.stringify(BlockTextSchema),
+  simpleText: JSON.stringify(SimpleTextSchema),
 };
 
 const createSlide = (name: string, mId: number, lId: number, id: number, type: keyof typeof TEMPLATES) => {
@@ -17,7 +19,7 @@ const createSlide = (name: string, mId: number, lId: number, id: number, type: k
     template,
     notes: '',
   };
-}
+};
 
 export const createProject = () => {
   const now = new Date().toISOString();
@@ -55,7 +57,8 @@ export const createProject = () => {
       }
     ],
     slides: [
-      createSlide('Slide 1', 0, 0, 0, 'blockText'),
+      createSlide('Slide 1.1', 0, 0, 0, 'blockText'),
+      createSlide('Slide 1.2', 0, 0, 1, 'simpleText'),
     ],
     glossary: [],
     resources: [],
