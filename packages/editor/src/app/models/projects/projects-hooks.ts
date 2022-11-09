@@ -22,11 +22,20 @@ export const resetState = () => {
   processor.dispatch(fn());
 };
 
-export const useState = () => {
+export const useInteractions = () => {
+  return useSelector((data: stateManager.RootState) => {
+    return {
+      isDirty: data.projects.isDirty,
+      isUncommitted: data.projects.isUncommitted, 
+    };
+  });
+};
+
+export const useData = () => {
   return useSelector((data: stateManager.RootState) => data.projects.data);
 };
 
-export const setData = (data) => {
+const setData = (data) => {
   if (!processor.dispatch) {
     console.warn('projects processor not ready');
     return;
@@ -58,7 +67,7 @@ export const setScorm = (data) => {
     return;
   }
 
-  processor.dispatch(state.setMeta(data));
+  processor.dispatch(state.setScorm(data));
 };
 
 export const useModules = (moduleId?: number,) => {
@@ -346,7 +355,7 @@ export const removeResourceItem = (data) => {
 };
 
 export const useAssets = () => {
-  return useSelector((data: stateManager.RootState) => data.projects.data.assets);
+  return useSelector((data: stateManager.RootState) => data.projects.assets);
 }
 
 export const addAsset = (data) => {
@@ -378,57 +387,93 @@ export const removeAsset = (data) => {
 
 export const create = (): Promise<rq.ApiResult> => {
   return new Promise((resolve) => {
-    API.create().then((result) => {
-      if (!result.error) {
-        setData(result.data.project);
+    API.create().then((res) => {
+      if (res.error) {
+        console.error(res)
+      } else {
+        setData(res.data.project);
       }
 
-      resolve(result);
+      resolve(res);
     });
   });
 };
 
-export const importAsset = (): Promise<rq.ApiResult> => {
+export const upload = (): Promise<rq.ApiResult> => {
 
   return new Promise((resolve) => {
-    API.importAsset().then(resolve);
+    API.upload().then((res) => {
+      if (res.error) {
+        console.error(res);
+      }
+
+      resolve(res);
+    });
   });
 };
 
-export const save = (): Promise<rq.ApiResult> => {
-  const data = useSelector((data: stateManager.RootState) => data.projects.data.data);
-
+export const save = (data): Promise<rq.ApiResult> => {
   return new Promise((resolve) => {
-    API.save(data).then(resolve);
+    API.save(data).then((res) => {
+      if (processor.dispatch) {
+        const fn = state.resetIsUncommitted as ActionCreatorWithoutPayload;
+        processor.dispatch(fn());
+      }
+
+      if (res.error) {
+        console.error(res);
+      } else {
+        setData(res.data.project);
+      }
+
+      resolve(res);
+    });
   });
 };
 
-export const publish = (): Promise<rq.ApiResult> => {
+export const publish = (data): Promise<rq.ApiResult> => {
 
   return new Promise((resolve) => {
-    API.publish().then(resolve);
+    API.publish(data).then((res) => {
+      if (res.error) {
+        console.error(res);
+      }
+
+      resolve(res);
+    });
   });
 };
 
 export const list = (): Promise<rq.ApiResult> => {
 
   return new Promise((resolve) => {
-    API.list().then(resolve);
+    API.list().then((res) => {
+      if (res.error) {
+        console.error(res);
+      }
+
+      resolve(res);
+    });
   });
 };
 
 export const open = (): Promise<rq.ApiResult> => {
 
   return new Promise((resolve) => {
-    API.open().then(resolve);
+    API.open().then((res) => {
+      if (res.error) {
+        console.error(res);
+      }
+
+      resolve(res);
+    });
   });
 };
 
 export default {
   useProcessor,
   resetState,
-  useState,
-  setData,
+  useData,
   useMeta,
   setMeta,
   useScorm,
@@ -463,7 +508,7 @@ export default {
   setAsset,
   removeAsset,
   create,
-  importAsset,
+  upload,
   save,
   publish,
   list,

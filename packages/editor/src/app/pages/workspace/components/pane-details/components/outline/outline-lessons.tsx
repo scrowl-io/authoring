@@ -7,7 +7,7 @@ import { OutlineSlides } from './outline-slides';
 import { resetActiveSlide } from '../../../../';
 import { Projects } from '../../../../../../models';
 import { Elem } from '../../../../../../utils';
-import { menu } from '../../../../../../services';
+import { menu, sys } from '../../../../../../services';
 import { InputInlineText } from './input-inline-text';
 
 export const OutlineLessonItem = ({
@@ -64,8 +64,23 @@ export const OutlineLessonItem = ({
     {
       label: 'Delete Lesson',
       click: () => {
-        resetActiveSlide();
-        Projects.removeLesson(lesson);
+        sys
+          .messageDialog({
+            message: 'Are you sure?',
+            buttons: ['Delete Lesson', 'Cancel'],
+            detail: lesson.name,
+          })
+          .then((res) => {
+            if (res.error) {
+              console.error(res);
+              return;
+            }
+
+            if (res.data.response === 0) {
+              resetActiveSlide();
+              Projects.removeModule(lesson);
+            }
+          });
       },
     },
   ];

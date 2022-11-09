@@ -7,6 +7,7 @@ export const initialState = {
   isOpenGlossaryEditor: false,
   isOpenAssetBrowser: false,
   isOpenTemplateBrowser: false,
+  isOpenPromptProjectName: false,
   contentFocus: null,
   newSlide: false,
 };
@@ -36,6 +37,12 @@ export const config: stateManager.StateConfig = {
     resetNewSlide: (state) => {
       state.newSlide = false;
     },
+    openPromptProjectName: (state) => {
+      state.isOpenPromptProjectName = true;
+    },
+    closePromptProjectName: (state) => {
+      state.isOpenPromptProjectName = false;
+    },
   },
   extraReducers: {
     [Projects.state.addOutlineItem.type]: (state) => {
@@ -46,7 +53,17 @@ export const config: stateManager.StateConfig = {
 
 export const slice = createSlice(config);
 
-export const { setData, resetData, setContentFocus, resetContentFocus, openTemplateBrowser, closeTemplateBrowser, resetNewSlide } = slice.actions;
+export const {
+  setData,
+  resetData,
+  setContentFocus,
+  resetContentFocus,
+  openTemplateBrowser,
+  closeTemplateBrowser,
+  resetNewSlide,
+  openPromptProjectName,
+  closePromptProjectName
+} = slice.actions;
 
 export const reducer = slice.reducer;
 

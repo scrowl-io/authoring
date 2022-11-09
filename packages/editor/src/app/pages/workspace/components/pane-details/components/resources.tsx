@@ -80,9 +80,9 @@ export const Resources = () => {
   return (
     <>
       <div>
-        <dl className={css.tabResourceList}>
+        <dl>
           {sortedResources.map((resource, idx) => (
-            <div key={idx} className={css.tabResourceItem}>
+            <div key={idx}>
               <div
                 className="d-flex justify-content-between"
                 onClick={() => {
@@ -92,7 +92,7 @@ export const Resources = () => {
                   handleResourceMenu(ev, resource);
                 }}
               >
-                <dt className={css.tabResourceItemTitle}>{resource.title}</dt>
+                <dt>{resource.title}</dt>
                 <Button
                   className={css.actionMenu}
                   variant="ghost"
@@ -106,9 +106,7 @@ export const Resources = () => {
                   <Icon display="rounded" icon="more_vert" opsz={20} filled />
                 </Button>
               </div>
-              <dd className={css.tabResourceItemDescription}>
-                {resource.definition}
-              </dd>
+              <dd>{resource.definition}</dd>
             </div>
           ))}
         </dl>

@@ -1,5 +1,6 @@
 {
   "name": "@scrowl/editor",
+  "productName": "Scrowl",
   "version": "0.0.1",
   "license": "MIT",
   "keywords": [],
@@ -16,7 +17,7 @@
   },
   "homepage": "https://github.com/scrowl-io/authoring/packages/editor#readme",
   "scripts": {
-    "clean": "rimraf dist",
+    "clean": "rimraf dist && rimraf release/build && rimraf release/app",
     "copy:assets": "node ./scripts/copy-assets.mjs",
     "start:frontend": "parcel serve --target frontend --no-cache --port 5003 --no-cache",
     "start:preload": "parcel build --target preload --no-cache",
@@ -25,10 +26,16 @@
     "reload:backend": "wait-on dist/preload.js dist/main.js http://localhost:5003 && nodemon --watch dist/main.js --watch dist/preload.js --exec electron ./dist/main.js",
     "prestart": "yarn clean && node ./scripts/reset-dev-env.mjs",
     "start": "cross-env NODE_ENV=development PORT=5003 concurrently \"yarn start:frontend\" \"yarn start:preload\" \"yarn reload:preload\" \"yarn start:backend\" \"yarn reload:backend\"",
-    "build": "",
+    "build:frontend": "parcel build --no-cache --no-source-maps --public-url ../dist --target frontend",
+    "build:backend": "parcel build --no-cache --no-source-maps --public-url ../dist --target backend --target preload",
+    "prebuild": "yarn run clean",
+    "build": "yarn run build:backend && yarn run build:frontend",
+    "postbuild": "electron-builder build",
+    "build:test": "yarn run build && open release/build/mac",
     "lint": "",
     "postinstall": "yarn electron-builder install-app-deps"
   },
+  "main": "./dist/main.js",
   "backend": "./dist/main.js",
   "preload": "./dist/preload.js",
   "frontend": "./dist/app.html",
@@ -73,7 +80,11 @@
     "files": [
       "dist/*",
       "../../node_modules/**/*",
+      "./node_modules/**/*",
       "./package.json"
+    ],
+    "extraFiles": [
+      "./src/main/assets/**"
     ],
     "extraResources": [
       "./assets/**"
@@ -112,6 +123,8 @@
     "@types/react": "^18.0.21",
     "@types/react-dom": "^18.0.6",
     "@types/react-redux": "^7.1.24",
+    "@types/uuid": "^8.3.4",
+    "asar": "^3.2.0",
     "concurrently": "^7.4.0",
     "cross-env": "^7.0.3",
     "electron": "20.3.0",
@@ -138,6 +151,7 @@
     "@scrowl/template-block-text": "^1.0.0",
     "@scrowl/template-core": "^1.0.0",
     "@scrowl/template-simple-text": "^1.0.0",
+    "adm-zip": "^0.5.9",
     "bootstrap": "^5.2.2",
     "electron-context-menu": "^3.5.0",
     "electron-devtools-installer": "^3.2.0",
@@ -146,6 +160,7 @@
     "electron-squirrel-startup": "^1.0.0",
     "framer-motion": "^7.5.3",
     "fs-extra": "^10.1.0",
+    "handlebars": "^4.7.7",
     "hasha": "^5.2.2",
     "lottie-web": "^5.9.6",
     "md5": "^2.3.0",

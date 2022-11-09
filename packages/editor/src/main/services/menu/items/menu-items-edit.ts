@@ -1,6 +1,6 @@
 import { MenuItemConstructorOptions } from 'electron';
 
-export const editMenuItems = (isMac: boolean) => {
+export const create = (isMac: boolean) => {
   const menuId = 'edit-menu';
   const template: MenuItemConstructorOptions = {
     id: menuId,
@@ -57,5 +57,5 @@ export const editMenuItems = (isMac: boolean) => {
 };
 
 export default {
-  editMenuItems,
+  create,
 };

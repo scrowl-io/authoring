@@ -3,9 +3,9 @@ import { rq } from '../../services';
 
 const ENDPOINTS:ProjectsEndpoints = {
   create: '/projects/create',
-  importAsset: '/projects/import',
+  upload: '/projects/upload',
   save: '/projects/save',
-  publish: '/projects/pubish',
+  publish: '/projects/publish',
   list: '/projects/list',
   open: '/projects/open',
 };
@@ -14,8 +14,8 @@ export const create = (data?: any): Promise<rq.ApiResult> => {
   return rq.invoke(ENDPOINTS.create, data);
 };
 
-export const importAsset = (data?): Promise<rq.ApiResult> => {
-  return rq.invoke(ENDPOINTS.importAsset, data);
+export const upload = (data?): Promise<rq.ApiResult> => {
+  return rq.invoke(ENDPOINTS.upload, data);
 };
 
 export const save = (data?): Promise<rq.ApiResult> => {
@@ -36,7 +36,7 @@ export const open = (data?): Promise<rq.ApiResult> => {
 
 export default {
   create,
-  importAsset,
+  upload,
   save,
   publish,
   list,

@@ -195,6 +195,32 @@ export const resetNewSlide = () => {
   processor.dispatch(fn());
 };
 
+export const usePromptProjectName = () => {
+  return useSelector((data: stateManager.RootState) => {
+    return data.workspace.isOpenPromptProjectName;
+  });
+};
+
+export const openPromptProjectName = () => {
+  if (!processor.dispatch) {
+    console.warn('workspace processor not ready');
+    return;
+  }
+
+  const fn = state.workspace.openPromptProjectName as ActionCreatorWithoutPayload;
+  processor.dispatch(fn());
+};
+
+export const closePromptProjectName = () => {
+  if (!processor.dispatch) {
+    console.warn('workspace processor not ready');
+    return;
+  }
+
+  const fn = state.workspace.closePromptProjectName as ActionCreatorWithoutPayload;
+  processor.dispatch(fn());
+};
+
 export default {
   useProcessor,
   useWorkspace,
@@ -215,4 +241,7 @@ export default {
   closeTemplateBrowser,
   useNewSlide,
   resetNewSlide,
+  usePromptProjectName,
+  openPromptProjectName,
+  closePromptProjectName,
 };

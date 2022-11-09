@@ -23,3 +23,40 @@ export type MenuEndpoints = {
 export type ContextMenuItem = MenuItemConstructorOptions;
 
 export type ContextMenuPosition = [number, number];
+
+export type MenuItemProps = {
+  API?: rq.RegisterEndpoints;
+  register?: () => void;
+  create?: (isMac: boolean) => MenuItemConstructorOptions;
+  [key: string]: any;
+};
+
+export interface MenuItemApiFileCreate extends Omit<rq.RegisterEndpoint, 'name'> {
+  name: '/file/create';
+}
+
+export interface MenuItemApiFileSave extends Omit<rq.RegisterEndpoint, 'name'> {
+  name: '/file/save';
+}
+
+export interface MenuItemApiFileOpen extends Omit<rq.RegisterEndpoint, 'name'> {
+  name: '/file/open';
+}
+
+export interface MenuItemApiFileClose extends Omit<rq.RegisterEndpoint, 'name'> {
+  name: '/file/close';
+}
+
+export type MenuItemApiFile = {
+  create: MenuItemApiFileCreate;
+  save: MenuItemApiFileSave;
+  open: MenuItemApiFileOpen;
+  close: MenuItemApiFileClose;
+}
+
+export type MenuItemEndpointFile = {
+  create: MenuItemApiFileCreate['name'];
+  save: MenuItemApiFileSave['name'];
+  open: MenuItemApiFileOpen['name'];
+  close: MenuItemApiFileClose['name'];
+}

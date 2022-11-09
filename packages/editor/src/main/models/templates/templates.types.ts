@@ -21,11 +21,13 @@ export type AspectRatios = {
   };
 };
 
-export type TemplateRecords = Array<{
+export type TemplateRecord = {
   name: string;
   source: string;
   manifest: schema;
-}>;
+};
+
+export type TemplateRecords = Array<{TemplateRecord}>;
 
 export interface TemplatesApiLoad
   extends Omit<rq.RegisterEndpoint, 'name'> {
