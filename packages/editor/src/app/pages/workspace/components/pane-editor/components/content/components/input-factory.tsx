@@ -7,6 +7,7 @@ import {
   NumberSpinner,
   Select,
   Textbox,
+  Radio,
 } from './';
 
 export const InputFactory = ({
@@ -32,6 +33,17 @@ export const InputFactory = ({
     case 'Checkbox':
       return (
         <Checkbox
+          field={field}
+          {...content}
+          onChange={onChange}
+          onValidate={onValidate}
+          onBlur={onBlur}
+          onFocus={onFocus}
+        />
+      );
+    case 'Radio':
+      return (
+        <Radio
           field={field}
           {...content}
           onChange={onChange}

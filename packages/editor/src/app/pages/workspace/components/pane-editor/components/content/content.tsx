@@ -23,7 +23,9 @@ export const Content = () => {
   };
 
   const handleContentFocus = (field, value) => {
-    setContentFocus(field);
+    const focusField = Array.isArray(field) ? field.join('.') : field;
+
+    setContentFocus(focusField);
   };
 
   const handleContentBlur = (field, value) => {

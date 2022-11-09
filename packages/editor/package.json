@@ -152,6 +152,7 @@
     "@scrowl/template-core": "^1.0.0",
     "@scrowl/template-lesson-intro": "^1.0.0",
     "@scrowl/template-simple-text": "^1.0.0",
+    "@scrowl/template-two-column": "^1.0.0",
     "adm-zip": "^0.5.9",
     "bootstrap": "^5.2.2",
     "electron-context-menu": "^3.5.0",

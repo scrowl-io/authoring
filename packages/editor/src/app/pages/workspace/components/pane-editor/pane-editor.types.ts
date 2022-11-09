@@ -8,6 +8,7 @@ export type {
   InputNumberSpinnerProps,
   InputSelectProps,
   InputTextboxProps,
+  InputRadioProps,
   LAYOUT_INPUT_TYPE,
 } from '@scrowl/template-core';
 

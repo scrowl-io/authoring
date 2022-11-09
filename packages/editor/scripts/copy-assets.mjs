@@ -63,6 +63,13 @@ const config = {
       overwrite: true,
     },
   },
+  'node_modules/@scrowl/template-two-column/dist': {
+    dest: './src/main/assets/templates/two-column',
+    includePaths: ['../../'],
+    options: {
+      overwrite: true,
+    },
+  },
 };
 
 const findPath = (source, includePaths) => {

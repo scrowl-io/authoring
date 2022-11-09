@@ -3,11 +3,13 @@ import { TemplateSchema } from '../templates/templates.types';
 import { BlockTextSchema } from '@scrowl/template-block-text/schema';
 import { LessonIntroSchema } from '@scrowl/template-lesson-intro/schema';
 import { SimpleTextSchema } from '@scrowl/template-simple-text/schema';
+import { TwoColumnSchema } from '@scrowl/template-two-column/schema';
 
 const TEMPLATES = {
   blockText: JSON.stringify(BlockTextSchema),
   lessonIntro: JSON.stringify(LessonIntroSchema),
   simpleText: JSON.stringify(SimpleTextSchema),
+  twoColumn: JSON.stringify(TwoColumnSchema),
 };
 
 const createSlide = (
@@ -68,6 +70,7 @@ export const createProject = () => {
       createSlide('Slide 1', 0, 0, 0, 'blockText'),
       createSlide('Slide 1.2', 0, 0, 1, 'simpleText'),
       createSlide('Slide 1.3', 0, 0, 2, 'lessonIntro'),
+      createSlide('Slide 1.4', 0, 0, 3, 'twoColumn'),
     ],
     glossary: [],
     resources: [],

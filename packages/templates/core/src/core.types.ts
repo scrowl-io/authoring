@@ -64,6 +64,20 @@ export interface InputSelectProps extends BaseInputProps {
   iconFromValue?: boolean;
 }
 
+export interface InputRadioProps extends BaseInputProps {
+  type: 'Radio';
+  value: string | number;
+  options: Array<{
+    label?: string;
+    value: string | number;
+    icon?: string;
+    controller?: {
+      fields: Array<string>;
+      effect: 'hide'
+    }
+  }>
+}
+
 export interface InputTextboxProps extends BaseInputProps {
   type: 'Textbox';
   value?: string;
@@ -89,7 +103,8 @@ export interface InputFieldsetProps extends BaseInputProps {
       | InputNumberSpinnerProps
       | InputSelectProps
       | InputTextboxProps
-    };
+      | InputRadioProps;
+  };
 }
 
 export type InputProps =

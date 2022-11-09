@@ -8,3 +8,4 @@ export * from './textbox';
 export * from './input-factory';
 export * from './fieldset';
 export * from './form-builder';
+export * from './radio';
