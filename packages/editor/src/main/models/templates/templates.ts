@@ -5,7 +5,7 @@ import { list as templateList } from './default-templates';
 export const TEMPLATE_PATHS = {
   working: fs.joinPath(fs.APP_PATHS.temp, 'templates'),
   project: fs.getSrcPath('assets', 'project'),
-  templates: fs.getSrcPath('assets', 'project'),
+  templates: fs.getSrcPath('assets', 'templates'),
 };
 
 export const load = (ev: rq.RequestEvent, template: TemplateSchema) => {

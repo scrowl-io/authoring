@@ -56,6 +56,13 @@ const config = {
       overwrite: true,
     },
   },
+  'node_modules/@scrowl/template-simple-text/dist': {
+    dest: './src/main/assets/templates/simple-text',
+    includePaths: ['../../'],
+    options: {
+      overwrite: true,
+    },
+  },
 };
 
 const findPath = (source, includePaths) => {
