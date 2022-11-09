@@ -6,8 +6,8 @@ export const TwoColumnSchema: TwoColumnSchemaProps = {
     label: 'Two Column',
     component: 'TwoColumn',
     filename: 'two-column',
-    icon: "view_week",
-    tags: ["text", "columns"],
+    icon: 'view_week',
+    tags: ['text', 'columns'],
   },
   content: {
     options: {
@@ -17,7 +17,7 @@ export const TwoColumnSchema: TwoColumnSchemaProps = {
         numberOfColumns: {
           type: 'Radio',
           label: 'Number of Columns',
-          value: 2,
+          value: 3,
           options: [
             {
               label: 'One column',
@@ -25,8 +25,8 @@ export const TwoColumnSchema: TwoColumnSchemaProps = {
               icon: 'crop_portrait',
               controller: {
                 fields: ['secondColumn', 'thridColumn'],
-                effect: 'hide'
-              }
+                effect: 'hide',
+              },
             },
             {
               label: 'Two columns',
@@ -34,8 +34,8 @@ export const TwoColumnSchema: TwoColumnSchemaProps = {
               icon: 'view_column_2',
               controller: {
                 fields: ['thridColumn'],
-                effect: 'hide'
-              }
+                effect: 'hide',
+              },
             },
             {
               label: 'Three columns',
@@ -59,18 +59,20 @@ export const TwoColumnSchema: TwoColumnSchemaProps = {
           type: 'Textbox',
           label: 'Heading',
           placeholder: 'Heading',
+          value: 'Heading 1',
         },
         body: {
           type: 'Textbox',
           label: 'body',
-          value: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+          value:
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
           placeholder: 'Write content here...',
           multiLine: true,
           lines: 3,
           autoGrow: 5,
           allowLinebreaks: true,
-        }
-      }
+        },
+      },
     },
     secondColumn: {
       type: 'Fieldset',
@@ -80,18 +82,20 @@ export const TwoColumnSchema: TwoColumnSchemaProps = {
           type: 'Textbox',
           label: 'Heading',
           placeholder: 'Heading',
+          value: 'Heading 2',
         },
         body: {
           type: 'Textbox',
           label: 'body',
-          value: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+          value:
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
           placeholder: 'Write content here...',
           multiLine: true,
           lines: 3,
           autoGrow: 5,
           allowLinebreaks: true,
-        }
-      }
+        },
+      },
     },
     thirdColumn: {
       type: 'Fieldset',
@@ -101,18 +105,20 @@ export const TwoColumnSchema: TwoColumnSchemaProps = {
           type: 'Textbox',
           label: 'Heading',
           placeholder: 'Heading',
+          value: 'Heading 3',
         },
         body: {
           type: 'Textbox',
           label: 'body',
-          value: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+          value:
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
           placeholder: 'Write content here...',
           multiLine: true,
           lines: 3,
           autoGrow: 5,
           allowLinebreaks: true,
-        }
-      }
+        },
+      },
     },
   },
 };

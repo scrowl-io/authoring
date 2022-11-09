@@ -68,7 +68,7 @@ export const TwoColumn = ({ schema, ...props }: TwoColumnProps) => {
           <Column
             isEdit={editMode}
             focusElement={focusElement}
-            className="first-column"
+            className="column first-column"
             field="firstColumn"
             heading={firstColumn.heading}
             body={firstColumn.body}
@@ -77,7 +77,7 @@ export const TwoColumn = ({ schema, ...props }: TwoColumnProps) => {
             <Column
               isEdit={editMode}
               focusElement={focusElement}
-              className="second-column"
+              className="column second-column"
               field="secondColumn"
               heading={secondColumn.heading}
               body={secondColumn.body}
@@ -87,7 +87,7 @@ export const TwoColumn = ({ schema, ...props }: TwoColumnProps) => {
             <Column
               isEdit={editMode}
               focusElement={focusElement}
-              className="third-column"
+              className="column third-column"
               field="thirdColumn"
               heading={thirdColumn.heading}
               body={thirdColumn.body}
