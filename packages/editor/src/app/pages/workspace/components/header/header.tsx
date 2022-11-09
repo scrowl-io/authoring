@@ -5,7 +5,7 @@ import { Button, Icon } from '@owlui/lib';
 import * as css from './_workspace-header.scss';
 import { Elem } from '../../../../utils';
 import { Projects, Settings } from '../../../../models';
-import { menu } from '../../../../services';
+import { menu, sys } from '../../../../services';
 import { Path as startPath } from '../../../start';
 import { Logo } from '../../../../components';
 import { PublishOverlay, Confirmation } from '../overlay';
@@ -19,7 +19,8 @@ export enum PREVIEW_MODE {
 }
 
 export const Header = () => {
-  const projectMeta = Projects.useMeta();
+  const projectData = Projects.useData();
+  const projectMeta = projectData.meta;
   const projectNameLn = projectMeta.name.length;
   const [projectName, setProjectName] = useState(projectMeta.name);
   const [projectNameSize, setProjectNameSize] = useState(
@@ -31,6 +32,7 @@ export const Header = () => {
   const animationSettings = Settings.useAnimation();
   const isAnimated = !animationSettings.reducedAnimations;
   const animationDelay = animationSettings.animationDelay;
+  const isUncommitted = Projects.useInteractions().isUncommitted;
   const motionOptsContainer = {
     initial: !isAnimated ? {} : { opacity: 0 },
     animate: !isAnimated ? {} : { opacity: 1 },
@@ -136,9 +138,28 @@ export const Header = () => {
   };
 
   const handelSubmitPublish = () => {
-    console.log('course published');
-    setIsOpenPublish(false);
-    setIsOpenConfirmation(true);
+    if (isUncommitted) {
+      Projects.save(projectData).then((saveRes) => {
+        if (saveRes.error) {
+          sys.messageDialog({
+            message: saveRes.message,
+          });
+          return;
+        }
+
+        Projects.publish(saveRes.data.project).then((pubRes) => {
+          if (pubRes.error) {
+            sys.messageDialog({
+              message: pubRes.message,
+            });
+            return;
+          }
+
+          setIsOpenPublish(false);
+          setIsOpenConfirmation(true);
+        });
+      });
+    }
   };
 
   const handleCloseConfirmation = () => {

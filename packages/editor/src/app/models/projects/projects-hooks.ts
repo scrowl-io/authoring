@@ -387,12 +387,14 @@ export const removeAsset = (data) => {
 
 export const create = (): Promise<rq.ApiResult> => {
   return new Promise((resolve) => {
-    API.create().then((result) => {
-      if (!result.error) {
-        setData(result.data.project);
+    API.create().then((res) => {
+      if (res.error) {
+        console.error(res)
+      } else {
+        setData(res.data.project);
       }
 
-      resolve(result);
+      resolve(res);
     });
   });
 };
@@ -400,7 +402,13 @@ export const create = (): Promise<rq.ApiResult> => {
 export const upload = (): Promise<rq.ApiResult> => {
 
   return new Promise((resolve) => {
-    API.upload().then(resolve);
+    API.upload().then((res) => {
+      if (res.error) {
+        console.error(res);
+      }
+
+      resolve(res);
+    });
   });
 };
 
@@ -412,29 +420,53 @@ export const save = (data): Promise<rq.ApiResult> => {
         processor.dispatch(fn());
       }
 
+      if (res.error) {
+        console.error(res);
+      } else {
+        setData(res.data.project);
+      }
+
       resolve(res);
     });
   });
 };
 
-export const publish = (): Promise<rq.ApiResult> => {
+export const publish = (data): Promise<rq.ApiResult> => {
 
   return new Promise((resolve) => {
-    API.publish().then(resolve);
+    API.publish(data).then((res) => {
+      if (res.error) {
+        console.error(res);
+      }
+
+      resolve(res);
+    });
   });
 };
 
 export const list = (): Promise<rq.ApiResult> => {
 
   return new Promise((resolve) => {
-    API.list().then(resolve);
+    API.list().then((res) => {
+      if (res.error) {
+        console.error(res);
+      }
+
+      resolve(res);
+    });
   });
 };
 
 export const open = (): Promise<rq.ApiResult> => {
 
   return new Promise((resolve) => {
-    API.open().then(resolve);
+    API.open().then((res) => {
+      if (res.error) {
+        console.error(res);
+      }
+
+      resolve(res);
+    });
   });
 };
 

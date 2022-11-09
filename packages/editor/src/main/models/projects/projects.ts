@@ -3,6 +3,7 @@ import { ProjectsApi, ProjectData, ProjectFile } from './projects.types';
 import { createProject } from './project.data';
 import { rq, fs, log } from '../../services';
 import * as utils from '../../utils';
+import { scorm } from './project-publisher';
 
 const getProjectPath = (name) => {
   return fs.joinPath(fs.APP_PATHS.save, name);
@@ -184,9 +185,18 @@ export const save = (ev: rq.RequestEvent, data: ProjectData) => {
   });
 };
 
-export const publish = (ev: rq.RequestEvent) => {
+export const publish = (ev: rq.RequestEvent, data: ProjectData) => {
   return new Promise<rq.ApiResult>((resolve) => {
+    log.info('publishing project');
 
+    // prompt the user for a save location
+    // create a publish temp folder
+    // copy project assets [uploaded media] into publish folder
+    // copy project resources [js, css, html] into publish folder
+    // copy templates into publish temp folder
+    // create project files [html, js] and add them to publish folder
+
+    resolve(scorm(data, ''));
   });
 };
 
