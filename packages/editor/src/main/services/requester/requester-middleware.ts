@@ -56,7 +56,7 @@ const createTemplateServer = () => {
   return new Promise<ApiResult>(resolve => {
     try {
       const address = '127.0.0.1';
-      const templateWorkingPath = fs.joinPath(fs.APP_PATHS.temp, 'templates', 'src');
+      const templateWorkingPath = fs.joinPath(fs.APP_PATHS.temp, 'templates');
       const server = http.createServer((req, res) => {
         try {
           const pathname = new URL(`http://${req.headers.host}${req.url}`)
