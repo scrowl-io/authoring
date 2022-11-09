@@ -1,41 +1,140 @@
 import React from 'react';
-import { Form } from 'react-bootstrap';
+import { Icon } from '@owlui/lib';
+import { InputRadioProps } from '../../../pane-editor.types';
 
-export const Radio = (props) => {
-  console.log(props);
-  console.log(props.options);
+export const Radio = ({
+  field,
+  type,
+  value,
+  options,
+  label,
+  hint,
+  disabled,
+  focus,
+  validationError,
+  onChange,
+  onValidate,
+  onFocus,
+  onBlur,
+  ...props
+}: InputRadioProps) => {
+  const inputRef: any = React.useRef();
+  const lastFocusState: any = React.useRef(false);
+  const isChecked = value ? true : false;
+  const isInvalid =
+    validationError !== null &&
+    validationError !== undefined &&
+    validationError.length;
 
-  const checkSelected = (option) => {
-    if (option.value === props.value) {
-      return true;
+  if (inputRef.current && lastFocusState.current !== focus) {
+    lastFocusState.current = focus;
+
+    if (focus) {
+      inputRef.current.focus();
     }
+  }
+
+  let inputClasses = 'form-check-input';
+
+  if (isInvalid) {
+    inputClasses += ' is-invalid';
+  }
+
+  const inputProps: any = {
+    ref: inputRef,
+    type: 'radio',
+    name: field,
+    className: inputClasses,
+    disabled,
+
+    onChange: (ev: React.FormEvent<HTMLInputElement>) => {
+      let val: string | number = ev.currentTarget.value;
+
+      const isNumber = parseInt(val);
+
+      if (!isNaN(isNumber)) {
+        val = isNumber;
+      }
+
+      if (onChange) {
+        onChange(field, val);
+      }
+      if (onValidate) {
+        onValidate(field, val);
+      }
+      if (onBlur) {
+        onBlur(field, val);
+      }
+    },
+
+    onBlur: (ev: React.FocusEvent<HTMLInputElement>) => {
+      let val: string | number = ev.currentTarget.value;
+
+      const isNumber = parseInt(val);
+
+      if (!isNaN(isNumber)) {
+        val = isNumber;
+      }
+
+      if (onValidate) {
+        onValidate(field, val);
+      }
+      if (onBlur) {
+        onBlur(field, val);
+      }
+    },
+
+    onFocus: (ev: React.FocusEvent<HTMLInputElement>) => {
+      let val: string | number = ev.currentTarget.value;
+
+      const isNumber = parseInt(val);
+
+      if (!isNaN(isNumber)) {
+        val = isNumber;
+      }
+
+      if (onFocus) {
+        onFocus(field, val);
+      }
+    },
   };
 
-  const onChange = (ev: React.FormEvent<HTMLInputElement>) => {
-    const val = ev.currentTarget;
+  let controlClasses = 'control-radio-group mb-2';
 
-    props.onChange(props.field, parseInt(val.id));
-  };
+  if (disabled) {
+    controlClasses += ' disabled';
+  }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column' }}>
-      <span>{props.label}</span>
-      {props.options.map((option, index) => {
-        console.log(option);
-        return (
-          <Form.Check
-            inline
-            type={props.type}
-            name={props.field}
-            label={option.label}
-            key={index}
-            checked={checkSelected(option)}
-            onChange={onChange}
-            onClick={onChange}
-            id={option.value}
-          />
-        );
-      })}
+    <div className={controlClasses} style={{ marginLeft: '5px' }}>
+      <div className="form-radio">
+        {options.map((radioOpt, idx) => {
+          const id = `${field}-${radioOpt.value}`;
+          const key = `${field}-${idx}`;
+          const isChecked = radioOpt.value === value;
+
+          return (
+            <label key={key} className="form-radio-control-item" htmlFor={id}>
+              <input
+                {...inputProps}
+                id={id}
+                checked={isChecked}
+                value={radioOpt.value}
+              />
+              <div className="form-radio-label">
+                {radioOpt.icon && (
+                  <div className="form-radio-label__icon">
+                    <Icon icon={radioOpt.icon} />
+                  </div>
+                )}
+                {radioOpt.label && (
+                  <div className="form-radio-label__text">{radioOpt.label}</div>
+                )}
+              </div>
+            </label>
+          );
+        })}
+      </div>
     </div>
   );
 };

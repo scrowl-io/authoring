@@ -67,45 +67,16 @@ export interface InputSelectProps extends BaseInputProps {
 export interface InputRadioProps extends BaseInputProps {
   type: 'Radio';
   value: string | number;
-  options: {
+  options: Array<{
     label?: string;
     value: string | number;
     icon?: string;
-    inputControls?: string | string[];
-  }[];
-  valueControls?: {
-    inputs: boolean;
-    effect: {
-      style: {
-        display: string;
-      };
-    };
-  };
-}
-
-/*
-- radio input - selected value: hides/shows other inputs  
-  radio: {
-    options: [
-      {
-        value: 1,
-        label?: 'One Col'
-        icon:? '',
-        inputControls?: ['midCol', 'rightCol']
-      },
-      { label: 'Two Col', icon: '', value: 2, inputControls: ['midCol'] },
-      { label: 'Three Col', icon: '', value: 3, inputControls: [] }
-    ],
-    valueControls?: {
-      inputs: true,
-      effect: {
-        style: {
-          display: none
-        }
-      }
+    controller?: {
+      fields: Array<string>;
+      effect: 'hide'
     }
-  }
-*/
+  }>
+}
 
 export interface InputTextboxProps extends BaseInputProps {
   type: 'Textbox';

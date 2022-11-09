@@ -6,39 +6,41 @@ export const TwoColumnSchema: TwoColumnSchemaProps = {
     label: 'Two Column',
     component: 'TwoColumn',
     filename: 'two-column',
+    icon: "view_week",
+    tags: ["text", "columns"],
   },
   content: {
     options: {
       type: 'Fieldset',
-      label: 'Options',
+      label: 'Columns',
       content: {
-        showProgress: {
-          type: 'Checkbox',
-          label: 'Show Progress Bar',
-          value: false,
-        },
         numberOfColumns: {
           type: 'Radio',
           label: 'Number of Columns',
-          value: 3,
+          value: 2,
           options: [
             {
-              label: '1',
+              label: 'One column',
               value: 1,
-              icon: 'number_of_columns_1',
-              inputControls: ['1', '2'],
+              icon: 'crop_portrait',
+              controller: {
+                fields: ['secondColumn', 'thridColumn'],
+                effect: 'hide'
+              }
             },
             {
-              label: '2',
+              label: 'Two columns',
               value: 2,
-              icon: 'number_of_columns_2',
-              inputControls: ['2'],
+              icon: 'view_column_2',
+              controller: {
+                fields: ['thridColumn'],
+                effect: 'hide'
+              }
             },
             {
-              label: '3',
+              label: 'Three columns',
               value: 3,
-              icon: 'number_of_columns_3',
-              inputControls: [''],
+              icon: 'view_week',
             },
           ],
         },
@@ -49,89 +51,68 @@ export const TwoColumnSchema: TwoColumnSchemaProps = {
         },
       },
     },
-    firstColumnHeading: {
-      type: 'Textbox',
-      label: 'First Column Heading',
-      value: 'First',
-      placeholder: 'First ',
-      multiLine: true,
-      lines: 5,
-      autoGrow: 10,
-      allowLinebreaks: true,
-    },
-    firstColumnText: {
-      type: 'Textbox',
-      label: 'First Column Text',
-      value:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-      placeholder: 'Write text content here...',
-      multiLine: true,
-      lines: 10,
-      autoGrow: 10,
-      allowLinebreaks: true,
-    },
-    secondColumnHeading: {
-      type: 'Textbox',
-      label: 'Second Column Heading',
-      value: 'Second',
-      placeholder: 'Second',
-      multiLine: true,
-      lines: 5,
-      autoGrow: 10,
-      allowLinebreaks: true,
-    },
-    secondColumnText: {
-      type: 'Textbox',
-      label: 'Second Column Text',
-      value:
-        'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.',
-      placeholder: 'Write text content here...',
-      multiLine: true,
-      lines: 10,
-      autoGrow: 10,
-      allowLinebreaks: true,
-    },
-    thirdColumnHeading: {
-      type: 'Textbox',
-      label: 'Third Column Heading',
-      value: 'Third',
-      placeholder: 'Third',
-      multiLine: true,
-      lines: 5,
-      autoGrow: 10,
-      allowLinebreaks: true,
-    },
-    thirdColumnText: {
-      type: 'Textbox',
-      label: 'Third Column Text',
-      value:
-        'Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Ut tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.',
-      placeholder: 'Write text content here...',
-      multiLine: true,
-      lines: 10,
-      autoGrow: 10,
-      allowLinebreaks: true,
-    },
-    bgImage: {
+    firstColumn: {
       type: 'Fieldset',
-      label: 'Background Image',
+      label: 'First Column',
       content: {
-        alt: {
+        heading: {
           type: 'Textbox',
-          label: 'Alt Text',
-          placeholder: 'Image alt text',
+          label: 'Heading',
+          placeholder: 'Heading',
         },
-        url: {
-          type: 'Asset',
-          assetType: 'image',
-          label: 'Image',
+        body: {
+          type: 'Textbox',
+          label: 'body',
+          value: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+          placeholder: 'Write content here...',
+          multiLine: true,
+          lines: 3,
+          autoGrow: 5,
+          allowLinebreaks: true,
+        }
+      }
+    },
+    secondColumn: {
+      type: 'Fieldset',
+      label: 'Second Column',
+      content: {
+        heading: {
+          type: 'Textbox',
+          label: 'Heading',
+          placeholder: 'Heading',
         },
-        bg: {
-          type: 'Checkbox',
-          label: 'Use as Background',
-          value: false,
+        body: {
+          type: 'Textbox',
+          label: 'body',
+          value: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+          placeholder: 'Write content here...',
+          multiLine: true,
+          lines: 3,
+          autoGrow: 5,
+          allowLinebreaks: true,
+        }
+      }
+    },
+    thirdColumn: {
+      type: 'Fieldset',
+      label: 'Third Column',
+      content: {
+        heading: {
+          type: 'Textbox',
+          label: 'Heading',
+          placeholder: 'Heading',
         },
-      },
+        body: {
+          type: 'Textbox',
+          label: 'body',
+          value: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+          placeholder: 'Write content here...',
+          multiLine: true,
+          lines: 3,
+          autoGrow: 5,
+          allowLinebreaks: true,
+        }
+      }
     },
   },
 };

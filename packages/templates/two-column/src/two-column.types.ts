@@ -4,40 +4,31 @@ import {
   TemplateCommons,
   InputTextboxProps,
   InputFieldsetProps,
-  InputSelectProps,
   InputCheckboxProps,
-  InputAssetProps,
   InputRadioProps,
 } from '@scrowl/template-core';
 
-export interface TwoColumnContentBgImage extends InputFieldsetProps {
-  content: {
-    alt: InputTextboxProps;
-    url: InputAssetProps;
-    bg: InputCheckboxProps;
-  };
-}
-
 export interface TwoColumnContentOptions extends InputFieldsetProps {
   content: {
-    alignment?: InputSelectProps;
-    showProgress: InputCheckboxProps;
     numberOfColumns: InputRadioProps;
     stackOnMobile: InputCheckboxProps;
   };
 }
 
+export interface TwoColumnContentColumnProps extends InputFieldsetProps {
+  content: {
+    heading: InputTextboxProps;
+    body: InputTextboxProps;
+  }
+}
+
 export type TwoColumnSchemaProps = {
   meta: TemplateSchemaMeta;
   content: {
-    firstColumnText: InputTextboxProps;
-    firstColumnHeading?: InputTextboxProps;
-    secondColumnText?: InputTextboxProps;
-    secondColumnHeading?: InputTextboxProps;
-    thirdColumnText?: InputTextboxProps;
-    thirdColumnHeading?: InputTextboxProps;
-    bgImage?: TwoColumnContentBgImage;
     options: TwoColumnContentOptions;
+    firstColumn: TwoColumnContentColumnProps;
+    secondColumn: TwoColumnContentColumnProps;
+    thirdColumn: TwoColumnContentColumnProps;
   };
 };
 
