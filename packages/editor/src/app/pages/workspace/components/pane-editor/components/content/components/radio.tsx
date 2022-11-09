@@ -20,7 +20,6 @@ export const Radio = ({
 }: InputRadioProps) => {
   const inputRef: any = React.useRef();
   const lastFocusState: any = React.useRef(false);
-  const isChecked = value ? true : false;
   const isInvalid =
     validationError !== null &&
     validationError !== undefined &&
