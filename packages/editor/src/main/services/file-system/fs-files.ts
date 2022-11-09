@@ -350,6 +350,30 @@ export const copy = (source: string, dest: string, opts?: fs.CopyOptions) => {
   });
 };
 
+export const fileRemove = (pathname) => {
+  return new Promise<rq.ApiResult>((resolve) => {
+    fs.remove(pathname)
+      .then(() => {
+        resolve({
+          error: false,
+          data: {
+            pathname,
+          },
+        });
+      })
+      .catch((e) => {
+        resolve({
+          error: true,
+          message: `Failed to remove contents: ${pathname}`,
+          data: {
+            trace: e,
+            pathname,
+          },
+        });
+      });
+  });
+}
+
 export default {
   APP_PATHS,
   normalizePath,
@@ -366,4 +390,5 @@ export default {
   fileWriteSync,
   fileWrite,
   copy,
+  fileRemove,
 };
