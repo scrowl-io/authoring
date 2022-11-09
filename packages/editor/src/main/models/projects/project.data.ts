@@ -32,14 +32,14 @@ export const createProject = () => {
       tags: [],
     },
     scorm: {
-      name: "",
-      description: "",
-      authors: "",
-      organization: "",
-      reportStatus: "Passed/Incomplete",
-      lmsIdentifier: "",
-      outputFormat: "SCORM 2004",
-      optomizeMedia: "Recommended",
+      name: '',
+      description: '',
+      authors: '',
+      organization: '',
+      reportStatus: 'Passed/Incomplete',
+      identifier: '',
+      outputFormat: '1.2',
+      optimizeMedia: 'recommended',
     },
     modules: [
       {

@@ -1,7 +1,20 @@
 import React from 'react';
 import { Accordion } from '../../../../../../components';
+import { Projects } from '../../../../../../models';
 
-export const CourseSettings = ({ data, onChange }) => {
+export type CourseSettingsProps = {
+  data: Projects.ProjectScorm;
+  onChange: (value: any) => void;
+  errors: {
+    [key: string]: string;
+  };
+};
+
+export const CourseSettings = ({
+  data,
+  onChange,
+  errors,
+}: CourseSettingsProps) => {
   const { name, description, authors, organization } = data;
 
   const handleUpdateName = (ev: React.FormEvent<HTMLInputElement>) => {
@@ -52,11 +65,14 @@ export const CourseSettings = ({ data, onChange }) => {
           type="text"
           id="course-settings-name"
           name="course-settings-name"
-          className="form-control form-control-sm"
+          className={`form-control form-control-sm${
+            errors.name ? ' is-invalid' : ''
+          }`}
           placeholder="Course Name"
           value={name}
           onChange={handleUpdateName}
         />
+        {errors.name && <div className="invalid-feedback">{errors.name}</div>}
       </div>
       <div className="mb-2">
         <label htmlFor="course-settings-description" className="form-label">

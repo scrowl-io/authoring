@@ -62,13 +62,16 @@ export type ProjectMeta = {
 
 export type ProjectScorm = {
   name: string;
-  description: string;
-  authors: string;
-  organization: string;
-  reportStatus: string;
-  lmsIdentifier: string;
-  outputFormat: "SCORM 2004";
-  optomizeMedia: "Recommended";
+  outputFormat: '1.2' | '2004.3' | '2004.4';
+  optimizeMedia: 'low' | 'recommended' | 'high' | 'original';
+  version?: string;
+  description?: string;
+  authors?: string;
+  organization?: string;
+  reportStatus?: string;
+  identifier?: string;
+  masteryScore?: number;
+  language?: 'en-US';
 };
 
 export type ProjectAsset = {

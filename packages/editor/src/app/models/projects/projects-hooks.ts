@@ -35,7 +35,7 @@ export const useData = () => {
   return useSelector((data: stateManager.RootState) => data.projects.data);
 };
 
-export const setData = (data) => {
+const setData = (data) => {
   if (!processor.dispatch) {
     console.warn('projects processor not ready');
     return;
@@ -67,7 +67,7 @@ export const setScorm = (data) => {
     return;
   }
 
-  processor.dispatch(state.setMeta(data));
+  processor.dispatch(state.setScorm(data));
 };
 
 export const useModules = (moduleId?: number,) => {
@@ -442,7 +442,6 @@ export default {
   useProcessor,
   resetState,
   useData,
-  setData,
   useMeta,
   setMeta,
   useScorm,

@@ -5,6 +5,7 @@ import { updateObj, List } from '../../utils';
 export const initialState = {
   isDirty: false, // true if the user has made any change
   isUncommitted: false, // true if the user has any unsaved change
+  syncScormName: true,
   assets: [],
   data: {
     meta: {
@@ -27,7 +28,7 @@ export const initialState = {
       reportStatus: "Passed/Incomplete",
       lmsIdentifier: "",
       outputFormat: "SCORM 2004",
-      optomizeMedia: "Recommended",
+      optimizeMedia: "Recommended",
     },
     modules: [],
     lessons: [],
@@ -87,15 +88,44 @@ export const config: stateManager.StateConfig = {
       state.isUncommitted = false;
     },
     setData: (state, action) => {
-      state.data = action.payload;
+      updateObj(state.data, action.payload);
+
+      if (action.payload.meta
+        && action.payload.meta.name
+        && action.payload.scorm
+        && action.payload.scorm.name) {
+        state.syncScormName = action.payload.meta.name === action.payload.scorm.name;
+      }
+
+      const isEmptyMeta = state.data.meta.name.length <= 0;
+      const isSame = state.data.meta.name === state.data.scorm.name;
+
+      if (!isSame && !isEmptyMeta && state.syncScormName) {
+        state.data.scorm.name = state.data.meta.name.slice();
+      }
     },
     setMeta: (state, action) => {
       updateObj(state.data.meta, action.payload);
+
+      const isEmptyMeta = state.data.meta.name.length <= 0;
+      const isSame = state.data.meta.name === state.data.scorm.name;
+
+      if (!isSame && !isEmptyMeta && state.syncScormName) {
+        state.data.scorm.name = state.data.meta.name.slice();
+      }
+
       state.isDirty = true;
       state.isUncommitted = true;
     },
     setScorm: (state, action) => {
       updateObj(state.data.scorm, action.payload);
+
+      const isSame = state.data.meta.name === state.data.scorm.name;
+
+      if (!isSame) {
+        state.syncScormName = false;
+      }
+
       state.isDirty = true;
       state.isUncommitted = true;
     },
