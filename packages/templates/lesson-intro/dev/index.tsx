@@ -13,8 +13,6 @@ const App = () => {
   const schema = LessonIntroSchema as LessonIntroSchemaProps;
   const controller = new Scrowl.core.scroll.Controller();
 
-  schema.content.options.content.showProgress.value = true;
-
   return (
     <LessonIntro
       id="template-block-text"

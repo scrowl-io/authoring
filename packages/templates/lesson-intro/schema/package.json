@@ -16,7 +16,7 @@
     "url": "https://github.com/scrowl-io/scrowl/issues"
   },
   "homepage": "https://github.com/scrowl-io/authoring/packages/template/lesson-intro#readme",
-  "source": "../src/lesson-intro.schema.ts",
+  "source": "./index.ts",
   "main": "../lib/schema.js",
   "module": "../lib/schema.module.js",
   "types": "../lib/schema.d.ts"

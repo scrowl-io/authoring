@@ -6,9 +6,11 @@ export const LessonIntroSchema: LessonIntroSchemaProps = {
     label: 'Lesson Intro',
     component: 'LessonIntro',
     filename: 'lesson-intro',
+    tags: ["text", "introduction"],
+    icon: 'article',
   },
   content: {
-    lessonTitle: {
+    title: {
       type: 'Textbox',
       label: 'Title',
       value: 'Enter Your New Title',
@@ -17,7 +19,7 @@ export const LessonIntroSchema: LessonIntroSchemaProps = {
       autoGrow: 10,
       allowLinebreaks: true,
     },
-    lessonSubtitle: {
+    subtitle: {
       type: 'Textbox',
       label: 'Subtitle',
       value: 'Subtitle',
@@ -27,7 +29,7 @@ export const LessonIntroSchema: LessonIntroSchemaProps = {
       autoGrow: 10,
       allowLinebreaks: true,
     },
-    lessonTime: {
+    time: {
       type: 'Textbox',
       label: 'Time',
       value: '40 min',
@@ -47,7 +49,7 @@ export const LessonIntroSchema: LessonIntroSchemaProps = {
     },
     heroImage: {
       type: 'Fieldset',
-      label: 'Background Image',
+      label: 'Hero Image',
       content: {
         alt: {
           type: 'Textbox',
@@ -58,41 +60,6 @@ export const LessonIntroSchema: LessonIntroSchemaProps = {
           type: 'Asset',
           assetType: 'image',
           label: 'Image',
-        },
-        bg: {
-          type: 'Checkbox',
-          label: 'Use as Background',
-          value: false,
-        },
-      },
-    },
-    options: {
-      type: 'Fieldset',
-      label: 'Options',
-      content: {
-        alignment: {
-          type: 'Select',
-          hint: 'BodyAlignment',
-          label: 'Alignment',
-          value: 'left',
-          options: [
-            {
-              name: 'Align Left',
-              value: 'left',
-              icon: 'align_horizontal_left',
-            },
-            {
-              name: 'Align Right',
-              value: 'right',
-              icon: 'align_horizontal_right',
-            },
-          ],
-          iconFromValue: true,
-        },
-        showProgress: {
-          type: 'Checkbox',
-          label: 'Show Progress Bar',
-          value: false,
         },
       },
     },

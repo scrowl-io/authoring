@@ -1,136 +1,130 @@
-.template-block-text {
-  .slide-container {
-  }
+.template-lesson-intro {
+  text-align: center;
+  padding: 0;
 
-  .hero {
-    width: 100vw;
-    height: 100vh;
+  header {
+    height: 34vh;
+    padding: 1rem;
+    padding-top: 10vh;
 
-    background-position: 50% 50%;
-    background-size: cover;
+    align-items: center;
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    margin-bottom: 8vh;
 
-    background-color: #fbfbfb;
-
-    .overlay {
-      background-color: rgba(0, 0, 0, 0.1);
-      position: absolute;
-      top: 0;
-      left: 0;
-      bottom: 0;
-      right: 0;
-      z-index: 1;
+    h1 {
+      font-size: 30px;
+      margin: 0;
+      // width: 100%;
     }
 
-    .img {
-      height: calc(100vh - 32px);
-      width: calc(45% - 10px - 4rem);
-      background-size: cover;
-      background-position: 50% 50%;
-      top: 16px;
-      right: 16px;
-      position: absolute;
+    h2 {
+      font-size: 22px;
+      padding-top: 0.7rem;
+      padding-bottom: 0.5rem;
+      // width: 100%;
 
-      &.right {
-        left: 16px;
-        right: initial;
+      span {
+        display: inline-block;
+        // width: 100%;
       }
     }
 
-    .text {
-      // margin: 0 5%;
-      // position: absolute;
-      top: 0;
-      left: 0;
-      bottom: 0;
-      z-index: 5;
-      overflow: hidden;
-
-      // min-width: 250px;
-      display: flex;
-      flex-direction: column;
-      // justify-content: center;
-      align-items: center;
-      height: 100vh;
-
-      font-size: min(3.5vw, 24px);
-
+    .time {
+      font-size: 0.9rem;
       font-weight: 400;
-      line-height: min(4.1vw, 3rem);
-      // line-height: 3rem;
+      color: var(--text-dark-a11y-color);
 
-      &.right {
-        left: initial;
-        right: 0;
-      }
-
-      .wrapper {
-        margin-top: 3em;
-        background-color: rgba(251, 251, 251, 0.9);
-        padding: 2rem;
-        max-height: calc(100vh - 32px);
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-
-        .lesson-title {
-          font-size: 2em;
-        }
-
-        .lesson-subtitle {
-          font-size: 1em;
-          margin-top: 1em;
-        }
-
-        .lesson-time {
-          display: flex;
-          margin-top: 0.5em;
-
-          span {
-            color: #72727e;
-            margin-left: 0.25em;
-          }
-
-          svg {
-            width: 1em;
-            fill: #72727e;
-          }
-        }
-
-        .lesson-start-button {
-          margin-top: 1em;
-          font-weight: 600;
-        }
-
-        p {
-          color: var(--bs-body-color);
-          padding: 0;
-          margin: 0;
-          margin: min(3vw, 20px) 0;
-
-          &.header {
-            font-size: min(3.5vw, 26px);
-            font-weight: 600;
-          }
-        }
+      .icon svg {
+        height: 1rem;
+        margin-top: -3px;
+        margin-right: 3px;
+        fill: var(--text-dark-a11y-color);
       }
     }
-  }
 
-  &:not(.show-progress) {
-    hr {
-      width: 100% !important;
-    }
-  }
-
-  &.edit-mode {
-    .can-focus {
+    button {
+      user-select: none;
       cursor: pointer;
+      background: unset;
+      margin-top: 5vh;
+      border: none;
+      // padding: 1rem 2rem;
+      color: var(--link-color);
+      font-weight: 400;
+      font-size: min(5vw, 1.25rem);
+
+      span.hide {
+        opacity: 0;
+      }
+
+      .link {
+        font-size: min(5vw, 1.25rem);
+      }
     }
 
-    .has-focus {
-      background-color: #fff8e6;
+    button:hover:enabled span.link {
+      text-decoration: underline;
+    }
+
+    button:disabled {
+      cursor: default;
+      color: var(--text-dark-a11y-color-50);
+      text-decoration: none;
+    }
+  }
+
+  .img-container {
+    // border:1px solid red;
+    margin-top: 1rem;
+    height: 50vh;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    overflow: hidden;
+    padding: 1rem;
+
+    img {
+      max-height: 100%;
+      max-width: 100%;
+    }
+  }
+
+  .img-container.hero {
+    width: 100%;
+    margin-top: 0rem;
+    height: 58vh;
+    background-size: cover;
+    background-position: 50% 50%;
+  }
+
+  .dark {
+    background: var(--bg-color);
+    color: var(--text-light-color);
+
+    header {
+      h1 {
+        color: var(--text-light-color);
+      }
+
+      h2 {
+        color: var(--text-light-a11y-color);
+      }
+
+      .time {
+        color: var(--text-light-a11y-color);
+      }
+    }
+    &.edit-mode {
+      // background-color: red;
+      .can-focus {
+        cursor: pointer;
+      }
+
+      .has-focus {
+        background: #fff8e6;
+      }
     }
   }
 }

@@ -4,8 +4,6 @@ import {
   TemplateCommons,
   InputTextboxProps,
   InputFieldsetProps,
-  InputSelectProps,
-  InputCheckboxProps,
   InputAssetProps,
 } from '@scrowl/template-core';
 
@@ -13,26 +11,17 @@ export interface LessonIntroContentBgImage extends InputFieldsetProps {
   content: {
     alt: InputTextboxProps;
     url: InputAssetProps;
-    bg: InputCheckboxProps;
-  };
-}
-
-export interface LessonIntroContentOptions extends InputFieldsetProps {
-  content: {
-    alignment: InputSelectProps;
-    showProgress: InputCheckboxProps;
   };
 }
 
 export type LessonIntroSchemaProps = {
   meta: TemplateSchemaMeta;
   content: {
-    lessonTitle: InputTextboxProps;
-    lessonSubtitle: InputTextboxProps;
-    lessonTime: InputTextboxProps;
+    title: InputTextboxProps;
+    subtitle: InputTextboxProps;
+    time: InputTextboxProps;
     startLabel: InputTextboxProps;
     heroImage: LessonIntroContentBgImage;
-    options: LessonIntroContentOptions;
   };
 };
 
