@@ -4,7 +4,7 @@ import * as css from './_index.scss';
 import { SimpleTextProps } from './simple-text.types';
 
 export const SimpleText = ({ schema, ...props }: SimpleTextProps) => {
-  let classes = `${css.templateBlockText} `;
+  let classes = `${css.templateSimpleText} `;
   const editMode = props.editMode ? true : false;
   const focusElement = editMode ? props.focusElement : null;
   const scrollScenes: any = React.useRef([]);
