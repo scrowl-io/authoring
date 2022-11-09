@@ -1,6 +1,6 @@
 import { MenuItemConstructorOptions } from 'electron';
 
-export const outlineMenuItems = (isMac: boolean) => {
+export const create = (isMac: boolean) => {
   const menuId = 'outline-menu';
   const template: MenuItemConstructorOptions = {
     id: menuId,
@@ -57,5 +57,5 @@ export const outlineMenuItems = (isMac: boolean) => {
 };
 
 export default {
-  outlineMenuItems,
+  create,
 };

@@ -1,9 +1,13 @@
-import blockText from '@scrowl/template-block-text/package.json';
+import { BlockTextSchema } from '@scrowl/template-block-text/schema';
+import { LessonIntroSchema } from '@scrowl/template-lesson-intro/schema';
+import { SimpleTextSchema } from '@scrowl/template-simple-text/schema';
 
-export const templates = [
-  blockText.meta,
+export const list = [
+  BlockTextSchema,
+  LessonIntroSchema,
+  SimpleTextSchema,
 ];
 
 export default {
-  templates,
+  list,
 };

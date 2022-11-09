@@ -1,6 +1,27 @@
 import { MenuItemConstructorOptions } from 'electron';
+import { MenuItemApiFile } from '../menu.types';
+import { rq } from '../..';
 
-export const fileMenuItems = (isMac: boolean) => {
+export const API: MenuItemApiFile = {
+  create: {
+    name: '/file/create',
+    type: 'send',
+  },
+  save: {
+    name: '/file/save',
+    type: 'send'
+  },
+  open: {
+    name: '/file/open',
+    type: 'send',
+  },
+  close: {
+    name: '/file/close',
+    type: 'send',
+  },
+};
+
+export const create = (isMac: boolean) => {
   const menuId = 'file-menu';
   const template = {
     id: menuId,
@@ -10,14 +31,18 @@ export const fileMenuItems = (isMac: boolean) => {
         id: `${menuId}-create`,
         label: "New Project",
         accelerator: "CmdorCtrl+N",
-        click: () => {},
+        click: () => {
+          rq.send(API.create.name);
+        },
       },
       { type: "separator" },
       {
         id: `${menuId}-open`,
         label: "Open...",
         accelerator: "CmdorCtrl+O",
-        click: () => {},
+        click: () => {
+          rq.send(API.open.name);
+        },
       },
       {
         id: `${menuId}-open-recent`,
@@ -31,7 +56,9 @@ export const fileMenuItems = (isMac: boolean) => {
         label: "Save",
         accelerator: "CmdorCtrl+S",
         enabled: false,
-        click: () => {},
+        click: () => {
+          rq.send(API.save.name);
+        },
       },
       { type: "separator" },
       {
@@ -39,7 +66,9 @@ export const fileMenuItems = (isMac: boolean) => {
         label: "Close Project",
         accelerator: "CmdorCtrl+W",
         enabled: false,
-        click: () => {},
+        click: () => {
+          rq.send(API.close.name);
+        },
       }
     ] as Array<MenuItemConstructorOptions>
   };
@@ -51,6 +80,11 @@ export const fileMenuItems = (isMac: boolean) => {
   return template;
 };
 
+export const register = () => {
+  rq.registerEndpointAll(API);
+};
+
 export default {
-  fileMenuItems,
+  register,
+  create,
 };

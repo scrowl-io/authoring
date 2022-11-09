@@ -1,14 +1,24 @@
 import { ProjectData } from './projects.types';
 import { TemplateSchema } from '../templates/templates.types';
 import { BlockTextSchema } from '@scrowl/template-block-text/schema';
+import { LessonIntroSchema } from '@scrowl/template-lesson-intro/schema';
+import { SimpleTextSchema } from '@scrowl/template-simple-text/schema';
 import { TwoColumnSchema } from '@scrowl/template-two-column/schema';
 
 const TEMPLATES = {
   blockText: JSON.stringify(BlockTextSchema),
+  lessonIntro: JSON.stringify(LessonIntroSchema),
+  simpleText: JSON.stringify(SimpleTextSchema),
   twoColumn: JSON.stringify(TwoColumnSchema),
 };
 
-const createSlide = (name: string, mId: number, lId: number, id: number, type: keyof typeof TEMPLATES) => {
+const createSlide = (
+  name: string,
+  mId: number,
+  lId: number,
+  id: number,
+  type: keyof typeof TEMPLATES
+) => {
   const template: TemplateSchema = JSON.parse(TEMPLATES[type]);
 
   return {
@@ -22,18 +32,16 @@ const createSlide = (name: string, mId: number, lId: number, id: number, type: k
 };
 
 export const createProject = () => {
+  const now = new Date().toISOString();
+
   const data: ProjectData = {
     meta: {
       id: '',
       name: '',
-      blueprint: '',
-      version: 0,
-      createdBy: '',
-      folder: '',
+      filename: '',
+      createdAt: now,
+      updatedAt: now,
       tags: [],
-      scrowlVer: '',
-      dateCreated: '',
-      lastSaved: '',
     },
     scorm: {
       name: '',
@@ -41,43 +49,31 @@ export const createProject = () => {
       authors: '',
       organization: '',
       reportStatus: 'Passed/Incomplete',
-      lmsIdentifier: '',
-      outputFormat: 'SCORM 2004',
-      optomizeMedia: 'Recommended',
+      identifier: '',
+      outputFormat: '1.2',
+      optimizeMedia: 'recommended',
     },
     modules: [
       {
         id: 0,
         name: 'Module 1'
-      },
-      {
-        id: 1,
-        name: 'Module 2'
       }
     ],
     lessons: [
       {
         moduleId: 0,
         id: 0,
-        name: 'Lesson 1.1'
-      },
-      {
-        moduleId: 1,
-        id: 1,
-        name: 'Lesson 2.1'
+        name: 'Lesson 1'
       }
     ],
     slides: [
-      createSlide('Slide 1.1', 0, 0, 0, 'blockText'),
-      createSlide('Slide 1.2', 0, 0, 1, 'blockText'),
-      createSlide('Slide 1.3', 0, 0, 2, 'blockText'),
-      createSlide('Slide 2.1', 1, 1, 3, 'blockText'),
-      createSlide('Slide 2.2', 1, 1, 4, 'blockText'),
-      createSlide('Slide 2.3', 1, 1, 5, 'twoColumn'),
+      createSlide('Slide 1', 0, 0, 0, 'blockText'),
+      createSlide('Slide 1.2', 0, 0, 1, 'simpleText'),
+      createSlide('Slide 1.3', 0, 0, 2, 'lessonIntro'),
+      createSlide('Slide 1.4', 0, 0, 3, 'twoColumn'),
     ],
     glossary: [],
     resources: [],
-    assets: [],
   };
 
   return data;

@@ -10,7 +10,7 @@ import {
   useNewSlide,
 } from '../../../../';
 import { Elem } from '../../../../../../utils';
-import { menu } from '../../../../../../services';
+import { menu, sys } from '../../../../../../services';
 import { InputInlineText } from './input-inline-text';
 
 export const OutlineSlideItem = ({
@@ -65,8 +65,23 @@ export const OutlineSlideItem = ({
     {
       label: 'Delete Slide',
       click: () => {
-        resetActiveSlide();
-        Projects.removeSlide(slide);
+        sys
+          .messageDialog({
+            message: 'Are you sure?',
+            buttons: ['Delete Slide', 'Cancel'],
+            detail: slide.name,
+          })
+          .then((res) => {
+            if (res.error) {
+              console.error(res);
+              return;
+            }
+
+            if (res.data.response === 0) {
+              resetActiveSlide();
+              Projects.removeSlide(slide);
+            }
+          });
       },
     },
   ];

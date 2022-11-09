@@ -6,11 +6,12 @@
   "type": "module",
   "scripts": {
     "lint": "",
-    "build:player": "yarn workspace @scrowl/player run build",
-    "build:runtime": "yarn workspace @scrowl/runtime run build",
-    "update": "yarn build:runtime && yarn build:player && yarn workspace @scrowl/editor run copy:assets",
+    "update": "lerna run build --include-dependencies && yarn workspace @scrowl/editor run copy:assets",
+    "prestart:update": "yarn run update",
+    "start:update": "yarn workspace @scrowl/editor run start",
     "start": "yarn workspace @scrowl/editor run start",
-    "build": ""
+    "prepackage": "yarn run update",
+    "package": "yarn workspace @scrowl/editor run package"
   },
   "workspaces": [
     "config",

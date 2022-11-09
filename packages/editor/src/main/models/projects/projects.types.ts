@@ -6,9 +6,9 @@ export interface ProjectsApiCreate
   name: '/projects/create';
 }
 
-export interface ProjectsApiImportAsset
+export interface ProjectsApiUpload
   extends Omit<rq.RegisterEndpoint, 'name'> {
-  name: '/projects/import';
+  name: '/projects/upload';
 }
 
 export interface ProjectsApiSave
@@ -18,7 +18,7 @@ export interface ProjectsApiSave
 
 export interface ProjectsApiPublish
   extends Omit<rq.RegisterEndpoint, 'name'> {
-  name: '/projects/pubish';
+  name: '/projects/publish';
 }
 
 export interface ProjectsApiList
@@ -33,7 +33,7 @@ export interface ProjectsApiOpen
 
 export type ProjectsApi = Partial<{
   create: ProjectsApiCreate;
-  importAsset: ProjectsApiImportAsset;
+  upload: ProjectsApiUpload;
   save: ProjectsApiSave;
   publish: ProjectsApiPublish;
   list: ProjectsApiList;
@@ -42,7 +42,7 @@ export type ProjectsApi = Partial<{
 
 export type ProjectsEndpoints = {
   create: ProjectsApiCreate['name'];
-  importAsset: ProjectsApiImportAsset['name'];
+  upload: ProjectsApiUpload['name'];
   save: ProjectsApiSave['name'];
   publish: ProjectsApiPublish['name'];
   list: ProjectsApiList['name'];
@@ -52,30 +52,32 @@ export type ProjectsEndpoints = {
 export type ProjectMeta = {
   id: string;
   name: string;
-  blueprint: string;
-  version: number;
-  createdBy: string;
-  folder: string;
+  filename: string;
+  createdAt: string;
+  updatedAt: string;
   tags: Array<string>;
-  scrowlVer: string;
-  dateCreated: string;
-  lastSaved: string;
+  blueprint?: string;
+  createdBy?: string;
 };
 
 export type ProjectScorm = {
   name: string;
-  description: string;
-  authors: string;
-  organization: string;
-  reportStatus: string;
-  lmsIdentifier: string;
-  outputFormat: "SCORM 2004";
-  optomizeMedia: "Recommended";
+  outputFormat: '1.2' | '2004.3' | '2004.4';
+  optimizeMedia: 'low' | 'recommended' | 'high' | 'original';
+  version?: string;
+  description?: string;
+  authors?: string;
+  organization?: string;
+  reportStatus?: string;
+  identifier?: string;
+  masteryScore?: number;
+  language?: 'en-US';
 };
 
 export type ProjectAsset = {
   name: string;
   location: string;
+  isDeleted?: boolean;
 };
 
 export type ProjectModule = {
@@ -113,10 +115,22 @@ export type ProjectResource = {
 export type ProjectData = {
   meta: Partial<ProjectMeta>,
   scorm: Partial<ProjectScorm>;
-  assets?: Array<ProjectAsset>;
   modules?: Array<ProjectModule>;
   lessons?: Array<ProjectLesson>;
   slides?: Array<ProjectSlide>;
   glossary?: Array<ProjectGlossaryItem>;
   resources?: Array<ProjectResource>;
+};
+
+export type ProjectFile = {
+  createdAt: string;
+  openedAt: string;
+  updatedAt: string;
+  assets: Array<ProjectAsset>;
+  versions: Array<
+    {
+      createdAt: string;
+      filename: string;
+    }
+  >
 };

@@ -2,7 +2,8 @@ import React, { useEffect, useState, useRef, forwardRef } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import '../../_overlay.scss';
 import { Backdrop, Drawer } from '../';
-import { Settings } from '../../../../../../models';
+import { Projects, Settings } from '../../../../../../models';
+import { hasProp } from '../../../../../../utils';
 import { CourseSettings } from './course-settings';
 import { Reporting } from './reporting';
 import { ExportOptions } from './export-options';
@@ -14,33 +15,64 @@ const PublishFormElement = (
 ) => {
   const animationSettings = Settings.useAnimation();
   const isAnimated = !animationSettings.reducedAnimations;
-  const initialState = {
+  const publishData = Projects.useScorm();
+  const initialErrorState = {
     name: '',
-    description: '',
-    authors: '',
-    organization: '',
-    reportStatus: 'Passed/Incomplete',
-    lmsIdentifier: '',
-    outputFormat: 'scorm_2004',
-    optomizeMedia: 'recommended',
   };
-  const [publishData, setPublishData] = useState(initialState);
+  const [publishErrors, setPublishErrors] = useState(initialErrorState);
 
   const handleClose = () => {
     onClose();
   };
 
-  const handleSubmit = (ev: React.MouseEvent<Element, MouseEvent>) => {
+  const validateForm = (data) => {
+    let isValid = true;
+    const update = {};
+    const errors = {
+      name: '',
+    };
+
+    if (hasProp(data, 'name')) {
+      let { name } = data;
+
+      if (name.length) {
+        name = name.trim();
+      }
+
+      if (!name.length) {
+        isValid = false;
+        errors.name = 'Cannot be empty';
+      }
+
+      update['name'] = name;
+    }
+
+    setPublishErrors(errors);
+    return [isValid, update];
+  };
+
+  const handleChange = (data) => {
+    validateForm(data);
+    Projects.setScorm(data);
+  };
+
+  const handleSubmit = (ev: React.SyntheticEvent) => {
     ev.preventDefault();
+
+    const [isValid, update] = validateForm(publishData);
+
+    Projects.setScorm(update);
+
+    if (!isValid) {
+      return;
+    }
+
     onSubmit();
   };
 
-  const handleUpdatePublishData = (data) => {
-    setPublishData({
-      ...publishData,
-      ...data,
-    });
-  };
+  useEffect(() => {
+    setPublishErrors(initialErrorState);
+  }, [isOpen]);
 
   return (
     <div ref={ref}>
@@ -62,20 +94,19 @@ const PublishFormElement = (
               </div>
 
               <div className="owlui-offcanvas-body content-form">
-                <form className="owlui-offcanvas-form">
+                <form
+                  className="owlui-offcanvas-form"
+                  onSubmit={handleSubmit}
+                  name="publishCourse"
+                >
                   <div className="accordion">
                     <CourseSettings
                       data={publishData}
-                      onChange={handleUpdatePublishData}
+                      onChange={handleChange}
+                      errors={publishErrors}
                     />
-                    <Reporting
-                      data={publishData}
-                      onChange={handleUpdatePublishData}
-                    />
-                    <ExportOptions
-                      data={publishData}
-                      onChange={handleUpdatePublishData}
-                    />
+                    <Reporting data={publishData} onChange={handleChange} />
+                    <ExportOptions data={publishData} onChange={handleChange} />
                     <Overview />
                   </div>
                   <footer className="d-flex justify-content-end my-3">
@@ -86,11 +117,7 @@ const PublishFormElement = (
                     >
                       Cancel
                     </button>
-                    <button
-                      type="submit"
-                      className="btn btn-success"
-                      onClick={handleSubmit}
-                    >
+                    <button type="submit" className="btn btn-success">
                       Publish
                     </button>
                   </footer>

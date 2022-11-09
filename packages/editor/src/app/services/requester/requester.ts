@@ -17,5 +17,5 @@ export const off = (endpoint: string, listener: Listener) => {
 };
 
 export const offAll = (endpoint: string) => {
-  window.scrowlAPI.actions.removeAllListeners(endpoint);
+  window.scrowlAPI.actions.removeListenerAll(endpoint);
 };

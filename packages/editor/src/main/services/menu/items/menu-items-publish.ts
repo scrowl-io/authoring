@@ -1,6 +1,6 @@
 import { MenuItemConstructorOptions } from 'electron';
 
-export const publishMenuItems = (isMac: boolean) => {
+export const create = (isMac: boolean) => {
   const menuId = 'publish-menu';
   const template: MenuItemConstructorOptions = {
     id: menuId,
@@ -27,5 +27,5 @@ export const publishMenuItems = (isMac: boolean) => {
 };
 
 export default {
-  publishMenuItems,
+  create,
 };
