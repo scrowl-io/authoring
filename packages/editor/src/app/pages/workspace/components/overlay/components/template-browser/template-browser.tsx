@@ -4,15 +4,14 @@ import * as css from './_template-browser.scss';
 import { Modal } from '../modal';
 import { Projects, Templates } from '../../../../../../models';
 import {
-  useActiveTemplate,
   useTemplateBrowser,
   openTemplateBrowser,
   closeTemplateBrowser,
   useNewSlide,
   resetNewSlide,
+  useActiveSlide,
   setActiveSlide,
   resetActiveSlide,
-  setActiveTemplate,
 } from '../../../../page-workspace-hooks';
 
 export const TemplateBrowser = () => {
@@ -21,7 +20,8 @@ export const TemplateBrowser = () => {
   const [templateList, setTemplateList] = useState<
     Array<Templates.TemplateSchema>
   >([]);
-  const activeTemplate = useActiveTemplate();
+  const activeSlide = useActiveSlide();
+  const activeTemplate = activeSlide.template;
   const isOpen = useTemplateBrowser();
   const [selectedTemplate, setSelectedTemplate] = useState(activeTemplate);
   const isNewSlide = useNewSlide();
@@ -33,13 +33,23 @@ export const TemplateBrowser = () => {
 
   const handleSubmit = () => {
     if (!isNewSlide) {
-      setActiveTemplate(selectedTemplate);
+      setActiveSlide({
+        template: selectedTemplate,
+      });
+      Projects.setSlide({
+        ...activeSlide,
+        template: selectedTemplate,
+      });
     } else {
       setActiveSlide({
         ...latestSlide,
         template: selectedTemplate,
       });
       resetNewSlide();
+      Projects.setSlide({
+        ...latestSlide,
+        template: selectedTemplate,
+      });
     }
 
     closeTemplateBrowser();

@@ -1,6 +1,6 @@
 import { MenuItemConstructorOptions } from 'electron';
 
-export const previewMenuItems = (isMac: boolean) => {
+export const create = (isMac: boolean) => {
   const menuId = 'preview-menu';
   const template: MenuItemConstructorOptions = {
     id: menuId,
@@ -48,5 +48,5 @@ export const previewMenuItems = (isMac: boolean) => {
 };
 
 export default {
-  previewMenuItems,
+  create,
 };

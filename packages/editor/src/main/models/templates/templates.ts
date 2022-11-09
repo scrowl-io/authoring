@@ -2,9 +2,11 @@ import { TemplatesApi, TemplateSchema } from './templates.types';
 import { rq, fs, tmpr, log } from '../../services';
 import { list as templateList } from './default-templates';
 
-const PathTemplateWorking = fs.joinPath(fs.pathTempFolder, 'templates');
-const PathTemplateAssetsProject = fs.getAssetPath(fs.joinPath('assets', 'project'));
-const PathTemplateAssetsTemplates = fs.getAssetPath(fs.joinPath('assets', 'templates'));
+export const TEMPLATE_PATHS = {
+  working: fs.joinPath(fs.APP_PATHS.temp, 'templates'),
+  project: fs.getSrcPath('assets', 'project'),
+  templates: fs.getSrcPath('assets', 'project'),
+};
 
 export const load = (ev: rq.RequestEvent, template: TemplateSchema) => {
 
@@ -62,17 +64,17 @@ export const load = (ev: rq.RequestEvent, template: TemplateSchema) => {
 
     try {
       const cacheBreaker = new Date().valueOf();
-      const projectDest = fs.joinPath(PathTemplateWorking, 'src');
+      const projectDest = fs.joinPath(TEMPLATE_PATHS.working, 'src');
       const projectCopyOpts = {
         overwrite: true,
         filter: (src: string) => {
           return src.indexOf('.hbs') === -1;
         },
       };
-      const templatePath = fs.joinPath(PathTemplateAssetsTemplates, template.meta.filename);
-      const canvasJsSrc = fs.joinPath(PathTemplateAssetsProject, 'canvas.js.hbs');
+      const templatePath = fs.joinPath(TEMPLATE_PATHS.templates, template.meta.filename);
+      const canvasJsSrc = fs.joinPath(TEMPLATE_PATHS.project, 'canvas.js.hbs');
       const canvasJsDest = fs.joinPath(projectDest, 'index.js');
-      const canvasHtmlSrc = fs.joinPath(PathTemplateAssetsProject, 'canvas.html.hbs');;
+      const canvasHtmlSrc = fs.joinPath(TEMPLATE_PATHS.project, 'canvas.html.hbs');;
       const canvasHtmlDest = fs.joinPath(projectDest, 'index.html');
       const renderData = {
         canvasJs: `./index.js?ver=${cacheBreaker}`,
@@ -82,7 +84,7 @@ export const load = (ev: rq.RequestEvent, template: TemplateSchema) => {
         templateContent: JSON.stringify(template.content),
       };
       const canvasFrameRenders = [
-        fs.copy(PathTemplateAssetsProject, projectDest, projectCopyOpts),
+        fs.copy(TEMPLATE_PATHS.project, projectDest, projectCopyOpts),
         fs.copy(templatePath, projectDest),
         compileFile(canvasJsSrc, renderData, canvasJsDest),
         compileFile(canvasHtmlSrc, renderData, canvasHtmlDest),
@@ -161,6 +163,7 @@ export const init = () => {
 };
 
 export default {
+  TEMPLATE_PATHS,
   load,
   init,
 };
