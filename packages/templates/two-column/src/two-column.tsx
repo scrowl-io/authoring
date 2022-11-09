@@ -45,6 +45,7 @@ export const TwoColumn = ({ schema, ...props }: TwoColumnProps) => {
   const editMode = props.editMode ? true : false;
   const focusElement = editMode ? props.focusElement : null;
   const options = schema.content.options;
+  let alignment = options.content.alignment.value;
   const numberOfColumns = options.content.numberOfColumns.value;
   const stackOnMobile = options.content.stackOnMobile.value;
   const firstColumn = schema.content.firstColumn.content;
@@ -62,6 +63,16 @@ export const TwoColumn = ({ schema, ...props }: TwoColumnProps) => {
               ? 'stacked-view-narrow'
               : stackOnMobile && numberOfColumns === 1
               ? 'stacked-view-single'
+              : ''
+          } ${
+            alignment === 'left'
+              ? 'align-left'
+              : alignment === 'right'
+              ? 'align-right'
+              : alignment === 'center'
+              ? 'align-center'
+              : alignment === 'justify'
+              ? 'align-justify'
               : ''
           }`}
         >

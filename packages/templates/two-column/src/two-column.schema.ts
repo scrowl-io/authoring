@@ -17,7 +17,7 @@ export const TwoColumnSchema: TwoColumnSchemaProps = {
         numberOfColumns: {
           type: 'Radio',
           label: 'Number of Columns',
-          value: 3,
+          value: 2,
           options: [
             {
               label: 'One column',
@@ -48,6 +48,35 @@ export const TwoColumnSchema: TwoColumnSchemaProps = {
           type: 'Checkbox',
           label: 'Stack On Mobile',
           value: true,
+        },
+        alignment: {
+          type: 'Select',
+          hint: 'BodyAlignment',
+          label: 'Alignment',
+          value: 'left',
+          options: [
+            {
+              name: 'Full Justify',
+              value: 'justify',
+              icon: 'align_horizontal_right',
+            },
+            {
+              name: 'Align Left',
+              value: 'left',
+              icon: 'align_horizontal_left',
+            },
+            {
+              name: 'Align Center',
+              value: 'center',
+              icon: 'align_horizontal_left',
+            },
+            {
+              name: 'Align Right',
+              value: 'right',
+              icon: 'align_horizontal_right',
+            },
+          ],
+          iconFromValue: true,
         },
       },
     },

@@ -12,6 +12,22 @@
     align-items: center;
     height: 100%;
 
+    &.align-left {
+      text-align: left;
+    }
+
+    &.align-right {
+      text-align: right;
+    }
+
+    &.align-center {
+      text-align: center;
+    }
+
+    &.align-justify {
+      text-align: justify;
+    }
+
     .column {
       margin: 0 1.5rem;
     }

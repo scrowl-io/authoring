@@ -6,12 +6,14 @@ import {
   InputFieldsetProps,
   InputCheckboxProps,
   InputRadioProps,
+  InputSelectProps,
 } from '@scrowl/template-core';
 
 export interface TwoColumnContentOptions extends InputFieldsetProps {
   content: {
     numberOfColumns: InputRadioProps;
     stackOnMobile: InputCheckboxProps;
+    alignment: InputSelectProps;
   };
 }
 
