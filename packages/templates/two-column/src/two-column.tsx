@@ -4,7 +4,7 @@ import * as css from './_index.scss';
 import { TwoColumnProps } from './two-column.types';
 
 export const TwoColumn = ({ schema, ...props }: TwoColumnProps) => {
-  let classes = `${css.templateBlockText} `;
+  let classes = `${css.templateTwoColumn} `;
   const editMode = props.editMode ? true : false;
   const focusElement = editMode ? props.focusElement : null;
   const scrollScenes: any = React.useRef([]);
