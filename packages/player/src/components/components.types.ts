@@ -1,1 +1,1 @@
-export * from './slide/player-slide.types';
+export * from './slide/slide.types';
