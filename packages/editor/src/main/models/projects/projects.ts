@@ -1,5 +1,5 @@
 import { v4 as uuid } from 'uuid';
-import { ProjectsApi, ProjectData, ProjectFile } from './projects.types';
+import { ProjectsApi, ProjectData, ProjectFile, ProjectMeta } from './projects.types';
 import { createProject } from './project.data';
 import { rq, fs, log } from '../../services';
 import * as utils from '../../utils';
@@ -156,10 +156,9 @@ export const save = (ev: rq.RequestEvent, data: ProjectData) => {
       projectFile.updatedAt = now;
     }
 
-    projectFile.versions.unshift({
-      createdAt: now,
-      filename: data.meta.filename,
-    });
+    const meta = data.meta as ProjectMeta;
+
+    projectFile.versions.unshift(meta);
 
     writeProjectData(data).then((writeDataRes) => {
       if (writeDataRes.error) {

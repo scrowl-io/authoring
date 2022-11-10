@@ -127,10 +127,5 @@ export type ProjectFile = {
   openedAt: string;
   updatedAt: string;
   assets: Array<ProjectAsset>;
-  versions: Array<
-    {
-      createdAt: string;
-      filename: string;
-    }
-  >
+  versions: Array<ProjectMeta>;
 };
