@@ -7,10 +7,27 @@ if (isDev) {
   window.updateDev();
 }
 
-fs.fileRemove(fs.APP_PATHS.temp).then((res) => {
-  if (res.error) {
-    log.error(res.message, res.data.trace);
-  }
+const cleanUpPromises = [
+  fs.fileRemove(fs.APP_PATHS.temp),
+  fs.fileRemove(fs.APP_PATHS.publish),
+];
+const cleanUpPaths = [
+  fs.APP_PATHS.temp,
+  fs.APP_PATHS.publish,
+];
+
+Promise.allSettled(cleanUpPromises).then((cleanUpRes) => {
+  cleanUpRes.forEach((cleanUp, idx) => {
+    if (cleanUp.status === 'rejected') {
+      log.error(`Failed to clean up temporary directory: ${cleanUpPaths[idx]}`);
+      return;
+    }
+
+    if (cleanUp.value.error) {
+      log.error(`Unable to clean temporary director: ${cleanUp.value.message}`);
+      return;
+    }
+  });
 
   window.init();
 });

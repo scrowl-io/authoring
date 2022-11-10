@@ -1,7 +1,6 @@
 import { TemplatesApi, TemplateSchema } from './templates.types';
 import { rq, fs, tmpr, log } from '../../services';
 import { list as templateList } from './default-templates';
-import { ListFormat } from 'typescript';
 
 export const TEMPLATE_PATHS = {
   working: fs.joinPath(fs.APP_PATHS.temp, 'templates'),

@@ -2,5 +2,5 @@ export type {
   FSEndpoints as SystemEndpoints,
   SystemMessageDialogOptions,
   SystemSaveDialogOptions,
-  SystemOpenDialogSyncOptions
+  SystemOpenDialogOptions
 } from '../../../main/services/file-system/fs.types';

@@ -75,8 +75,7 @@ export type ProjectScorm = {
 };
 
 export type ProjectAsset = {
-  name: string;
-  location: string;
+  filname: string;
   isDeleted?: boolean;
 };
 
