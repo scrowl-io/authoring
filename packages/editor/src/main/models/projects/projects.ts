@@ -188,14 +188,44 @@ export const publish = (ev: rq.RequestEvent, data: ProjectData) => {
   return new Promise<rq.ApiResult>((resolve) => {
     log.info('publishing project');
 
-    // prompt the user for a save location
-    // create a publish temp folder
-    // copy project assets [uploaded media] into publish folder
-    // copy project resources [js, css, html] into publish folder
-    // copy templates into publish temp folder
-    // create project files [html, js] and add them to publish folder
+    fs.dialog.save(ev, {
+      defaultPath: fs.APP_PATHS.downloads,
+      properties: ['showOverwriteConfirmation', 'createDirectory'],
+      buttonLabel: 'Publish',
+      message: 'Publish SCORM package',
+    }).then((saveRes) => {
 
-    resolve(scorm(data, ''));
+      if (saveRes.error) {
+        resolve(saveRes);
+        return;
+      }
+
+      if (saveRes.data.canceled) {
+        resolve(saveRes);
+        return;
+      }
+
+      if (!saveRes.data.filePath) {
+        const missingPathError = {
+          error: true,
+          message: 'File path required',
+          data: saveRes.data,
+        };
+        log.error(missingPathError);
+        resolve(missingPathError);
+        return;
+      }
+
+      const filepath = `${saveRes.data.filePath}.zip`;
+
+      // create a publish temp folder
+      // copy project assets [uploaded media] into publish folder
+      // copy project resources [js, css, html] into publish folder
+      // copy templates into publish temp folder
+      // create project files [html, js] and add them to publish folder
+
+      scorm(data, filepath).then(resolve);
+    });
   });
 };
 

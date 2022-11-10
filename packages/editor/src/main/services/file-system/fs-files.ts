@@ -9,6 +9,7 @@ import { FileDataResult, FileExistsResult } from './fs.types';
 export const APP_PATHS = {
   root: path.join(__dirname, '../../../../'),
   save: path.join(app.getPath('documents'), 'scrowl'),
+  downloads: app.getPath('downloads'),
   temp: path.join(app.getPath('temp'), 'scrowl'),
 };
 
