@@ -2,15 +2,28 @@ import packager from 'simple-scorm-packager';
 import { ProjectData, ProjectFile } from './projects.types';
 import { Templates } from '../';
 import { rq, fs, tmpr, log } from '../../services';
-import { dt, lt } from '../../utils';
+import { dt, lt, obj } from '../../utils';
 import { TEMPLATE_PATHS } from '../templates';
 
-export const getProjectTemplates = (project: ProjectData) => {
+export type TemplateInfo = {
+  component: string;
+  js: string;
+  css: string;
+}
+
+export type TemplateList = Array<TemplateInfo>;
+export type TemplateMap = {
+  [key: string]: TemplateInfo;
+};
+
+export const getProjectTemplates = (project: ProjectData): [false | Set<string>, TemplateList] => {
   let templatePath;
   const templatePaths = new Set<string>();
+  const templateList: TemplateList = [];
+  const templateMap: TemplateMap = {};
 
   if (!project.slides) {
-    return templatePaths;
+    return [false, templateList];
   }
 
   project.slides.forEach((slide) => {
@@ -18,10 +31,22 @@ export const getProjectTemplates = (project: ProjectData) => {
 
     if (fs.fileExistsSync(templatePath)) {
       templatePaths.add(templatePath);
+
+      if (!templateMap[slide.template.meta.component]) {
+        templateMap[slide.template.meta.component] = {
+          component: slide.template.meta.component,
+          js: `./scrowl.template-${slide.template.meta.filename}.js`,
+          css: `./scrowl.template-${slide.template.meta.filename}.css`
+        };
+      }
     }
   });
 
-  return templatePaths;
+  for (const [key, template] of Object.entries(templateMap)) {
+    templateList.push(template);
+  }
+
+  return [templatePaths, templateList];
 };
 
 export const getProjectUploads = (project: ProjectData, meta: ProjectFile, src: string) => {
@@ -101,13 +126,15 @@ const createScormSource = (project: ProjectData, meta: ProjectFile, source: stri
 
       const copyPromises: Array<Promise<rq.ApiResult>> = [];
       const copyPaths: Array<string> = [];
-      const templatePaths = getProjectTemplates(project);
+      const [templatePaths, templates] = getProjectTemplates(project);
       const uploadPaths = getProjectUploads(project, meta, uploadSource);
 
-      templatePaths.forEach((templatePath) => {
-        copyPaths.push(templatePath);
-        copyPromises.push(fs.copy(templatePath, dest));
-      });
+      if (templatePaths) {
+        templatePaths.forEach((templatePath) => {
+          copyPaths.push(templatePath);
+          copyPromises.push(fs.copy(templatePath, dest));
+        });
+      }
 
       uploadPaths.forEach((uploadPath) => {
         copyPaths.push(uploadPath);
@@ -145,6 +172,7 @@ const createScormSource = (project: ProjectData, meta: ProjectFile, source: stri
             project,
             source,
             dest,
+            templates,
           },
         });
       });
@@ -152,13 +180,16 @@ const createScormSource = (project: ProjectData, meta: ProjectFile, source: stri
   });
 };
 
-const createScormEntry = (project, source, dest) => {
+const createScormEntry = (project: ProjectData, source: string, dest: string, templates: TemplateList) => {
   // create project files [html, js] and add them to publish folder
   return new Promise<rq.ApiResult>((resolve) => {
     const entryHtmlSrc = fs.joinPath(Templates.TEMPLATE_PATHS.project, 'scorm.html.hbs');
     const entryHtmlDest = fs.joinPath(dest, 'index.html');
     const entryJsSrc = fs.joinPath(Templates.TEMPLATE_PATHS.project, 'scorm.js.hbs');
     const entryJsDest = fs.joinPath(dest, 'index.js');
+    const renderData = {
+      templates,
+    }
 
     resolve({
       error: false,
@@ -182,7 +213,9 @@ export const scorm = (project: ProjectData, meta: ProjectFile, pubDest: string, 
         return;
       }
 
-      createScormEntry(project, projectSource, projectDest).then((entryRes) => {
+      const templates = sourceRes.data.templates;
+
+      createScormEntry(project, projectSource, projectDest, templates).then((entryRes) => {
         if (entryRes.error) {
           resolve(entryRes);
           return;

@@ -6,18 +6,20 @@ const e = React.createElement;
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      schema: {{{data.schema}}}
-    };
   }
   render() {
-    const schema = this.state.schema;
-    const focusElement = this.state.focusElement;
+    const schema = {{{data.schema}}};
+    const templateList = {
+      {{#each data.templates as | temp |}}
+      '{{temp.component}}': {{temp.component}},
+      {{/each}}
+    };
 
     return e(
       Scrowl.player.Root,
       {
         schema,
+        templateList,
       },
       null
     );
