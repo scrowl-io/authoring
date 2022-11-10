@@ -1,0 +1,71 @@
+@use '@owlui/lib/src/theme/utils' as *;
+
+.pane {
+  &--left {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    flex-shrink: 0;
+    min-width: $owl-sys-size-sidebar-minwidth;
+    overflow: scroll;
+    color: var(--owl-sidebar-color);
+    background: var(--owl-sidebar-bg);
+
+    &__header {
+      flex: 0 1 auto;
+      margin-top: calc($owl-sys-space-sidebar / 2);
+    }
+
+    &__content {
+      flex: 1 1 auto;
+      padding-bottom: $owl-sys-space-sidebar;
+      overflow-y: auto;
+    }
+  }
+
+  &--right {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    flex-shrink: 0;
+    min-width: $owl-sys-size-sidebar-minwidth;
+    width: $owl-sys-size-sidebar-width;
+    color: var(--owl-sidebar-color);
+    border-left: var(--owl-border-width) var(--owl-border-color) solid;
+    background: var(--owl-sidebar-bg);
+
+    &__header {
+      flex: 0 1 auto;
+      margin-top: calc($owl-sys-space-sidebar / 2);
+    }
+
+    &__content {
+      flex: 1 1 auto;
+      padding-bottom: $owl-sys-space-sidebar;
+      overflow-y: auto;
+    }
+  }
+
+  &__heading {
+    @include typeface-label();
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: calc(var(--owl-sidebar-spacing) / 2)
+      calc(var(--owl-sidebar-spacing) / 2) calc(var(--owl-sidebar-spacing) / 2)
+      var(--owl-sidebar-spacing);
+    line-height: $owl-ref-typeface-lineheight-sm;
+    font-size: $owl-ref-typeface-size-xs;
+    user-select: none;
+  }
+
+  .owlui-nav-tabs {
+    font-size: $owl-ref-typeface-size-xs;
+  }
+
+  .owlui-tab-pane {
+    font-size: $owl-ref-typeface-size-xs;
+  }
+}
