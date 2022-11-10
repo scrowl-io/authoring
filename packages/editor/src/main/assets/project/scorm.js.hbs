@@ -1,0 +1,28 @@
+{{#with . as | data |}}
+const domContainer = document.querySelector('#app');
+const root = ReactDOM.createRoot(domContainer);
+const e = React.createElement;
+
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      schema: {{{data.schema}}}
+    };
+  }
+  render() {
+    const schema = this.state.schema;
+    const focusElement = this.state.focusElement;
+
+    return e(
+      Scrowl.player.Root,
+      {
+        schema,
+      },
+      null
+    );
+  }
+}
+
+root.render(e(App));
+{{/with}}
