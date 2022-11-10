@@ -1,7 +1,5 @@
 import {
   FileFilter,
-  OpenDialogReturnValue,
-  SaveDialogReturnValue,
 } from 'electron';
 import { rq } from '..';
 import {
@@ -13,7 +11,9 @@ import {
 export { Dirent } from 'fs-extra';
 
 export type {
-  MessageBoxOptions as SystemMessageDialogOptions
+  MessageBoxOptions as SystemMessageDialogOptions,
+  SaveDialogOptions as SystemSaveDialogOptions,
+  OpenDialogOptions as SystemOpenDialogOptions
 } from 'electron';
 
 export interface FileFilters {
@@ -49,45 +49,26 @@ export interface FileDataResultSuccess extends Omit<ApiResultSuccess, 'data'> {
 
 export type FileDataResult = FileDataResultSuccess | ApiResultError;
 
-export interface FileFromDirData {
-  projectName?: string;
-  fileLocation: string;
-  modifiedAt: Date;
-  createdAt: Date;
-}
-export interface FileFromDirDataResultSuccess
-  extends Omit<ApiResultSuccess, 'data'> {
-  data: {
-    files: FileFromDirData[];
-  };
-}
-
-export type FileFromDirDataResult =
-  | FileFromDirDataResultSuccess
-  | ApiResultError;
-
-export interface DialogSaveResultSuccess
-  extends Omit<ApiResultSuccess, 'data'> {
-  data: SaveDialogReturnValue;
-}
-
-export type DialogSaveResult = DialogSaveResultSuccess | ApiResultError;
-
-export interface DialogOpenResultSuccess
-  extends Omit<ApiResultSuccess, 'data'> {
-  data: OpenDialogReturnValue;
-}
-
-export type DialogOpenResult = DialogOpenResultSuccess | ApiResultError;
-
 export interface FSApiMessage extends Omit<rq.RegisterEndpoint, 'name'> {
   name: '/system/message';
 }
 
+export interface FSApiSave extends Omit<rq.RegisterEndpoint, 'name'> {
+  name: '/system/save';
+}
+
+export interface FSApiOpen extends Omit<rq.RegisterEndpoint, 'name'> {
+  name: '/system/open';
+}
+
 export type FSApi = Partial<{
   message: FSApiMessage;
+  save: FSApiSave;
+  open: FSApiOpen;
 }>;
 
 export type FSEndpoints = {
   message: FSApiMessage['name'];
+  save: FSApiSave['name'];
+  open: FSApiOpen['name'];
 };
