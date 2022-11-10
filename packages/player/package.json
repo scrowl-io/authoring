@@ -19,19 +19,21 @@
   "scripts": {
     "clean": "rimraf ../.parcel-cache",
     "prebuild": "yarn run clean && rimraf dist && rimraf lib",
-    "build": "parcel build --no-cache && tsc",
-    "postbuild": "node ./scripts/post-build.mjs"
+    "build": "parcel build --no-cache",
+    "postbuild": "webpack --config webpack.config.js --stats-error-details"
   },
-  "source": "./src/components/index.ts",
-  "main": "./dist/scrowl.player.js",
-  "module": "./lib/scrowl.player.js",
+  "source": "./src/index.ts",
+  "main": "./lib/scrowl.player.js",
+  "module": "./lib/scrowl.player.module.js",
+  "types": "./lib/scrowl.player.d.ts",
   "exports": {
     ".": {
-      "require": "./dist/scrowl.player.js",
-      "default": "./dist/scrowl.player.js",
-      "import": "./src/components/index.ts"
+      "require": "./lib/scrowl.player.js",
+      "default": "./lib/scrowl.player.js",
+      "import": "./lib/scrowl.player.module.js"
     },
-    "./lib": "./lib/scrowl.player.js"
+    "./src": "./src/index.ts",
+    "./web": "./dist/scrowl.player.js"
   },
   "eslintConfig": {
     "extends": "@scrowl/config"

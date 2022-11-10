@@ -4,5 +4,6 @@
     {
       "path": "./src/typings/tsconfig.json"
     }
-  ]
+  ],
+  "exclude": ["./src/webpack.common.js"]
 }

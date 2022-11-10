@@ -1,6 +1,11 @@
-export declare global {
+import { player } from '../src';
+import { RUNTIME_SERVICE } from '../../runtime/src/runtime.types';
+
+declare global {
   interface Window {
-    __SCROWL_MANIFEST: any;
-    __SCROWL_RUNTIME: any;
-  }
-}
+    Scrowl: {
+      runtime?: RUNTIME_SERVICE;
+      player: typeof player;
+    };
+  };
+};

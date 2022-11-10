@@ -1,5 +1,4 @@
 import React from 'react';
-import './_player-slide.scss';
 import { SlideProps } from './player-slide.types';
 
 export const Slide = ({
