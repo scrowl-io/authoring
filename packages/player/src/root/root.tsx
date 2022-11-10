@@ -2,7 +2,7 @@ import React from 'react';
 import * as css from './_root.scss';
 import { PlayerRootProps } from './root.types';
 
-export const Root = ({ templateList, ...props }: PlayerRootProps) => {
+export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
   const runtime = window.Scrowl.runtime;
 
   if (runtime) {
@@ -12,6 +12,10 @@ export const Root = ({ templateList, ...props }: PlayerRootProps) => {
       console.error(`unable to start runtime: ${startRes.message}`);
     }
   }
+
+  console.log('');
+  console.log('project', project);
+  console.log('templateList', templateList);
 
   return (
     <div className={css.player} {...props}>

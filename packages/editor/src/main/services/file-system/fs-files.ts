@@ -381,6 +381,32 @@ export const fileRemove = (pathname) => {
   });
 }
 
+export const fileRename = (src, filename) => {
+  return new Promise<rq.ApiResult>((resolve) => {
+    fs.rename(src, filename, (e) => {
+      if (e) {
+        resolve({
+          error: true,
+          message: `Failed to rename file: ${src} -> ${filename}`,
+          data: {
+            src,
+            filename,
+          },
+        });
+        return;
+      }
+
+      resolve({
+        error: false,
+        data: {
+          src,
+          filename,
+        },
+      });
+    });
+  });
+};
+
 export default {
   APP_PATHS,
   normalizePath,
@@ -398,4 +424,5 @@ export default {
   fileWrite,
   copy,
   fileRemove,
+  fileRename,
 };

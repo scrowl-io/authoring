@@ -8,7 +8,7 @@ class App extends React.Component {
     super(props);
   }
   render() {
-    const schema = {{{data.schema}}};
+    const project = {{{data.project}}};
     const templateList = {
       {{#each data.templates as | temp |}}
       '{{temp.component}}': {{temp.component}},
@@ -18,7 +18,7 @@ class App extends React.Component {
     return e(
       Scrowl.player.Root,
       {
-        schema,
+        project,
         templateList,
       },
       null

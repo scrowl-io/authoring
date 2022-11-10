@@ -128,3 +128,15 @@ export type ProjectFile = {
   assets: Array<ProjectAsset>;
   versions: Array<ProjectMeta>;
 };
+
+export type TemplateInfo = {
+  component: string;
+  js: string;
+  css: string;
+}
+
+export type TemplateList = Array<TemplateInfo>;
+
+export type TemplateMap = {
+  [key: string]: TemplateInfo;
+};

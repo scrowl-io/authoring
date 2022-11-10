@@ -1,20 +1,9 @@
 import packager from 'simple-scorm-packager';
-import { ProjectData, ProjectFile } from './projects.types';
+import { ProjectData, ProjectFile, TemplateList, TemplateMap } from './projects.types';
 import { Templates } from '../';
 import { rq, fs, tmpr, log } from '../../services';
-import { dt, lt, obj } from '../../utils';
+import { dt, lt, str } from '../../utils';
 import { TEMPLATE_PATHS } from '../templates';
-
-export type TemplateInfo = {
-  component: string;
-  js: string;
-  css: string;
-}
-
-export type TemplateList = Array<TemplateInfo>;
-export type TemplateMap = {
-  [key: string]: TemplateInfo;
-};
 
 export const getProjectTemplates = (project: ProjectData): [false | Set<string>, TemplateList] => {
   let templatePath;
@@ -180,7 +169,7 @@ const createScormSource = (project: ProjectData, meta: ProjectFile, source: stri
   });
 };
 
-const createScormEntry = (project: ProjectData, source: string, dest: string, templates: TemplateList) => {
+const createScormEntry = ({ scorm, meta, ...project}: ProjectData, source: string, dest: string, templates: TemplateList) => {
   // create project files [html, js] and add them to publish folder
   return new Promise<rq.ApiResult>((resolve) => {
     const entryHtmlSrc = fs.joinPath(Templates.TEMPLATE_PATHS.project, 'scorm.html.hbs');
@@ -188,16 +177,122 @@ const createScormEntry = (project: ProjectData, source: string, dest: string, te
     const entryJsSrc = fs.joinPath(Templates.TEMPLATE_PATHS.project, 'scorm.js.hbs');
     const entryJsDest = fs.joinPath(dest, 'index.js');
     const renderData = {
+      project: JSON.stringify(project),
       templates,
     }
 
-    resolve({
-      error: false,
-      data: {
-        project,
-        source,
-        dest,
-      },
+    const renderEntryFile = (src, dest) => {
+      return new Promise<rq.ApiResult>((resolve) => {
+        fs.fileRead(src).then((readRes) => {
+          if (readRes.error) {
+            resolve(readRes);
+            return;
+          }
+
+          const renderRes = tmpr.compile(readRes.data.contents, renderData);
+
+          if (renderRes.error) {
+            resolve(renderRes);
+            return;
+          }
+
+          fs.fileWrite(dest, renderRes.data.contents).then(resolve);
+        })
+      })
+    };
+
+    const renderPromises = [
+      renderEntryFile(entryHtmlSrc, entryHtmlDest),
+      renderEntryFile(entryJsSrc, entryJsDest),
+    ];
+
+    Promise.allSettled(renderPromises).then((renderPromiseRes) => {
+      let isRendered = true;
+      let errorRes;
+
+      renderPromiseRes.forEach((renderRes) => {
+        if (!isRendered) {
+          return;
+        }
+
+        if (renderRes.status === 'rejected') {
+          isRendered = false;
+          errorRes = renderRes;
+          return;
+        }
+
+        if (renderRes.value.error) {
+          isRendered = false;
+          errorRes = renderRes.value;
+          return;
+        }
+      });
+
+      if (!isRendered) {
+        resolve({
+          error: true,
+          message: `Failed to write scorm project files`,
+          data: {
+            trace: errorRes,
+          },
+        });
+        return;
+      }
+
+      resolve({
+        error: false,
+        data: {
+          project,
+          source,
+          dest,
+        },
+      });
+    });
+  });
+};
+
+const createScormPackage = (src: string, dest: string, project: ProjectData, meta: ProjectFile) => {
+  return new Promise<rq.ApiResult>((resolve) => {
+    const config = project.scorm;
+    const today = dt.getDateStampLocal();
+    const projectVersion = `0.0.${meta.versions.length}`;
+    const destFolder = fs.getDirname(dest);
+    const packagerOpts = {
+      source: src,
+      title: project.meta.name,
+      version: config.version,
+      language: config.language,
+      startingPage: 'content/index.html',
+      organization: config.organization,
+      identifier: config.identifier,
+      package: {
+        outputFolder: destFolder,
+        zip: true,
+        date: today,
+        version: projectVersion,
+        name: config.name,
+        description: config.description,
+        author: config.authors,
+        rights: "©Copyright " + new Date().getFullYear(),
+      }
+    }
+    const packageFilename = fs.joinPath(destFolder, `${str.toScormCase(packagerOpts.package.name)}_v${packagerOpts.package.version}_${today}.zip`);
+
+    packager(packagerOpts, (message: string) => {
+      fs.fileRename(packageFilename, dest).then((res) => {
+        if (res.error) {
+          resolve(res);
+          return;
+        }
+
+        resolve({
+          error: false,
+          data: {
+            message,
+            dest,
+          },
+        });
+      });
     });
   });
 };
@@ -221,12 +316,20 @@ export const scorm = (project: ProjectData, meta: ProjectFile, pubDest: string, 
           return;
         }
 
-        resolve({
-          error: false,
-          data: {
-            project,
-            dest: pubDest,
-          },
+        createScormPackage(tempDest, pubDest, project, meta).then((packRes) => {
+          if (packRes.error) {
+            resolve(packRes);
+            return;
+          }
+
+          log.info(`Published project: ${pubDest}`);
+          resolve({
+            error: false,
+            data: {
+              project,
+              dest: pubDest,
+            },
+          });
         });
       });
     });
