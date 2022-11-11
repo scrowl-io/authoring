@@ -29,7 +29,7 @@
     "package:frontend": "parcel build --no-cache --no-source-maps --public-url ../dist --target frontend",
     "package:backend": "parcel build --no-cache --no-source-maps --public-url ../dist --target backend --target preload",
     "prepackage": "yarn run clean",
-    "package": "yarn run build:backend && yarn run build:frontend",
+    "package": "yarn run package:backend && yarn run package:frontend",
     "postpackage": "electron-builder build",
     "package:local:mac": "yarn run package && open release/build/mac",
     "lint": "",
