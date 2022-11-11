@@ -10,6 +10,9 @@ const CONTENT_TYPES = {
   html: 'text/html',
   text: 'text/plain',
   webp: 'image/webp',
+  svg: 'image/svg+xml',
+  mp4: 'video/mp4',
+  mp3: 'audio/mpeg',
 };
 
 const getContentType = (filename: string) => {
@@ -27,6 +30,12 @@ const getContentType = (filename: string) => {
       return CONTENT_TYPES.css;
     case '.webp':
       return CONTENT_TYPES.webp;
+    case '.svg':
+      return CONTENT_TYPES.svg;
+    case '.mp4':
+      return CONTENT_TYPES.mp4;
+    case '.mp3':
+      return CONTENT_TYPES.mp3;
     default:
       return CONTENT_TYPES.text;
   }
