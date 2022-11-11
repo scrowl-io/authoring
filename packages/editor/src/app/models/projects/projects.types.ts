@@ -10,3 +10,5 @@ export type {
   ProjectLesson,
   ProjectSlide
 } from '../../../main/models/projects/projects.types';
+
+export type { AssetType } from '../../../main/services/file-system/fs.types';

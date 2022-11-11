@@ -58,7 +58,7 @@ export const LessonIntroSchema: LessonIntroSchemaProps = {
         },
         url: {
           type: 'Asset',
-          assetType: 'image',
+          assetTypes: ['image'],
           label: 'Image',
         },
       },

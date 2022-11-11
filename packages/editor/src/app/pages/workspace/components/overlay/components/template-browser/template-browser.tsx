@@ -90,61 +90,63 @@ export const TemplateBrowser = () => {
       onClose={handelClose}
     >
       <div className={css.templateBrowserContainer}>
-        {templateList.map((template, idx) => {
-          const isActive =
-            activeTemplate.meta.component === template.meta.component;
-          const isSelected =
-            selectedTemplate.meta.component === template.meta.component;
+        <div className={css.templateBrowserContent}>
+          {templateList.map((template, idx) => {
+            const isActive =
+              activeTemplate.meta.component === template.meta.component;
+            const isSelected =
+              selectedTemplate.meta.component === template.meta.component;
 
-          return (
-            <button
-              type="button"
-              id={`template-${template.meta.component}`}
-              key={idx}
-              className={`${css.templateBrowserItem}${
-                isActive ? ' active' : ''
-              }${isSelected ? ' selected' : ''}`}
-              onClick={() => {
-                setSelectedTemplate(template);
-              }}
-            >
-              {template.meta.icon && (
-                <span className={css.templateBrowserItemBg}>
+            return (
+              <button
+                type="button"
+                id={`template-${template.meta.component}`}
+                key={idx}
+                className={`${css.templateBrowserItem}${
+                  isActive ? ' active' : ''
+                }${isSelected ? ' selected' : ''}`}
+                onClick={() => {
+                  setSelectedTemplate(template);
+                }}
+              >
+                {template.meta.icon && (
+                  <span className={css.templateBrowserItemBg}>
+                    <Icon
+                      icon={template.meta.icon}
+                      display="sharp"
+                      filled={true}
+                      grad={200}
+                      opsz={20}
+                    />
+                  </span>
+                )}
+                <span className={css.templateBrowserItemType}>
                   <Icon
-                    icon={template.meta.icon}
+                    icon="dashboard"
                     display="sharp"
                     filled={true}
                     grad={200}
                     opsz={20}
                   />
                 </span>
-              )}
-              <span className={css.templateBrowserItemType}>
-                <Icon
-                  icon="dashboard"
-                  display="sharp"
-                  filled={true}
-                  grad={200}
-                  opsz={20}
-                />
-              </span>
-              <label htmlFor={`template-${template.meta.component}`}>
-                <span>{template.meta.label}</span>
-                <small>{`v${template.meta.version}`}</small>
-              </label>
-              {isActive && (
-                <span className={css.templateBrowserItemActive}>
-                  <Icon
-                    icon="check_circle"
-                    display="outlined"
-                    grad={200}
-                    opsz={20}
-                  />
-                </span>
-              )}
-            </button>
-          );
-        })}
+                <label htmlFor={`template-${template.meta.component}`}>
+                  <span>{template.meta.label}</span>
+                  <small>{`v${template.meta.version}`}</small>
+                </label>
+                {isActive && (
+                  <span className={css.templateBrowserItemActive}>
+                    <Icon
+                      icon="check_circle"
+                      display="outlined"
+                      grad={200}
+                      opsz={20}
+                    />
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </div>
       </div>
       <footer className="d-flex justify-content-end">
         {!isNewSlide && (

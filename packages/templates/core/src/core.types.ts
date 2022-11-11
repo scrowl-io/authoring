@@ -35,9 +35,9 @@ export interface BaseInputProps {
 
 export interface InputAssetProps extends BaseInputProps {
   type: 'Asset';
+  assetTypes: Array<'image' | 'document' | 'video' | 'audio' | 'json'>
   value?: string;
   placeholder?: string;
-  assetType?: string;
 }
 
 export interface InputCheckboxProps extends BaseInputProps {

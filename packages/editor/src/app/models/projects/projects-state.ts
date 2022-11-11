@@ -441,6 +441,9 @@ export const config: stateManager.StateConfig = {
       state.isDirty = true;
       state.isUncommitted = true;
     },
+    setAssets: (state, action) => {
+      state.assets = action.payload || [];
+    },
     addAssetItem: (state, action) => {
       state.assets.push(action.payload);
     },
@@ -471,6 +474,7 @@ export const {
   addResourceItem,
   setResourceItem,
   removeResourceItem,
+  setAssets,
   addAssetItem,
   setAssetItem,
   removeAssetItem,

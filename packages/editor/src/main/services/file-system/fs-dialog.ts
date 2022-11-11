@@ -1,6 +1,18 @@
 import { dialog, MessageBoxOptions, SaveDialogOptions, OpenDialogOptions } from 'electron';
-import { FSApi } from './fs.types';
+import { FSApi, AssetFilter, AssetType, ASSET_TYPES } from './';
 import { rq } from '../';
+
+export const getAllowedAssets = (types: Array<AssetType>) => {
+  let filters: Array<AssetFilter> = [];
+
+  types.forEach((type: AssetType) => {
+    if (ASSET_TYPES[type] && ASSET_TYPES[type]) {
+      filters.push(ASSET_TYPES[type]);
+    }
+  });
+
+  return filters;
+};
 
 export const message = (ev: rq.RequestEvent, options: MessageBoxOptions) => {
   return new Promise<rq.ApiResult>((resolve) => {

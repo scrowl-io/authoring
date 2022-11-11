@@ -13,14 +13,45 @@ export { Dirent } from 'fs-extra';
 export type {
   MessageBoxOptions as SystemMessageDialogOptions,
   SaveDialogOptions as SystemSaveDialogOptions,
-  OpenDialogOptions as SystemOpenDialogOptions
+  OpenDialogOptions as SystemOpenDialogOptions,
 } from 'electron';
 
-export interface FileFilters {
-  [key: string]: FileFilter;
+export interface AssetTypeImage extends Omit<FileFilter, 'name' | 'extensions' > {
+  name: 'image';
+  extensions: ['jpg', 'jpeg', 'png', 'gif'];
 }
 
-export type AllowedFiles = 'image' | 'video' | 'scrowl';
+export interface AssetTypeDocument extends Omit<FileFilter, 'name' | 'extensions' > {
+  name: 'document';
+  extensions: ['txt', 'doc', 'docx', 'pdf'];
+}
+
+export interface AssetTypeVideo extends Omit<FileFilter, 'name' | 'extensions' > {
+  name: 'video';
+  extensions: ['mp4', 'mkv', 'avi'];
+}
+
+export interface AssetTypeAudio extends Omit<FileFilter, 'name' | 'extensions' > {
+  name: 'audio';
+  extensions: ['mp3', 'mp4'];
+}
+
+export interface AssetTypeJson extends Omit<FileFilter, 'name' | 'extensions' > {
+  name: 'json';
+  extensions: ['json'];
+}
+
+export type AssetFilter = AssetTypeImage | AssetTypeDocument | AssetTypeVideo | AssetTypeAudio | AssetTypeJson;
+
+export type AssetFilters = {
+  image: AssetTypeImage;
+  document: AssetTypeDocument;
+  video: AssetTypeVideo;
+  audio: AssetTypeAudio;
+  json: AssetTypeJson;
+}
+
+export type AssetType = 'image' | 'document' | 'video' | 'audio' | 'json';
 
 export interface DirectoryTempResultSuccess
   extends Omit<ApiResultSuccess, 'data'> {

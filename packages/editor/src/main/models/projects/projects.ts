@@ -4,11 +4,80 @@ import { createProject } from './project.data';
 import { rq, fs, log } from '../../services';
 import * as utils from '../../utils';
 import { scorm } from './project-publisher';
+import { AssetType } from '../../services/file-system';
 
 const projectMetaFilename = 'project.json';
 
 const getProjectPath = (name) => {
   return fs.joinPath(fs.APP_PATHS.save, name);
+};
+
+const getProjectInfo = (meta: ProjectMeta): rq.ApiResult => {
+  const noId = !meta.id;
+  const noName = !meta.name;
+    
+  let folder;
+  let info: ProjectFile;
+
+  try {
+    if (!noId && !noName) {
+      folder = fs.getDirname(meta.filename || '');
+    } else if (!noId) {
+      folder = getProjectPath(utils.str.toKebabCase(meta.name));
+    } else {
+      return {
+        error: false,
+        data: {
+          isNew: true,
+          uncommitted: true,
+        }
+      }
+    }
+  
+    const fileName = fs.joinPath(folder, projectMetaFilename);
+    const exists = fs.fileExistsSync(fileName);
+  
+    if (!exists) {
+      return {
+        error: false,
+        data: {
+          isNew: !noId,
+          uncommitted: noName,
+          fileName,
+          exists,
+          folder,
+        }
+      }
+    }
+  
+    const read = fs.fileReadSync(fileName) as rq.ApiResult;
+  
+    if (read.error) {
+      return read;
+    }
+  
+    info = read.data as ProjectFile;
+
+    return {
+      error: false,
+      data: {
+        isNew: !noId,
+        uncommitted: noName,
+        fileName,
+        exists,
+        folder,
+        info,
+      }
+    };
+  } catch (e) {
+    return {
+      error: true,
+      message: 'Failed to get project source: unexpected error',
+      data: {
+        trace: e,
+      },
+    };
+  }
 };
 
 export const create = (ev: rq.RequestEvent) => {
@@ -23,13 +92,116 @@ export const create = (ev: rq.RequestEvent) => {
   });
 };
 
-export const upload = (ev: rq.RequestEvent) => {
+export type UploadReq = {
+  meta: ProjectMeta,
+  options: {
+    assetTypes: Array<AssetType>
+  }
+}
+
+export const upload = (ev: rq.RequestEvent, req: UploadReq) => {
   return new Promise<rq.ApiResult>((resolve) => {
-    resolve({
-      error: false,
-      data: {
-        imported: true,
-      },
+    if (!req.meta) {
+      resolve({
+        error: true,
+        message: 'Unable to select asset to import: project data missing',
+        data: {
+          req,
+        },
+      });
+    }
+
+    if (!req.options.assetTypes || !req.options.assetTypes.length) {
+      resolve({
+        error: true,
+        message: 'Unable to select asset to import: asset types not defined.',
+        data: {
+          req,
+        },
+      });
+      return;
+    }
+
+    const config = {
+      title: 'Import File',
+      filters: fs.dialog.getAllowedAssets(req.options.assetTypes),
+    };
+
+    if (!config.filters.length) {
+      resolve({
+        error: true,
+        message: 'Unabled to select asset to import: asset type not supported.',
+        data: {
+          req,
+        },
+      });
+      return;
+    }
+
+    fs.dialog.open(ev, config).then((res) => {
+      if (res.error) {
+        resolve(res);
+        return;
+      }
+
+      if (res.data.canceled) {
+        resolve(res);
+        return;
+      }
+
+      const ext = fs.getExt(res.data.filePath).replace('.', '');
+      const name = fs.getBasename(res.data.filePath, ext);
+      const type = fs.assetTypeByExt(ext);
+      const infoRes = getProjectInfo(req.meta);
+
+      if (infoRes.error) {
+        log.error('getting project info failed', infoRes);
+        resolve(infoRes);
+        return;
+      }
+
+      switch (type) {
+        case 'image':
+          const dest = (infoRes.data.isNew || infoRes.data.uncommitted) ? fs.joinPath(fs.APP_PATHS.uploads, `${name}webp`) : fs.joinPath(infoRes.data.folder, 'assets', `${name}webp`);
+          const destWorking = fs.joinPath(fs.APP_PATHS.temp, 'templates', 'assets', `${name}webp`);
+          
+          fs.asset.toWebp(res.data.filePath, dest).then((transformRes) => {
+            if (transformRes.error) {
+              log.error('asset conversion failed', transformRes);
+              resolve(transformRes);
+              return;
+            }
+
+            // copy file so it can be served to the canvas
+            fs.copy(dest, destWorking).then((copyRes) => {
+              if (copyRes.error) {
+                log.error('asset copied failed', copyRes);
+                resolve(copyRes);
+                return;
+              }
+
+              resolve({
+                error: false,
+                data: {
+                  filename: `${name}webp`,
+                  type,
+                  ext: 'webp',
+                  size: transformRes.data.size,
+                },
+              });
+            });
+          });
+          break;
+      }
+
+    }).catch((e) => {
+      resolve({
+        error: true,
+        message: 'Failed to import file: unexpected error',
+        data: {
+          trace: e,
+        },
+      });
     });
   });
 };

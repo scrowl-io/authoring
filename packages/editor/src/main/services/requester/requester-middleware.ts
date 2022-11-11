@@ -1,4 +1,5 @@
 import * as http from 'http';
+import { createReadStream } from 'fs';
 import { ApiResult } from './requester.types';
 import { fs, log } from '../';
 import { AddressInfo } from 'net';
@@ -9,6 +10,10 @@ const CONTENT_TYPES = {
   js: 'text/javascript',
   html: 'text/html',
   text: 'text/plain',
+  webp: 'image/webp',
+  svg: 'image/svg+xml',
+  mp4: 'video/mp4',
+  mp3: 'audio/mpeg',
 };
 
 const getContentType = (filename: string) => {
@@ -24,19 +29,30 @@ const getContentType = (filename: string) => {
       return CONTENT_TYPES.html;
     case '.css':
       return CONTENT_TYPES.css;
+    case '.webp':
+      return CONTENT_TYPES.webp;
+    case '.svg':
+      return CONTENT_TYPES.svg;
+    case '.mp4':
+      return CONTENT_TYPES.mp4;
+    case '.mp3':
+      return CONTENT_TYPES.mp3;
     default:
       return CONTENT_TYPES.text;
   }
 };
 
 const responseOk = (
-  content: string,
+  src: string,
   contentType: string,
   res: http.ServerResponse
 ) => {
+  const read = createReadStream(src);
+
   res.setHeader('Content-Type', contentType);
   res.writeHead(200);
-  res.end(content, 'utf-8');
+
+  read.pipe(res);
 };
 
 const responseNotFound = (url: string, res: http.ServerResponse) => {
@@ -77,18 +93,7 @@ const createTemplateServer = () => {
                 return;
               }
 
-              fs.fileRead(filename)
-                .then(readRes => {
-                  if (readRes.error) {
-                    responseInternalError(readRes, res);
-                    return;
-                  }
-
-                  responseOk(readRes.data.contents, contentType, res);
-                })
-                .catch(e => {
-                  responseInternalError(e, res);
-                });
+              responseOk(filename, contentType, res);
             })
             .catch(e => {
               responseInternalError(e, res);

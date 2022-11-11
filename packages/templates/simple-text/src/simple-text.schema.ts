@@ -41,7 +41,7 @@ export const SimpleTextSchema: SimpleTextSchemaProps = {
         },
         url: {
           type: 'Asset',
-          assetType: 'image',
+          assetTypes: ['image'],
           label: 'Image',
         },
         bg: {
