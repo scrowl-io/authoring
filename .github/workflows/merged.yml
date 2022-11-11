@@ -1,0 +1,41 @@
+name: PR Merge Workflow
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  bump-version:
+    if: github.event.pull_request.merged === true
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.15.0 # matching Elctron's (20.X) version of node
+          cache: "yarn"
+          cache-dependency-path: "yarn.lock"
+
+      - name: Install
+        run: yarn install --frozen-lockfile
+
+      - name: Identity
+        run: |
+          git config --global user.name '${GITHUB_ACTOR}'
+          git config --gloabl user.email ${GITHUB_ACTOR}@users.noreply.github.com'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_ACTOR: ${{ github.actor }}
+
+      - name: Version
+        run: yarn run version
