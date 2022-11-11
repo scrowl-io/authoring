@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import * as styles from './page-welcome.scss';
+import * as css from './page-welcome.scss';
 import { animations } from '../../components';
 import { Projects } from '../../models';
 import { menu } from '../../services';
@@ -50,7 +50,7 @@ export const Page = () => {
 
   return (
     <motion.div
-      className={styles.firstWelcome}
+      className={css.firstWelcome}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.7 }}

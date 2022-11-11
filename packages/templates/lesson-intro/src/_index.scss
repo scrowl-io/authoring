@@ -20,8 +20,9 @@
     }
 
     h2 {
-      font-size: 22px;
-      padding-top: 0.7rem;
+      font-size: 18px;
+      font-weight: 400;
+      padding-top: 3rem;
       padding-bottom: 0.5rem;
       // width: 100%;
 
@@ -32,15 +33,19 @@
     }
 
     .time {
-      font-size: 0.9rem;
-      font-weight: 400;
-      color: var(--text-dark-a11y-color);
+      margin-top: 2rem;
+      display: flex;
+      align-items: center;
 
-      .icon svg {
+      svg {
         height: 1rem;
-        margin-top: -3px;
         margin-right: 3px;
         fill: var(--text-dark-a11y-color);
+      }
+
+      span {
+        color: var(--text-dark-a11y-color);
+        font-size: 14px;
       }
     }
 

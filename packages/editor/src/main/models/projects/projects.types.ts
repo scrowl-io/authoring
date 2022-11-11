@@ -75,8 +75,7 @@ export type ProjectScorm = {
 };
 
 export type ProjectAsset = {
-  name: string;
-  location: string;
+  filname: string;
   isDeleted?: boolean;
 };
 
@@ -127,10 +126,17 @@ export type ProjectFile = {
   openedAt: string;
   updatedAt: string;
   assets: Array<ProjectAsset>;
-  versions: Array<
-    {
-      createdAt: string;
-      filename: string;
-    }
-  >
+  versions: Array<ProjectMeta>;
+};
+
+export type TemplateInfo = {
+  component: string;
+  js: string;
+  css: string;
+}
+
+export type TemplateList = Array<TemplateInfo>;
+
+export type TemplateMap = {
+  [key: string]: TemplateInfo;
 };

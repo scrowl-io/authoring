@@ -1,4 +1,5 @@
-const TerserPlugin = require("terser-webpack-plugin");
+/* eslint-disable @typescript-eslint/no-var-requires */
+const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const postcssConfig = require('./.postcssrc.json');
 
@@ -21,8 +22,8 @@ const postcssLoader = {
   options: {
     implementation: require('postcss'),
     postcssOptions: {
-      "modules": true,
-      "plugins": postcssPlugins,
+      modules: true,
+      plugins: postcssPlugins,
     },
   },
 };
@@ -32,9 +33,11 @@ const sassLoader = {
     implementation: require('sass'),
     sassOptions: {
       includePaths: [
-        "./",
-        "../../../node_modules/",
-        "./node_modules/",
+        './',
+        '../../../node_modules/',
+        '../../node_modules',
+        '../node_modules',
+        './node_modules/',
       ],
     },
   },
@@ -79,7 +82,7 @@ module.exports = {
     }),
   ],
   externals: {
-    'react': 'React',
+    react: 'React',
     'react-dom': 'ReactDOM',
     'react-dom/server': 'ReactDOMServer',
   },

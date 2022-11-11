@@ -31,6 +31,13 @@ export const toKebabCase = str => {
     .toLowerCase();
 };
 
+export const toScormCase = (str) => {
+  return str
+    .toLowerCase()
+    .replace(/[^\p{L}0-9]+/gu, '')
+    .replace(/\s/g, '');
+};
+
 export const hasLettersOnly = str => {
   return /^[a-zA-Z]+$/.test(str);
 };
@@ -65,6 +72,7 @@ export default {
   toCamelCase,
   toPascalCase,
   toKebabCase,
+  toScormCase,
   prettyJson,
   toLower,
   toCapitalize,

@@ -12,11 +12,13 @@
     "./package": "./package.json",
     "./prettier": "./src/.prettierrc.json",
     "./stylelint": "./src/.stylelintrc.json",
-    "./tsconfig": "./tsconfig.json"
+    "./tsconfig": "./tsconfig.json",
+    "./webpack": "./src/webpack.common.js"
   },
   "dependencies": {
     "@typescript-eslint/eslint-plugin": "^5.38.1",
     "@typescript-eslint/parser": "^5.38.1",
+    "css-loader": "^6.7.1",
     "eslint": "^8.24.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.26.0",
@@ -24,14 +26,21 @@
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.31.8",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "postcss": "^8.4.17",
+    "file-loader": "^6.2.0",
+    "mini-css-extract-plugin": "^2.6.1",
+    "postcss": "^8.4.18",
+    "postcss-loader": "^7.0.1",
     "prettier": "^2.7.1",
+    "sass": "^1.56.1",
+    "sass-loader": "^13.2.0",
     "stylelint": "^14.13.0",
     "stylelint-config-prettier": "^9.0.3",
     "stylelint-config-standard": "^28.0.0",
     "stylelint-config-standard-scss": "^5.0.0",
     "stylelint-order": "^5.0.0",
     "stylelint-prettier": "^2.0.0",
+    "terser-webpack-plugin": "^5.3.6",
+    "ts-loader": "^9.4.1",
     "typescript": "4.7.4"
   }
 }

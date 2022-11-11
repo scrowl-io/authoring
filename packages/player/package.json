@@ -17,21 +17,25 @@
   },
   "homepage": "https://github.com/scrowl-io/authoring/packages/player#readme",
   "scripts": {
-    "clean": "rimraf ../.parcel-cache",
+    "clean": "rimraf ../../../.parcel-cache",
+    "prestart": "yarn run clean && rimraf dev/dist",
+    "start": "cd dev && parcel serve --no-cache --open",
     "prebuild": "yarn run clean && rimraf dist && rimraf lib",
-    "build": "parcel build --no-cache && tsc",
-    "postbuild": "node ./scripts/post-build.mjs"
+    "build": "parcel build --no-cache",
+    "postbuild": "webpack --config webpack.config.js --stats-error-details"
   },
-  "source": "./src/components/index.ts",
-  "main": "./dist/scrowl.player.js",
-  "module": "./lib/scrowl.player.js",
+  "source": "./src/index.ts",
+  "main": "./lib/scrowl.player.js",
+  "module": "./lib/scrowl.player.module.js",
+  "types": "./lib/scrowl.player.d.ts",
   "exports": {
     ".": {
-      "require": "./dist/scrowl.player.js",
-      "default": "./dist/scrowl.player.js",
-      "import": "./src/components/index.ts"
+      "require": "./lib/scrowl.player.js",
+      "default": "./lib/scrowl.player.js",
+      "import": "./lib/scrowl.player.module.js"
     },
-    "./lib": "./lib/scrowl.player.js"
+    "./src": "./src/index.ts",
+    "./web": "./dist/scrowl.player.js"
   },
   "eslintConfig": {
     "extends": "@scrowl/config"
@@ -56,6 +60,10 @@
     "@parcel/transformer-typescript-types": "2.7.0",
     "@parcel/validator-typescript": "2.7.0",
     "@scrowl/config": "^0.0.1",
+    "@scrowl/template-block-text": "^1.0.0",
+    "@scrowl/template-lesson-intro": "^1.0.0",
+    "@scrowl/template-simple-text": "^1.0.0",
+    "@scrowl/template-two-column": "^1.0.0",
     "@types/react": "^18.0.21",
     "@types/react-dom": "^18.0.6",
     "eslint": "^8.25.0",
@@ -71,6 +79,7 @@
   },
   "dependencies": {
     "@owlui/lib": "^0.0.44",
+    "@scrowl/template-core": "^1.0.0",
     "bootstrap": "^5.2.2",
     "react": "^18.2.0",
     "react-bootstrap": "^2.5.0",

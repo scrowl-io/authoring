@@ -1,0 +1,30 @@
+{{#with . as | data |}}
+const domContainer = document.querySelector('#app');
+const root = ReactDOM.createRoot(domContainer);
+const e = React.createElement;
+
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+  render() {
+    const project = {{{data.project}}};
+    const templateList = {
+      {{#each data.templates as | temp |}}
+      '{{temp.component}}': {{temp.component}},
+      {{/each}}
+    };
+
+    return e(
+      Scrowl.player.Root,
+      {
+        project,
+        templateList,
+      },
+      null
+    );
+  }
+}
+
+root.render(e(App));
+{{/with}}

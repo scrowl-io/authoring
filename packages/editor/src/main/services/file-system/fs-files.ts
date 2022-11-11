@@ -3,13 +3,15 @@ import path from 'path';
 import { URL } from 'url';
 import { app } from 'electron';
 import fs from 'fs-extra';
-import { rq } from '../';
+import { rq, log } from '../';
 import { FileDataResult, FileExistsResult } from './fs.types';
 
 export const APP_PATHS = {
   root: path.join(__dirname, '../../../../'),
   save: path.join(app.getPath('documents'), 'scrowl'),
+  downloads: app.getPath('downloads'),
   temp: path.join(app.getPath('temp'), 'scrowl'),
+  publish: path.join(app.getPath('temp'), 'publish'),
 };
 
 export const getAppPath = (filename: string) => {
@@ -305,6 +307,7 @@ export const fileWrite = (pathname: string, contents: unknown) => {
 export const copy = (source: string, dest: string, opts?: fs.CopyOptions) => {
   return new Promise<rq.ApiResult>(resolve => {
     if (!source) {
+      log.error(`failed to copy: missing source`);
       resolve(
         createResultError('Unable to copy temp to source: source required')
       );
@@ -312,6 +315,7 @@ export const copy = (source: string, dest: string, opts?: fs.CopyOptions) => {
     }
 
     if (!dest) {
+      log.error(`failed to copy: missing dest`);
       resolve(
         createResultError('Unable to copy temp to source: destination required')
       );
@@ -320,6 +324,7 @@ export const copy = (source: string, dest: string, opts?: fs.CopyOptions) => {
 
     try {
       if (!fs.pathExistsSync(source)) {
+        log.error(`failed to copy: source doesn't exist`);
         resolve({
           error: true,
           message: `Unable to copy ${source}: path does not exist`,
@@ -341,12 +346,64 @@ export const copy = (source: string, dest: string, opts?: fs.CopyOptions) => {
             },
           });
         })
-        .catch(e => {
+        .catch((e) => {
+          log.error(`failed to copy: unexpected error`, e);
           resolve(createResultError(`Unable to copy ${source} to ${dest}`, e));
         });
     } catch (e) {
+      log.error(`failed to copy: crash`, e);
       resolve(createResultError(`Unable to copy ${source} to ${dest}`, e));
     }
+  });
+};
+
+export const fileRemove = (pathname) => {
+  return new Promise<rq.ApiResult>((resolve) => {
+    fs.remove(pathname)
+      .then(() => {
+        resolve({
+          error: false,
+          data: {
+            pathname,
+          },
+        });
+      })
+      .catch((e) => {
+        resolve({
+          error: true,
+          message: `Failed to remove contents: ${pathname}`,
+          data: {
+            trace: e,
+            pathname,
+          },
+        });
+      });
+  });
+}
+
+export const fileRename = (src, filename) => {
+  return new Promise<rq.ApiResult>((resolve) => {
+    fs.rename(src, filename, (e) => {
+      if (e) {
+        resolve({
+          error: true,
+          message: `Failed to rename file: ${src} -> ${filename}`,
+          data: {
+            src,
+            filename,
+          },
+        });
+        return;
+      }
+
+      resolve({
+        error: false,
+        data: {
+          src,
+          filename,
+        },
+      });
+    });
   });
 };
 
@@ -366,4 +423,6 @@ export default {
   fileWriteSync,
   fileWrite,
   copy,
+  fileRemove,
+  fileRename,
 };

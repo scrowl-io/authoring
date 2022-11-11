@@ -1,0 +1,20 @@
+{
+  "name": "@scrowl/player-dev",
+  "version": "1.0.0",
+  "description": "",
+  "license": "MIT",
+  "keywords": [],
+  "author": {
+    "name": "OSG"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/scrowl-io/authoring.git",
+    "directory": "packages/player"
+  },
+  "bugs": {
+    "url": "https://github.com/scrowl-io/scrowl/issues"
+  },
+  "homepage": "https://github.com/scrowl-io/authoring/packages/player#readme",
+  "source": "./index.html"
+}

@@ -1,9 +1,11 @@
 import { v4 as uuid } from 'uuid';
-import { ProjectsApi, ProjectData, ProjectFile } from './projects.types';
+import { ProjectsApi, ProjectData, ProjectFile, ProjectMeta } from './projects.types';
 import { createProject } from './project.data';
 import { rq, fs, log } from '../../services';
 import * as utils from '../../utils';
 import { scorm } from './project-publisher';
+
+const projectMetaFilename = 'project.json';
 
 const getProjectPath = (name) => {
   return fs.joinPath(fs.APP_PATHS.save, name);
@@ -96,14 +98,21 @@ export const save = (ev: rq.RequestEvent, data: ProjectData) => {
 
     const now = new Date().toISOString();
     const isNew = !data.meta.id;
-    const projectFolder = !isNew ? data.meta.filename : utils.str.toKebabCase(data.meta.name);
-    const projectPath = getProjectPath(projectFolder);
-    const projectFileName = fs.joinPath(projectPath, 'project.json');
+    
+    let projectFolder;
     let projectFile: ProjectFile;
+
+    if (!isNew) {
+      projectFolder = fs.getDirname(data.meta.filename || '');
+    } else {
+      projectFolder = getProjectPath(utils.str.toKebabCase(data.meta.name));
+    }
+
+    const projectFileName = fs.joinPath(projectFolder, projectMetaFilename);
 
     data.meta.updatedAt = now;
     data.meta.id = uuid();
-    data.meta.filename = `${fs.joinPath(projectPath, data.meta.id)}.gzip`;
+    data.meta.filename = `${fs.joinPath(projectFolder, data.meta.id)}.gzip`;
 
     const projectExistsRes = fs.fileExistsSync(projectFileName);
 
@@ -156,10 +165,9 @@ export const save = (ev: rq.RequestEvent, data: ProjectData) => {
       projectFile.updatedAt = now;
     }
 
-    projectFile.versions.unshift({
-      createdAt: now,
-      filename: data.meta.filename,
-    });
+    const meta = data.meta as ProjectMeta;
+
+    projectFile.versions.unshift(meta);
 
     writeProjectData(data).then((writeDataRes) => {
       if (writeDataRes.error) {
@@ -189,14 +197,65 @@ export const publish = (ev: rq.RequestEvent, data: ProjectData) => {
   return new Promise<rq.ApiResult>((resolve) => {
     log.info('publishing project');
 
-    // prompt the user for a save location
-    // create a publish temp folder
-    // copy project assets [uploaded media] into publish folder
-    // copy project resources [js, css, html] into publish folder
-    // copy templates into publish temp folder
-    // create project files [html, js] and add them to publish folder
+    fs.dialog.save(ev, {
+      defaultPath: fs.joinPath(fs.APP_PATHS.downloads, utils.str.toScormCase(data.meta.name)),
+      properties: ['showOverwriteConfirmation', 'createDirectory'],
+      buttonLabel: 'Publish',
+      message: 'Publish SCORM package',
+    }).then((saveRes) => {
 
-    resolve(scorm(data, ''));
+      if (saveRes.error) {
+        resolve(saveRes);
+        return;
+      }
+
+      if (saveRes.data.canceled) {
+        resolve(saveRes);
+        return;
+      }
+
+      if (!saveRes.data.filePath) {
+        const missingPathError = {
+          error: true,
+          message: 'File path required',
+          data: saveRes.data,
+        };
+        log.error(missingPathError);
+        resolve(missingPathError);
+        return;
+      }
+
+      fs.fileRemove(fs.APP_PATHS.publish).then((removeRes) => {
+        if (removeRes.error) {
+          resolve(removeRes);
+          return;
+        }
+
+        const filepath = `${saveRes.data.filePath}.zip`;
+        const projectFileName = fs.joinPath(fs.getDirname(data.meta.filename || ''), projectMetaFilename);
+        
+        fs.fileRead(projectFileName).then((readRes) => {
+          if (readRes.error) {
+            log.error(`Failed to get project meta file: ${projectFileName}`);
+            resolve(readRes);
+            return;
+          }
+
+          scorm(data, readRes.data.contents, filepath, fs.APP_PATHS.publish).then(resolve);
+        });
+      }).catch((e) => {
+        const unexpectedError = {
+          error: true,
+          message: 'Failed to publish: unexpected error',
+          data: {
+            trace: e,
+          },
+        };
+
+        log.error(unexpectedError)
+        resolve(unexpectedError);
+      });
+    });
   });
 };
 

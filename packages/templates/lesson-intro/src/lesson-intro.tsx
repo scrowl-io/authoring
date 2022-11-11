@@ -76,8 +76,7 @@ export const LessonIntro = ({ schema, ...props }: LessonIntroProps) => {
             {time && time.length > 0 && (
               <span
                 className={
-                  'lesson-time can-focus ' +
-                  (focusElement === 'text' && ' has-focus')
+                  'time can-focus ' + (focusElement === 'text' && ' has-focus')
                 }
                 onMouseDown={() => {
                   if (editMode) {

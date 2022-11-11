@@ -1,3 +1,4 @@
-import Scrowl from '../src';
+import { core } from '../src';
 
-window.Scrowl = Scrowl;
+window.Scrowl = window.Scrowl || {};
+window.Scrowl.core = core;

@@ -64,18 +64,17 @@ export const load = (ev: rq.RequestEvent, template: TemplateSchema) => {
 
     try {
       const cacheBreaker = new Date().valueOf();
-      const projectDest = fs.joinPath(TEMPLATE_PATHS.working, 'src');
       const projectCopyOpts = {
-        overwrite: true,
+        overwrite: false,
         filter: (src: string) => {
           return src.indexOf('.hbs') === -1;
         },
       };
       const templatePath = fs.joinPath(TEMPLATE_PATHS.templates, template.meta.filename);
       const canvasJsSrc = fs.joinPath(TEMPLATE_PATHS.project, 'canvas.js.hbs');
-      const canvasJsDest = fs.joinPath(projectDest, 'index.js');
+      const canvasJsDest = fs.joinPath(TEMPLATE_PATHS.working, 'index.js');
       const canvasHtmlSrc = fs.joinPath(TEMPLATE_PATHS.project, 'canvas.html.hbs');;
-      const canvasHtmlDest = fs.joinPath(projectDest, 'index.html');
+      const canvasHtmlDest = fs.joinPath(TEMPLATE_PATHS.working, 'index.html');
       const renderData = {
         canvasJs: `./index.js?ver=${cacheBreaker}`,
         templateJs: `./scrowl.template-${template.meta.filename}.js?ver=${cacheBreaker}`,
@@ -83,42 +82,56 @@ export const load = (ev: rq.RequestEvent, template: TemplateSchema) => {
         templateComponent: template.meta.component,
         templateContent: JSON.stringify(template.content),
       };
-      const canvasFrameRenders = [
-        fs.copy(TEMPLATE_PATHS.project, projectDest, projectCopyOpts),
-        fs.copy(templatePath, projectDest),
-        compileFile(canvasJsSrc, renderData, canvasJsDest),
-        compileFile(canvasHtmlSrc, renderData, canvasHtmlDest),
-      ];
 
-      Promise.allSettled(canvasFrameRenders).then((renderRes) => {
-        let isRendered = true;
-
-        for (let i = 0, ii = renderRes.length; i < ii; i++) {
-          if (renderRes[i].status === 'rejected') {
-            isRendered = false;
-            log.error('Failed to render canvas');
-            break;
-          }
-        }
-
-        if (!isRendered) {
-          const renderError: rq.ApiResultError = {
-            error: true,
-            message: 'Failed to render template',
-            data: {
-              template,
-            },
-          };
-          log.error(renderError);
-          resolve(renderError);
+      fs.copy(TEMPLATE_PATHS.project, TEMPLATE_PATHS.working, projectCopyOpts).then((copyProjectFilesRes) => {
+        if (copyProjectFilesRes.error) {
+          resolve(copyProjectFilesRes);
           return;
         }
 
-        resolve({
-          error: false,
-          data: {
-            url: `${rq.templateServerUrl}/index.html?ver=${cacheBreaker}`
+        const canvasFrameRenders = [
+          compileFile(canvasJsSrc, renderData, canvasJsDest),
+          compileFile(canvasHtmlSrc, renderData, canvasHtmlDest),
+        ];
+
+        Promise.allSettled(canvasFrameRenders).then((renderRes) => {
+          let isRendered = true;
+  
+          for (let i = 0, ii = renderRes.length; i < ii; i++) {
+            if (renderRes[i].status === 'rejected') {
+              isRendered = false;
+              log.error('Failed to render canvas');
+              break;
+            }
           }
+  
+          if (!isRendered) {
+            const renderError: rq.ApiResultError = {
+              error: true,
+              message: 'Failed to render template',
+              data: {
+                template,
+              },
+            };
+            log.error(renderError);
+            resolve(renderError);
+            return;
+          }
+  
+          fs.copy(templatePath, TEMPLATE_PATHS.working, { overwrite: false }).then((tempCopyRes) => {
+            if (tempCopyRes.error) {
+              log.error(tempCopyRes);
+              resolve(tempCopyRes);
+              return;
+            }
+  
+            resolve({
+              error: false,
+              data: {
+                url: `${rq.templateServerUrl}/index.html?ver=${cacheBreaker}`
+              }
+            });
+          });
         });
       });
     } catch (e) {

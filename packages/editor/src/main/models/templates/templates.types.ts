@@ -1,7 +1,7 @@
 import { TemplateSchema as schema } from '@scrowl/template-core';
 import { rq } from '../../services';
 
-export type { TemplateSchema } from '@scrowl/template-core';
+export type { TemplateSchema, TemplateSchemaContent, InputProps } from '@scrowl/template-core';
 
 export type AspectRatios = {
   '4:3': {

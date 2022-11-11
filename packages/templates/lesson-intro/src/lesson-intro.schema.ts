@@ -6,7 +6,7 @@ export const LessonIntroSchema: LessonIntroSchemaProps = {
     label: 'Lesson Intro',
     component: 'LessonIntro',
     filename: 'lesson-intro',
-    tags: ["text", "introduction"],
+    tags: ['text', 'introduction'],
     icon: 'article',
   },
   content: {
@@ -22,7 +22,7 @@ export const LessonIntroSchema: LessonIntroSchemaProps = {
     subtitle: {
       type: 'Textbox',
       label: 'Subtitle',
-      value: 'Subtitle',
+      value: 'Subtitle Goes Here',
       placeholder: 'Subtitle',
       multiLine: true,
       lines: 10,
