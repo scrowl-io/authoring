@@ -13,16 +13,25 @@ const getProjectPath = (name) => {
 };
 
 const getProjectInfo = (meta: ProjectMeta): rq.ApiResult => {
-  const isNew = !meta.id;
+  const noId = !meta.id;
+  const noName = !meta.name;
     
   let folder;
   let info: ProjectFile;
 
   try {
-    if (!isNew) {
+    if (!noId && !noName) {
       folder = fs.getDirname(meta.filename || '');
-    } else {
+    } else if (!noId) {
       folder = getProjectPath(utils.str.toKebabCase(meta.name));
+    } else {
+      return {
+        error: false,
+        data: {
+          isNew: true,
+          uncommitted: true,
+        }
+      }
     }
   
     const fileName = fs.joinPath(folder, projectMetaFilename);
@@ -32,7 +41,8 @@ const getProjectInfo = (meta: ProjectMeta): rq.ApiResult => {
       return {
         error: false,
         data: {
-          isNew,
+          isNew: !noId,
+          uncommitted: noName,
           fileName,
           exists,
           folder,
@@ -51,7 +61,8 @@ const getProjectInfo = (meta: ProjectMeta): rq.ApiResult => {
     return {
       error: false,
       data: {
-        isNew,
+        isNew: !noId,
+        uncommitted: noName,
         fileName,
         exists,
         folder,
@@ -138,23 +149,25 @@ export const upload = (ev: rq.RequestEvent, req: UploadReq) => {
         return;
       }
 
-      const ext = fs.getExt(res.data.filePath);
+      const ext = fs.getExt(res.data.filePath).replace('.', '');
       const name = fs.getBasename(res.data.filePath, ext);
       const type = fs.assetTypeByExt(ext);
       const infoRes = getProjectInfo(req.meta);
 
       if (infoRes.error) {
+        log.error('getting project info failed', infoRes);
         resolve(infoRes);
         return;
       }
 
       switch (type) {
         case 'image':
-          const dest = infoRes.data.isNew ? fs.joinPath(fs.APP_PATHS.uploads, `${name}.webp`) : fs.joinPath(infoRes.data.folder, 'assets', `${name}.webp`);
-          const destWorking = fs.joinPath(fs.APP_PATHS.temp, 'templates', 'assets', `${name}.webp`);
-
+          const dest = (infoRes.data.isNew || infoRes.data.uncommitted) ? fs.joinPath(fs.APP_PATHS.uploads, `${name}webp`) : fs.joinPath(infoRes.data.folder, 'assets', `${name}webp`);
+          const destWorking = fs.joinPath(fs.APP_PATHS.temp, 'templates', 'assets', `${name}webp`);
+          
           fs.asset.toWebp(res.data.filePath, dest).then((transformRes) => {
             if (transformRes.error) {
+              log.error('asset conversion failed', transformRes);
               resolve(transformRes);
               return;
             }
@@ -162,6 +175,7 @@ export const upload = (ev: rq.RequestEvent, req: UploadReq) => {
             // copy file so it can be served to the canvas
             fs.copy(dest, destWorking).then((copyRes) => {
               if (copyRes.error) {
+                log.error('asset copied failed', copyRes);
                 resolve(copyRes);
                 return;
               }
@@ -169,7 +183,8 @@ export const upload = (ev: rq.RequestEvent, req: UploadReq) => {
               resolve({
                 error: false,
                 data: {
-                  filename: `${name}.webp`,
+                  filename: `${name}webp`,
+                  type,
                   ext: 'webp',
                   size: transformRes.data.size,
                 },
