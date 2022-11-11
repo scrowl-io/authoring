@@ -32,7 +32,7 @@ jobs:
       - name: Identity
         run: |
           git config --global user.name '${GITHUB_ACTOR}'
-          git config --gloabl user.email ${GITHUB_ACTOR}@users.noreply.github.com'
+          git config --global user.email '${GITHUB_ACTOR}@users.noreply.github.com'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_ACTOR: ${{ github.actor }}
