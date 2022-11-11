@@ -1,2 +1,2 @@
-export * from './player-pane.types';
-export * from './player-pane';
+export * from './pane.types';
+export * from './pane';

@@ -1,6 +1,6 @@
 import React from 'react';
-import { PaneProps } from './player-pane.types';
-import * as styles from './player-pane.module.scss';
+import { PaneProps } from './pane.types';
+import * as styles from './_pane.scss';
 
 export const Pane = ({ children, className, side }: PaneProps) => {
   let paneStyles = `${styles.pane}`;
