@@ -6,15 +6,12 @@ import { SimpleTextProps } from '@scrowl/template-simple-text';
 import { TwoColumnProps } from '@scrowl/template-two-column';
 
 export type {
+  TemplateSchema,
   BlockTextProps,
   LessonIntroProps,
   SimpleTextProps,
   TwoColumnProps
 }
-
-export type {
-  TemplateSchema
-} from '@scrowl/template-core';
 
 export type TemplateElementProps = BlockTextProps | LessonIntroProps | SimpleTextProps | TwoColumnProps;
 
