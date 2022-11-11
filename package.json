@@ -11,7 +11,9 @@
     "start:update": "yarn workspace @scrowl/editor run start",
     "start": "yarn workspace @scrowl/editor run start",
     "prepackage": "yarn run update",
-    "package": "yarn workspace @scrowl/editor run package"
+    "package": "yarn workspace @scrowl/editor run package",
+    "version": "lerna version --conventional-commits --no-git-tag-version",
+    "postversion": "git add . && git commit -m \"chore(release): publish `node -p 'require(\"./lerna.json\").version'`\""
   },
   "workspaces": [
     "config",

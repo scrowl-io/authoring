@@ -1,0 +1,43 @@
+name: Dev Release Workflow
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - releases-dev
+
+jobs:
+  releases-dev:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: releases-dev
+
+      - name: Setup
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.15.0 # matching Elctron's (20.X) version of node
+          cache: "yarn"
+          cache-dependency-path: "yarn.lock"
+
+      - name: Install
+        run: yarn install --frozen-lockfile
+
+      - name: Build
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: yarn run package:authoring
+
+      - name: Pre-Release
+        uses: marvinpinto/action-automatic-releases@latest
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          automatic_release_tag: latest
+          prerelease: true
+          title: Development Build
+          files: |
+            packages/editor/release/build/Scrowl-*.dmg
