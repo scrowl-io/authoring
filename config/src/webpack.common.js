@@ -32,7 +32,13 @@ const sassLoader = {
   options: {
     implementation: require('sass'),
     sassOptions: {
-      includePaths: ['./', '../../../node_modules/', './node_modules/'],
+      includePaths: [
+        './',
+        '../../../node_modules/',
+        '../../node_modules',
+        '../node_modules',
+        './node_modules/',
+      ],
     },
   },
 };
