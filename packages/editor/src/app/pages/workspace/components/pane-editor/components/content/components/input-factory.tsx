@@ -1,7 +1,7 @@
 import React from 'react';
 import { InputFactoryProps } from '../../../pane-editor.types';
 import {
-  ImageAsset,
+  Asset,
   Checkbox,
   Fieldset,
   NumberSpinner,
@@ -21,7 +21,7 @@ export const InputFactory = ({
   switch (content.type) {
     case 'Asset':
       return (
-        <ImageAsset
+        <Asset
           field={field}
           {...content}
           onChange={onChange}

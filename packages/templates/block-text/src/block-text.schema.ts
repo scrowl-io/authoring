@@ -31,7 +31,7 @@ export const BlockTextSchema: BlockTextSchemaProps = {
         },
         url: {
           type: 'Asset',
-          assetType: 'image',
+          assetTypes: ['image'],
           label: 'Image',
         },
         bg: {

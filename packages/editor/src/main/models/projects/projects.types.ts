@@ -1,4 +1,4 @@
-import { rq } from '../../services';
+import { rq, fs } from '../../services';
 import { TemplateSchema } from '../templates';
 
 export interface ProjectsApiCreate
@@ -75,7 +75,10 @@ export type ProjectScorm = {
 };
 
 export type ProjectAsset = {
-  filname: string;
+  filename: string;
+  ext: string;
+  type: fs.AssetType;
+  size: string;
   isDeleted?: boolean;
 };
 

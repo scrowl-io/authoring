@@ -1,6 +1,41 @@
 import { dialog, MessageBoxOptions, SaveDialogOptions, OpenDialogOptions } from 'electron';
-import { FSApi } from './fs.types';
+import { FSApi, AssetFilters, AssetFilter, AssetType } from './fs.types';
 import { rq } from '../';
+
+export const ASSET_TYPES: AssetFilters = {
+  image: {
+    name: 'image',
+    extensions: ['jpg', 'jpeg', 'png', 'gif'],
+  },
+  document: {
+    name: 'document',
+    extensions: ['txt', 'doc', 'docx', 'pdf'],
+  },
+  video: {
+    name: 'video',
+    extensions: ['mp4', 'mkv', 'avi'],
+  },
+  audio: {
+    name: 'audio',
+    extensions: ['mp3', 'mp4'],
+  },
+  json: {
+    name: 'json',
+    extensions: ['json'],
+  },
+};
+
+export const getAllowedAssets = (types: Array<AssetType>) => {
+  let filters: Array<AssetFilter> = [];
+
+  types.forEach((type: AssetType) => {
+    if (ASSET_TYPES[type] && ASSET_TYPES[type]) {
+      filters.push(ASSET_TYPES[type]);
+    }
+  });
+
+  return filters;
+};
 
 export const message = (ev: rq.RequestEvent, options: MessageBoxOptions) => {
   return new Promise<rq.ApiResult>((resolve) => {

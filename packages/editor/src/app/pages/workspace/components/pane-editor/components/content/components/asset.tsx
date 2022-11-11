@@ -3,7 +3,7 @@ import { InputAssetProps } from '../../../pane-editor.types';
 import { useContentFocus } from '../../../../../page-workspace-hooks';
 import { AssetBrowser } from '../../../../../components';
 
-export const ImageAsset = ({
+export const Asset = ({
   field,
   type,
   value,
@@ -17,7 +17,7 @@ export const ImageAsset = ({
   onFocus,
   onBlur,
   placeholder,
-  assetType,
+  assetTypes,
   ...props
 }: InputAssetProps) => {
   const contentFocus = useContentFocus();
@@ -145,11 +145,12 @@ export const ImageAsset = ({
         isOpen={isOpenAssetBrowser}
         onClose={closeAssetBrowser}
         onSelected={handleAssetSelected}
+        assetTypes={assetTypes}
       />
     </>
   );
 };
 
 export default {
-  ImageAsset,
+  Asset,
 };

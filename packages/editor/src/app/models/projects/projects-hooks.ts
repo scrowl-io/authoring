@@ -1,5 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { ActionCreatorWithoutPayload } from '@reduxjs/toolkit';
+import { AssetType } from './projects.types';
 import { stateManager, rq } from '../../services';
 import { API, state } from './';
 import { List } from '../../utils';
@@ -354,9 +355,26 @@ export const removeResourceItem = (data) => {
   processor.dispatch(state.removeResourceItem(data));
 };
 
-export const useAssets = () => {
-  return useSelector((data: stateManager.RootState) => data.projects.assets);
+export const useAssets = (assetTypes?: Array<string>) => {
+  return useSelector((data: stateManager.RootState) => {
+    if (!assetTypes) {
+      return data.projects.assets;
+    }
+    
+    return data.projects.assets.filter((asset) => {
+      return assetTypes.indexOf(asset.type) !== -1;
+    });
+  });
 }
+
+export const setAssets = (data) => {
+  if (!processor.dispatch) {
+    console.warn('projects processor not ready');
+    return;
+  }
+
+  processor.dispatch(state.setAssets(data));
+};
 
 export const addAsset = (data) => {
   if (!processor.dispatch) {
@@ -392,6 +410,7 @@ export const create = (): Promise<rq.ApiResult> => {
         console.error(res)
       } else {
         setData(res.data.project);
+        setAssets(res.data.assets);
       }
 
       resolve(res);
@@ -399,10 +418,9 @@ export const create = (): Promise<rq.ApiResult> => {
   });
 };
 
-export const upload = (): Promise<rq.ApiResult> => {
-
+export const upload = (options: { assetTypes: Array<AssetType> }): Promise<rq.ApiResult> => {
   return new Promise((resolve) => {
-    API.upload().then((res) => {
+    API.upload(options).then((res) => {
       if (res.error) {
         console.error(res);
       }

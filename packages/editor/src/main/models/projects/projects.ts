@@ -23,13 +23,50 @@ export const create = (ev: rq.RequestEvent) => {
   });
 };
 
-export const upload = (ev: rq.RequestEvent) => {
+export const upload = (ev: rq.RequestEvent, options) => {
   return new Promise<rq.ApiResult>((resolve) => {
-    resolve({
-      error: false,
-      data: {
-        imported: true,
-      },
+    if (!options.assetTypes || !options.assetTypes.length) {
+      resolve({
+        error: true,
+        message: 'Unable to select asset to import: asset types not defined.',
+        data: {
+          options,
+        },
+      });
+      return;
+    }
+
+    const config = {
+      title: 'Import File',
+      filters: fs.dialog.getAllowedAssets(options.assetTypes),
+    };
+
+    if (!config.filters.length) {
+      resolve({
+        error: true,
+        message: 'Unabled to select asset to import: asset type not supported.',
+        data: {
+          options,
+        },
+      });
+      return;
+    }
+
+    fs.dialog.open(ev, config).then((res) => {
+      if (res.error) {
+        resolve(res);
+        return;
+      }
+
+      resolve(res);
+    }).catch((e) => {
+      resolve({
+        error: true,
+        message: 'Failed to import file: unexpected error',
+        data: {
+          trace: e,
+        },
+      });
     });
   });
 };
