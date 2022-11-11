@@ -1,10 +1,18 @@
 import React from 'react';
+import { Button, Icon } from '@owlui/lib';
 import Highlighter from 'react-highlight-words';
+import { AssetEntryProps } from './asset.types';
 import { menu } from '../../../../../../services';
 
-export const AssetEntry = (props: any) => {
-  let fileSizeBytes = props.data.size;
-  const searchTerm = props.searchHighlight || '';
+export const AssetEntry = ({
+  asset,
+  colType,
+  colSize,
+  onSelected,
+  ...props
+}: AssetEntryProps) => {
+  let fileSizeBytes = asset.size;
+  // const searchTerm = props.searchHighlight || '';
   const assetEntryMenu: Array<menu.ContextMenuItem> = [
     {
       label: 'Rename',
@@ -44,46 +52,19 @@ export const AssetEntry = (props: any) => {
     });
   };
 
+  const handleSelected = () => {
+    onSelected(asset);
+  };
+
   return (
-    <tr
-      className={
-        'asset-list-entry ' +
-        (props.data.parentFolderId === -1 ? 'root-entry' : '')
-      }
-      style={
-        props.data.filterMatch ? {} : { pointerEvents: 'none', opacity: '0.5' }
-      }
-    >
+    <tr className="asset-list-entry">
       <td className="truncate">
-        <div className="wrapper name">
-          <a
-            href="#"
-            role="button"
-            onClick={(e) => {
-              e.preventDefault();
-              props.onSelect();
-            }}
-          >
-            <Highlighter
-              className="highlighter"
-              highlightClassName="highlight"
-              searchWords={[searchTerm]}
-              autoEscape={true}
-              textToHighlight={props.data.name}
-            />
-          </a>
+        <div className="wrapper name" onClick={handleSelected}>
+          {asset.filename}
         </div>
       </td>
-      <td style={{ width: '65px', maxWidth: '65px' }}>
-        <div className="wrapper">
-          <Highlighter
-            className="highlighter"
-            highlightClassName="highlight"
-            searchWords={[props.searchHighlight]}
-            autoEscape={true}
-            textToHighlight={props.data.type}
-          />
-        </div>
+      <td style={colType}>
+        <div className="wrapper">{asset.ext}</div>
       </td>
       <td className="file-size">
         <div className="wrapper ">
@@ -92,13 +73,9 @@ export const AssetEntry = (props: any) => {
         </div>
 
         <div className="actions-container">
-          <button
-            className="btn  btn-outline-primary btn-sm action"
-            type="button"
-            onClick={handleAssetMenu}
-          >
-            <span className="material-symbols-sharp">arrow_drop_down</span>
-          </button>
+          <Button variant="outline-primary" onClick={handleAssetMenu}>
+            <Icon icon="arrow_drop_down" />
+          </Button>
         </div>
       </td>
     </tr>

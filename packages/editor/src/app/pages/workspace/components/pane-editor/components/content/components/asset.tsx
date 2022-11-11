@@ -23,7 +23,7 @@ export const Asset = ({
   const contentFocus = useContentFocus();
   const isFocused = contentFocus === field;
   const inputRef = React.useRef<HTMLInputElement>(null);
-  const [assetName, setAssetName] = useState(value);
+  const [assetName, setAssetName] = useState(value || '');
   const [isOpenAssetBrowser, setIsOpenAssetBrowser] = useState(false);
   const isInvalid =
     validationError !== null &&
@@ -46,8 +46,11 @@ export const Asset = ({
     }
   };
 
-  const handleAssetSelected = (data) => {
-    setAssetName(data.name);
+  const handleAssetSelected = (asset) => {
+    setAssetName(asset.filename);
+    setIsOpenAssetBrowser(false);
+    onChange(field, asset.filename);
+    onBlur(field);
   };
 
   const handleAssetFocus = () => {

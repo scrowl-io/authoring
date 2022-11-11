@@ -3,7 +3,7 @@ import { AnimatePresence } from 'framer-motion';
 import { Backdrop } from '../backdrop';
 import { Drawer } from '..';
 import { Projects, Settings } from '../../../../../../models';
-import { menu } from '../../../../../../services';
+import { menu, sys } from '../../../../../../services';
 import '../../_overlay.scss';
 import {
   AssetSearch,
@@ -58,7 +58,14 @@ export const AssetDrawerElement = (
 
     Projects.upload({ meta: meta, options: { assetTypes: types } }).then(
       (res) => {
-        console.log('uploaded', res);
+        if (res.error) {
+          sys.messageDialog({
+            message: res.message,
+          });
+          return;
+        }
+
+        Projects.addAsset(res.data);
       }
     );
   };
@@ -137,12 +144,14 @@ export const AssetDrawerElement = (
                         </thead>
                         <tbody>
                           {assets.length ? (
-                            assets.map((asset) => {
+                            assets.map((asset, idx) => {
                               return (
                                 <AssetEntry
+                                  key={idx}
                                   asset={asset}
                                   colType={stylesColType}
                                   colSize={stylesColSize}
+                                  onSelected={onSelected}
                                 />
                               );
                             })

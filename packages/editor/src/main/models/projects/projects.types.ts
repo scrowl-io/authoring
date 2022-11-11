@@ -78,7 +78,7 @@ export type ProjectAsset = {
   filename: string;
   ext: string;
   type: fs.AssetType;
-  size: string;
+  size: number;
   isDeleted?: boolean;
 };
 

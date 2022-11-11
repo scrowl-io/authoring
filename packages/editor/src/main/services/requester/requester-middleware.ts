@@ -9,6 +9,7 @@ const CONTENT_TYPES = {
   js: 'text/javascript',
   html: 'text/html',
   text: 'text/plain',
+  webp: 'image/webp',
 };
 
 const getContentType = (filename: string) => {
@@ -24,6 +25,8 @@ const getContentType = (filename: string) => {
       return CONTENT_TYPES.html;
     case '.css':
       return CONTENT_TYPES.css;
+    case '.webp':
+      return CONTENT_TYPES.webp;
     default:
       return CONTENT_TYPES.text;
   }

@@ -11,8 +11,8 @@ export const APP_PATHS = {
   save: path.join(app.getPath('documents'), 'scrowl'),
   downloads: app.getPath('downloads'),
   temp: path.join(app.getPath('temp'), 'scrowl'),
-  publish: path.join(app.getPath('temp'), 'publish'),
-  uploads: path.join(app.getPath('temp'), 'uploads'),
+  publish: path.join(app.getPath('temp'), 'scrowl', 'publish'),
+  uploads: path.join(app.getPath('temp'), 'scrowl', 'uploads'),
 };
 
 export const ASSET_TYPES: AssetFilters = {
