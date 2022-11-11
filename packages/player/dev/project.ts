@@ -47,9 +47,9 @@ export const create = () => {
       }
     ],
     slides: [
-      createSlide('Slide 1', 0, 0, 0, 'blockText'),
-      createSlide('Slide 1.2', 0, 0, 1, 'simpleText'),
-      createSlide('Slide 1.3', 0, 0, 2, 'lessonIntro'),
+      createSlide('Slide 1.1', 0, 0, 2, 'lessonIntro'),
+      createSlide('Slide 1.2', 0, 0, 0, 'blockText'),
+      createSlide('Slide 1.3', 0, 0, 1, 'simpleText'),
       createSlide('Slide 1.4', 0, 0, 3, 'twoColumn'),
     ],
     glossary: [],
