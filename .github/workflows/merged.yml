@@ -38,4 +38,10 @@ jobs:
           GITHUB_ACTOR: ${{ github.actor }}
 
       - name: Version
-        run: yarn run version --yes
+        run: yarn run version --yes --git-remote main
+
+      - name: Commit
+        uses: actions/checkout@v3
+        run: |
+          git commit -am "Auto Versioning"
+          git push
