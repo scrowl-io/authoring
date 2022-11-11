@@ -38,4 +38,4 @@ jobs:
           GITHUB_ACTOR: ${{ github.actor }}
 
       - name: Version
-        run: yarn run version
+        run: yarn run version --yes
