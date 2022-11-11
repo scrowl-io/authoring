@@ -26,6 +26,7 @@ export const AssetDrawerElement = (
 ) => {
   const animationSettings = Settings.useAnimation();
   const isAnimated = !animationSettings.reducedAnimations;
+  const meta = Projects.useMeta();
   const assets = Projects.useAssets(assetTypes);
   const styles = {
     maxWidth: 450,
@@ -55,9 +56,11 @@ export const AssetDrawerElement = (
   const handleAddFile = () => {
     const types = assetTypes as Array<AssetType>;
 
-    Projects.upload({ assetTypes: types }).then((res) => {
-      console.log('uploaded', res);
-    });
+    Projects.upload({ meta: meta, options: { assetTypes: types } }).then(
+      (res) => {
+        console.log('uploaded', res);
+      }
+    );
   };
 
   const handlePreventBubbling = (ev) => {
@@ -87,8 +90,6 @@ export const AssetDrawerElement = (
       menu.API.enableProjectActions();
     }
   }, [isOpen]);
-
-  console.log('assets', assets.length);
 
   return (
     <div ref={ref}>

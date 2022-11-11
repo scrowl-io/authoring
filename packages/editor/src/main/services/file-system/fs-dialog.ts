@@ -1,29 +1,6 @@
 import { dialog, MessageBoxOptions, SaveDialogOptions, OpenDialogOptions } from 'electron';
-import { FSApi, AssetFilters, AssetFilter, AssetType } from './fs.types';
+import { FSApi, AssetFilter, AssetType, ASSET_TYPES } from './';
 import { rq } from '../';
-
-export const ASSET_TYPES: AssetFilters = {
-  image: {
-    name: 'image',
-    extensions: ['jpg', 'jpeg', 'png', 'gif'],
-  },
-  document: {
-    name: 'document',
-    extensions: ['txt', 'doc', 'docx', 'pdf'],
-  },
-  video: {
-    name: 'video',
-    extensions: ['mp4', 'mkv', 'avi'],
-  },
-  audio: {
-    name: 'audio',
-    extensions: ['mp3', 'mp4'],
-  },
-  json: {
-    name: 'json',
-    extensions: ['json'],
-  },
-};
 
 export const getAllowedAssets = (types: Array<AssetType>) => {
   let filters: Array<AssetFilter> = [];

@@ -4,11 +4,69 @@ import { createProject } from './project.data';
 import { rq, fs, log } from '../../services';
 import * as utils from '../../utils';
 import { scorm } from './project-publisher';
+import { AssetType } from '../../services/file-system';
 
 const projectMetaFilename = 'project.json';
 
 const getProjectPath = (name) => {
   return fs.joinPath(fs.APP_PATHS.save, name);
+};
+
+const getProjectInfo = (meta: ProjectMeta): rq.ApiResult => {
+  const isNew = !meta.id;
+    
+  let folder;
+  let info: ProjectFile;
+
+  try {
+    if (!isNew) {
+      folder = fs.getDirname(meta.filename || '');
+    } else {
+      folder = getProjectPath(utils.str.toKebabCase(meta.name));
+    }
+  
+    const fileName = fs.joinPath(folder, projectMetaFilename);
+    const exists = fs.fileExistsSync(fileName);
+  
+    if (!exists) {
+      return {
+        error: false,
+        data: {
+          isNew,
+          fileName,
+          exists,
+          folder,
+        }
+      }
+    }
+  
+    const read = fs.fileReadSync(fileName) as rq.ApiResult;
+  
+    if (read.error) {
+      return read;
+    }
+  
+    info = read.data as ProjectFile;
+
+    return {
+      error: false,
+      data: {
+        isNew,
+        fileName,
+        exists,
+        folder,
+        info,
+      }
+    };
+  } catch (e) {
+    return {
+      error: true,
+      message: 'Failed to get project source: unexpected error',
+      data: {
+        trace: e,
+      },
+    };
+  }
 };
 
 export const create = (ev: rq.RequestEvent) => {
@@ -23,14 +81,31 @@ export const create = (ev: rq.RequestEvent) => {
   });
 };
 
-export const upload = (ev: rq.RequestEvent, options) => {
+export type UploadReq = {
+  meta: ProjectMeta,
+  options: {
+    assetTypes: Array<AssetType>
+  }
+}
+
+export const upload = (ev: rq.RequestEvent, req: UploadReq) => {
   return new Promise<rq.ApiResult>((resolve) => {
-    if (!options.assetTypes || !options.assetTypes.length) {
+    if (!req.meta) {
+      resolve({
+        error: true,
+        message: 'Unable to select asset to import: project data missing',
+        data: {
+          req,
+        },
+      });
+    }
+
+    if (!req.options.assetTypes || !req.options.assetTypes.length) {
       resolve({
         error: true,
         message: 'Unable to select asset to import: asset types not defined.',
         data: {
-          options,
+          req,
         },
       });
       return;
@@ -38,7 +113,7 @@ export const upload = (ev: rq.RequestEvent, options) => {
 
     const config = {
       title: 'Import File',
-      filters: fs.dialog.getAllowedAssets(options.assetTypes),
+      filters: fs.dialog.getAllowedAssets(req.options.assetTypes),
     };
 
     if (!config.filters.length) {
@@ -46,7 +121,7 @@ export const upload = (ev: rq.RequestEvent, options) => {
         error: true,
         message: 'Unabled to select asset to import: asset type not supported.',
         data: {
-          options,
+          req,
         },
       });
       return;
@@ -58,7 +133,52 @@ export const upload = (ev: rq.RequestEvent, options) => {
         return;
       }
 
-      resolve(res);
+      if (res.data.canceled) {
+        resolve(res);
+        return;
+      }
+
+      const ext = fs.getExt(res.data.filePath);
+      const name = fs.getBasename(res.data.filePath, ext);
+      const type = fs.assetTypeByExt(ext);
+      const infoRes = getProjectInfo(req.meta);
+
+      if (infoRes.error) {
+        resolve(infoRes);
+        return;
+      }
+
+      switch (type) {
+        case 'image':
+          const dest = infoRes.data.isNew ? fs.joinPath(fs.APP_PATHS.uploads, `${name}.webp`) : fs.joinPath(infoRes.data.folder, 'assets', `${name}.webp`);
+          const destWorking = fs.joinPath(fs.APP_PATHS.temp, 'templates', 'assets', `${name}.webp`);
+
+          fs.asset.toWebp(res.data.filePath, dest).then((transformRes) => {
+            if (transformRes.error) {
+              resolve(transformRes);
+              return;
+            }
+
+            // copy file so it can be served to the canvas
+            fs.copy(dest, destWorking).then((copyRes) => {
+              if (copyRes.error) {
+                resolve(copyRes);
+                return;
+              }
+
+              resolve({
+                error: false,
+                data: {
+                  filename: `${name}.webp`,
+                  ext: 'webp',
+                  size: transformRes.data.size,
+                },
+              });
+            });
+          });
+          break;
+      }
+
     }).catch((e) => {
       resolve({
         error: true,

@@ -4,7 +4,7 @@ import { URL } from 'url';
 import { app } from 'electron';
 import fs from 'fs-extra';
 import { rq, log } from '../';
-import { FileDataResult, FileExistsResult } from './fs.types';
+import { FileDataResult, FileExistsResult, AssetFilters, AssetType } from './fs.types';
 
 export const APP_PATHS = {
   root: path.join(__dirname, '../../../../'),
@@ -12,6 +12,49 @@ export const APP_PATHS = {
   downloads: app.getPath('downloads'),
   temp: path.join(app.getPath('temp'), 'scrowl'),
   publish: path.join(app.getPath('temp'), 'publish'),
+  uploads: path.join(app.getPath('temp'), 'uploads'),
+};
+
+export const ASSET_TYPES: AssetFilters = {
+  image: {
+    name: 'image',
+    extensions: ['jpg', 'jpeg', 'png', 'gif'],
+  },
+  document: {
+    name: 'document',
+    extensions: ['txt', 'doc', 'docx', 'pdf'],
+  },
+  video: {
+    name: 'video',
+    extensions: ['mp4', 'mkv', 'avi'],
+  },
+  audio: {
+    name: 'audio',
+    extensions: ['mp3', 'mp4'],
+  },
+  json: {
+    name: 'json',
+    extensions: ['json'],
+  },
+};
+
+export const assetTypeByExt = (ext: string): AssetType => {
+  let type;
+
+  for (const [key, value] of Object.entries(ASSET_TYPES)) {
+    if (type) {
+      break;
+    }
+
+    const lookup = value.extensions as Array<string>;
+
+    if (lookup.indexOf(ext) !== -1) {
+      type = value.name;
+      break;
+    }
+  }
+
+  return type;
 };
 
 export const getAppPath = (filename: string) => {
@@ -409,6 +452,8 @@ export const fileRename = (src, filename) => {
 
 export default {
   APP_PATHS,
+  ASSET_TYPES,
+  assetTypeByExt,
   normalizePath,
   isJSON,
   joinPath,

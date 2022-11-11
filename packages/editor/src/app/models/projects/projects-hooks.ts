@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { ActionCreatorWithoutPayload } from '@reduxjs/toolkit';
-import { AssetType } from './projects.types';
+import { AssetType, ProjectMeta } from './projects.types';
 import { stateManager, rq } from '../../services';
 import { API, state } from './';
 import { List } from '../../utils';
@@ -418,9 +418,16 @@ export const create = (): Promise<rq.ApiResult> => {
   });
 };
 
-export const upload = (options: { assetTypes: Array<AssetType> }): Promise<rq.ApiResult> => {
+export type UploadReq = {
+  meta: ProjectMeta,
+  options: {
+    assetTypes: Array<AssetType>
+  }
+}
+
+export const upload = (req: UploadReq): Promise<rq.ApiResult> => {
   return new Promise((resolve) => {
-    API.upload(options).then((res) => {
+    API.upload(req).then((res) => {
       if (res.error) {
         console.error(res);
       }
