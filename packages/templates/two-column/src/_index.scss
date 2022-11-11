@@ -9,6 +9,28 @@
   .column-wrapper {
     display: flex;
     justify-content: center;
+    align-items: center;
+    height: 100%;
+
+    &.align-left {
+      text-align: left;
+    }
+
+    &.align-right {
+      text-align: right;
+    }
+
+    &.align-center {
+      text-align: center;
+    }
+
+    &.align-justify {
+      text-align: justify;
+    }
+
+    .column {
+      margin: 0 1.5rem;
+    }
   }
 
   @media only screen and (max-width: 700px) {

@@ -45,6 +45,7 @@ export const TwoColumn = ({ schema, ...props }: TwoColumnProps) => {
   const editMode = props.editMode ? true : false;
   const focusElement = editMode ? props.focusElement : null;
   const options = schema.content.options;
+  let alignment = options.content.alignment.value;
   const numberOfColumns = options.content.numberOfColumns.value;
   const stackOnMobile = options.content.stackOnMobile.value;
   const firstColumn = schema.content.firstColumn.content;
@@ -63,12 +64,22 @@ export const TwoColumn = ({ schema, ...props }: TwoColumnProps) => {
               : stackOnMobile && numberOfColumns === 1
               ? 'stacked-view-single'
               : ''
+          } ${
+            alignment === 'left'
+              ? 'align-left'
+              : alignment === 'right'
+              ? 'align-right'
+              : alignment === 'center'
+              ? 'align-center'
+              : alignment === 'justify'
+              ? 'align-justify'
+              : ''
           }`}
         >
           <Column
             isEdit={editMode}
             focusElement={focusElement}
-            className="first-column"
+            className="column first-column"
             field="firstColumn"
             heading={firstColumn.heading}
             body={firstColumn.body}
@@ -77,7 +88,7 @@ export const TwoColumn = ({ schema, ...props }: TwoColumnProps) => {
             <Column
               isEdit={editMode}
               focusElement={focusElement}
-              className="second-column"
+              className="column second-column"
               field="secondColumn"
               heading={secondColumn.heading}
               body={secondColumn.body}
@@ -87,7 +98,7 @@ export const TwoColumn = ({ schema, ...props }: TwoColumnProps) => {
             <Column
               isEdit={editMode}
               focusElement={focusElement}
-              className="third-column"
+              className="column third-column"
               field="thirdColumn"
               heading={thirdColumn.heading}
               body={thirdColumn.body}
