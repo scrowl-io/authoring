@@ -1,4 +1,5 @@
 import * as http from 'http';
+import { createReadStream } from 'fs';
 import { ApiResult } from './requester.types';
 import { fs, log } from '../';
 import { AddressInfo } from 'net';
@@ -42,13 +43,16 @@ const getContentType = (filename: string) => {
 };
 
 const responseOk = (
-  content: string,
+  src: string,
   contentType: string,
   res: http.ServerResponse
 ) => {
+  const read = createReadStream(src);
+
   res.setHeader('Content-Type', contentType);
   res.writeHead(200);
-  res.end(content, 'utf-8');
+
+  read.pipe(res);
 };
 
 const responseNotFound = (url: string, res: http.ServerResponse) => {
@@ -89,18 +93,7 @@ const createTemplateServer = () => {
                 return;
               }
 
-              fs.fileRead(filename)
-                .then(readRes => {
-                  if (readRes.error) {
-                    responseInternalError(readRes, res);
-                    return;
-                  }
-
-                  responseOk(readRes.data.contents, contentType, res);
-                })
-                .catch(e => {
-                  responseInternalError(e, res);
-                });
+              responseOk(filename, contentType, res);
             })
             .catch(e => {
               responseInternalError(e, res);
