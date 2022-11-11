@@ -1,23 +1,25 @@
 import React from 'react';
 import { TemplateSchema } from '@scrowl/template-core';
+import { BlockTextProps } from '@scrowl/template-block-text';
+import { LessonIntroProps } from '@scrowl/template-lesson-intro';
+import { SimpleTextProps } from '@scrowl/template-simple-text';
+import { TwoColumnProps } from '@scrowl/template-two-column';
+
+export type {
+  BlockTextProps,
+  LessonIntroProps,
+  SimpleTextProps,
+  TwoColumnProps
+}
 
 export type {
   TemplateSchema
 } from '@scrowl/template-core';
 
-export type PlayerTemplateList = {
-  [key: string]: () => JSX.Element;
-};
+export type TemplateElementProps = BlockTextProps | LessonIntroProps | SimpleTextProps | TwoColumnProps;
 
-export type ProjectMeta = {
-  id: string;
-  name: string;
-  filename: string;
-  createdAt: string;
-  updatedAt: string;
-  tags: Array<string>;
-  blueprint?: string;
-  createdBy?: string;
+export type PlayerTemplateList = {
+  [key: string]: (TemplateElementProps) => JSX.Element;
 };
 
 export type ProjectAsset = {
@@ -58,7 +60,6 @@ export type ProjectResource = {
 };
 
 export type ProjectData = {
-  meta: Partial<ProjectMeta>,
   modules?: Array<ProjectModule>;
   lessons?: Array<ProjectLesson>;
   slides?: Array<ProjectSlide>;
@@ -73,9 +74,10 @@ export interface PlayerRootCommons {
 
 export type PlayerRootProps = PlayerRootCommons & React.AllHTMLAttributes<HTMLDivElement>;
 
-// export interface PlayerRoutesCommons {
-//   config: Array<Pages.PageDefinition>;
-//   templateList?: PlayerTemplateList;
-// }
-
-// export type PlayerRoutesProps = PlayerRoutesCommons;
+export type PageConfig = {
+  module: ProjectModule;
+  lessons: Array<{
+    lesson: ProjectLesson;
+    slides: Array<ProjectSlide>;
+  }>;
+};
