@@ -18,8 +18,10 @@ export type {
 
 export type TemplateElementProps = BlockTextProps | LessonIntroProps | SimpleTextProps | TwoColumnProps;
 
+export type TemplateComponent = (TemplateElementProps) => JSX.Element;
+
 export type PlayerTemplateList = {
-  [key: string]: (TemplateElementProps) => JSX.Element;
+  [key: string]: TemplateComponent;
 };
 
 export type ProjectAsset = {
@@ -74,7 +76,7 @@ export interface PlayerRootCommons {
 
 export type PlayerRootProps = PlayerRootCommons & React.AllHTMLAttributes<HTMLDivElement>;
 
-export type PageConfig = {
+export type PlayerRootConfig = {
   module: ProjectModule;
   lessons: Array<{
     lesson: ProjectLesson;

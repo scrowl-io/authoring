@@ -1,82 +1,15 @@
 import React from 'react';
-import * as css from './_root.scss';
 import {
-  PlayerRootProps,
-  ProjectSlide,
-  ProjectLesson,
-  ProjectModule,
-  PageConfig,
-} from './root.types';
+  MemoryRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from 'react-router-dom';
+import * as css from './_root.scss';
+import { PlayerRootProps } from './root.types';
+import Config from './config';
 import { Error } from '../components';
-
-const createPages = (
-  slides: Array<ProjectSlide>,
-  lessons: Array<ProjectLesson>,
-  modules: Array<ProjectModule>
-) => {
-  const pages: Array<PageConfig> = [];
-
-  while (modules.length > 0) {
-    const module = modules.shift();
-
-    if (!module) {
-      break;
-    }
-
-    const config: PageConfig = {
-      module: module,
-      lessons: [],
-    };
-    const lCnt = lessons.length;
-    let l = 0;
-
-    while (lessons.length > 0 && l < lCnt) {
-      l++;
-
-      if (lessons[0].moduleId !== module.id) {
-        continue;
-      }
-
-      const lesson = lessons.shift();
-
-      if (!lesson) {
-        break;
-      }
-
-      const configSlides: Array<ProjectSlide> = [];
-      const sCnt = slides.length;
-      let s = 0;
-
-      while (slides.length > 0 && s < sCnt) {
-        s++;
-
-        if (
-          slides[0].moduleId !== module.id ||
-          slides[0].lessonId !== lesson.id
-        ) {
-          continue;
-        }
-
-        const slide = slides.shift();
-
-        if (!slide) {
-          break;
-        }
-
-        configSlides.push(slide);
-      }
-
-      config.lessons.push({
-        lesson,
-        slides: configSlides,
-      });
-    }
-
-    pages.push(config);
-  }
-
-  return pages;
-};
+import { Pages } from '../services';
 
 export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
   if (window.Scrowl) {
@@ -113,16 +46,28 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
   const slides = project.slides;
   const lessons = project.lessons;
   const modules = project.modules;
-  const pageConfig = createPages(slides, lessons, modules);
+  const config = Config.create(slides, lessons, modules);
+  const pages = Pages.create(config, templateList);
 
   console.log('');
   console.log('project', project);
   console.log('templateList', templateList);
-  console.log('pageConfig', pageConfig);
+  console.log('pageConfig', config);
 
   return (
-    <div className={css.player} {...props}>
-      <main className={css.playerMain}>Hello World</main>
-    </div>
+    <Router>
+      <div className={css.player} {...props}>
+        <main className={css.playerMain}>
+          <Routes>
+            {pages.map((page, idx) => {
+              return (
+                <Route key={idx} path={page.url} element={<page.Element />} />
+              );
+            })}
+            <Route path="*" element={<Navigate to={pages[0].url} />} />
+          </Routes>
+        </main>
+      </div>
+    </Router>
   );
 };

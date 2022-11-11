@@ -13,6 +13,8 @@
     "./src/**/*.tsx",
     "./types/*.d.ts",
     "./web/**/*.ts",
-    "./web/**/*.tsx"
+    "./web/**/*.tsx",
+    "./dev/**/*.ts",
+    "./dev/**/*.tsx"
   ]
 }
