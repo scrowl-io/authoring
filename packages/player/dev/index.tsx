@@ -10,8 +10,9 @@ import './_index.scss';
 import { player } from '../src';
 import { create } from './project';
 
-window.Scrowl = window.Scrowl || {};
-window.Scrowl.core = core;
+window['Scrowl'] = {
+  core: core,
+};
 
 const container = document.getElementById('app') as HTMLElement;
 const root = createRoot(container);

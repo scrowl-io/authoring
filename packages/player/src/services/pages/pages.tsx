@@ -4,11 +4,15 @@ import {
   PlayerRootConfig,
   PlayerTemplateList,
   TemplateComponent,
-} from '../../root';
+} from '../../root/root.types';
 import { Error } from '../../components';
 
 const Page = ({ slides, templates, ...props }: PageProps) => {
-  const controller = useRef(new window.Scrowl.core.scroll.Controller());
+  let controller;
+
+  if (window['Scrowl'] && window['Scrowl'].core) {
+    controller = useRef(new window['Scrowl'].core.scroll.Controller());
+  }
 
   return (
     <div>

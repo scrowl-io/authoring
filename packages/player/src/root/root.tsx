@@ -12,8 +12,8 @@ import { Error } from '../components';
 import { Pages } from '../services';
 
 export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
-  if (window.Scrowl) {
-    const runtime = window.Scrowl.runtime;
+  if (window['Scrowl']) {
+    const runtime = window['Scrowl'].runtime;
 
     if (runtime) {
       const startRes = runtime.start();
@@ -70,4 +70,8 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
       </div>
     </Router>
   );
+};
+
+export default {
+  Root,
 };
