@@ -38,6 +38,10 @@ const config = {
     dest: './src/main/assets/project',
     includePaths: ['../../'],
   },
+  'node_modules/@scrowl/player/dist': {
+    dest: './src/main/assets/project',
+    includePaths: ['../../'],
+  },
   'node_modules/@scrowl/template-core/dist': {
     dest: './src/main/assets/project',
     includePaths: ['../../'],

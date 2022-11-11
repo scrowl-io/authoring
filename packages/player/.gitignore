@@ -42,8 +42,8 @@ release/build/*
 
 # build output
 dist/
-dev/
 lib/
+*.scss.json
 
 # testing reports
 tests/reports

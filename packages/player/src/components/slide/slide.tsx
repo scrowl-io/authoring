@@ -1,6 +1,5 @@
 import React from 'react';
-import './_player-slide.scss';
-import { SlideProps } from './player-slide.types';
+import { SlideProps } from './slide.types';
 
 export const Slide = ({
   children,

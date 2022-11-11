@@ -1,6 +1,6 @@
 const path = require('path');
 const { merge } = require('webpack-merge');
-const common = require('@scrowl/template-core/webpack.config');
+const common = require('@scrowl/config/webpack');
 const config = require('./package.json');
 
 module.exports = merge(common, {

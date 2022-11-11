@@ -1,4 +1,4 @@
-import { dialog, MessageBoxOptions } from 'electron';
+import { dialog, MessageBoxOptions, SaveDialogOptions, OpenDialogOptions } from 'electron';
 import { FSApi } from './fs.types';
 import { rq } from '../';
 
@@ -38,12 +38,72 @@ export const message = (ev: rq.RequestEvent, options: MessageBoxOptions) => {
   });
 };
 
+export const save = (ev: rq.RequestEvent, options: SaveDialogOptions) => {
+  return new Promise<rq.ApiResult>((resolve) => {
+    dialog.showSaveDialog(options).then(({ canceled, filePath }) => {
+      resolve({
+        error: false,
+        data: {
+          canceled,
+          filePath,
+        },
+      });
+    })
+    .catch((e) => {
+      resolve({
+        error: true,
+        message: 'Save dialog failed: unexpected',
+        data: {
+          trace: e,
+          options,
+        },
+      });
+    })
+  });
+};
+
+export const open = (ev: rq.RequestEvent, options: OpenDialogOptions) => {
+  return new Promise<rq.ApiResult>((resolve) => {
+    dialog
+      .showOpenDialog(options)
+      .then(({ canceled, filePaths }) => {
+        resolve({
+          error: false,
+          data: {
+            canceled,
+            filePath: filePaths[0],
+          },
+        });
+      })
+      .catch((e) => {
+        resolve({
+          error: true,
+          message: 'Unable to open dialog - unknown reason',
+          data: {
+            trace: e,
+            options,
+          },
+        });
+      });
+  });
+};
+
 export const API: FSApi = {
   message: {
     name: '/system/message',
     type: 'invoke',
     fn: message,
-  }
+  },
+  save: {
+    name: '/system/save',
+    type: 'invoke',
+    fn: save,
+  },
+  open: {
+    name: '/system/open',
+    type: 'invoke',
+    fn: open,
+  },
 };
 
 export const register = () => {
@@ -52,5 +112,7 @@ export const register = () => {
 
 export default {
   message,
+  save,
+  open,
   register,
 };

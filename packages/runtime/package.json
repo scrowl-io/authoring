@@ -18,25 +18,22 @@
   "homepage": "https://github.com/scrowl-io/authoring/packages/runtime#readme",
   "scripts": {
     "clean": "rimraf ../.parcel-cache",
-    "prebuild": "yarn run clean && rimraf dist",
-    "build": "parcel build --target prod --no-cache"
+    "prebuild": "yarn run clean && rimraf dist && rimraf lib",
+    "build": "parcel build --no-cache",
+    "postbuild": "webpack --config webpack.config.js --stats-error-details"
   },
-  "main": "./src/index.ts",
-  "prod": "./dist/scrowl.runtime.js",
-  "targets": {
-    "prod": {
-      "source": "./src/prod.ts",
-      "outputFormat": "global",
-      "optimize": true
-    }
-  },
+  "source": "./src/index.ts",
+  "main": "./lib/scrowl.runtime.js",
+  "module": "./lib/scrowl.runtime.module.js",
+  "types": "./lib/scrowl.runtime.d.ts",
   "exports": {
     ".": {
-      "require": "./dist/scrowl.template-block-text.js",
-      "default": "./dist/scrowl.template-block-text.js",
-      "import": "./src/index.ts"
+      "require": "./lib/scrowl.runtime.js",
+      "default": "./lib/scrowl.runtime.js",
+      "import": "./lib/scrowl.runtime.module.js"
     },
-    "./src": "./src/index.ts"
+    "./src": "./src/index.ts",
+    "./web": "./dist/scrowl.runtime.js"
   },
   "eslintConfig": {
     "extends": "@scrowl/config"
