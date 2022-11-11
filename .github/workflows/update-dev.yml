@@ -1,0 +1,27 @@
+name: Update Dev Workflow
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 12 * * *'
+  
+jobs:
+  update-dev:
+    runs-on: ubuntu-latest
+    steps:
+       - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: releases-dev
+
+      - name: Setup
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.15.0
+      
+      - name: Creating PR
+        id: pull
+        uses: tretuna/sync-branches@1.4.0
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          FROM_BRANCH: "main"
+          TO_BRANCH: "releases-dev"
