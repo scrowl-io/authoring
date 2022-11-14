@@ -73,8 +73,6 @@ const ResourceFormElement = (
       ...resource,
       title: ev.currentTarget.value,
     });
-
-    console.log('name change', resource);
   };
 
   const handleChangeResourceDescription = (

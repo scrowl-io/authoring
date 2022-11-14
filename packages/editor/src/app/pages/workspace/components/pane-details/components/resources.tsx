@@ -1,10 +1,11 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { Button, Icon } from '@owlui/lib';
 import * as css from '../_pane-details.scss';
 import { ResourceItem, NewResourceItem } from '../pane-details.types';
 import { Projects } from '../../../../../models';
 import { Elem, List } from '../../../../../utils';
 import { menu } from '../../../../../services';
+import { AssetIcon } from '../../../../../components';
 import { ResourceOverlay } from '../../overlay';
 
 export const Resources = () => {
@@ -78,14 +79,14 @@ export const Resources = () => {
   return (
     <>
       <div>
-        <dl>
+        <dl className={css.tabResourcesList}>
           {sortedResources.map((resource, idx) => {
             const editableResource = {
               ...resource,
               isNew: false,
             };
             return (
-              <div key={idx}>
+              <div key={idx} className={css.tabResourcesItem}>
                 <div
                   className="d-flex justify-content-between"
                   onClick={() => {
@@ -95,7 +96,13 @@ export const Resources = () => {
                     handleResourceMenu(ev, editableResource);
                   }}
                 >
-                  <dt>{editableResource.title}</dt>
+                  <dt className={css.tabResourcesItemTitle}>
+                    <AssetIcon
+                      type={editableResource.type}
+                      ext={editableResource.ext}
+                    />
+                    <span>{editableResource.title}</span>
+                  </dt>
                   <Button
                     className={css.actionMenu}
                     variant="ghost"
@@ -109,7 +116,9 @@ export const Resources = () => {
                     <Icon display="rounded" icon="more_vert" opsz={20} filled />
                   </Button>
                 </div>
-                <dd>{editableResource.description}</dd>
+                <dd className={css.tabResourcesDescription}>
+                  {editableResource.description}
+                </dd>
               </div>
             );
           })}
