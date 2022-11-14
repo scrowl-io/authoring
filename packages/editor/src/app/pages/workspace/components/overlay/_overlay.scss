@@ -186,6 +186,10 @@
       }
 
       &-entry {
+        .wrapper {
+          display: flex;
+        }
+
         .name {
           span[class*='owlui-icons'] {
             margin-right: 0.25rem;
