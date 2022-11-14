@@ -1,17 +1,8 @@
 import React, { useEffect, useLayoutEffect, useRef } from 'react';
-import * as css from '../../_pane-details.scss';
+import * as css from './_inline-inputs.scss';
+import { InlineInputTextProps } from './inline-inputs.types';
 
-export interface InputInlineTextCommon {
-  text: string;
-  isEdit: boolean;
-  onChange: (value: string) => void;
-  containerProps?: React.AllHTMLAttributes<HTMLDivElement>;
-}
-
-export type InputInlineTextProps = InputInlineTextCommon &
-  React.AllHTMLAttributes<HTMLTextAreaElement>;
-
-export const InputInlineText = ({
+export const Text = ({
   isEdit,
   text,
   onChange,
@@ -19,7 +10,7 @@ export const InputInlineText = ({
   onKeyDown,
   containerProps,
   ...props
-}: InputInlineTextProps) => {
+}: InlineInputTextProps) => {
   const isDirty = useRef(false);
   const prevText = useRef(text);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -120,5 +111,5 @@ export const InputInlineText = ({
 };
 
 export default {
-  InputInlineText,
+  Text,
 };

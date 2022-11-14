@@ -11,7 +11,7 @@ import {
 } from '../../../../';
 import { Elem } from '../../../../../../utils';
 import { menu, sys } from '../../../../../../services';
-import { InputInlineText } from './input-inline-text';
+import { InlineInput } from '../../../../../../components';
 
 export const OutlineSlideItem = ({
   slide,
@@ -163,7 +163,7 @@ export const OutlineSlideItem = ({
               appearance="Slide"
             />
           </span>
-          <InputInlineText
+          <InlineInput.Text
             isEdit={isEdit}
             text={slide.name}
             onChange={handleNameChange}
