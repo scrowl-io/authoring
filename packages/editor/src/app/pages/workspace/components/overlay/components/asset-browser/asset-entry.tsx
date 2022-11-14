@@ -1,8 +1,8 @@
 import React from 'react';
 import { Button, Icon } from '@owlui/lib';
-import Highlighter from 'react-highlight-words';
 import { AssetEntryProps } from './asset.types';
 import { menu } from '../../../../../../services';
+import { AssetIcon } from '../../../../../../components';
 
 export const AssetEntry = ({
   asset,
@@ -60,21 +60,37 @@ export const AssetEntry = ({
     <tr className="asset-list-entry">
       <td className="truncate">
         <div className="wrapper name" onClick={handleSelected}>
-          {asset.filename}
+          <AssetIcon type={asset.type} ext={asset.ext} />
+          <span>{asset.filename}</span>
         </div>
       </td>
       <td style={colType}>
         <div className="wrapper">{asset.ext}</div>
       </td>
       <td className="file-size">
-        <div className="wrapper ">
-          {fileSize[0]}
-          <span className="size-unit">{fileSize[1]}</span>
-        </div>
+        <div className="wrapper">
+          <span className="file-size-label">
+            <span>{fileSize[0]}</span>
+            <span className="size-unit">{fileSize[1]}</span>
+          </span>
 
-        <div className="actions-container">
-          <Button variant="outline-primary" onClick={handleAssetMenu}>
-            <Icon icon="arrow_drop_down" />
+          <Button
+            className="action-menu"
+            variant="ghost"
+            onClick={(ev) => {
+              handleAssetMenu(ev);
+            }}
+            onContextMenu={(ev) => {
+              handleAssetMenu(ev);
+            }}
+          >
+            <Icon
+              display="rounded"
+              icon="more_vert"
+              opsz={20}
+              filled
+              pxScale="Sm"
+            />
           </Button>
         </div>
       </td>

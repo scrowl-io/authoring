@@ -99,6 +99,7 @@
     table {
       margin: 0;
     }
+
     .asset-list {
       height: calc(100vh - 185px);
       overflow: auto;
@@ -175,8 +176,35 @@
           }
         }
 
+        tr {
+          vertical-align: middle;
+        }
+
         td {
-          padding: 0;
+          padding: 0.25rem;
+        }
+      }
+
+      &-entry {
+        .name {
+          span[class*='owlui-icons'] {
+            margin-right: 0.25rem;
+            color: var(--owl-input-placeholder-color);
+          }
+        }
+
+        .file-size-label {
+          margin-top: 0.5rem;
+          display: inline-block;
+        }
+
+        &:hover .action-menu,
+        &:focus .action-menu {
+          opacity: 1;
+        }
+
+        & .action-menu {
+          margin-left: 0.25rem;
         }
       }
     }
