@@ -13,7 +13,7 @@ export interface AssetBrowserCommons {
   isOpen: boolean;
   onClose: (data?: any) => void;
   onSelected: (data?: any) => void;
-  assetTypes: Array<AssetType>;
+  assetTypes?: Array<AssetType>;
 };
 
 export type AssetBrowserProps = AssetBrowserCommons & React.AllHTMLAttributes<HTMLDivElement>;

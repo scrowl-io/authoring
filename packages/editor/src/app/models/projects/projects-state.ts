@@ -405,24 +405,28 @@ export const config: stateManager.StateConfig = {
       state.isUncommitted = true;
     },
     setGlossaryItem: (state, action) => {
-      let lookup;
-      const ln = state.data.glossary.length;
+      const glossaryItem = action.payload;
+      const idx = List.indexBy(state.data.glossary, 'id', glossaryItem.id);
 
-      for (let i = 0; i < ln; i++) {
-        lookup = state.data.glossary[i];
-
-        if (lookup.id === action.payload.id) {
-          state.data.glossary[i] = action.payload;
-          break;
-        }
+      if (idx === -1) {
+        console.error('unable to update: glossary item not found', action.payload);
+        return;
       }
 
+      state.data.glossary[idx] = glossaryItem;
       state.isDirty = true;
       state.isUncommitted = true;
     },
     removeGlossaryItem: (state, action) => {
-      state.data.glossary.splice(action.payload.idx);
+      const glossaryItem = action.payload;
+      const idx = List.indexBy(state.data.glossary, 'id', glossaryItem.id);
 
+      if (idx === -1) {
+        console.error('unable to remove: glossary item not found', action.payload);
+        return;
+      }
+
+      state.data.glossary.splice(idx, 1);
       state.isDirty = true;
       state.isUncommitted = true;
     },
@@ -433,11 +437,26 @@ export const config: stateManager.StateConfig = {
       state.isUncommitted = true;
     },
     setResourceItem: (state, action) => {
-      
+      const { isNew, ...resourceItem } = action.payload;
+      const idx = List.indexBy(state.data.resources, 'filename', resourceItem.filename);
+
+      if (idx === -1) {
+        console.error('unable to update: resource not found', action.payload);
+        return;
+      }
+
+      state.data.resources[idx] = resourceItem;
     },
     removeResourceItem: (state, action) => {
-      state.data.resources.splice(action.payload.idx);
+      const resourceItem = action.payload;
+      const idx = List.indexBy(state.data.resources, 'filename', resourceItem.filename);
 
+      if (idx === -1) {
+        console.error('unable to remove: resource not found', action.payload);
+        return;
+      }
+
+      state.data.resources.splice(idx, 1);
       state.isDirty = true;
       state.isUncommitted = true;
     },
@@ -446,12 +465,35 @@ export const config: stateManager.StateConfig = {
     },
     addAssetItem: (state, action) => {
       state.assets.push(action.payload);
+
+      state.isDirty = true;
+      state.isUncommitted = true;
     },
     setAssetItem: (state, action) => {
-      
+      const { isNew, ...assetItem } = action.payload;
+      const idx = List.indexBy(state.assets, 'filename', assetItem.filename);
+
+      if (idx === -1) {
+        console.error('unable to update: asset not found', action.payload);
+        return;
+      }
+
+      state.data.assets[idx] = assetItem;
+      state.isDirty = true;
+      state.isUncommitted = true;
     },
     removeAssetItem: (state, action) => {
-      state.data.assets.splice(action.payload.idx);
+      const assetItem = action.payload;
+      const idx = List.indexBy(state.assets, 'filename', assetItem.filename);
+
+      if (idx === -1) {
+        console.error('unable to remove: asset not found', action.payload);
+        return;
+      }
+
+      state.data.assets[idx].isDeleted = true;
+      state.isDirty = true;
+      state.isUncommitted = true;
     },
   },
 };

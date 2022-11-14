@@ -104,17 +104,6 @@ export const upload = (ev: rq.RequestEvent, req: UploadReq) => {
       });
     }
 
-    if (!req.options.assetTypes || !req.options.assetTypes.length) {
-      resolve({
-        error: true,
-        message: 'Unable to select asset to import: asset types not defined.',
-        data: {
-          req,
-        },
-      });
-      return;
-    }
-
     const config: OpenDialogOptions = {
       title: 'Import File',
     };
@@ -181,6 +170,7 @@ export const upload = (ev: rq.RequestEvent, req: UploadReq) => {
               resolve({
                 error: false,
                 data: {
+                  title: name.replace('.', ''),
                   filename: `${name}webp`,
                   type,
                   ext: 'webp',

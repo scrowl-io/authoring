@@ -67,6 +67,10 @@
     min-height: 100%;
     grid-auto-flow: row;
     grid-template-rows: auto 1fr;
+
+    &--resource {
+      grid-template-rows: auto auto 1fr;
+    }
   }
 }
 

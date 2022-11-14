@@ -1,29 +1,31 @@
 import React, { useState, useRef } from 'react';
 import { Button, Icon } from '@owlui/lib';
 import * as css from '../_pane-details.scss';
+import { ResourceItem, NewResourceItem } from '../pane-details.types';
 import { Projects } from '../../../../../models';
-import { Elem } from '../../../../../utils';
+import { Elem, List } from '../../../../../utils';
 import { menu } from '../../../../../services';
 import { ResourceOverlay } from '../../overlay';
 
 export const Resources = () => {
   const [isOpenResourceBrowser, setIsOpenResourceBrowser] = useState(false);
-  const newResource = {
-    id: -1,
-    filename: '',
+  const newResource: NewResourceItem = {
+    isNew: true,
     title: '',
-    description: '',
+    filename: '',
+    ext: '',
+    size: 0,
   };
-  const selectedResource = useRef<Projects.ProjectResource>(newResource);
+  const [selectedResource, setSelectedResource] =
+    useState<ResourceItem>(newResource);
   const resources = Projects.useResources();
-  const sortedResources = resources
-    .slice()
-    .sort((a: any, b: any) => a.title.localeCompare(b.title));
+  const sortedResources = List.sortBy(resources.slice(), 'title');
   const resourceMenu: Array<menu.ContextMenuItem> = [
     {
       label: 'Edit Resource',
       click: () => {
-        handleOpenResourceBrowser();
+        // handleOpenResourceBrowser();
+        console.log('editing resource');
       },
     },
     { type: 'separator' },
@@ -37,7 +39,7 @@ export const Resources = () => {
 
   const handleResourceMenu = (
     ev: React.MouseEvent,
-    resource?: Projects.ProjectResource
+    resource?: ResourceItem
   ) => {
     ev.preventDefault();
     ev.stopPropagation();
@@ -46,69 +48,71 @@ export const Resources = () => {
     const position = Elem.getPosition(target);
 
     if (resource) {
-      selectedResource.current = resource;
+      setSelectedResource(resource);
     }
 
     menu.API.contextMenu(resourceMenu, position).then((result) => {
-      console.log('menu close', result);
       target.blur();
     });
   };
 
-  const handleOpenResourceBrowser = (resource?: Projects.ProjectResource) => {
+  const handleOpenResourceBrowser = (resource: ResourceItem) => {
+    setSelectedResource(resource);
     setIsOpenResourceBrowser(true);
-
-    if (resource) {
-      selectedResource.current = resource;
-    }
   };
 
   const handleCloseResourceBrowser = () => {
     setIsOpenResourceBrowser(false);
   };
 
-  const handleSubmitResource = (resource: Projects.ProjectResource) => {
-    setIsOpenResourceBrowser(false);
-
-    if (resource.id === -1) {
+  const handleSubmitResource = ({ isNew, ...resource }: ResourceItem) => {
+    if (isNew) {
       Projects.addResourceItem(resource);
     } else {
       Projects.setResourceItem(resource);
     }
+
+    setIsOpenResourceBrowser(false);
   };
 
   return (
     <>
       <div>
         <dl>
-          {sortedResources.map((resource, idx) => (
-            <div key={idx}>
-              <div
-                className="d-flex justify-content-between"
-                onClick={() => {
-                  handleOpenResourceBrowser(resource);
-                }}
-                onContextMenu={(ev) => {
-                  handleResourceMenu(ev, resource);
-                }}
-              >
-                <dt>{resource.title}</dt>
-                <Button
-                  className={css.actionMenu}
-                  variant="ghost"
-                  onClick={(ev) => {
-                    handleResourceMenu(ev, resource);
+          {sortedResources.map((resource, idx) => {
+            const editableResource = {
+              ...resource,
+              isNew: false,
+            };
+            return (
+              <div key={idx}>
+                <div
+                  className="d-flex justify-content-between"
+                  onClick={() => {
+                    handleOpenResourceBrowser(editableResource);
                   }}
                   onContextMenu={(ev) => {
-                    handleResourceMenu(ev, resource);
+                    handleResourceMenu(ev, editableResource);
                   }}
                 >
-                  <Icon display="rounded" icon="more_vert" opsz={20} filled />
-                </Button>
+                  <dt>{editableResource.title}</dt>
+                  <Button
+                    className={css.actionMenu}
+                    variant="ghost"
+                    onClick={(ev) => {
+                      handleResourceMenu(ev, editableResource);
+                    }}
+                    onContextMenu={(ev) => {
+                      handleResourceMenu(ev, editableResource);
+                    }}
+                  >
+                    <Icon display="rounded" icon="more_vert" opsz={20} filled />
+                  </Button>
+                </div>
+                <dd>{editableResource.description}</dd>
               </div>
-              <dd>{resource.definition}</dd>
-            </div>
-          ))}
+            );
+          })}
         </dl>
         <div className="owl-sticky-add-item">
           <button
@@ -135,7 +139,7 @@ export const Resources = () => {
         isOpen={isOpenResourceBrowser}
         onClose={handleCloseResourceBrowser}
         onSubmit={handleSubmitResource}
-        resource={selectedResource.current}
+        resourceItem={selectedResource}
       />
     </>
   );
