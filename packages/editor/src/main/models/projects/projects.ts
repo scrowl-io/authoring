@@ -132,6 +132,8 @@ export const upload = (ev: rq.RequestEvent, req: UploadReq) => {
         });
         return;
       }
+    } else {
+      config.filters = fs.dialog.getAllAssets();
     }
 
     fs.dialog.open(ev, config).then((res) => {
