@@ -1,10 +1,10 @@
+import { OpenDialogOptions } from 'electron';
 import { v4 as uuid } from 'uuid';
-import { ProjectsApi, ProjectData, ProjectFile, ProjectMeta } from './projects.types';
+import { ProjectsApi, ProjectData, ProjectFile, ProjectMeta, UploadReq } from './projects.types';
 import { createProject } from './project.data';
 import { rq, fs, log } from '../../services';
 import * as utils from '../../utils';
 import { scorm } from './project-publisher';
-import { AssetType } from '../../services/file-system';
 
 const projectMetaFilename = 'project.json';
 
@@ -92,13 +92,6 @@ export const create = (ev: rq.RequestEvent) => {
   });
 };
 
-export type UploadReq = {
-  meta: ProjectMeta,
-  options: {
-    assetTypes: Array<AssetType>
-  }
-}
-
 export const upload = (ev: rq.RequestEvent, req: UploadReq) => {
   return new Promise<rq.ApiResult>((resolve) => {
     if (!req.meta) {
@@ -111,31 +104,25 @@ export const upload = (ev: rq.RequestEvent, req: UploadReq) => {
       });
     }
 
-    if (!req.options.assetTypes || !req.options.assetTypes.length) {
-      resolve({
-        error: true,
-        message: 'Unable to select asset to import: asset types not defined.',
-        data: {
-          req,
-        },
-      });
-      return;
-    }
-
-    const config = {
+    const config: OpenDialogOptions = {
       title: 'Import File',
-      filters: fs.dialog.getAllowedAssets(req.options.assetTypes),
     };
 
-    if (!config.filters.length) {
-      resolve({
-        error: true,
-        message: 'Unabled to select asset to import: asset type not supported.',
-        data: {
-          req,
-        },
-      });
-      return;
+    if (req.options.assetTypes) {
+      config.filters = fs.dialog.getAllowedAssets(req.options.assetTypes);
+
+      if (!config.filters.length) {
+        resolve({
+          error: true,
+          message: 'Unabled to select asset to import: asset type not supported.',
+          data: {
+            req,
+          },
+        });
+        return;
+      }
+    } else {
+      config.filters = fs.dialog.getAllAssets();
     }
 
     fs.dialog.open(ev, config).then((res) => {
@@ -183,6 +170,7 @@ export const upload = (ev: rq.RequestEvent, req: UploadReq) => {
               resolve({
                 error: false,
                 data: {
+                  title: name.replace('.', ''),
                   filename: `${name}webp`,
                   type,
                   ext: 'webp',
@@ -333,7 +321,7 @@ export const save = (ev: rq.RequestEvent, data: ProjectData) => {
         return;
       }
 
-      projectFile = projectFileRead.data as ProjectFile;
+      projectFile = projectFileRead.data.contents as ProjectFile;
       projectFile.updatedAt = now;
     }
 

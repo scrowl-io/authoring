@@ -12,6 +12,8 @@
   padding-top: 0.5rem;
   height: calc(100vh - 82px);
   z-index: 10;
+  overflow-x: hidden;
+  overflow-y: auto;
 
   &__header {
     flex: 0 1 auto;
@@ -21,6 +23,7 @@
   &__content {
     flex: 1 1 auto;
     padding-bottom: $owl-sys-space-sidebar;
+    overflow-x: hidden;
     overflow-y: auto;
   }
 

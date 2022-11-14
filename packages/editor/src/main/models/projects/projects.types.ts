@@ -1,5 +1,6 @@
 import { rq, fs } from '../../services';
 import { TemplateSchema } from '../templates';
+import { AssetType } from '../../services/file-system';
 
 export interface ProjectsApiCreate
   extends Omit<rq.RegisterEndpoint, 'name'> {
@@ -75,11 +76,16 @@ export type ProjectScorm = {
 };
 
 export type ProjectAsset = {
+  title: string;
   filename: string;
   ext: string;
   type: fs.AssetType;
   size: number;
   isDeleted?: boolean;
+};
+
+export interface ProjectResource extends ProjectAsset {
+  description?: string;
 };
 
 export type ProjectModule = {
@@ -105,13 +111,6 @@ export type ProjectGlossaryItem = {
   id: number;
   word: string;
   definition: string;
-};
-
-export type ProjectResource = {
-  id: number;
-  filename: string;
-  title: string;
-  description?: string;
 };
 
 export type ProjectData = {
@@ -143,3 +142,10 @@ export type TemplateList = Array<TemplateInfo>;
 export type TemplateMap = {
   [key: string]: TemplateInfo;
 };
+
+export type UploadReq = {
+  meta: ProjectMeta,
+  options: {
+    assetTypes: Array<AssetType>
+  }
+}

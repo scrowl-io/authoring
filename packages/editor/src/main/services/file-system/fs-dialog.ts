@@ -14,6 +14,16 @@ export const getAllowedAssets = (types: Array<AssetType>) => {
   return filters;
 };
 
+export const getAllAssets = () => {
+  let filters: Array<AssetFilter> = [];
+
+  for (const [type, filter] of Object.entries(ASSET_TYPES)) {
+    filters.push(filter);
+  }
+
+  return filters;
+};
+
 export const message = (ev: rq.RequestEvent, options: MessageBoxOptions) => {
   return new Promise<rq.ApiResult>((resolve) => {
     if (!options) {
@@ -123,6 +133,8 @@ export const register = () => {
 }
 
 export default {
+  getAllowedAssets,
+  getAllAssets,
   message,
   save,
   open,

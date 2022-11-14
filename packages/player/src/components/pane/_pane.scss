@@ -8,7 +8,8 @@
     flex-wrap: nowrap;
     flex-shrink: 0;
     min-width: $owl-sys-size-sidebar-minwidth;
-    overflow: scroll;
+    overflow-x: hidden;
+    overflow-y: auto;
     color: var(--owl-sidebar-color);
     background: var(--owl-sidebar-bg);
 
@@ -20,6 +21,7 @@
     &__content {
       flex: 1 1 auto;
       padding-bottom: $owl-sys-space-sidebar;
+      overflow-x: hidden;
       overflow-y: auto;
     }
   }

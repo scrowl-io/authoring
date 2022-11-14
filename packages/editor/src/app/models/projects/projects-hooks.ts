@@ -355,7 +355,7 @@ export const removeResourceItem = (data) => {
   processor.dispatch(state.removeResourceItem(data));
 };
 
-export const useAssets = (assetTypes?: Array<string>) => {
+export const useAssets = (assetTypes?: Array<AssetType>) => {
   return useSelector((data: stateManager.RootState) => {
     if (!assetTypes) {
       return data.projects.assets;
@@ -421,7 +421,7 @@ export const create = (): Promise<rq.ApiResult> => {
 export type UploadReq = {
   meta: ProjectMeta,
   options: {
-    assetTypes: Array<AssetType>
+    assetTypes?: Array<AssetType>
   }
 }
 

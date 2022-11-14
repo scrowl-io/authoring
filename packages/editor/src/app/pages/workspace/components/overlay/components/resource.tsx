@@ -2,25 +2,35 @@ import React, { useEffect, useState, useRef, forwardRef } from 'react';
 import { Button } from '@owlui/lib';
 import { AnimatePresence } from 'framer-motion';
 import '../_overlay.scss';
+import { ResourceItem } from '../../pane-details';
 import { Backdrop, Drawer, AssetBrowser } from '.';
 import { Settings } from '../../../../../models';
 import { menu } from '../../../../../services';
 
+export interface ResourceFormProps
+  extends Omit<React.AllHTMLAttributes<HTMLDivElement>, 'onSubmit'> {
+  isOpen: boolean;
+  onClose: () => void;
+  onSubmit: (resource: ResourceItem) => void;
+  resourceItem: ResourceItem;
+}
+
 const ResourceFormElement = (
-  { className, isOpen, onClose, onSubmit, resource, ...props },
+  {
+    className,
+    isOpen,
+    onClose,
+    onSubmit,
+    resourceItem,
+    ...props
+  }: ResourceFormProps,
   ref
 ) => {
   const animationSettings = Settings.useAnimation();
   const isAnimated = !animationSettings.reducedAnimations;
-  const isNew = resource === undefined || resource.id === -1;
-  const title = isNew ? 'Add New' : 'Edit';
-  const [resourceTitle, setResourceTitle] = useState(
-    isNew ? '' : resource.title
-  );
-  const [resourceDescription, setResourceDescription] = useState(
-    isNew ? '' : resource.description
-  );
+  const modalTitle = resourceItem.isNew ? 'Add New' : 'Edit';
   const [isOpenAssetBrowser, setIsOpenAssetBrowser] = useState(false);
+  const [resource, setResource] = useState<ResourceItem>(resourceItem);
 
   const handleClose = () => {
     onClose();
@@ -28,12 +38,7 @@ const ResourceFormElement = (
 
   const handleSubmit = (ev: React.MouseEvent<Element, MouseEvent>) => {
     ev.preventDefault();
-
-    onSubmit({
-      title: resourceTitle,
-      description: resourceDescription,
-      id: isNew ? -1 : resource.id,
-    });
+    onSubmit(resource);
   };
 
   const handleAssetBrowse = () => {
@@ -42,26 +47,54 @@ const ResourceFormElement = (
 
   const handleAssetClose = () => {
     setIsOpenAssetBrowser(false);
-    console.log('asset browse closed');
   };
 
-  const handleAssetSelected = (data) => {
+  const handleAssetSelected = (asset) => {
     setIsOpenAssetBrowser(false);
-    console.log('asset browse selected');
+
+    if (resource.filename === resource.title) {
+      setResource({
+        ...resource,
+        ...asset,
+      });
+    } else {
+      setResource({
+        ...resource,
+        ...asset,
+        title: resource.title,
+      });
+    }
+  };
+
+  const handleChangeResourceTitle = (
+    ev: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setResource({
+      ...resource,
+      title: ev.currentTarget.value,
+    });
+  };
+
+  const handleChangeResourceDescription = (
+    ev: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
+    setResource({
+      ...resource,
+      description: ev.currentTarget.value,
+    });
   };
 
   useEffect(() => {
-    if (resourceTitle !== resource.title) {
-      setResourceTitle(resource.title);
-      setResourceDescription(resource.description);
-    }
-
     if (isOpen) {
       menu.API.disableProjectActions();
     } else {
       menu.API.enableProjectActions();
     }
-  }, [resource, isOpen, isOpenAssetBrowser]);
+  }, [isOpen]);
+
+  useEffect(() => {
+    setResource(resourceItem);
+  }, [resourceItem, isOpen]);
 
   return (
     <div ref={ref}>
@@ -78,7 +111,9 @@ const ResourceFormElement = (
               style={{ zIndex: isOpenAssetBrowser ? 1040 : 1045 }}
             >
               <div className="owlui-offcanvas-header">
-                <h4 className="owlui-offcanvas-title mb-0">{title} Resource</h4>
+                <h4 className="owlui-offcanvas-title mb-0">
+                  {modalTitle} Resource
+                </h4>
                 <button
                   type="button"
                   className="btn-close"
@@ -87,7 +122,7 @@ const ResourceFormElement = (
               </div>
 
               <div className="owlui-offcanvas-body content-form">
-                <form className="owlui-offcanvas-form">
+                <form className="owlui-offcanvas-form owlui-offcanvas-form--resource">
                   <div className="owlui-input-group mb-2">
                     <input
                       type="text"
@@ -95,7 +130,7 @@ const ResourceFormElement = (
                       className="owlui-form-control owlui-read-only"
                       placeholder="File attachment"
                       aria-label="File attachment"
-                      value={resourceTitle}
+                      value={resource.filename}
                     />
                     <div className="owlui-input-group-append">
                       <Button
@@ -105,6 +140,21 @@ const ResourceFormElement = (
                         Browse
                       </Button>
                     </div>
+                  </div>
+
+                  <div className="mb-2">
+                    <label htmlFor="resource-title" className="form-label">
+                      Title
+                    </label>
+                    <input
+                      id="resouce-title"
+                      type="text"
+                      className="owlui-form-control"
+                      placeholder="Title"
+                      aria-label="Title"
+                      value={resource.title}
+                      onChange={handleChangeResourceTitle}
+                    />
                   </div>
 
                   <div className="mb-2 owlui-offcanvas-form__textarea">
@@ -119,10 +169,8 @@ const ResourceFormElement = (
                       className="owlui-form-control form-control-lg"
                       placeholder="Describe the resource"
                       style={{ resize: 'none' }}
-                      value={resourceDescription}
-                      onChange={(e) => {
-                        setResourceDescription(e.target.value);
-                      }}
+                      value={resource.description}
+                      onChange={handleChangeResourceDescription}
                     />
                   </div>
 
@@ -160,7 +208,7 @@ const ResourceFormElement = (
 
 export const ResourceForm = forwardRef(ResourceFormElement);
 
-export const ResourceOverlay = ({ isOpen, ...props }) => {
+export const ResourceOverlay = ({ isOpen, ...props }: ResourceFormProps) => {
   const overlayRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
