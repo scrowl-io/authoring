@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Icon } from '@owlui/lib';
 import { InputAssetProps } from '../../../pane-editor.types';
 import { useContentFocus } from '../../../../../page-workspace-hooks';
 import { AssetBrowser } from '../../../../../components';
@@ -49,8 +50,14 @@ export const Asset = ({
   const handleAssetSelected = (asset) => {
     setAssetName(asset.filename);
     setIsOpenAssetBrowser(false);
-    onChange(field, asset.filename);
-    onBlur(field);
+
+    if (onChange) {
+      onChange(field, asset.filename);
+    }
+
+    if (onBlur) {
+      onBlur(field);
+    }
   };
 
   const handleAssetFocus = () => {
@@ -95,6 +102,18 @@ export const Asset = ({
     groupClasses += ' is-invalid';
   }
 
+  const handleRemoveAsset = () => {
+    setAssetName('');
+
+    if (onChange) {
+      onChange(field, '');
+    }
+
+    if (onBlur) {
+      onBlur(field);
+    }
+  };
+
   useEffect(() => {
     if (inputRef.current && isFocused) {
       inputRef.current.focus();
@@ -112,16 +131,9 @@ export const Asset = ({
               className="btn btn-outline-primary post"
               type="button"
               disabled={disabled}
-              onClick={handleButtonFocus}
+              onClick={handleRemoveAsset}
             >
-              <span
-                style={{
-                  fontSize: '15px',
-                }}
-                className="material-symbols-sharp"
-              >
-                close
-              </span>
+              <Icon icon="close" pxScale="Sm" />
             </button>
           ) : null}
 
