@@ -87,10 +87,27 @@ export const getProjectUploads = (project: ProjectData, meta: ProjectFile, src: 
     return list;
   }
 
+  const scanResources = () => {
+    if (!project.resources || !project.resources.length) {
+      return;
+    }
+
+    let assetPath;
+
+    project.resources.forEach((resource) => {
+      assetPath = getAssetPath(resource.filename);
+
+      if (assetPath) {
+        assets.add(resource.filename);
+      }
+    });
+  };
+
   project.slides.forEach((slide) => {
     scanContent(slide, assets);
   });
 
+  scanResources();
   return assets;
 };
 
