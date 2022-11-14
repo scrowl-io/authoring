@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, Icon } from '@owlui/lib';
 import { AssetEntryProps } from './asset.types';
 import { menu } from '../../../../../../services';
-import { AssetIcon } from '../../../../../../components';
+import { AssetIcon, InlineInput } from '../../../../../../components';
+import { Projects } from '../../../../../../models';
 
 export const AssetEntry = ({
   asset,
@@ -11,20 +12,21 @@ export const AssetEntry = ({
   onSelected,
   ...props
 }: AssetEntryProps) => {
+  const [isEdit, setIsEdit] = useState(false);
   let fileSizeBytes = asset.size;
   // const searchTerm = props.searchHighlight || '';
   const assetEntryMenu: Array<menu.ContextMenuItem> = [
     {
       label: 'Rename',
       click: () => {
-        console.log('rename asset entry');
+        setIsEdit(true);
       },
     },
     { type: 'separator' },
     {
       label: 'Remove',
       click: () => {
-        console.log('remove asset entry');
+        Projects.removeAsset(asset);
       },
     },
   ];
@@ -56,12 +58,30 @@ export const AssetEntry = ({
     onSelected(asset);
   };
 
+  const handleTitleChange = (val) => {
+    const updateData = {
+      ...asset,
+      title: val,
+    };
+
+    Projects.setAsset(updateData);
+  };
+
+  const handleTitleClose = () => {
+    setIsEdit(false);
+  };
+
   return (
     <tr className="asset-list-entry">
       <td className="truncate">
         <div className="wrapper name" onClick={handleSelected}>
           <AssetIcon type={asset.type} ext={asset.ext} />
-          <span>{asset.filename}</span>
+          <InlineInput.Text
+            isEdit={isEdit}
+            text={asset.title}
+            onChange={handleTitleChange}
+            onBlur={handleTitleClose}
+          />
         </div>
       </td>
       <td style={colType}>

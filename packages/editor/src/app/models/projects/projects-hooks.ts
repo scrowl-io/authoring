@@ -357,13 +357,19 @@ export const removeResourceItem = (data) => {
 
 export const useAssets = (assetTypes?: Array<AssetType>) => {
   return useSelector((data: stateManager.RootState) => {
+    let list;
+
     if (!assetTypes) {
-      return data.projects.assets;
+      list = data.projects.assets;
+    } else {
+      list = data.projects.assets.filter((asset) => {
+        return assetTypes.indexOf(asset.type) !== -1;
+      });
     }
-    
-    return data.projects.assets.filter((asset) => {
-      return assetTypes.indexOf(asset.type) !== -1;
-    });
+
+    return list.filter((asset) => {
+      return !asset.isDeleted;
+    })
   });
 }
 

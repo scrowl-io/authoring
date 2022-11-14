@@ -477,8 +477,8 @@ export const config: stateManager.StateConfig = {
         console.error('unable to update: asset not found', action.payload);
         return;
       }
-
-      state.data.assets[idx] = assetItem;
+      
+      state.assets[idx] = assetItem;
       state.isDirty = true;
       state.isUncommitted = true;
     },
@@ -491,7 +491,7 @@ export const config: stateManager.StateConfig = {
         return;
       }
 
-      state.data.assets[idx].isDeleted = true;
+      state.assets[idx].isDeleted = true;
       state.isDirty = true;
       state.isUncommitted = true;
     },

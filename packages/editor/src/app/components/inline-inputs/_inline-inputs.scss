@@ -1,0 +1,42 @@
+.inline-input {
+  $ref: &;
+  width: 100%;
+  position: relative;
+  word-break: break-all;
+  line-height: 1.4;
+
+  &__display {
+    z-index: 1;
+  }
+
+  &__control {
+    width: 100%;
+    padding: 0 2px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    visibility: hidden;
+    user-select: none;
+    pointer-events: none;
+    z-index: -1;
+    resize: none;
+    font-size: 0.75rem;
+    overflow: hidden;
+  }
+
+  &.active {
+    #{$ref}__display {
+      visibility: hidden;
+      user-select: none;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    #{$ref}__control {
+      visibility: visible;
+      user-select: all;
+      pointer-events: all;
+      z-index: 1;
+    }
+  }
+}

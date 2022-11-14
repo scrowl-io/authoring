@@ -8,7 +8,7 @@ import { resetActiveSlide } from '../../../../';
 import { Projects } from '../../../../../../models';
 import { Elem } from '../../../../../../utils';
 import { menu, sys } from '../../../../../../services';
-import { InputInlineText } from './input-inline-text';
+import { InlineInput } from '../../../../../../components';
 
 export const OutlineModuleItem = ({
   module,
@@ -144,7 +144,7 @@ export const OutlineModuleItem = ({
                 opsz={20}
               />
             </span>
-            <InputInlineText
+            <InlineInput.Text
               isEdit={isEdit}
               text={module.name}
               onChange={handleNameChange}
