@@ -6,7 +6,7 @@ import {
 import { rq } from '../';
 import { MenuApi, ContextMenuItem, ContextMenuPosition } from './menu.types';
 
-export const contextMenu = (ev: rq.RequestEvent, items: Array<ContextMenuItem>, position: ContextMenuPosition) => {
+export const contextMenu = (ev: rq.RequestEvent, items: Array<ContextMenuItem>, position: ContextMenuPosition, data: any) => {
   return new Promise<rq.ApiResult>((resolve) => {
     if (!items || !items.length) {
       resolve({
@@ -15,6 +15,7 @@ export const contextMenu = (ev: rq.RequestEvent, items: Array<ContextMenuItem>, 
         data: {
           items,
           position,
+          data,
         }
       });
       return;
@@ -32,6 +33,8 @@ export const contextMenu = (ev: rq.RequestEvent, items: Array<ContextMenuItem>, 
             error: false,
             data: {
               item,
+              position,
+              data,
             },
           });
         }

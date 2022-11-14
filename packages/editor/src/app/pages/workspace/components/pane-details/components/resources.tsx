@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import { Button, Icon } from '@owlui/lib';
 import * as css from '../_pane-details.scss';
-import { ResourceItem, NewResourceItem } from '../pane-details.types';
+import {
+  ResourceItem,
+  NewResourceItem,
+  ContextMenuResult,
+} from '../pane-details.types';
 import { Projects } from '../../../../../models';
 import { Elem, List } from '../../../../../utils';
 import { menu } from '../../../../../services';
@@ -24,16 +28,22 @@ export const Resources = () => {
   const resourceMenu: Array<menu.ContextMenuItem> = [
     {
       label: 'Edit Resource',
-      click: () => {
-        // handleOpenResourceBrowser();
-        console.log('editing resource');
+      click: (menuItem) => {
+        const res = menuItem as unknown as ContextMenuResult;
+        const editResource = res.data.resource;
+
+        setSelectedResource(editResource);
+        setIsOpenResourceBrowser(true);
       },
     },
     { type: 'separator' },
     {
       label: 'Remove Resource',
-      click: () => {
-        console.log('remove resource item');
+      click: (menuItem) => {
+        const res = menuItem as unknown as ContextMenuResult;
+        const editResource = res.data.resource;
+
+        Projects.removeResourceItem(editResource);
       },
     },
   ];
@@ -52,9 +62,11 @@ export const Resources = () => {
       setSelectedResource(resource);
     }
 
-    menu.API.contextMenu(resourceMenu, position).then((result) => {
-      target.blur();
-    });
+    menu.API.contextMenu(resourceMenu, position, { resource: resource }).then(
+      (result) => {
+        target.blur();
+      }
+    );
   };
 
   const handleOpenResourceBrowser = (resource: ResourceItem) => {
