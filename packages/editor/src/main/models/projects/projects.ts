@@ -321,7 +321,7 @@ export const save = (ev: rq.RequestEvent, data: ProjectData) => {
         return;
       }
 
-      projectFile = projectFileRead.data as ProjectFile;
+      projectFile = projectFileRead.data.contents as ProjectFile;
       projectFile.updatedAt = now;
     }
 
