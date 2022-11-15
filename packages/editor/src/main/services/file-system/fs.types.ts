@@ -23,7 +23,7 @@ export interface AssetTypeImage extends Omit<FileFilter, 'name' | 'extensions' >
 
 export interface AssetTypeDocument extends Omit<FileFilter, 'name' | 'extensions' > {
   name: 'document';
-  extensions: ['txt', 'doc', 'docx', 'pdf'];
+  extensions: ['txt', 'doc', 'docx', 'pdf', 'zip'];
 }
 
 export interface AssetTypeVideo extends Omit<FileFilter, 'name' | 'extensions' > {

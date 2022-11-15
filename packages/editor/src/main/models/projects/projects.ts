@@ -127,7 +127,7 @@ export const upload = (ev: rq.RequestEvent, req: UploadReq) => {
         return;
       }
     } else {
-      config.filters = fs.dialog.getAllAssets();
+      config.filters = fs.dialog.getAllowedAssets(['image', 'document'])
     }
 
     fs.dialog.open(ev, config).then((res) => {
@@ -141,6 +141,8 @@ export const upload = (ev: rq.RequestEvent, req: UploadReq) => {
         return;
       }
 
+      let dest: string;
+      let destWorking: string;
       const ext = fs.getExt(res.data.filePath).replace('.', '');
       const name = fs.getBasename(res.data.filePath, ext);
       const type = fs.assetTypeByExt(ext);
@@ -154,8 +156,8 @@ export const upload = (ev: rq.RequestEvent, req: UploadReq) => {
 
       switch (type) {
         case 'image':
-          const dest = (infoRes.data.isNew || infoRes.data.uncommitted) ? fs.joinPath(fs.APP_PATHS.uploads, `${name}webp`) : fs.joinPath(infoRes.data.folder, 'assets', `${name}webp`);
-          const destWorking = fs.joinPath(fs.APP_PATHS.temp, 'templates', 'assets', `${name}webp`);
+          dest = (infoRes.data.isNew || infoRes.data.uncommitted) ? fs.joinPath(fs.APP_PATHS.uploads, `${name}webp`) : fs.joinPath(infoRes.data.folder, 'assets', `${name}webp`);
+          destWorking = fs.joinPath(fs.APP_PATHS.temp, 'templates', 'assets', `${name}webp`);
           
           fs.asset.toWebp(res.data.filePath, dest).then((transformRes) => {
             if (transformRes.error) {
@@ -183,6 +185,62 @@ export const upload = (ev: rq.RequestEvent, req: UploadReq) => {
                 },
               });
             });
+          });
+          break;
+        default:
+          dest = (infoRes.data.isNew || infoRes.data.uncommitted) ? fs.joinPath(fs.APP_PATHS.uploads, `${name}${ext}`) : fs.joinPath(infoRes.data.folder, 'assets', `${name}${ext}`);
+          destWorking = fs.joinPath(fs.APP_PATHS.temp, 'templates', 'assets', `${name}${ext}`);
+          
+          const copyPaths = [
+            `${res.data.filePath} to ${dest}`,
+            `${res.data.filePath} to ${destWorking}`,
+          ];
+          const copyPromises = [
+            fs.copy(res.data.filePath, dest),
+            fs.copy(res.data.filePath, destWorking),
+          ];
+
+          Promise.allSettled(copyPromises).then((copyAllRes) => {
+            let isError = false;
+            let errorRes;
+
+            copyAllRes.forEach((copyRes, idx) => {
+              if (copyRes.status === 'rejected') {
+                log.error(`failed to copy: ${copyPaths[idx]}`);
+                isError = true;
+                return;
+              }
+    
+              if (copyRes.value.error) {
+                isError = true;
+                errorRes = copyRes.value;
+                log.error(`failed to copy: ${copyPaths[idx]}`);
+                return;
+              }
+            });
+
+            if (isError) {
+              resolve(errorRes);
+              return;
+            }
+
+            const statsRes = fs.fileStatsSync(res.data.filePath);
+
+            if (statsRes.error) {
+              resolve(statsRes);
+              return;
+            }
+
+            resolve({
+              error: false,
+              data: {
+                title: name.replace('.', ''),
+                filename: `${name}${ext}`,
+                type,
+                ext,
+                size: statsRes.data.stats.size,
+              },
+            })
           });
           break;
       }
