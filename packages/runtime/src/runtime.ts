@@ -15,7 +15,7 @@ export const service: RUNTIME_SERVICE = {
     start: undefined,
     end: undefined,
     convert: (total) => {
-      function ZeroPad(val:number, pad:number) {
+      function ZeroPad(val: number, pad: number) {
         let res = new String(val);
         const len = res.length;
 
@@ -88,22 +88,23 @@ export const service: RUNTIME_SERVICE = {
     },
   },
   isAvailable: () => {
-    const isReady = (service.init && !service.finished);
+    const isReady = service.init && !service.finished;
 
     if (!isReady || !service.API) {
       return {
         error: true,
-        message: 'Service is unavailable'
-      }
+        message: 'Service is unavailable',
+      };
     }
 
     return {
       error: false,
       API: service.API,
-    }
+    };
   },
   getError: (printError) => {
-    printError = printError === undefined || printError === null ? true : printError;
+    printError =
+      printError === undefined || printError === null ? true : printError;
     const res = service.isAvailable();
 
     if (res.error) {
@@ -136,14 +137,14 @@ export const service: RUNTIME_SERVICE = {
       return {
         error: false,
         API: source.API,
-      }
+      };
     }
 
     if (source.parent === source) {
       return {
         error: true,
-        message: 'Error: unable to find API - top level reached'
-      }
+        message: 'Error: unable to find API - top level reached',
+      };
     }
 
     while (
@@ -154,14 +155,14 @@ export const service: RUNTIME_SERVICE = {
       retryCnt++;
       source = source.parent;
     }
-    
+
     if (retryCnt >= retryLimit) {
       return {
         error: true,
-        message: 'Error: unable to find API - nested to deep'
-      }
+        message: 'Error: unable to find API - nested to deep',
+      };
     }
-    
+
     return {
       error: false,
       API: source.API,
@@ -169,15 +170,15 @@ export const service: RUNTIME_SERVICE = {
   },
   start: () => {
     const resFind = service._findAPI(window);
-    
+
     if (resFind.error) {
       return resFind;
     }
-    
+
     service.API = resFind.API;
     service._time.start = new Date();
     service.init = true;
-    
+
     const resInit = service.API.LMSInitialize();
 
     if (resInit === service.STATUSES.update.false) {
@@ -185,12 +186,12 @@ export const service: RUNTIME_SERVICE = {
         error: true,
         message: 'SCORM service failed to initialize',
         data: service.getError(),
-      }
+      };
     }
 
     return {
       error: false,
-    }
+    };
   },
   save: () => {
     const res = service.isAvailable();
@@ -206,12 +207,12 @@ export const service: RUNTIME_SERVICE = {
         error: true,
         message: 'SCORM service failed to save',
         data: service.getError(),
-      }
+      };
     }
 
     return {
       error: false,
-    }
+    };
   },
   stop: () => {
     const res = service.isAvailable();
@@ -233,7 +234,7 @@ export const service: RUNTIME_SERVICE = {
         error: true,
         message: 'SCORM service failed to save',
         data: service.getError(),
-      }
+      };
     }
 
     service.finished = true;
@@ -255,14 +256,14 @@ export const service: RUNTIME_SERVICE = {
         error: true,
         message: `SCORM service failed to set ${elem} to ${val}`,
         data: service.getError(true),
-      }
+      };
     }
 
     return {
       error: false,
     };
   },
-  getValue: elem => {
+  getValue: (elem) => {
     const res = service.isAvailable();
 
     if (res.error) {
@@ -276,14 +277,14 @@ export const service: RUNTIME_SERVICE = {
         error: true,
         message: `SCORM service failed to get ${elem}`,
         data: service.getError(true),
-      }
+      };
     }
 
     return {
       error: false,
     };
   },
-  updateStatus: status => {
+  updateStatus: (status) => {
     const res = service.isAvailable();
 
     if (res.error) {
@@ -298,7 +299,7 @@ export const service: RUNTIME_SERVICE = {
       return {
         error: true,
         message: msg,
-      }
+      };
     }
 
     const lessonStatus = service.STATUSES.lesson[status];
@@ -324,18 +325,25 @@ export const service: RUNTIME_SERVICE = {
     if (!service._time.start) {
       return {
         error: true,
-        message: 'Service was never started'
-      }
+        message: 'Service was never started',
+      };
     }
 
-    const totalTime = service._time.end.getTime() - service._time.start.getTime();
-    const endRes = service.setValue('cmi.core.session_time', service._time.convert(totalTime));
+    const totalTime =
+      service._time.end.getTime() - service._time.start.getTime();
+    const endRes = service.setValue(
+      'cmi.core.session_time',
+      service._time.convert(totalTime)
+    );
 
     if (endRes.error) {
       return endRes;
     }
 
-    const exitRes = service.setValue('cmi.core.exit', service.STATUSES.exit.save);
+    const exitRes = service.setValue(
+      'cmi.core.exit',
+      service.STATUSES.exit.save
+    );
 
     if (exitRes.error) {
       return exitRes;
