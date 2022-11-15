@@ -65,6 +65,10 @@ export const AssetDrawerElement = (
           return;
         }
 
+        if (res.data.canceled) {
+          return;
+        }
+
         Projects.addAsset(res.data);
       }
     );
