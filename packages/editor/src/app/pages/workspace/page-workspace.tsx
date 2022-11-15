@@ -8,6 +8,7 @@ import {
   PaneEditor,
   TemplateBrowser,
   PromptProjectName,
+  PublishProgress,
 } from './components';
 import { Projects } from '../../models';
 import { menu } from '../../services';
@@ -65,6 +66,7 @@ export const Page = () => {
       </div>
       <TemplateBrowser />
       <PromptProjectName />
+      <PublishProgress />
     </>
   );
 };

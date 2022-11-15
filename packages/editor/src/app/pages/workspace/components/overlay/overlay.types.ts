@@ -51,3 +51,10 @@ export interface BackdropCommons {
 }
 
 export type BackdropProps = BackdropCommons & React.AllHTMLAttributes<HTMLDivElement>;
+
+export interface ModalProps extends React.AllHTMLAttributes<HTMLDivElement> {
+  isOpen: boolean,
+  title?: string,
+  onClose: () => void;
+  modalSize?: 'sm' | 'md' | 'lg';
+}

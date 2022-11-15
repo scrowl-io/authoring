@@ -8,6 +8,7 @@ export const initialState = {
   isOpenAssetBrowser: false,
   isOpenTemplateBrowser: false,
   isOpenPromptProjectName: false,
+  isOpenPublishProgress: false,
   contentFocus: null,
   newSlide: false,
 };
@@ -43,6 +44,12 @@ export const config: stateManager.StateConfig = {
     closePromptProjectName: (state) => {
       state.isOpenPromptProjectName = false;
     },
+    openPublishProgress: (state) => {
+      state.isOpenPublishProgress = true;
+    },
+    closePublishProgress: (state) => {
+      state.isOpenPublishProgress = false;
+    },
   },
   extraReducers: {
     [Projects.state.addOutlineItem.type]: (state) => {
@@ -62,7 +69,9 @@ export const {
   closeTemplateBrowser,
   resetNewSlide,
   openPromptProjectName,
-  closePromptProjectName
+  closePromptProjectName,
+  openPublishProgress,
+  closePublishProgress
 } = slice.actions;
 
 export const reducer = slice.reducer;

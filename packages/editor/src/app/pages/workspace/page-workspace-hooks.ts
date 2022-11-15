@@ -221,6 +221,32 @@ export const closePromptProjectName = () => {
   processor.dispatch(fn());
 };
 
+export const usePublishProgress = () => {
+  return useSelector((data: stateManager.RootState) => {
+    return data.workspace.isOpenPublishProgress;
+  });
+};
+
+export const openPublishProgress = () => {
+  if (!processor.dispatch) {
+    console.warn('workspace processor not ready');
+    return;
+  }
+
+  const fn = state.workspace.openPublishProgress as ActionCreatorWithoutPayload;
+  processor.dispatch(fn());
+};
+
+export const closePublishProgress = () => {
+  if (!processor.dispatch) {
+    console.warn('workspace processor not ready');
+    return;
+  }
+
+  const fn = state.workspace.closePublishProgress as ActionCreatorWithoutPayload;
+  processor.dispatch(fn());
+};
+
 export default {
   useProcessor,
   useWorkspace,
@@ -244,4 +270,7 @@ export default {
   usePromptProjectName,
   openPromptProjectName,
   closePromptProjectName,
+  usePublishProgress,
+  openPublishProgress,
+  closePublishProgress,
 };

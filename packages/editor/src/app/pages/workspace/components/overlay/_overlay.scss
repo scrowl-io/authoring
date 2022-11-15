@@ -297,3 +297,18 @@
 .collapse-disabled .accordion-button::after {
   content: none;
 }
+
+.modal-publish-progress {
+  .owlui-modal-dialog {
+    width: 300px;
+    text-align: center;
+  }
+
+  .owlui-modal-content {
+    height: 100%;
+  }
+
+  .owlui-offcanvas-body {
+    overflow: hidden;
+  }
+}
