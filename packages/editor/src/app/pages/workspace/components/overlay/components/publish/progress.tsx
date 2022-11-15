@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, forwardRef } from 'react';
 import { animations } from '../../../../../../components';
 import { Modal } from '../modal';
 import {
@@ -6,19 +6,13 @@ import {
   closePublishProgress,
 } from '../../../../page-workspace-hooks';
 
-export const PublishProgress = () => {
-  const isOpen = usePublishProgress();
-
-  const handleClose = () => {
-    closePublishProgress();
-  };
-
+const PublishProgressElement = ({ isOpen, onClose }, ref) => {
   return (
-    <div>
+    <div ref={ref}>
       <Modal
         className="modal-publish-progress"
         isOpen={isOpen}
-        onClose={handleClose}
+        onClose={onClose}
         modalSize="sm"
       >
         <div className="overlay-publish-progress">
@@ -36,6 +30,33 @@ export const PublishProgress = () => {
         </div>
       </Modal>
     </div>
+  );
+};
+
+const PublishProgressRef = forwardRef(PublishProgressElement);
+
+export const PublishProgress = () => {
+  const overlayRef = useRef<HTMLDivElement>(null);
+  const isOpen = usePublishProgress();
+
+  const handleClose = () => {
+    closePublishProgress();
+  };
+
+  useEffect(() => {
+    const appNode = document.getElementById('app');
+
+    if (appNode && overlayRef.current) {
+      appNode.appendChild(overlayRef.current);
+    }
+  }, [overlayRef, isOpen]);
+
+  return (
+    <PublishProgressRef
+      ref={overlayRef}
+      isOpen={isOpen}
+      onClose={handleClose}
+    />
   );
 };
 
