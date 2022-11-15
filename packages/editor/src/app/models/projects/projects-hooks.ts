@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { ActionCreatorWithoutPayload } from '@reduxjs/toolkit';
-import { AssetType, UploadReq, SaveReq, ProjectData, ProjectAsset } from './projects.types';
+import { AssetType, UploadReq, SaveReq, ProjectData, ProjectAsset, PreviewAssetReq } from './projects.types';
 import { stateManager, rq } from '../../services';
 import { API, state } from './';
 import { List } from '../../utils';
@@ -494,6 +494,10 @@ export const open = (): Promise<rq.ApiResult> => {
   });
 };
 
+export const previewAsset = (data: PreviewAssetReq) => {
+  return API.previewAsset(data);
+};
+
 export default {
   useProcessor,
   resetState,
@@ -537,4 +541,5 @@ export default {
   publish,
   list,
   open,
+  previewAsset,
 };

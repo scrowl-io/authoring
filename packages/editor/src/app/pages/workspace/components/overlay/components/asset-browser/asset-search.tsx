@@ -1,14 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-export const AssetSearch = (props: any) => {
-  const [searchTerm, setSearchTerm] = useState('');
+export interface AssetSearchProps
+  extends React.AllHTMLAttributes<HTMLInputElement> {}
 
-  const handleSearch = (ev: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(searchTerm);
-    props.onChange(ev.currentTarget.value);
-  };
-
-  const handleSumbit = (ev: React.KeyboardEvent<HTMLInputElement>) => {
+export const AssetSearch = ({ value, onChange }: AssetSearchProps) => {
+  const handleSubmit = (ev: React.KeyboardEvent<HTMLInputElement>) => {
     if (ev.key === 'Enter') {
       ev.currentTarget.blur();
     }
@@ -17,15 +13,16 @@ export const AssetSearch = (props: any) => {
   return (
     <div className="mt-1">
       <input
+        id="asset-search-input"
         type="search"
         className="form-control form-control-sm"
         placeholder="Search files..."
         autoComplete="off"
-        value={searchTerm}
-        onChange={handleSearch}
-        onKeyDown={handleSumbit}
+        value={value}
+        onChange={onChange}
+        onKeyDown={handleSubmit}
       />
-      <label htmlFor="searchField" className="visually-hidden">
+      <label htmlFor="asset-search-input" className="visually-hidden">
         Search
       </label>
     </div>
