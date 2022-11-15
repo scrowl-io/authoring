@@ -6,7 +6,7 @@ import {
   closePublishProgress,
 } from '../../../../page-workspace-hooks';
 
-const PublishProgress = () => {
+export const PublishProgress = () => {
   const isOpen = usePublishProgress();
 
   const handleClose = () => {

@@ -9,6 +9,10 @@ import { menu, sys } from '../../../../services';
 import { Path as startPath } from '../../../start';
 import { Logo } from '../../../../components';
 import { PublishOverlay, Confirmation } from '../overlay';
+import {
+  openPublishProgress,
+  closePublishProgress,
+} from '../../page-workspace-hooks';
 
 export enum PREVIEW_MODE {
   default = 'default',
@@ -33,7 +37,6 @@ export const Header = () => {
   const animationSettings = Settings.useAnimation();
   const isAnimated = !animationSettings.reducedAnimations;
   const animationDelay = animationSettings.animationDelay;
-  const isUncommitted = Projects.useInteractions().isUncommitted;
   const motionOptsContainer = {
     initial: !isAnimated ? {} : { opacity: 0 },
     animate: !isAnimated ? {} : { opacity: 1 },
@@ -139,28 +142,32 @@ export const Header = () => {
   };
 
   const handelSubmitPublish = () => {
-    if (isUncommitted) {
-      Projects.save({ data: projectData, assets }).then((saveRes) => {
-        if (saveRes.error) {
+    openPublishProgress();
+    Projects.save({ data: projectData, assets }).then((saveRes) => {
+      if (saveRes.error) {
+        closePublishProgress();
+        sys.messageDialog({
+          message: saveRes.message,
+        });
+        return;
+      }
+
+      Projects.publish(saveRes.data.project).then((pubRes) => {
+        if (pubRes.error) {
+          closePublishProgress();
           sys.messageDialog({
-            message: saveRes.message,
+            message: pubRes.message,
           });
           return;
         }
 
-        Projects.publish(saveRes.data.project).then((pubRes) => {
-          if (pubRes.error) {
-            sys.messageDialog({
-              message: pubRes.message,
-            });
-            return;
-          }
-
-          setIsOpenPublish(false);
+        setIsOpenPublish(false);
+        closePublishProgress();
+        setTimeout(() => {
           setIsOpenConfirmation(true);
-        });
+        }, 1);
       });
-    }
+    });
   };
 
   const handleCloseConfirmation = () => {
