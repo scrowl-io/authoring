@@ -163,6 +163,11 @@ export const Header = () => {
 
         setIsOpenPublish(false);
         closePublishProgress();
+
+        if (pubRes.data.canceled) {
+          return;
+        }
+
         setTimeout(() => {
           setIsOpenConfirmation(true);
         }, 1);
