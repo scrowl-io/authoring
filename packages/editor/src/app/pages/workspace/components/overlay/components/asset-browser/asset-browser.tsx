@@ -4,6 +4,7 @@ import { Backdrop } from '../backdrop';
 import { Drawer } from '..';
 import { Projects, Settings } from '../../../../../../models';
 import { menu, sys } from '../../../../../../services';
+import { List } from '../../../../../../utils';
 import '../../_overlay.scss';
 import {
   AssetSearch,
@@ -28,6 +29,7 @@ export const AssetDrawerElement = (
   const isAnimated = !animationSettings.reducedAnimations;
   const meta = Projects.useMeta();
   const assets = Projects.useAssets(assetTypes);
+  const prevAssets = useRef(assets);
   const styles = {
     maxWidth: 450,
     width: 450,
@@ -46,8 +48,46 @@ export const AssetDrawerElement = (
   const [isCopying, setIsCopying] = useState(false);
   const [uploadAsset, setUploadAsset] = useState(initialUploadAssetState);
   const [copyProgress, setCopyProgress] = useState(0);
+  const [filterInput, setFilterInput] = useState('');
+  const [filteredAssets, setFilterAssets] = useState<
+    Array<Projects.ProjectAsset>
+  >([]);
+  const [sortField, setSortField] = useState('title');
+  const [sortOrder, setSortOrder] = useState('asc');
 
-  const searchAssetList = (val: string) => {};
+  const sortAssetList = () => {
+    let sortedList: Array<Projects.ProjectAsset> = assets.slice();
+
+    List.sortBy(sortedList, sortField, sortOrder === 'desc');
+
+    return sortedList;
+  };
+
+  const searchAssetList = () => {
+    let filteredList: Array<Projects.ProjectAsset> = [];
+
+    const filterAssetList = (asset: Projects.ProjectAsset) => {
+      return asset.title.indexOf(filterInput) !== -1;
+    };
+
+    if (!filterInput || !filterInput.length) {
+      filteredList = sortAssetList();
+    } else {
+      filteredList = sortAssetList().filter(filterAssetList);
+    }
+
+    setFilterAssets(filteredList);
+  };
+
+  const handleFilterInput = (ev: React.FormEvent<HTMLInputElement>) => {
+    const val = ev.currentTarget.value;
+
+    setFilterInput(val);
+  };
+
+  const handleSortOrder = (ev: React.MouseEvent) => {
+    console.log('ev', ev);
+  };
 
   const handleClose = () => {
     onClose();
@@ -95,6 +135,17 @@ export const AssetDrawerElement = (
   }, [isCopying]);
 
   useEffect(() => {
+    searchAssetList();
+  }, [filterInput]);
+
+  useEffect(() => {
+    if (assets.length !== prevAssets.current.length) {
+      searchAssetList();
+      prevAssets.current = assets;
+    }
+  }, [assets, prevAssets]);
+
+  useEffect(() => {
     if (isOpen) {
       menu.API.disableProjectActions();
     } else {
@@ -132,23 +183,36 @@ export const AssetDrawerElement = (
               <div className="offcanvas-body">
                 <div className="owl-offcanvas-form">
                   <div className="asset-browser-body">
-                    <AssetSearch onChange={searchAssetList} />
+                    <AssetSearch
+                      value={filterInput}
+                      onChange={handleFilterInput}
+                    />
                     <div className="mt-2 asset-list">
                       <table className="table">
                         <thead>
-                          <tr>
-                            <th scope="col">Name</th>
-                            <th scope="col" style={stylesColType}>
+                          <tr onClick={handleSortOrder}>
+                            <th scope="col" data-sort-field="title">
+                              Name
+                            </th>
+                            <th
+                              scope="col"
+                              data-sort-field="type"
+                              style={stylesColType}
+                            >
                               Type
                             </th>
-                            <th scope="col" style={stylesColSize}>
+                            <th
+                              scope="col"
+                              data-sort-field="size"
+                              style={stylesColSize}
+                            >
                               Size
                             </th>
                           </tr>
                         </thead>
                         <tbody>
-                          {assets.length ? (
-                            assets.map((asset, idx) => {
+                          {filteredAssets.length ? (
+                            filteredAssets.map((asset, idx) => {
                               return (
                                 <AssetEntry
                                   key={idx}
@@ -164,7 +228,7 @@ export const AssetDrawerElement = (
                           )}
                         </tbody>
                       </table>
-                      {assets.length ? (
+                      {filteredAssets.length ? (
                         <></>
                       ) : (
                         <div style={{ textAlign: 'center' }} className="mt-3">
