@@ -8,9 +8,10 @@ import {
 } from '../pane-details.types';
 import { Projects } from '../../../../../models';
 import { Elem, List } from '../../../../../utils';
-import { menu } from '../../../../../services';
+import { menu, sys } from '../../../../../services';
 import { AssetIcon } from '../../../../../components';
 import { ResourceOverlay } from '../../overlay';
+import { ProjectResource } from '../../../../../models/projects';
 
 export const Resources = () => {
   const [isOpenResourceBrowser, setIsOpenResourceBrowser] = useState(false);
@@ -24,6 +25,7 @@ export const Resources = () => {
   const [selectedResource, setSelectedResource] =
     useState<ResourceItem>(newResource);
   const resources = Projects.useResources();
+  const projectMeta = Projects.useMeta();
   const sortedResources = List.sortBy(resources.slice(), 'title');
   const resourceMenu: Array<menu.ContextMenuItem> = [
     {
@@ -34,6 +36,23 @@ export const Resources = () => {
 
         setSelectedResource(editResource);
         setIsOpenResourceBrowser(true);
+      },
+    },
+    {
+      label: 'Preview',
+      click: (menuItem) => {
+        const res = menuItem as unknown as ContextMenuResult;
+        const previewResource = res.data.resource as ProjectResource;
+        Projects.previewAsset({
+          asset: previewResource,
+          meta: projectMeta,
+        }).then((res) => {
+          if (res.error) {
+            sys.messageDialog({
+              message: res.message,
+            });
+          }
+        });
       },
     },
     { type: 'separator' },
