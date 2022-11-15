@@ -5,7 +5,6 @@ import { createProject } from './project.data';
 import { rq, fs, log } from '../../services';
 import * as utils from '../../utils';
 import { scorm } from './project-publisher';
-import { join, resolve } from 'path';
 
 const projectMetaFilename = 'project.json';
 
