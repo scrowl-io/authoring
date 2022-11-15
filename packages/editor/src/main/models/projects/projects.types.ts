@@ -32,6 +32,11 @@ export interface ProjectsApiOpen
   name: '/projects/open';
 }
 
+export interface ProjectsApiPreviewAsset
+  extends Omit<rq.RegisterEndpoint, 'name'> {
+  name: '/projects/preview-asset';
+}
+
 export type ProjectsApi = Partial<{
   create: ProjectsApiCreate;
   upload: ProjectsApiUpload;
@@ -39,6 +44,7 @@ export type ProjectsApi = Partial<{
   publish: ProjectsApiPublish;
   list: ProjectsApiList;
   open: ProjectsApiOpen;
+  previewAsset: ProjectsApiPreviewAsset;
 }>;
 
 export type ProjectsEndpoints = {
@@ -48,6 +54,7 @@ export type ProjectsEndpoints = {
   publish: ProjectsApiPublish['name'];
   list: ProjectsApiList['name'];
   open: ProjectsApiOpen['name'];
+  previewAsset: ProjectsApiPreviewAsset['name'];
 };
 
 export type ProjectMeta = {
@@ -153,4 +160,9 @@ export type UploadReq = {
 export type SaveReq = {
   data: ProjectData;
   assets: Array<ProjectAsset>;
+};
+
+export type PreviewAssetReq = {
+  asset: ProjectAsset | ProjectResource;
+  meta: ProjectMeta;
 };

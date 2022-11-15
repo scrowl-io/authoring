@@ -1,6 +1,14 @@
-import { OpenDialogOptions } from 'electron';
+import { OpenDialogOptions, BrowserWindow, IpcMainInvokeEvent } from 'electron';
 import { v4 as uuid } from 'uuid';
-import { ProjectsApi, ProjectData, ProjectFile, ProjectMeta, UploadReq, SaveReq } from './projects.types';
+import {
+  ProjectsApi,
+  ProjectData,
+  ProjectFile,
+  ProjectMeta,
+  UploadReq,
+  SaveReq,
+  PreviewAssetReq
+} from './projects.types';
 import { createProject } from './project.data';
 import { rq, fs, log } from '../../services';
 import * as utils from '../../utils';
@@ -501,6 +509,52 @@ export const open = (ev: rq.RequestEvent) => {
   });
 };
 
+export const previewAsset = (ev: rq.RequestEvent, req: PreviewAssetReq) => {
+  return new Promise<rq.ApiResult>((resolve) => {
+    let errorMsg = '';
+    const event = ev as IpcMainInvokeEvent;
+    const win = BrowserWindow.fromWebContents(event.sender);
+
+    if (!win) {
+      errorMsg = 'Unable to preview asset: window not found';
+      log.error(errorMsg);
+      resolve({
+        error: true,
+        message: errorMsg,
+        data: {
+          req,
+        },
+      });
+      return;
+    }
+
+    try {
+      const infoRes = getProjectInfo(req.meta);
+      const src = (infoRes.data.isNew || infoRes.data.uncommitted) ? fs.joinPath(fs.APP_PATHS.uploads, req.asset.filename) : fs.joinPath(infoRes.data.folder, 'assets', req.asset.filename);
+
+      win.previewFile(src);
+
+      resolve({
+        error: false,
+        data: {
+          req,
+        },
+      });
+    } catch (e) {
+      errorMsg = 'Unable to preview asset: unexpected error';
+      log.error(errorMsg);
+      resolve({
+        error: true,
+        message: errorMsg,
+        data: {
+          trace: e,
+          req,
+        },
+      });
+    }
+  });
+};
+
 export const API: ProjectsApi = {
   create: {
     name: '/projects/create',
@@ -532,6 +586,11 @@ export const API: ProjectsApi = {
     type: 'invoke',
     fn: open,
   },
+  previewAsset: {
+    name: '/projects/preview-asset',
+    type: 'invoke',
+    fn: previewAsset,
+  }
 };
 
 export const init = () => {

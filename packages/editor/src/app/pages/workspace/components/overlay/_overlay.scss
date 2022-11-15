@@ -312,3 +312,8 @@
     overflow: hidden;
   }
 }
+
+.sort-indicator {
+  pointer-events: none;
+  user-select: none;
+}

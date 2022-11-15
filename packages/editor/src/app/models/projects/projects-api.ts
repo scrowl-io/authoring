@@ -1,4 +1,4 @@
-import { ProjectsEndpoints } from './projects.types';
+import { ProjectsEndpoints, PreviewAssetReq } from './projects.types';
 import { rq } from '../../services';
 
 const ENDPOINTS:ProjectsEndpoints = {
@@ -8,6 +8,7 @@ const ENDPOINTS:ProjectsEndpoints = {
   publish: '/projects/publish',
   list: '/projects/list',
   open: '/projects/open',
+  previewAsset: '/projects/preview-asset',
 };
 
 export const create = (data?: any): Promise<rq.ApiResult> => {
@@ -34,6 +35,10 @@ export const open = (data?): Promise<rq.ApiResult> => {
   return rq.invoke(ENDPOINTS.open, data);
 };
 
+export const previewAsset = (data: PreviewAssetReq) => {
+  return rq.invoke(ENDPOINTS.previewAsset, data);
+};
+
 export default {
   create,
   upload,
@@ -41,4 +46,5 @@ export default {
   publish,
   list,
   open,
+  previewAsset,
 };
