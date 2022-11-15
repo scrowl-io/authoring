@@ -1,4 +1,5 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { PageDefinition, PageProps } from './pages.types';
 import {
   PlayerRootConfig,
@@ -13,6 +14,12 @@ const Page = ({ slides, templates, ...props }: PageProps) => {
   if (window['Scrowl'] && window['Scrowl'].core) {
     controller = useRef(new window['Scrowl'].core.scroll.Controller());
   }
+
+  const player = document.querySelector('.player-main');
+
+  useEffect(() => {
+    player?.scrollTo({ top: 0 });
+  }, [slides]);
 
   return (
     <div>
@@ -40,6 +47,10 @@ const Page = ({ slides, templates, ...props }: PageProps) => {
   );
 };
 
+const finishCourse = () => {
+  console.log('finished the course');
+};
+
 export const create = (
   rootConfig: Array<PlayerRootConfig>,
   templateList: PlayerTemplateList
@@ -51,12 +62,33 @@ export const create = (
       const id = `module-${mIdx}--lesson-${lIdx}`;
       const url = `/${id}`;
 
+      let nextLessonUrl;
+      let nextLessonId;
+      let nextLessonText;
+
+      if (lIdx < config.lessons.length - 1) {
+        nextLessonId = `module-${mIdx}--lesson-${lIdx + 1}`;
+        nextLessonUrl = `/${nextLessonId}`;
+        nextLessonText = `Continue to Lesson ${lIdx + 1}`;
+      }
+
       data.push({
         module: config.module,
         lesson: page.lesson,
         url,
         Element: () => {
-          return <Page id={id} slides={page.slides} templates={templateList} />;
+          return (
+            <>
+              <Page id={id} slides={page.slides} templates={templateList} />
+              {lIdx < config.lessons.length - 1 ? (
+                <>
+                  <Link to={nextLessonUrl}>{nextLessonText}</Link>
+                </>
+              ) : (
+                <button onClick={finishCourse}>Finish Course</button>
+              )}
+            </>
+          );
         },
       });
     });

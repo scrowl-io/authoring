@@ -24,9 +24,6 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
     }
   }
 
-  console.log('project', project);
-  console.log('templateList', templateList);
-
   if (!templateList || !Object.keys(templateList).length) {
     return <Error msg="Templates missing" />;
   }
@@ -43,16 +40,14 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
     return <Error msg="Modules missing" />;
   }
 
+  console.log('project:');
+  console.log(project);
+
   const slides = project.slides;
   const lessons = project.lessons;
   const modules = project.modules;
   const config = Config.create(slides, lessons, modules);
   const pages = Pages.create(config, templateList);
-
-  console.log('');
-  console.log('project', project);
-  console.log('templateList', templateList);
-  console.log('pageConfig', config);
 
   return (
     <Router>
