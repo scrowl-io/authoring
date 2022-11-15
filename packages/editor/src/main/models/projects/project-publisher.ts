@@ -74,7 +74,7 @@ export const getProjectUploads = (project: ProjectData, meta: ProjectFile, src: 
             assetPath = getAssetPath(input.value);
 
             if (assetPath) {
-              list.add(input.value);
+              list.add(assetPath);
             }
           }
           break;
@@ -98,13 +98,13 @@ export const getProjectUploads = (project: ProjectData, meta: ProjectFile, src: 
       assetPath = getAssetPath(resource.filename);
 
       if (assetPath) {
-        assets.add(resource.filename);
+        assets.add(assetPath);
       }
     });
   };
 
   project.slides.forEach((slide) => {
-    scanContent(slide, assets);
+    scanContent(slide.template.content, assets);
   });
 
   scanResources();
@@ -143,8 +143,11 @@ const createScormSource = (project: ProjectData, meta: ProjectFile, source: stri
       }
 
       uploadPaths.forEach((uploadPath) => {
+        const assetFilename = fs.getBasename(uploadPath);
+        const assetDest = fs.joinPath(uploadDest, assetFilename);
+
         copyPaths.push(uploadPath);
-        copyPromises.push(fs.copy(uploadPath, uploadDest));
+        copyPromises.push(fs.copy(uploadPath, assetDest));
       });
 
       Promise.allSettled(copyPromises).then((copyPromiseRes) => {
