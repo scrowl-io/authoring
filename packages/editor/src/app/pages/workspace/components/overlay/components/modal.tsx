@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Backdrop } from '.';
 import * as css from '../_overlay.scss';
+import { ModalProps } from '../overlay.types';
+import { Backdrop } from '.';
 import { Error } from '../../../../../components';
 import { menu } from '../../../../../services';
 
@@ -12,7 +13,7 @@ export const Modal = ({
   title,
   children,
   ...props
-}) => {
+}: ModalProps) => {
   let classes = css.overlayContainer;
   const modalSize = props.modalSize ? props.modalSize : 'md';
   const animation = {
@@ -54,7 +55,7 @@ export const Modal = ({
               exit="exit"
             >
               <div
-                className={`owlui-modal-dialog owlui-modal-dialog-centered ${modalSize}`}
+                className={`owlui-modal-dialog owlui-modal-dialog-centered modal-${modalSize}`}
               >
                 <div className="owlui-modal-content">
                   {title && (
