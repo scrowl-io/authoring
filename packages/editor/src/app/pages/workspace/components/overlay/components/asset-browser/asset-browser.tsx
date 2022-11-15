@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef, forwardRef } from 'react';
 import { AnimatePresence } from 'framer-motion';
+import { Icon } from '@owlui/lib';
 import { Backdrop } from '../backdrop';
 import { Drawer } from '..';
 import { Projects, Settings } from '../../../../../../models';
@@ -54,6 +55,7 @@ export const AssetDrawerElement = (
   >([]);
   const [sortField, setSortField] = useState('title');
   const [sortOrder, setSortOrder] = useState('asc');
+  const [sortIcon, setSortIcon] = useState('arrow_drop_down');
 
   const sortAssetList = () => {
     let sortedList: Array<Projects.ProjectAsset> = assets.slice();
@@ -86,7 +88,30 @@ export const AssetDrawerElement = (
   };
 
   const handleSortOrder = (ev: React.MouseEvent) => {
-    console.log('ev', ev);
+    const target = ev.target as HTMLTableCellElement;
+    let newSortOrder = 'asc';
+    const newSortField = target.dataset.sortField;
+    const isSameField = newSortField === sortField;
+
+    if (!newSortField) {
+      return;
+    }
+
+    switch (sortOrder) {
+      case 'asc':
+        newSortOrder = isSameField ? 'desc' : 'asc';
+        break;
+      case 'desc':
+        newSortOrder = isSameField ? 'asc' : 'desc';
+        break;
+    }
+
+    const newSortIcon =
+      newSortOrder === 'asc' ? 'arrow_drop_down' : 'arrow_drop_up';
+
+    setSortField(newSortField);
+    setSortOrder(newSortOrder);
+    setSortIcon(newSortIcon);
   };
 
   const handleClose = () => {
@@ -136,7 +161,7 @@ export const AssetDrawerElement = (
 
   useEffect(() => {
     searchAssetList();
-  }, [filterInput]);
+  }, [filterInput, sortField, sortOrder]);
 
   useEffect(() => {
     if (assets.length !== prevAssets.current.length) {
@@ -193,6 +218,12 @@ export const AssetDrawerElement = (
                           <tr onClick={handleSortOrder}>
                             <th scope="col" data-sort-field="title">
                               Name
+                              {sortField === 'title' && (
+                                <Icon
+                                  className="sort-indicator"
+                                  icon={sortIcon}
+                                />
+                              )}
                             </th>
                             <th
                               scope="col"
@@ -200,6 +231,12 @@ export const AssetDrawerElement = (
                               style={stylesColType}
                             >
                               Type
+                              {sortField === 'type' && (
+                                <Icon
+                                  className="sort-indicator"
+                                  icon={sortIcon}
+                                />
+                              )}
                             </th>
                             <th
                               scope="col"
@@ -207,6 +244,12 @@ export const AssetDrawerElement = (
                               style={stylesColSize}
                             >
                               Size
+                              {sortField === 'size' && (
+                                <Icon
+                                  className="sort-indicator"
+                                  icon={sortIcon}
+                                />
+                              )}
                             </th>
                           </tr>
                         </thead>
