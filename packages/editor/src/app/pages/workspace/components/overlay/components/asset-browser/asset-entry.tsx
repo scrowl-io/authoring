@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Icon } from '@owlui/lib';
 import { AssetEntryProps } from './asset.types';
-import { menu } from '../../../../../../services';
+import { menu, sys } from '../../../../../../services';
 import { AssetIcon, InlineInput } from '../../../../../../components';
 import { Projects } from '../../../../../../models';
 
@@ -12,6 +12,7 @@ export const AssetEntry = ({
   onSelected,
   ...props
 }: AssetEntryProps) => {
+  const projectMeta = Projects.useMeta();
   const [isEdit, setIsEdit] = useState(false);
   let fileSizeBytes = asset.size;
   // const searchTerm = props.searchHighlight || '';
@@ -20,6 +21,21 @@ export const AssetEntry = ({
       label: 'Rename',
       click: () => {
         setIsEdit(true);
+      },
+    },
+    {
+      label: 'Preview',
+      click: () => {
+        Projects.previewAsset({
+          asset,
+          meta: projectMeta,
+        }).then((res) => {
+          if (res.error) {
+            sys.messageDialog({
+              message: res.message,
+            });
+          }
+        });
       },
     },
     { type: 'separator' },
