@@ -61,15 +61,15 @@ const getProjectInfo = (meta: ProjectMeta): rq.ApiResult => {
       return read;
     }
   
-    info = read.data as ProjectFile;
+    info = read.data.contents as ProjectFile;
 
     return {
       error: false,
       data: {
-        isNew: !noId,
+        isNew: noId,
         uncommitted: noName,
         fileName,
-        exists: true,
+        exists: existsRes.data.exists,
         folder,
         info,
       }
@@ -262,6 +262,7 @@ export const save = (ev: rq.RequestEvent, { data, assets }: SaveReq) => {
     }
 
     try {
+      const isNew = !data.meta.id;
       const now = new Date().toISOString();
       const meta = data.meta as ProjectMeta;
       const infoRes = getProjectInfo(meta);
@@ -269,6 +270,17 @@ export const save = (ev: rq.RequestEvent, { data, assets }: SaveReq) => {
       if (infoRes.error) {
         resolve(infoRes);
         return;
+      }
+
+      if (isNew && infoRes.data.exists) {
+        resolve({
+          error: true,
+          message: 'Unable to save.\nA project with that name already exists',
+          data: {
+            data,
+            assets,
+          },
+        });
       }
 
       let info: ProjectFile;
