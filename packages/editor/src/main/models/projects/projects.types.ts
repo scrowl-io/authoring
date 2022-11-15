@@ -144,8 +144,13 @@ export type TemplateMap = {
 };
 
 export type UploadReq = {
-  meta: ProjectMeta,
+  meta: ProjectMeta;
   options: {
-    assetTypes: Array<AssetType>
-  }
-}
+    assetTypes: Array<AssetType>;
+  };
+};
+
+export type SaveReq = {
+  data: ProjectData;
+  assets: Array<ProjectAsset>;
+};

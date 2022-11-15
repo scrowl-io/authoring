@@ -20,9 +20,10 @@ export enum PREVIEW_MODE {
 
 export const Header = () => {
   const projectData = Projects.useData();
+  const assets = Projects.useAssets();
   const projectMeta = projectData.meta;
-  const projectNameLn = projectMeta.name.length;
-  const [projectName, setProjectName] = useState(projectMeta.name);
+  const projectNameLn = projectMeta.name ? projectMeta.name.length : 0;
+  const [projectName, setProjectName] = useState(projectMeta.name || '');
   const [projectNameSize, setProjectNameSize] = useState(
     projectNameLn - 3 < 13 ? 13 : projectNameLn - 3
   );
@@ -67,7 +68,7 @@ export const Header = () => {
         ev.currentTarget.blur();
         break;
       case 'Escape':
-        setProjectName(projectMeta.name);
+        setProjectName(projectMeta.name || '');
         ev.currentTarget.blur();
         break;
     }
@@ -139,7 +140,7 @@ export const Header = () => {
 
   const handelSubmitPublish = () => {
     if (isUncommitted) {
-      Projects.save(projectData).then((saveRes) => {
+      Projects.save({ data: projectData, assets }).then((saveRes) => {
         if (saveRes.error) {
           sys.messageDialog({
             message: saveRes.message,
@@ -167,7 +168,7 @@ export const Header = () => {
   };
 
   useEffect(() => {
-    if (projectMeta.name !== projectName) {
+    if (projectMeta.name && projectMeta.name !== projectName) {
       const nameLn = projectMeta.name.length;
 
       setProjectName(projectMeta.name);

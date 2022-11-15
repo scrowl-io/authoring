@@ -18,12 +18,13 @@ export const Page = () => {
   useProcessor();
 
   const projectData = Projects.useData();
+  const assets = Projects.useAssets();
 
   useEffect(() => {
     let isListening = true;
 
     const saveListener = () => {
-      Projects.save(projectData).then((res) => {
+      Projects.save({ data: projectData, assets }).then((res) => {
         if (!isListening) {
           return;
         }

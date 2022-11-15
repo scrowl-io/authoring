@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { ActionCreatorWithoutPayload } from '@reduxjs/toolkit';
-import { AssetType, ProjectMeta } from './projects.types';
+import { AssetType, UploadReq, SaveReq, ProjectData, ProjectAsset } from './projects.types';
 import { stateManager, rq } from '../../services';
 import { API, state } from './';
 import { List } from '../../utils';
@@ -32,7 +32,7 @@ export const useInteractions = () => {
   });
 };
 
-export const useData = () => {
+export const useData = ():ProjectData  => {
   return useSelector((data: stateManager.RootState) => data.projects.data);
 };
 
@@ -355,7 +355,7 @@ export const removeResourceItem = (data) => {
   processor.dispatch(state.removeResourceItem(data));
 };
 
-export const useAssets = (assetTypes?: Array<AssetType>) => {
+export const useAssets = (assetTypes?: Array<AssetType>): Array<ProjectAsset> => {
   return useSelector((data: stateManager.RootState) => {
     let list;
 
@@ -424,13 +424,6 @@ export const create = (): Promise<rq.ApiResult> => {
   });
 };
 
-export type UploadReq = {
-  meta: ProjectMeta,
-  options: {
-    assetTypes?: Array<AssetType>
-  }
-}
-
 export const upload = (req: UploadReq): Promise<rq.ApiResult> => {
   return new Promise((resolve) => {
     API.upload(req).then((res) => {
@@ -443,9 +436,9 @@ export const upload = (req: UploadReq): Promise<rq.ApiResult> => {
   });
 };
 
-export const save = (data): Promise<rq.ApiResult> => {
+export const save = (req: SaveReq): Promise<rq.ApiResult> => {
   return new Promise((resolve) => {
-    API.save(data).then((res) => {
+    API.save(req).then((res) => {
       if (processor.dispatch) {
         const fn = state.resetIsUncommitted as ActionCreatorWithoutPayload;
         processor.dispatch(fn());
