@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import * as css from '../../_pane-editor.scss';
 import { Projects } from '../../../../../../models';
 import {
@@ -11,11 +11,16 @@ import {
 import { FormBuilder } from './components';
 
 export const Content = () => {
+  const isDirty = useRef(false);
+  const isUncommitted = useRef(false);
+  const processCommit = useRef(false);
   const templateContent = useActiveTemplateContent();
   const activeSlide = useActiveSlide();
 
   const handleContentUpdate = (field, value) => {
     setActiveTemplateContent({ field, value });
+    isDirty.current = true;
+    isUncommitted.current = true;
   };
 
   const handleContentValidate = (field, value) => {
@@ -30,8 +35,19 @@ export const Content = () => {
 
   const handleContentBlur = (field, value) => {
     resetContentFocus();
-    Projects.setSlide(activeSlide);
+    isDirty.current = true;
+    isUncommitted.current = true;
+    processCommit.current = true;
   };
+
+  useEffect(() => {
+    if (processCommit.current && isDirty.current && isUncommitted.current) {
+      isDirty.current = false;
+      isUncommitted.current = false;
+      processCommit.current = false;
+      Projects.setSlide(activeSlide);
+    }
+  }, [activeSlide]);
 
   return (
     <div className={css.contentForm}>

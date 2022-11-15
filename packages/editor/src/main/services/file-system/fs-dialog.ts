@@ -1,27 +1,33 @@
-import { dialog, MessageBoxOptions, SaveDialogOptions, OpenDialogOptions } from 'electron';
-import { FSApi, AssetFilter, AssetType, ASSET_TYPES } from './';
+import { dialog, MessageBoxOptions, SaveDialogOptions, OpenDialogOptions, FileFilter } from 'electron';
+import { FSApi, AssetType, ASSET_TYPES } from './';
 import { rq } from '../';
 
 export const getAllowedAssets = (types: Array<AssetType>) => {
-  let filters: Array<AssetFilter> = [];
+  let filters: FileFilter = {
+    name: 'mixed',
+    extensions: []
+  };
 
   types.forEach((type: AssetType) => {
     if (ASSET_TYPES[type] && ASSET_TYPES[type]) {
-      filters.push(ASSET_TYPES[type]);
+      filters.extensions = filters.extensions.concat(ASSET_TYPES[type].extensions);
     }
   });
 
-  return filters;
+  return [filters];
 };
 
 export const getAllAssets = () => {
-  let filters: Array<AssetFilter> = [];
+  let filters: FileFilter = {
+    name: 'all',
+    extensions: []
+  };
 
   for (const [type, filter] of Object.entries(ASSET_TYPES)) {
-    filters.push(filter);
+    filters.extensions = filters.extensions.concat(filter.extensions);;
   }
 
-  return filters;
+  return [filters];
 };
 
 export const message = (ev: rq.RequestEvent, options: MessageBoxOptions) => {

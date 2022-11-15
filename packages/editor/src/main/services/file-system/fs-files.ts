@@ -22,7 +22,7 @@ export const ASSET_TYPES: AssetFilters = {
   },
   document: {
     name: 'document',
-    extensions: ['txt', 'doc', 'docx', 'pdf'],
+    extensions: ['txt', 'doc', 'docx', 'pdf', 'zip'],
   },
   video: {
     name: 'video',
@@ -450,6 +450,27 @@ export const fileRename = (src, filename) => {
   });
 };
 
+export const fileStatsSync = (pathname): rq.ApiResult => {
+  try {
+    const stats = fs.statSync(pathname);
+
+    return {
+      error: false,
+      data: {
+        stats,
+      }
+    }
+  } catch (e) {
+    return {
+      error: true,
+      message: 'failed to get stats: unexpected error',
+      data: {
+        trace: e,
+      },
+    };
+  }
+};
+
 export default {
   APP_PATHS,
   ASSET_TYPES,
@@ -470,4 +491,5 @@ export default {
   copy,
   fileRemove,
   fileRename,
+  fileStatsSync,
 };

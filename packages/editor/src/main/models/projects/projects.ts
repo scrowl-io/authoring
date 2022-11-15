@@ -1,6 +1,6 @@
 import { OpenDialogOptions } from 'electron';
 import { v4 as uuid } from 'uuid';
-import { ProjectsApi, ProjectData, ProjectFile, ProjectMeta, UploadReq } from './projects.types';
+import { ProjectsApi, ProjectData, ProjectFile, ProjectMeta, UploadReq, SaveReq } from './projects.types';
 import { createProject } from './project.data';
 import { rq, fs, log } from '../../services';
 import * as utils from '../../utils';
@@ -22,29 +22,34 @@ const getProjectInfo = (meta: ProjectMeta): rq.ApiResult => {
   try {
     if (!noId && !noName) {
       folder = fs.getDirname(meta.filename || '');
-    } else if (!noId) {
+    } else if (noId && !noName) {
       folder = getProjectPath(utils.str.toKebabCase(meta.name));
-    } else {
+    } else if (noId && noName) {
       return {
         error: false,
         data: {
           isNew: true,
           uncommitted: true,
+          exists: false,
         }
       }
     }
   
     const fileName = fs.joinPath(folder, projectMetaFilename);
-    const exists = fs.fileExistsSync(fileName);
-  
-    if (!exists) {
+    const existsRes = fs.fileExistsSync(fileName);
+    
+    if (existsRes.error) {
+      return existsRes;
+    }
+    
+    if (!existsRes.data.exists) {
       return {
         error: false,
         data: {
-          isNew: !noId,
-          uncommitted: noName,
+          isNew: true,
+          uncommitted: true,
           fileName,
-          exists,
+          exists: false,
           folder,
         }
       }
@@ -56,15 +61,15 @@ const getProjectInfo = (meta: ProjectMeta): rq.ApiResult => {
       return read;
     }
   
-    info = read.data as ProjectFile;
+    info = read.data.contents as ProjectFile;
 
     return {
       error: false,
       data: {
-        isNew: !noId,
+        isNew: noId,
         uncommitted: noName,
         fileName,
-        exists,
+        exists: existsRes.data.exists,
         folder,
         info,
       }
@@ -122,7 +127,7 @@ export const upload = (ev: rq.RequestEvent, req: UploadReq) => {
         return;
       }
     } else {
-      config.filters = fs.dialog.getAllAssets();
+      config.filters = fs.dialog.getAllowedAssets(['image', 'document'])
     }
 
     fs.dialog.open(ev, config).then((res) => {
@@ -136,6 +141,8 @@ export const upload = (ev: rq.RequestEvent, req: UploadReq) => {
         return;
       }
 
+      let dest: string;
+      let destWorking: string;
       const ext = fs.getExt(res.data.filePath).replace('.', '');
       const name = fs.getBasename(res.data.filePath, ext);
       const type = fs.assetTypeByExt(ext);
@@ -149,8 +156,8 @@ export const upload = (ev: rq.RequestEvent, req: UploadReq) => {
 
       switch (type) {
         case 'image':
-          const dest = (infoRes.data.isNew || infoRes.data.uncommitted) ? fs.joinPath(fs.APP_PATHS.uploads, `${name}webp`) : fs.joinPath(infoRes.data.folder, 'assets', `${name}webp`);
-          const destWorking = fs.joinPath(fs.APP_PATHS.temp, 'templates', 'assets', `${name}webp`);
+          dest = (infoRes.data.isNew || infoRes.data.uncommitted) ? fs.joinPath(fs.APP_PATHS.uploads, `${name}webp`) : fs.joinPath(infoRes.data.folder, 'assets', `${name}webp`);
+          destWorking = fs.joinPath(fs.APP_PATHS.temp, 'templates', 'assets', `${name}webp`);
           
           fs.asset.toWebp(res.data.filePath, dest).then((transformRes) => {
             if (transformRes.error) {
@@ -178,6 +185,62 @@ export const upload = (ev: rq.RequestEvent, req: UploadReq) => {
                 },
               });
             });
+          });
+          break;
+        default:
+          dest = (infoRes.data.isNew || infoRes.data.uncommitted) ? fs.joinPath(fs.APP_PATHS.uploads, `${name}${ext}`) : fs.joinPath(infoRes.data.folder, 'assets', `${name}${ext}`);
+          destWorking = fs.joinPath(fs.APP_PATHS.temp, 'templates', 'assets', `${name}${ext}`);
+          
+          const copyPaths = [
+            `${res.data.filePath} to ${dest}`,
+            `${res.data.filePath} to ${destWorking}`,
+          ];
+          const copyPromises = [
+            fs.copy(res.data.filePath, dest),
+            fs.copy(res.data.filePath, destWorking),
+          ];
+
+          Promise.allSettled(copyPromises).then((copyAllRes) => {
+            let isError = false;
+            let errorRes;
+
+            copyAllRes.forEach((copyRes, idx) => {
+              if (copyRes.status === 'rejected') {
+                log.error(`failed to copy: ${copyPaths[idx]}`);
+                isError = true;
+                return;
+              }
+    
+              if (copyRes.value.error) {
+                isError = true;
+                errorRes = copyRes.value;
+                log.error(`failed to copy: ${copyPaths[idx]}`);
+                return;
+              }
+            });
+
+            if (isError) {
+              resolve(errorRes);
+              return;
+            }
+
+            const statsRes = fs.fileStatsSync(res.data.filePath);
+
+            if (statsRes.error) {
+              resolve(statsRes);
+              return;
+            }
+
+            resolve({
+              error: false,
+              data: {
+                title: name.replace('.', ''),
+                filename: `${name}${ext}`,
+                type,
+                ext,
+                size: statsRes.data.stats.size,
+              },
+            })
           });
           break;
       }
@@ -243,7 +306,7 @@ const writeProjectData = (projectData: ProjectData) => {
   });
 }
 
-export const save = (ev: rq.RequestEvent, data: ProjectData) => {
+export const save = (ev: rq.RequestEvent, { data, assets }: SaveReq) => {
   return new Promise<rq.ApiResult>((resolve) => {
     if (!data.meta.name) {
       resolve({
@@ -256,100 +319,97 @@ export const save = (ev: rq.RequestEvent, data: ProjectData) => {
       return;
     }
 
-    const now = new Date().toISOString();
-    const isNew = !data.meta.id;
-    
-    let projectFolder;
-    let projectFile: ProjectFile;
+    try {
+      const isNew = !data.meta.id;
+      const now = new Date().toISOString();
+      const meta = data.meta as ProjectMeta;
+      const infoRes = getProjectInfo(meta);
 
-    if (!isNew) {
-      projectFolder = fs.getDirname(data.meta.filename || '');
-    } else {
-      projectFolder = getProjectPath(utils.str.toKebabCase(data.meta.name));
-    }
+      if (infoRes.error) {
+        resolve(infoRes);
+        return;
+      }
 
-    const projectFileName = fs.joinPath(projectFolder, projectMetaFilename);
-
-    data.meta.updatedAt = now;
-    data.meta.id = uuid();
-    data.meta.filename = `${fs.joinPath(projectFolder, data.meta.id)}.gzip`;
-
-    const projectExistsRes = fs.fileExistsSync(projectFileName);
-
-    if (projectExistsRes.error) {
-      resolve(projectExistsRes);
-      return;
-    }
-
-    const hasProject = projectExistsRes.data.exists;
-
-    if (isNew) {
-      if (hasProject) {
+      if (isNew && infoRes.data.exists) {
         resolve({
           error: true,
-          message: 'Unable to save project: project with that name already exits',
+          message: 'Unable to save.\nA project with that name already exists',
           data: {
-            path: projectFileName,
+            data,
+            assets,
           },
         });
-        return;
       }
 
-      projectFile = {
-        createdAt: now,
-        openedAt: now,
-        updatedAt: now,
-        assets: [],
-        versions: [],
-      };
-    } else {
-      if (!hasProject) {
-        resolve({
-          error: true,
-          message: 'Unable to save project: project not found',
-          data: {
-            path: projectFileName,
-          },
-        });
-        return;
+      let info: ProjectFile;
+
+      if (!infoRes.data.isNew) {
+        info = infoRes.data.info;
+      } else {
+        info = {
+          createdAt: now,
+          openedAt: now,
+          updatedAt: now,
+          assets: [],
+          versions: [],
+        };
       }
 
-      const projectFileRead = fs.fileReadSync(projectFileName) as rq.ApiResult;
+      meta.updatedAt = now;
+      meta.id = uuid();
+      meta.filename = `${fs.joinPath(infoRes.data.folder, meta.id)}.gzip`;
+      info.versions.unshift(meta);
+      info.assets = assets || [];
 
-      if (projectFileRead.error) {
-        resolve(projectFileRead);
-        return;
-      }
-
-      projectFile = projectFileRead.data.contents as ProjectFile;
-      projectFile.updatedAt = now;
-    }
-
-    const meta = data.meta as ProjectMeta;
-
-    projectFile.versions.unshift(meta);
-
-    writeProjectData(data).then((writeDataRes) => {
-      if (writeDataRes.error) {
-        resolve(writeDataRes);
-        return;
-      }
-
-      log.info('writing project file', projectFileName);
-      fs.fileWrite(projectFileName, projectFile).then((writeFileRes) => {
-        if (writeFileRes.error) {
-          resolve(writeFileRes);
+      writeProjectData(data).then((writeDataRes) => {
+        if (writeDataRes.error) {
+          resolve(writeDataRes);
           return;
         }
 
-        resolve({
-          error: false,
-          data: {
-            project: data,
-          },
+        log.info('writing project file', infoRes.data.fileName);
+        fs.fileWrite(infoRes.data.fileName, info).then((writeFileRes) => {
+          if (writeFileRes.error) {
+            resolve(writeFileRes);
+            return;
+          }
+
+          if (infoRes.data.exists || !assets || !assets.length) {
+            resolve({
+              error: false,
+              data: {
+                project: data,
+                assets,
+              },
+            });
+            return; 
+          }
+
+          fs.copy(fs.APP_PATHS.uploads, fs.joinPath(infoRes.data.folder, 'assets')).then((copyRes) => {
+            if (copyRes.error) {
+              resolve(copyRes);
+              return;
+            }
+
+            resolve({
+              error: false,
+              data: {
+                project: data,
+                assets,
+              },
+            });
+          })
         });
       });
-    });
+    } catch (e) {
+      resolve({
+        error: true,
+        message: 'Failed to save proejct: unexpected error',
+        data: {
+          trace: e,
+        },
+      });
+    }
   });
 };
 

@@ -12,6 +12,7 @@ import {
 const PromptProjectNameElement = ({ isOpen, ...props }, ref) => {
   const title = 'Saving Project';
   const projectData = Projects.useData();
+  const assets = Projects.useAssets();
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleSetProjectName = (ev: React.FormEvent<HTMLInputElement>) => {
@@ -38,7 +39,7 @@ const PromptProjectNameElement = ({ isOpen, ...props }, ref) => {
   };
 
   const handleSubmit = () => {
-    Projects.save(projectData).then((res) => {
+    Projects.save({ data: projectData, assets }).then((res) => {
       if (res.error) {
         console.error(res);
 
