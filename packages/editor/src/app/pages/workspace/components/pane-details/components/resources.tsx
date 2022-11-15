@@ -128,7 +128,7 @@ export const Resources = () => {
                     <Icon display="rounded" icon="more_vert" opsz={20} filled />
                   </Button>
                 </div>
-                <dd className={css.tabResourcesDescription}>
+                <dd className="tab_resources__item--description">
                   {editableResource.description}
                 </dd>
               </div>
