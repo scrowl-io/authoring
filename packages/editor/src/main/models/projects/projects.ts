@@ -152,7 +152,7 @@ export const upload = (ev: rq.RequestEvent, req: UploadReq) => {
       let dest: string;
       let destWorking: string;
       const ext = fs.getExt(res.data.filePath).replace('.', '');
-      const name = fs.getBasename(res.data.filePath, ext);
+      const name = fs.getBasename(res.data.filePath, ext).replace('.', '');
       const type = fs.assetTypeByExt(ext);
       const infoRes = getProjectInfo(req.meta);
 
@@ -161,12 +161,24 @@ export const upload = (ev: rq.RequestEvent, req: UploadReq) => {
         resolve(infoRes);
         return;
       }
-
       switch (type) {
         case 'image':
-          dest = (infoRes.data.isNew || infoRes.data.uncommitted) ? fs.joinPath(fs.APP_PATHS.uploads, `${name}webp`) : fs.joinPath(infoRes.data.folder, 'assets', `${name}webp`);
-          destWorking = fs.joinPath(fs.APP_PATHS.temp, 'templates', 'assets', `${name}webp`);
-          
+          dest = (infoRes.data.isNew || infoRes.data.uncommitted) ? fs.joinPath(fs.APP_PATHS.uploads, `${name}.webp`) : fs.joinPath(infoRes.data.folder, 'assets', `${name}.webp`);
+          destWorking = fs.joinPath(fs.APP_PATHS.temp, 'templates', 'assets', `${name}.webp`);
+       
+          rq.send(API.uploadProgress.name, {
+            type: 'start',
+            filename: name,
+            message: 'Optimizing image...',
+            steps: 2,
+            step: 1,
+            stats: {
+              completed: 50,
+              progress: 50,
+              total: 100,
+            }
+          });
+
           fs.asset.toWebp(res.data.filePath, dest).then((transformRes) => {
             if (transformRes.error) {
               log.error('asset conversion failed', transformRes);
@@ -174,8 +186,35 @@ export const upload = (ev: rq.RequestEvent, req: UploadReq) => {
               return;
             }
 
-            // copy file so it can be served to the canvas
-            fs.copy(dest, destWorking).then((copyRes) => {
+            rq.send(API.uploadProgress.name, {
+              type: 'start',
+              filename: name,
+              message: 'Adding image...',
+              steps: 2,
+              step: 2,
+              stats: {
+                completed: 0,
+                progress: 0,
+                total: 0,
+              }
+            });
+
+            const sendProgressUpdate = (completed, progress, total) => {
+              rq.send(API.uploadProgress.name, {
+                type: 'update',
+                filename: name,
+                message: 'Adding image...',
+                steps: 2,
+                step: 2,
+                stats: {
+                  completed,
+                  progress,
+                  total,
+                }
+              });
+            }
+
+            fs.progressWrite(dest, destWorking, sendProgressUpdate).then((copyRes) => {
               if (copyRes.error) {
                 log.error('asset copied failed', copyRes);
                 resolve(copyRes);
@@ -185,8 +224,8 @@ export const upload = (ev: rq.RequestEvent, req: UploadReq) => {
               resolve({
                 error: false,
                 data: {
-                  title: name.replace('.', ''),
-                  filename: `${name}webp`,
+                  title: name,
+                  filename: `${name}.webp`,
                   type,
                   ext: 'webp',
                   size: transformRes.data.size,
@@ -196,8 +235,8 @@ export const upload = (ev: rq.RequestEvent, req: UploadReq) => {
           });
           break;
         default:
-          dest = (infoRes.data.isNew || infoRes.data.uncommitted) ? fs.joinPath(fs.APP_PATHS.uploads, `${name}${ext}`) : fs.joinPath(infoRes.data.folder, 'assets', `${name}${ext}`);
-          destWorking = fs.joinPath(fs.APP_PATHS.temp, 'templates', 'assets', `${name}${ext}`);
+          dest = (infoRes.data.isNew || infoRes.data.uncommitted) ? fs.joinPath(fs.APP_PATHS.uploads, `${name}.${ext}`) : fs.joinPath(infoRes.data.folder, 'assets', `${name}.${ext}`);
+          destWorking = fs.joinPath(fs.APP_PATHS.temp, 'templates', 'assets', `${name}.${ext}`);
           
           const copyPaths = [
             `${res.data.filePath} to ${dest}`,
@@ -243,7 +282,7 @@ export const upload = (ev: rq.RequestEvent, req: UploadReq) => {
               error: false,
               data: {
                 title: name.replace('.', ''),
-                filename: `${name}${ext}`,
+                filename: `${name}.${ext}`,
                 type,
                 ext,
                 size: statsRes.data.stats.size,
@@ -565,6 +604,10 @@ export const API: ProjectsApi = {
     name: '/projects/upload',
     type: 'invoke',
     fn: upload,
+  },
+  uploadProgress: {
+    name: '/projects/upload/progress',
+    type: 'send',
   },
   save: {
     name: '/projects/save',

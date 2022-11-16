@@ -4,6 +4,7 @@ import { rq } from '../../services';
 const ENDPOINTS:ProjectsEndpoints = {
   create: '/projects/create',
   upload: '/projects/upload',
+  uploadProgress: '/projects/upload/progress',
   save: '/projects/save',
   publish: '/projects/publish',
   list: '/projects/list',
@@ -17,6 +18,14 @@ export const create = (data?: any): Promise<rq.ApiResult> => {
 
 export const upload = (data?): Promise<rq.ApiResult> => {
   return rq.invoke(ENDPOINTS.upload, data);
+};
+
+export const onUploadProgress = (listener: rq.Listener) => {
+  rq.on(ENDPOINTS.uploadProgress, listener);
+};
+
+export const offUploadProgress = () => {
+  rq.offAll(ENDPOINTS.uploadProgress);
 };
 
 export const save = (data?): Promise<rq.ApiResult> => {
@@ -42,6 +51,8 @@ export const previewAsset = (data: PreviewAssetReq) => {
 export default {
   create,
   upload,
+  onUploadProgress,
+  offUploadProgress,
   save,
   publish,
   list,

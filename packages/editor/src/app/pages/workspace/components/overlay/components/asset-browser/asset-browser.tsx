@@ -43,12 +43,20 @@ export const AssetDrawerElement = (
     width: '80px',
     maxWidth: '80px',
   };
-  const initialUploadAssetState = {
+  const initialCopyProgress = {
     filename: '',
+    type: '',
+    message: '',
+    steps: 0,
+    step: 0,
+    stats: {
+      completed: -1,
+      progress: -1,
+      total: -1,
+    },
   };
   const [isCopying, setIsCopying] = useState(false);
-  const [uploadAsset, setUploadAsset] = useState(initialUploadAssetState);
-  const [copyProgress, setCopyProgress] = useState(0);
+  const [copyProgress, setCopyProgress] = useState(initialCopyProgress);
   const [filterInput, setFilterInput] = useState('');
   const [filteredAssets, setFilterAssets] = useState<
     Array<Projects.ProjectAsset>
@@ -121,9 +129,12 @@ export const AssetDrawerElement = (
   const handleAddFile = () => {
     const types = assetTypes as Array<AssetType>;
 
+    setIsCopying(true);
     Projects.upload({ meta: meta, options: { assetTypes: types } }).then(
       (res) => {
         if (res.error) {
+          setIsCopying(false);
+          setCopyProgress(initialCopyProgress);
           sys.messageDialog({
             message: res.message,
           });
@@ -131,10 +142,14 @@ export const AssetDrawerElement = (
         }
 
         if (res.data.canceled) {
+          setIsCopying(false);
+          setCopyProgress(initialCopyProgress);
           return;
         }
 
         Projects.addAsset(res.data);
+        setIsCopying(false);
+        setCopyProgress(initialCopyProgress);
       }
     );
   };
@@ -145,7 +160,16 @@ export const AssetDrawerElement = (
     ev.preventDefault();
   };
 
+  const updateUploadProgress = (ev, uploadProgress) => {
+    if (isCopying) {
+      console.log('uploadProgress', uploadProgress);
+      setCopyProgress(uploadProgress);
+    }
+  };
+
   useEffect(() => {
+    Projects.API.onUploadProgress(updateUploadProgress);
+
     if (isCopying) {
       window.addEventListener('keydown', handlePreventBubbling, {
         capture: true,
@@ -153,6 +177,7 @@ export const AssetDrawerElement = (
     }
 
     return () => {
+      Projects.API.offUploadProgress();
       window.removeEventListener('keydown', handlePreventBubbling, {
         capture: true,
       });
@@ -193,17 +218,12 @@ export const AssetDrawerElement = (
               slideFrom="right"
               style={styles}
             >
+              {isCopying && <AssetProgress progress={copyProgress} />}
+
               <div className="offcanvas-header">
                 <h4 className="offcanvas-title mb-0">Project Files</h4>
                 <button type="button" className="btn-close" onClick={onClose} />
               </div>
-
-              {isCopying && (
-                <AssetProgress
-                  filename={uploadAsset.filename}
-                  progress={copyProgress}
-                />
-              )}
 
               <div className="offcanvas-body">
                 <div className="owl-offcanvas-form">

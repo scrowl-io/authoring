@@ -471,6 +471,55 @@ export const fileStatsSync = (pathname): rq.ApiResult => {
   }
 };
 
+export const progressWrite = (src: string, dest: string, onUpdate?: (completed: number, progress: number, total: number) => void) => {
+  return new Promise<rq.ApiResult>((resolve) => {
+    try {
+      const stats = fs.statSync(src);
+      let progress = 0;
+      let completed = 0;
+      const fileSize = stats.size;
+      
+      fs.ensureDirSync(getDirname(dest));
+
+      if (onUpdate) {
+        onUpdate(completed, progress, fileSize);
+      }
+
+      fs.createReadStream(src)
+        .on('data', (chunk) => {
+          const chunkLn = chunk.length;
+
+          progress += chunkLn;
+          completed = parseFloat((progress / fileSize).toFixed(4));
+
+          if (onUpdate) {
+            onUpdate(completed, progress, fileSize);
+          }
+        })
+        .on('end', () => {
+          resolve({
+            error: false,
+            data: {
+              src,
+              dest,
+            },
+          });
+        })
+        .pipe(fs.createWriteStream(dest));
+    } catch (e) {
+      resolve({
+        error: true,
+        message: 'Failed to copy file: unexpected error',
+        data: {
+          trace: e,
+          src,
+          dest,
+        },
+      });
+    }
+  });
+};
+
 export default {
   APP_PATHS,
   ASSET_TYPES,
@@ -492,4 +541,5 @@ export default {
   fileRemove,
   fileRename,
   fileStatsSync,
+  progressWrite,
 };

@@ -5,8 +5,18 @@ import { AssetType } from '../../../../../../../main/services/file-system/fs.typ
 export type { AssetType } from '../../../../../../../main/services/file-system/fs.types';
 
 export type AssetProgressProps = {
-  filename: string;
-  progress: number;
+  progress:  {
+    filename: string;
+    type: string,
+    message: string,
+    steps: number,
+    step: number,
+    stats: {
+      completed: number,
+      progress: number,
+      total: number,
+    },
+  };
 };
 
 export interface AssetBrowserCommons {
