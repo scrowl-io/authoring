@@ -44,6 +44,10 @@ export const registerEndpointAll = (endpoints: RegisterEndpoints)  => {
   }
 };
 
+export const removeListener = (endpoint) => {
+  ipcMain.removeAllListeners(endpoint);
+};
+
 export const init = () => {
   registerEndpoint({
     name: '/endpoints',
@@ -63,5 +67,6 @@ export const init = () => {
 export default {
   registerEndpoint,
   registerEndpointAll,
+  removeListener,
   init,
 };

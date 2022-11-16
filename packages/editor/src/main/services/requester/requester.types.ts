@@ -2,12 +2,14 @@ import {
   IpcMainInvokeEvent,
   KeyboardEvent,
   KeyboardInputEvent,
+  Event,
 } from 'electron';
 
 export type RequestEvent =
   | IpcMainInvokeEvent
   | KeyboardEvent
-  | KeyboardInputEvent;
+  | KeyboardInputEvent
+  | Event;
 
 export type ClickHandler = (
   menuItem: Electron.MenuItem,

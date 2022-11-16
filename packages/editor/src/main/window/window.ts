@@ -3,13 +3,15 @@ import {
   BrowserWindow,
   shell,
   BrowserWindowConstructorOptions,
+  session,
+  IpcMainEvent,
 } from 'electron';
 import installExtension, {
   REACT_DEVELOPER_TOOLS,
 } from 'electron-devtools-installer';
 import { Models } from '../models';
-import { Services, fs } from '../services';
-import { log } from '../services';
+import { Services, fs, rq, log } from '../services';
+import { API } from './';
 
 export const init = () => {
   log.info('application starting');
@@ -82,22 +84,62 @@ export const init = () => {
         }
       });
 
-      mainWindow.on('close', (ev: Electron.Event) => {
+      mainWindow.on('close', (closeEv) => {
         try {
-          if (isDARWIN) {
-            if (isQuitting) {
-              mainWindow = null;
-            } else {
-              ev.preventDefault();
-              mainWindow?.hide();
+          const closeWindow = () => {
+            if (isDARWIN) {
+              if (isQuitting) {
+                mainWindow = null;
+              } else {
+                closeEv.preventDefault();
+                mainWindow?.hide();
+              }
             }
           }
+
+          const promptUnsavedChanges = (promptEv) => {
+            fs.dialog.message(promptEv, {
+              type: 'question',
+              title: 'Confirm',
+              message: 'You have unsaved changes.\nAre you sure you want to quit?',
+              buttons: ['Yes', 'No']
+            }).then((closeRes) => {
+              if (closeRes.error) {
+                log.error(closeRes);
+                closeWindow();
+              } else {
+                const res = closeRes.data.response;
+  
+                switch (res) {
+                  case 0:
+                    closeWindow();
+                    break;
+                  case 1:
+                    closeEv.preventDefault();
+                    break;
+                }
+              }
+            });
+          }
+          
+          API.onUnsaved((unsavedEv, { isDirty, isUncommitted }) => {
+            API.offUnsaved();
+
+            if (isDirty || isUncommitted) {
+              promptUnsavedChanges(unsavedEv);
+            } else {
+              closeWindow();
+            }
+          });
+
+          API.unsaved();
+          closeEv.preventDefault();
         } catch (err) {
           console.error('window failed to closed', err);
         }
       });
 
-      mainWindow.on('closed', () => {
+      mainWindow.on('closed', (ev: Electron.Event) => {
         mainWindow = null;
       });
 
@@ -128,6 +170,8 @@ export const init = () => {
     // Respect the OSX convention of having the application in memory even
     // after all windows have been closed
     try {
+      session.defaultSession.cookies.flushStore();
+
       if (process.platform !== 'darwin') {
         app.quit();
       }
@@ -136,9 +180,21 @@ export const init = () => {
     }
   });
 
+  app.on('will-quit', () => {
+    if (rq.templateServer) {
+      rq.templateServer.close();
+    }
+  });
+
+  app.once('quit',  () => {
+    session.defaultSession.cookies.flushStore();
+  });
+
   app
     .whenReady()
     .then(() => {
+      session.defaultSession.cookies.flushStore();
+      API.init();
       log.info('application ready');
       Models.init();
       log.info('models initialized');
