@@ -4,12 +4,14 @@ import {
   shell,
   BrowserWindowConstructorOptions,
   session,
+  IpcMainEvent,
 } from 'electron';
 import installExtension, {
   REACT_DEVELOPER_TOOLS,
 } from 'electron-devtools-installer';
 import { Models } from '../models';
 import { Services, fs, rq, log } from '../services';
+import { API } from './';
 
 export const init = () => {
   log.info('application starting');
@@ -82,21 +84,21 @@ export const init = () => {
         }
       });
 
-      mainWindow.on('close', (ev: Electron.Event) => {
+      mainWindow.on('close', (closeEv) => {
         try {
           const closeWindow = () => {
             if (isDARWIN) {
               if (isQuitting) {
                 mainWindow = null;
               } else {
-                ev.preventDefault();
+                closeEv.preventDefault();
                 mainWindow?.hide();
               }
             }
           }
 
-          const promptUnsavedChanges = () => {
-            fs.dialog.message(ev, {
+          const promptUnsavedChanges = (promptEv) => {
+            fs.dialog.message(promptEv, {
               type: 'question',
               title: 'Confirm',
               message: 'You have unsaved changes.\nAre you sure you want to quit?',
@@ -113,20 +115,25 @@ export const init = () => {
                     closeWindow();
                     break;
                   case 1:
-                    ev.preventDefault();
+                    closeEv.preventDefault();
                     break;
                 }
               }
             });
           }
+          
+          API.onUnsaved((unsavedEv, { isDirty, isUncommitted }) => {
+            API.offUnsaved();
 
-          const hasUnsavedChanges = true;
+            if (isDirty || isUncommitted) {
+              promptUnsavedChanges(unsavedEv);
+            } else {
+              closeWindow();
+            }
+          });
 
-          if (hasUnsavedChanges) {
-            promptUnsavedChanges();
-          } else {
-            closeWindow();
-          }
+          API.unsaved();
+          closeEv.preventDefault();
         } catch (err) {
           console.error('window failed to closed', err);
         }
@@ -187,6 +194,7 @@ export const init = () => {
     .whenReady()
     .then(() => {
       session.defaultSession.cookies.flushStore();
+      API.init();
       log.info('application ready');
       Models.init();
       log.info('models initialized');

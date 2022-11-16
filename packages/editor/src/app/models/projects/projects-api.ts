@@ -1,7 +1,7 @@
-import { ProjectsEndpoints, PreviewAssetReq } from './projects.types';
+import { ProjectsEndpoints, PreviewAssetReq, WindowEndpoints } from './projects.types';
 import { rq } from '../../services';
 
-const ENDPOINTS:ProjectsEndpoints = {
+const ENDPOINTS: ProjectsEndpoints = {
   create: '/projects/create',
   upload: '/projects/upload',
   uploadProgress: '/projects/upload/progress',
@@ -10,6 +10,11 @@ const ENDPOINTS:ProjectsEndpoints = {
   list: '/projects/list',
   open: '/projects/open',
   previewAsset: '/projects/preview-asset',
+};
+
+const WINDOW_ENDPOINTS: WindowEndpoints = {
+  unsaved: '/window/unsaved/send', // sent from main
+  onUnsaved: '/window/unsaved/on', // send to main
 };
 
 export const create = (data?: any): Promise<rq.ApiResult> => {
@@ -48,6 +53,18 @@ export const previewAsset = (data: PreviewAssetReq) => {
   return rq.invoke(ENDPOINTS.previewAsset, data);
 };
 
+export const onUnsavedCheck = (listener: rq.Listener) => {
+  rq.on(WINDOW_ENDPOINTS.unsaved, listener);
+};
+
+export const offUnsavedCheck = () => {
+  rq.offAll(WINDOW_ENDPOINTS.unsaved);
+};
+
+export const sendUnsavedStatus = (data) => {
+  rq.send(WINDOW_ENDPOINTS.onUnsaved, data);
+};
+
 export default {
   create,
   upload,
@@ -58,4 +75,7 @@ export default {
   list,
   open,
   previewAsset,
+  onUnsavedCheck,
+  offUnsavedCheck,
+  sendUnsavedStatus
 };

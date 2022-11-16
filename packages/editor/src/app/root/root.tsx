@@ -39,6 +39,7 @@ export const Root = () => {
   const modelNames = Object.keys(modelModules);
   const inits: Array<Promise<rq.ApiResult>> = [];
   const [isReady, setIsReady] = useState(false);
+  const saveStatus = models.Projects.useInteractions();
 
   models.Settings.useProcessor();
   models.Projects.useProcessor();
@@ -62,6 +63,16 @@ export const Root = () => {
       setIsReady(true);
     });
   }, [modelModules, modelNames, inits]);
+
+  useEffect(() => {
+    models.Projects.API.onUnsavedCheck(() => {
+      models.Projects.API.sendUnsavedStatus(saveStatus);
+    });
+
+    return () => {
+      models.Projects.API.offUnsavedCheck();
+    };
+  }, [saveStatus]);
 
   return (
     <Router>
