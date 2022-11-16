@@ -112,6 +112,7 @@ const createTemplateServer = () => {
           error: false,
           data: {
             url: `http://${address}:${port}`,
+            server,
           },
         });
       });
@@ -128,6 +129,7 @@ const createTemplateServer = () => {
 };
 
 export let templateServerUrl = '';
+export let templateServer: http.Server;
 
 export const useTemplateMiddleware = () => {
   createTemplateServer().then(serverRes => {
@@ -137,6 +139,7 @@ export const useTemplateMiddleware = () => {
     }
 
     templateServerUrl = serverRes.data.url;
+    templateServer = serverRes.data.server;
   });
 };
 
