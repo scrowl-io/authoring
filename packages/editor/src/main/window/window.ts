@@ -2,9 +2,8 @@ import {
   app,
   BrowserWindow,
   shell,
-  BrowserWindowConstructorOptions,
   session,
-  IpcMainEvent,
+  BrowserWindowConstructorOptions,
 } from 'electron';
 import installExtension, {
   REACT_DEVELOPER_TOOLS,
@@ -16,11 +15,8 @@ import { API } from './';
 export const init = () => {
   log.info('application starting');
   const appPath = fs.getAppPath('app.html');
-  log.info(`RESOURCE_PATH: ${appPath}`);
   const preloadPath = fs.getDistPath('preload.js');
-  log.info(`RESOURCE_PATH: ${preloadPath}`);
   const iconPath = fs.getAssetPath('icon.png');
-  log.info(`RESOURCE_PATH: ${iconPath}`);
   const isDARWIN = process.platform === 'darwin';
   const isDevEnv = process.env.NODE_ENV === 'development';
   let mainWindow: BrowserWindow | null = null;
@@ -90,10 +86,13 @@ export const init = () => {
             if (isDARWIN) {
               if (isQuitting) {
                 mainWindow = null;
+                app.exit();
               } else {
                 closeEv.preventDefault();
                 mainWindow?.hide();
               }
+            } else {
+              app.exit();
             }
           }
 
