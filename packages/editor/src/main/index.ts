@@ -2,6 +2,7 @@ import * as window from './window';
 import { fs, log } from './services';
 
 const isDev = process.env.NODE_ENV === 'development';
+log.info(`starting application: ${process.env.NODE_ENV}`);
 
 if (isDev) {
   window.updateDev();
@@ -17,6 +18,7 @@ const cleanUpPaths = [
 ];
 
 Promise.allSettled(cleanUpPromises).then((cleanUpRes) => {
+  log.info('temporary folders cleaned');
   cleanUpRes.forEach((cleanUp, idx) => {
     if (cleanUp.status === 'rejected') {
       log.error(`Failed to clean up temporary directory: ${cleanUpPaths[idx]}`);
@@ -29,5 +31,6 @@ Promise.allSettled(cleanUpPromises).then((cleanUpRes) => {
     }
   });
 
+  log.info('initializing window');
   window.init();
 });
