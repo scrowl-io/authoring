@@ -199,7 +199,7 @@ export const upload = (ev: rq.RequestEvent, req: UploadReq) => {
               }
             });
 
-            const sendProgressUpdate = (completed, progress, total) => {
+            const sendProgressUpdateImage = (completed, progress, total) => {
               rq.send(API.uploadProgress.name, {
                 type: 'update',
                 filename: name,
@@ -214,7 +214,7 @@ export const upload = (ev: rq.RequestEvent, req: UploadReq) => {
               });
             }
 
-            fs.progressWrite(dest, destWorking, sendProgressUpdate).then((copyRes) => {
+            fs.progressWrite(dest, destWorking, sendProgressUpdateImage).then((copyRes) => {
               if (copyRes.error) {
                 log.error('asset copied failed', copyRes);
                 resolve(copyRes);
@@ -238,13 +238,40 @@ export const upload = (ev: rq.RequestEvent, req: UploadReq) => {
           dest = (infoRes.data.isNew || infoRes.data.uncommitted) ? fs.joinPath(fs.APP_PATHS.uploads, `${name}.${ext}`) : fs.joinPath(infoRes.data.folder, 'assets', `${name}.${ext}`);
           destWorking = fs.joinPath(fs.APP_PATHS.temp, 'templates', 'assets', `${name}.${ext}`);
           
+          rq.send(API.uploadProgress.name, {
+            type: 'start',
+            filename: name,
+            message: `Adding ${type}...`,
+            steps: 1,
+            step: 1,
+            stats: {
+              completed: 0,
+              progress: 0,
+              total: 0,
+            }
+          });
+
+          const sendProgressUpdate = (completed, progress, total) => {
+            rq.send(API.uploadProgress.name, {
+              type: 'update',
+              filename: name,
+              message: `Adding ${type}...`,
+              steps: 1,
+              step: 1,
+              stats: {
+                completed,
+                progress,
+                total,
+              }
+            });
+          }
           const copyPaths = [
             `${res.data.filePath} to ${dest}`,
             `${res.data.filePath} to ${destWorking}`,
           ];
           const copyPromises = [
             fs.copy(res.data.filePath, dest),
-            fs.copy(res.data.filePath, destWorking),
+            fs.progressWrite(res.data.filePath, destWorking, sendProgressUpdate),
           ];
 
           Promise.allSettled(copyPromises).then((copyAllRes) => {
