@@ -12,6 +12,11 @@ export interface ProjectsApiUpload
   name: '/projects/upload';
 }
 
+export interface ProjectsApiUploadProgress
+  extends Omit<rq.RegisterEndpoint, 'name'> {
+  name: '/projects/upload/progress';
+}
+
 export interface ProjectsApiSave
   extends Omit<rq.RegisterEndpoint, 'name'> {
   name: '/projects/save';
@@ -37,19 +42,21 @@ export interface ProjectsApiPreviewAsset
   name: '/projects/preview-asset';
 }
 
-export type ProjectsApi = Partial<{
+export type ProjectsApi = {
   create: ProjectsApiCreate;
   upload: ProjectsApiUpload;
+  uploadProgress: ProjectsApiUploadProgress;
   save: ProjectsApiSave;
   publish: ProjectsApiPublish;
   list: ProjectsApiList;
   open: ProjectsApiOpen;
   previewAsset: ProjectsApiPreviewAsset;
-}>;
+};
 
 export type ProjectsEndpoints = {
   create: ProjectsApiCreate['name'];
   upload: ProjectsApiUpload['name'];
+  uploadProgress: ProjectsApiUploadProgress['name'];
   save: ProjectsApiSave['name'];
   publish: ProjectsApiPublish['name'];
   list: ProjectsApiList['name'];

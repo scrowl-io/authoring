@@ -119,6 +119,7 @@
 
   .asset-browser-body {
     font-weight: 400;
+    z-index: 0;
 
     span.size-unit {
       font-size: 10px;
@@ -316,4 +317,44 @@
 .sort-indicator {
   pointer-events: none;
   user-select: none;
+}
+
+.copy-assets-progress {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+
+  &__backdrop {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: var(--owl-dropdown-color);
+    opacity: 0.5;
+    z-index: 10;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  &__body {
+    z-index: 20;
+    width: 66%;
+    background-color: #fff;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    text-align: center;
+  }
+
+  .progress {
+    --bs-progress-height: 0.5rem;
+    --bs-progress-bar-bg: var(--bs-success);
+    margin-bottom: 0.5rem;
+  }
 }
