@@ -31,6 +31,8 @@
     "prepackage": "yarn run clean",
     "package": "yarn run package:backend && yarn run package:frontend",
     "postpackage": "electron-builder build",
+    "package:test": "npx electron-builder build --dir",
+    "postpackage:test": "npx asar extract release/build/mac/Scrowl.app/Contents/Resources/app.asar release/app",
     "package:local:mac": "yarn run package && open release/build/mac",
     "lint": "",
     "postinstall": "yarn electron-builder install-app-deps"
@@ -79,8 +81,6 @@
     "copyright": "Occupational Safety Group Inc.",
     "files": [
       "dist/*",
-      "../../node_modules/**/*",
-      "./node_modules/**/*",
       "./package.json"
     ],
     "extraFiles": [
