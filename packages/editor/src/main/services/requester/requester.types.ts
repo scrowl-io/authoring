@@ -2,19 +2,19 @@ import {
   IpcMainInvokeEvent,
   KeyboardEvent,
   KeyboardInputEvent,
-  Event,
+  MenuItem,
+  BrowserWindow
 } from 'electron';
 
 export type RequestEvent =
   | IpcMainInvokeEvent
   | KeyboardEvent
-  | KeyboardInputEvent
-  | Event;
+  | KeyboardInputEvent;
 
 export type ClickHandler = (
-  menuItem: Electron.MenuItem,
-  browserWindow: Electron.BrowserWindow | undefined,
-  event: Electron.KeyboardEvent
+  menuItem: MenuItem,
+  browserWindow: BrowserWindow | undefined,
+  event: KeyboardEvent
 ) => void;
 
 export type JsonArray = Array<any | JsonResult | JsonArray>;

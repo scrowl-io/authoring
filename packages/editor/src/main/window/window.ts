@@ -2,7 +2,6 @@ import {
   app,
   BrowserWindow,
   shell,
-  session,
   BrowserWindowConstructorOptions,
 } from 'electron';
 import installExtension, {
@@ -13,7 +12,6 @@ import { Services, fs, rq, log } from '../services';
 import { API } from './';
 
 export const init = () => {
-  log.info('application starting');
   const appPath = fs.getAppPath('app.html');
   const preloadPath = fs.getDistPath('preload.js');
   const iconPath = fs.getAssetPath('icon.png');
@@ -46,7 +44,7 @@ export const init = () => {
       if (isDevEnv) {
         const installResult = await installExtensions();
 
-        console.log(`\n\nAdded Extensions: ${installResult}\n\n`);
+        log.info(`\n\nAdded Extensions: ${installResult}\n\n`);
       }
 
       mainWindow = new BrowserWindow(config);
@@ -57,7 +55,7 @@ export const init = () => {
       }
 
       mainWindow.loadURL(appPath);
-      log.info(`application attached to window`);
+      log.info(`window loaded`);
 
       mainWindow.on('ready-to-show', () => {
         if (!mainWindow) {
@@ -66,10 +64,10 @@ export const init = () => {
         }
 
         if (process.env.START_MINIMIZED) {
-          log.info(`starting minimized`);
+          log.info(`window ready: minimized`);
           mainWindow.minimize();
         } else {
-          log.info(`starting`);
+          log.info(`window ready`);
           mainWindow.show();
         }
 
@@ -134,15 +132,17 @@ export const init = () => {
           API.unsaved();
           closeEv.preventDefault();
         } catch (err) {
-          console.error('window failed to closed', err);
+          log.error('window failed to closed', err);
         }
       });
 
       mainWindow.on('closed', (ev: Electron.Event) => {
+        log.info('window event: closed');
         mainWindow = null;
       });
 
       app.on('activate', () => {
+        log.info('window activated');
         if (isDARWIN && mainWindow !== null) {
           mainWindow.show();
         }
@@ -153,56 +153,59 @@ export const init = () => {
         return { action: 'deny' };
       });
     } catch (e) {
-      console.error('Failed to start app', e);
+      log.error('Failed to start app', e);
     }
   }
 
   if (isDARWIN) {
+    log.info('setting application icon');
     app.dock.setIcon(iconPath);
   }
 
   app.on('before-quit', () => {
+    log.info('application event: before quit');
     isQuitting = true;
   });
   
   app.on('window-all-closed', () => {
+    log.info('application event: all closed');
     // Respect the OSX convention of having the application in memory even
     // after all windows have been closed
     try {
-      session.defaultSession.cookies.flushStore();
-
       if (process.platform !== 'darwin') {
         app.quit();
       }
     } catch (err) {
-      console.error('app failed to quit', err);
+      log.error('app failed to quit', err);
     }
   });
 
   app.on('will-quit', () => {
+    log.info('application event: will quit');
     if (rq.templateServer) {
       rq.templateServer.close();
     }
   });
 
-  app.once('quit',  () => {
-    session.defaultSession.cookies.flushStore();
-  });
-
   app
     .whenReady()
     .then(() => {
-      session.defaultSession.cookies.flushStore();
+      log.info('application event: ready');
+      log.info('initializing: window apis');
       API.init();
-      log.info('application ready');
+      log.info('window apis initialized');
+      log.info('initializing: models');
       Models.init();
       log.info('models initialized');
+      log.info('initializing: services');
       Services.init();
       log.info('services initialized');
+      log.info('creating window');
       create();
-      log.info('application initialized');
+      log.info('window created');
 
       app.on('activate', () => {
+        log.info('application event: activate');
         // On macOS it's common to re-create a window in the app when the
         // dock icon is clicked and there are no other windows open.
         if (mainWindow === null) create();

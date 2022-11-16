@@ -1,4 +1,5 @@
 import { MenuItemConstructorOptions, BrowserWindow } from 'electron';
+import { log } from '../../';
 
 export const create = (isMac: boolean) => {
   const menuId = 'help-menu';
@@ -10,7 +11,8 @@ export const create = (isMac: boolean) => {
         id: `${menuId}-reload`,
         label: 'Force Reload',
         accelerator: 'CmdorCtrl+Shift+R',
-        click: () => {
+        click: (menuItem, browserWindow, ev) => {
+          log.info('menu event: reload window', ev);
           const mainWindow = BrowserWindow.getAllWindows()[0];
           mainWindow.webContents.reloadIgnoringCache();
         },
@@ -19,9 +21,9 @@ export const create = (isMac: boolean) => {
         id: `${menuId}-dev-tools`,
         label: 'Show Developer Tools',
         accelerator: 'CmdorCtrl+Shift+I',
-        click: () => {
+        click: (menuItem, browserWindow, ev) => {
+          log.info('menu event: show dev tools', ev);
           const mainWindow = BrowserWindow.getAllWindows()[0];
-
           mainWindow.webContents.openDevTools();
         },
       },

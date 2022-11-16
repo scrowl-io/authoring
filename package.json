@@ -12,6 +12,7 @@
     "start": "yarn workspace @scrowl/editor run start",
     "prepackage": "yarn run update",
     "package": "yarn workspace @scrowl/editor run package",
+    "package:test": "yarn workspace @scrowl/editor run package:test",
     "version": "lerna version --conventional-commits --no-git-tag-version"
   },
   "workspaces": [
