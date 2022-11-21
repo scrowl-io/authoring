@@ -88,7 +88,7 @@ const GlossaryFormElement = (
                         'owlui-form-control ' +
                         (isDirty && termWord.trim() === '' ? 'error' : '')
                       }
-                      placeholder="Enter Term"
+                      placeholder="Enter term"
                       value={termWord}
                       onChange={(e) => {
                         setTermWord(e.target.value);

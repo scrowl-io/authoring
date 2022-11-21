@@ -68,7 +68,7 @@ export const CourseSettings = ({
           className={`form-control form-control-sm${
             errors.name ? ' is-invalid' : ''
           }`}
-          placeholder="Course Name"
+          placeholder="Course name"
           value={name}
           onChange={handleUpdateName}
         />
@@ -82,7 +82,7 @@ export const CourseSettings = ({
           id="course-settings-description"
           name="course-settings-description"
           className="form-control form-control-sm"
-          placeholder="Describe the Project"
+          placeholder="Describe the project"
           value={description}
           onChange={handleUpdateDescription}
         ></textarea>
@@ -96,7 +96,7 @@ export const CourseSettings = ({
           name="course-settings-authors"
           type="text"
           className="form-control form-control-sm"
-          placeholder="Course Authors"
+          placeholder="Course authors"
           value={authors}
           onChange={handleUpdateAuthors}
         />
