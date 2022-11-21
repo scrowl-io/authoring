@@ -98,9 +98,8 @@ export const OutlineLessonItem = ({
     ev.preventDefault();
 
     const target = ev.target as HTMLElement;
-    const position = Elem.getPosition(target);
 
-    menu.API.contextMenu(lessonMenuItems, position).then((result) => {
+    menu.API.contextMenu(lessonMenuItems).then((result) => {
       console.log('menu close', result);
       target.blur();
     });
