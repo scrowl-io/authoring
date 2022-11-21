@@ -102,12 +102,15 @@ export const Glossary = () => {
                 <header className={css.tabGlossaryHeader}>{h}</header>
                 {terms[h].map((item, iIdx: number) => {
                   return (
-                    <div key={iIdx} className={css.tabGlossaryTerm}>
+                    <div
+                      key={iIdx}
+                      className={css.tabGlossaryTerm}
+                      onClick={() => {
+                        handleOpenGlossaryForm(item);
+                      }}
+                    >
                       <div
                         className="d-flex justify-content-between"
-                        onClick={() => {
-                          handleOpenGlossaryForm(item);
-                        }}
                         onContextMenu={(ev) => {
                           handleGlossaryMenu(ev, item);
                         }}
