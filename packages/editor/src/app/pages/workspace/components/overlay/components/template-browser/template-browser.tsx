@@ -78,7 +78,7 @@ export const TemplateBrowser = () => {
   useEffect(() => {
     if (isNewSlide) {
       openTemplateBrowser();
-      resetActiveSlide();
+      setActiveSlide(templateList[0]);
     }
   }, [isNewSlide]);
 
