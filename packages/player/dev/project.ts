@@ -38,6 +38,14 @@ export const create = () => {
         id: 0,
         name: 'Module 1',
       },
+      {
+        id: 1,
+        name: 'Module 2',
+      },
+      {
+        id: 2,
+        name: 'Module 3',
+      },
     ],
     lessons: [
       {
@@ -55,17 +63,49 @@ export const create = () => {
         id: 2,
         name: 'Lesson 3',
       },
+      {
+        moduleId: 1,
+        id: 3,
+        name: 'Lesson 4',
+      },
+      {
+        moduleId: 1,
+        id: 4,
+        name: 'Lesson 5',
+      },
+      {
+        moduleId: 2,
+        id: 5,
+        name: 'Lesson 6',
+      },
+      {
+        moduleId: 2,
+        id: 6,
+        name: 'Lesson 7',
+      },
     ],
     slides: [
-      createSlide('Slide 1.1', 0, 0, 1, 'lessonIntro'),
       // not using the broken templates for now
       // createSlide('Slide 1.2', 0, 0, 0, 'blockText'),
       // createSlide('Slide 1.3', 0, 0, 1, 'simpleText'),
+      createSlide('Slide 1.1', 0, 0, 1, 'lessonIntro'),
       createSlide('Slide 1.2', 0, 0, 2, 'twoColumn'),
+
       createSlide('Slide 2.1', 0, 1, 3, 'twoColumn'),
       createSlide('Slide 2.2', 0, 1, 4, 'lessonIntro'),
+
       createSlide('Slide 3.1', 0, 2, 5, 'twoColumn'),
       createSlide('Slide 3.2', 0, 2, 6, 'twoColumn'),
+
+      createSlide('Slide 4.1', 1, 3, 7, 'twoColumn'),
+      createSlide('Slide 4.2', 1, 4, 8, 'twoColumn'),
+      createSlide('Slide 4.3', 1, 4, 9, 'twoColumn'),
+
+      createSlide('Slide 5.1', 2, 5, 10, 'twoColumn'),
+      createSlide('Slide 5.2', 2, 5, 11, 'twoColumn'),
+
+      createSlide('Slide 6.1', 2, 6, 12, 'twoColumn'),
+      createSlide('Slide 6.2', 2, 6, 13, 'twoColumn'),
     ],
     glossary: [],
     resources: [],

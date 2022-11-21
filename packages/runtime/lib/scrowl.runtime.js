@@ -156,7 +156,7 @@ const $b3d1e3300d945f09$export$6ed414b8d8bead88 = {
     save: ()=>{
         const res = $b3d1e3300d945f09$export$6ed414b8d8bead88.isAvailable();
         if (res.error) return res;
-        const resSave = res.API.LMSCommit();
+        const resSave = res.API.LMSCommit("");
         if (resSave === $b3d1e3300d945f09$export$6ed414b8d8bead88.STATUSES.update.false) return {
             error: true,
             message: "SCORM service failed to save",
@@ -178,6 +178,9 @@ const $b3d1e3300d945f09$export$6ed414b8d8bead88 = {
             data: $b3d1e3300d945f09$export$6ed414b8d8bead88.getError()
         };
         $b3d1e3300d945f09$export$6ed414b8d8bead88.finished = true;
+        $b3d1e3300d945f09$export$6ed414b8d8bead88.save();
+        console.log("terminating");
+        res.API.Commit();
         return {
             error: false
         };
@@ -241,6 +244,21 @@ const $b3d1e3300d945f09$export$6ed414b8d8bead88 = {
         const exitRes = $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.core.exit", $b3d1e3300d945f09$export$6ed414b8d8bead88.STATUSES.exit.save);
         if (exitRes.error) return exitRes;
         return $b3d1e3300d945f09$export$6ed414b8d8bead88.stop();
+    },
+    finish: ()=>{
+        console.log("DONE");
+        $b3d1e3300d945f09$export$6ed414b8d8bead88.updateStatus("success");
+        $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.core.score.raw", 87.00);
+        // service._time.end = new Date();
+        console.log($b3d1e3300d945f09$export$6ed414b8d8bead88);
+        $b3d1e3300d945f09$export$6ed414b8d8bead88.save();
+        const val = $b3d1e3300d945f09$export$6ed414b8d8bead88.getValue("cmi.core.lesson_status");
+        console.log(val);
+        $b3d1e3300d945f09$export$6ed414b8d8bead88.save();
+        const core = $b3d1e3300d945f09$export$6ed414b8d8bead88.getValue("cmi.core");
+        console.log(core);
+        $b3d1e3300d945f09$export$6ed414b8d8bead88.exit();
+        console.log($b3d1e3300d945f09$export$6ed414b8d8bead88);
     }
 };
 var $b3d1e3300d945f09$export$2e2bcd8739ae039 = {

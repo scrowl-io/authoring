@@ -40,9 +40,6 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
     return <Error msg="Modules missing" />;
   }
 
-  console.log('project:');
-  console.log(project);
-
   const slides = project.slides;
   const lessons = project.lessons;
   const modules = project.modules;

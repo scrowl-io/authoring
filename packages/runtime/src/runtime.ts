@@ -200,7 +200,7 @@ export const service: RUNTIME_SERVICE = {
       return res;
     }
 
-    const resSave = res.API.LMSCommit();
+    const resSave = res.API.LMSCommit('');
 
     if (resSave === service.STATUSES.update.false) {
       return {
@@ -238,6 +238,9 @@ export const service: RUNTIME_SERVICE = {
     }
 
     service.finished = true;
+    service.save();
+    console.log('terminating');
+    res.API.Commit();
     return {
       error: false,
     };
@@ -350,6 +353,23 @@ export const service: RUNTIME_SERVICE = {
     }
 
     return service.stop();
+  },
+  finish: () => {
+    console.log('DONE');
+    service.updateStatus('success');
+    service.setValue('cmi.core.score.raw', 87.00);
+    // service._time.end = new Date();
+    console.log(service);
+    service.save();
+    const val = service.getValue('cmi.core.lesson_status');
+    console.log(val);
+    service.save();
+    const core = service.getValue('cmi.core');
+    console.log(core);
+    service.exit();
+    console.log(service);
+    
+
   },
 };
 

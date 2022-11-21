@@ -6,7 +6,9 @@ import {
   PlayerTemplateList,
   TemplateComponent,
 } from '../../root/root.types';
+import * as css from '../../root/_root.scss';
 import { Error } from '../../components';
+import { NavBar } from '../../components/navbar';
 
 const Page = ({ slides, templates, ...props }: PageProps) => {
   let controller;
@@ -48,7 +50,8 @@ const Page = ({ slides, templates, ...props }: PageProps) => {
 };
 
 const finishCourse = () => {
-  console.log('finished the course');
+  const runtime = window['Scrowl'].runtime;
+  runtime?.finish();
 };
 
 export const create = (
@@ -57,8 +60,10 @@ export const create = (
 ) => {
   const data: Array<PageDefinition> = [];
 
-  rootConfig.forEach((config, mIdx) => {
-    config.lessons.forEach((page, lIdx) => {
+  console.log(rootConfig);
+
+  rootConfig.forEach((module, mIdx) => {
+    module.lessons.forEach((page, lIdx) => {
       const id = `module-${mIdx}--lesson-${lIdx}`;
       const url = `/${id}`;
 
@@ -66,27 +71,35 @@ export const create = (
       let nextLessonId;
       let nextLessonText;
 
-      if (lIdx < config.lessons.length - 1) {
+      if (lIdx < module.lessons.length - 1 || mIdx < rootConfig.length - 1) {
         nextLessonId = `module-${mIdx}--lesson-${lIdx + 1}`;
         nextLessonUrl = `/${nextLessonId}`;
-        nextLessonText = `Continue to Lesson ${lIdx + 1}`;
+        nextLessonText = `Continue to the next lesson`;
+      }
+
+      if (lIdx === module.lessons.length - 1 && mIdx <= rootConfig.length - 1) {
+        nextLessonId = `module-${mIdx + 1}--lesson-0`;
+        nextLessonUrl = `/${nextLessonId}`;
+        nextLessonText = `Continue to the first Lesson of Module ${mIdx + 1}`;
       }
 
       data.push({
-        module: config.module,
+        module: module.module,
         lesson: page.lesson,
         url,
         Element: () => {
           return (
             <>
+              <NavBar rootConfig={rootConfig} />
               <Page id={id} slides={page.slides} templates={templateList} />
-              {lIdx < config.lessons.length - 1 ? (
-                <>
+              <div className={css.nextLessonContainer}>
+                {lIdx < module.lessons.length - 1 ||
+                mIdx < rootConfig.length - 1 ? (
                   <Link to={nextLessonUrl}>{nextLessonText}</Link>
-                </>
-              ) : (
-                <button onClick={finishCourse}>Finish Course</button>
-              )}
+                ) : (
+                  <button onClick={finishCourse}>Finish Course</button>
+                )}
+              </div>
             </>
           );
         },

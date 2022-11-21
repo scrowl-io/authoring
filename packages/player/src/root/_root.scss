@@ -10,5 +10,30 @@
     width: 100%;
     overflow-y: auto;
     z-index: 1;
+
+    .navbar {
+      position: fixed;
+      top: 0;
+      background-color: transparent !important;
+
+      button {
+        border: none;
+
+        span {
+          width: 2em;
+          height: 2em;
+        }
+      }
+    }
+
+    .next-lesson-container {
+      display: flex;
+      justify-content: center;
+      height: 5em;
+
+      button {
+        height: 3em;
+      }
+    }
   }
 }

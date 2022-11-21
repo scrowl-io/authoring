@@ -140,7 +140,7 @@ const $defce2f29876acb7$export$6ed414b8d8bead88 = {
     save: ()=>{
         const res = $defce2f29876acb7$export$6ed414b8d8bead88.isAvailable();
         if (res.error) return res;
-        const resSave = res.API.LMSCommit();
+        const resSave = res.API.LMSCommit("");
         if (resSave === $defce2f29876acb7$export$6ed414b8d8bead88.STATUSES.update.false) return {
             error: true,
             message: "SCORM service failed to save",
@@ -162,6 +162,9 @@ const $defce2f29876acb7$export$6ed414b8d8bead88 = {
             data: $defce2f29876acb7$export$6ed414b8d8bead88.getError()
         };
         $defce2f29876acb7$export$6ed414b8d8bead88.finished = true;
+        $defce2f29876acb7$export$6ed414b8d8bead88.save();
+        console.log("terminating");
+        res.API.Commit();
         return {
             error: false
         };
@@ -225,6 +228,21 @@ const $defce2f29876acb7$export$6ed414b8d8bead88 = {
         const exitRes = $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.core.exit", $defce2f29876acb7$export$6ed414b8d8bead88.STATUSES.exit.save);
         if (exitRes.error) return exitRes;
         return $defce2f29876acb7$export$6ed414b8d8bead88.stop();
+    },
+    finish: ()=>{
+        console.log("DONE");
+        $defce2f29876acb7$export$6ed414b8d8bead88.updateStatus("success");
+        $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.core.score.raw", 87.00);
+        // service._time.end = new Date();
+        console.log($defce2f29876acb7$export$6ed414b8d8bead88);
+        $defce2f29876acb7$export$6ed414b8d8bead88.save();
+        const val = $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.core.lesson_status");
+        console.log(val);
+        $defce2f29876acb7$export$6ed414b8d8bead88.save();
+        const core = $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.core");
+        console.log(core);
+        $defce2f29876acb7$export$6ed414b8d8bead88.exit();
+        console.log($defce2f29876acb7$export$6ed414b8d8bead88);
     }
 };
 var $defce2f29876acb7$export$2e2bcd8739ae039 = {
