@@ -108,13 +108,11 @@ export const Glossary = () => {
                       onClick={() => {
                         handleOpenGlossaryForm(item);
                       }}
+                      onContextMenu={(ev) => {
+                        handleGlossaryMenu(ev, item);
+                      }}
                     >
-                      <div
-                        className="d-flex justify-content-between"
-                        onContextMenu={(ev) => {
-                          handleGlossaryMenu(ev, item);
-                        }}
-                      >
+                      <div className="d-flex justify-content-between">
                         <dt className={css.tabGlossaryTermWord}>{item.word}</dt>
                         <Button
                           className={css.actionMenu}
