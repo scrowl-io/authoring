@@ -229,7 +229,7 @@ const ResourceFormElement = (
                       Title
                     </label>
                     <input
-                      id="resouce-title"
+                      id="resource-title"
                       type="text"
                       name="title"
                       className={`owlui-form-control${
