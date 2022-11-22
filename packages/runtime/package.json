@@ -1,6 +1,6 @@
 {
   "name": "@scrowl/runtime",
-  "version": "0.0.23",
+  "version": "0.0.24",
   "description": "",
   "license": "MIT",
   "keywords": [],
@@ -57,7 +57,7 @@
     "@parcel/transformer-sass": "2.7.0",
     "@parcel/transformer-typescript-types": "2.7.0",
     "@parcel/validator-typescript": "2.7.0",
-    "@scrowl/config": "^0.0.23",
+    "@scrowl/config": "^0.0.24",
     "eslint": "^8.25.0",
     "parcel": "2.7.0",
     "postcss": "^8.4.17",
