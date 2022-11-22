@@ -22,12 +22,20 @@ export const TemplateBrowser = () => {
   >([]);
   const activeSlide = useActiveSlide();
   const activeTemplate = activeSlide.template;
+  const activeSlideRef = useRef(activeSlide);
   const isOpen = useTemplateBrowser();
   const [selectedTemplate, setSelectedTemplate] = useState(activeTemplate);
   const isNewSlide = useNewSlide();
   const latestSlide = Projects.useLatestSlide();
 
   const handelClose = () => {
+    if (isNewSlide) {
+      setActiveSlide(activeSlideRef.current);
+      setSelectedTemplate(activeSlideRef.current.template);
+      Projects.removeSlide(latestSlide);
+      resetNewSlide();
+    }
+
     closeTemplateBrowser();
   };
 
@@ -72,13 +80,19 @@ export const TemplateBrowser = () => {
   }, [inProgress]);
 
   useEffect(() => {
+    if (selectedTemplate.meta.component && !activeTemplate.meta.component) {
+      return;
+    }
+
     setSelectedTemplate(activeTemplate);
+    activeSlideRef.current = activeSlide;
   }, [activeTemplate]);
 
   useEffect(() => {
     if (isNewSlide) {
       openTemplateBrowser();
-      setActiveSlide(templateList[0]);
+      resetActiveSlide();
+      setSelectedTemplate(templateList[0]);
     }
   }, [isNewSlide]);
 
