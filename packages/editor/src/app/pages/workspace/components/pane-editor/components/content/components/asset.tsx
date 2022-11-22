@@ -30,6 +30,7 @@ export const Asset = ({
     validationError !== null &&
     validationError !== undefined &&
     validationError.length;
+  const inputId = `input-checkbox-${field.replace(/\./g, '-')}`;
 
   const showAssetBrowser = () => {
     setIsOpenAssetBrowser(true);
@@ -123,7 +124,9 @@ export const Asset = ({
   return (
     <>
       <div className={controlClasses}>
-        <label className="form-label">{label}</label>
+        <label htmlFor={inputId} className="form-label">
+          {label}
+        </label>
         <div className={groupClasses}>
           {assetName ? (
             <button
@@ -137,7 +140,7 @@ export const Asset = ({
             </button>
           ) : null}
 
-          <input {...inputProps} />
+          <input id={inputId} {...inputProps} />
 
           <button
             style={{ width: '25%', maxWidth: '75px' }}
