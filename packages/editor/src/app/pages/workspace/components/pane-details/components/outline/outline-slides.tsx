@@ -103,9 +103,8 @@ export const OutlineSlideItem = ({
     ev.preventDefault();
 
     const target = ev.target as HTMLElement;
-    const position = Elem.getPosition(target);
 
-    menu.API.contextMenu(slideMenuItems, position).then((result) => {
+    menu.API.contextMenu(slideMenuItems).then((result) => {
       console.log('menu close', result);
       target.blur();
     });
