@@ -26,8 +26,7 @@ export type GlossaryItem = NewGlossaryItem | ExistingGlossaryItem;
 
 export type ContextMenuResult = {
   data: {
-    resource: ResourceItem;
-    term: GlossaryItem;
+    item: ResourceItem | GlossaryItem;
   };
   position: [number, number];
   item: MenuItemConstructorOptions;
