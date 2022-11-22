@@ -118,16 +118,17 @@ export const Resources = () => {
               isNew: false,
             };
             return (
-              <div key={idx} className={css.tabResourcesItem}>
-                <div
-                  className="d-flex justify-content-between"
-                  onClick={() => {
-                    handleOpenResourceBrowser(editableResource);
-                  }}
-                  onContextMenu={(ev) => {
-                    handleResourceMenu(ev, editableResource);
-                  }}
-                >
+              <div
+                key={idx}
+                className={css.tabResourcesItem}
+                onClick={() => {
+                  handleOpenResourceBrowser(editableResource);
+                }}
+                onContextMenu={(ev) => {
+                  handleResourceMenu(ev, editableResource);
+                }}
+              >
+                <div className="d-flex justify-content-between">
                   <dt className={css.tabResourcesItemTitle}>
                     <AssetIcon
                       type={editableResource.type}
