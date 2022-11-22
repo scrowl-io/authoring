@@ -244,8 +244,8 @@ export const config: stateManager.StateConfig = {
       for (let i = 0; i < listLn; i++) {
         if (id === outlineList[i].id) {
           outlineList[i] = {
+            ...outlineList[i],
             ...data,
-            id,
           };
           break;
         }
