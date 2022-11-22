@@ -32,7 +32,7 @@ export const Resources = () => {
       label: 'Edit Resource',
       click: (menuItem) => {
         const res = menuItem as unknown as ContextMenuResult;
-        const editResource = res.data.resource;
+        const editResource = res.data.item as ResourceItem;
 
         setSelectedResource(editResource);
         setIsOpenResourceBrowser(true);
@@ -42,7 +42,8 @@ export const Resources = () => {
       label: 'Preview',
       click: (menuItem) => {
         const res = menuItem as unknown as ContextMenuResult;
-        const previewResource = res.data.resource as ProjectResource;
+        const previewResource = res.data.item as ProjectResource;
+
         Projects.previewAsset({
           asset: previewResource,
           meta: projectMeta,
@@ -60,7 +61,7 @@ export const Resources = () => {
       label: 'Remove Resource',
       click: (menuItem) => {
         const res = menuItem as unknown as ContextMenuResult;
-        const editResource = res.data.resource;
+        const editResource = res.data.item;
 
         Projects.removeResourceItem(editResource);
       },
@@ -81,7 +82,7 @@ export const Resources = () => {
       setSelectedResource(resource);
     }
 
-    menu.API.contextMenu(resourceMenu, position, { resource: resource }).then(
+    menu.API.contextMenu(resourceMenu, position, { item: resource }).then(
       (result) => {
         target.blur();
       }

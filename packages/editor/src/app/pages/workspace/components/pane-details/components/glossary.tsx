@@ -5,6 +5,7 @@ import { Projects } from '../../../../../models';
 import { Elem } from '../../../../../utils';
 import { menu } from '../../../../../services';
 import { GlossaryOverlay } from '../../overlay';
+import { ContextMenuResult, GlossaryItem } from '../pane-details.types';
 
 export const Glossary = () => {
   const [isOpenGlossaryForm, setIsOpenGlossaryForm] = useState(false);
@@ -31,8 +32,11 @@ export const Glossary = () => {
     { type: 'separator' },
     {
       label: 'Remove Term',
-      click: () => {
-        console.log('remove glossary term');
+      click: (menuItem) => {
+        const res = menuItem as unknown as ContextMenuResult;
+        const editTerm = res.data.item as GlossaryItem;
+
+        Projects.removeGlossaryItem(editTerm);
       },
     },
   ];
@@ -72,10 +76,11 @@ export const Glossary = () => {
       selectedTerm.current = term;
     }
 
-    menu.API.contextMenu(glossaryMenu, position).then((result) => {
-      console.log('menu close', result);
-      target.blur();
-    });
+    menu.API.contextMenu(glossaryMenu, position, { item: term }).then(
+      (result) => {
+        target.blur();
+      }
+    );
   };
 
   const handleCloseGlossaryForm = () => {
