@@ -229,6 +229,7 @@ export const upload = (ev: rq.RequestEvent, req: UploadReq) => {
                   type,
                   ext: 'webp',
                   size: transformRes.data.size,
+                  originalExt: ext,
                 },
               });
             });

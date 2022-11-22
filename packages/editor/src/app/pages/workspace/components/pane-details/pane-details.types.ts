@@ -6,15 +6,27 @@ export interface NewResourceItem extends Omit<Projects.ProjectResource, 'type'> 
   type?: Projects.AssetType;
 }
 
+export interface NewGlossaryItem
+  extends Omit<Projects.ProjectGlossaryItem, 'type'> {
+  isNew: true;
+  type?: Projects.AssetType;
+}
+
 export interface ExistingResourceItem extends Projects.ProjectResource {
+  isNew: false;
+}
+
+export interface ExistingGlossaryItem extends Projects.ProjectGlossaryItem {
   isNew: false;
 }
 
 export type ResourceItem = NewResourceItem | ExistingResourceItem;
 
+export type GlossaryItem = NewGlossaryItem | ExistingGlossaryItem;
+
 export type ContextMenuResult = {
   data: {
-    resource: ResourceItem;
+    item: ResourceItem | GlossaryItem;
   };
   position: [number, number];
   item: MenuItemConstructorOptions;

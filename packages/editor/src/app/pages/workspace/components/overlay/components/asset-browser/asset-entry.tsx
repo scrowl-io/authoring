@@ -101,7 +101,7 @@ export const AssetEntry = ({
         </div>
       </td>
       <td style={colType}>
-        <div className="wrapper">{asset.ext}</div>
+        <div className="wrapper">{asset.originalExt}</div>
       </td>
       <td className="file-size">
         <div className="wrapper">
