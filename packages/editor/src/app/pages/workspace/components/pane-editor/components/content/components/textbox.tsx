@@ -59,12 +59,14 @@ export const Textbox = ({
   let inputClasses = 'form-control form-control-sm';
   let groupClasses = 'input-group input-group-sm';
   let controlClasses = 'control-textbox mb-2 template-content-input';
+  const inputId = `input-checkbox-${field.replace(/\./g, '-')}`;
 
   if (isInvalid) {
     inputClasses += ' is-invalid';
   }
 
   const inputProps: any = {
+    id: inputId,
     ref: inputRef,
     type: 'text',
     className: inputClasses,
@@ -163,7 +165,9 @@ export const Textbox = ({
 
   return (
     <div className={controlClasses}>
-      <label className="form-label">{label}</label>
+      <label htmlFor={inputId} className="form-label">
+        {label}
+      </label>
       <div className={groupClasses}>
         {multiLine ? <textarea {...inputProps} /> : <input {...inputProps} />}
       </div>

@@ -65,26 +65,39 @@ export const getAppPath = (filename: string) => {
     const url = new URL(`http://localhost:${port}`);
 
     url.pathname = filename;
+    log.info(`getting app path: ${url.href}`);
     return url.href;
   } else {
-    return `file://${getSrcPath(filename)}`;
+    const appPath = `file://${getDistPath(filename)}`;
+
+    log.info(`getting app path: ${appPath}`);
+    return appPath;
   }
 };
 
 export const getAssetPath = (...paths) => {
-  return app.isPackaged
-  ? joinPath(process.resourcesPath, 'assets', ...paths)
-  : joinPath(APP_PATHS.root, 'assets', ...paths);
+  const assetPath = app.isPackaged
+  ? path.join(process.resourcesPath, 'assets', ...paths)
+  : path.join(APP_PATHS.root, 'assets', ...paths);
+
+  log.info(`getting asset path: ${assetPath}`);
+  return assetPath;
 };
 
-export const getSrcPath = (...paths) => {
-  return app.isPackaged
-  ? joinPath(process.resourcesPath, '../src', 'main', ...paths)
-  : joinPath(APP_PATHS.root, 'src', 'main', ...paths);
+export const getSourcePath = (...paths) => {
+  const srcPath = app.isPackaged
+    ? path.join(process.resourcesPath, '../', 'src', 'main', ...paths)
+    : path.join(APP_PATHS.root, 'src', 'main', ...paths);
+
+  log.info(`getting source path: ${srcPath}`);
+  return srcPath;
 }
 
 export const getDistPath = (...paths) => {
-  return joinPath(APP_PATHS.root, 'dist', ...paths);
+  const distPath = path.join(APP_PATHS.root, 'dist', ...paths);
+
+  log.info(`getting dist path: ${distPath}`);
+  return distPath;
 };
 
 const createResultError = (message: string, error?: unknown): rq.ApiResult => {

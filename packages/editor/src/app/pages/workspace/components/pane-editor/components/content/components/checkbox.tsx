@@ -23,6 +23,7 @@ export const Checkbox = ({
     validationError !== null &&
     validationError !== undefined &&
     validationError.length;
+  const inputId = `input-checkbox-${field.replace(/\./g, '-')}`;
 
   if (inputRef.current && lastFocusState.current !== focus) {
     lastFocusState.current = focus;
@@ -88,9 +89,11 @@ export const Checkbox = ({
   return (
     <div className={controlClasses} style={{ marginLeft: '5px' }}>
       <div className="form-check form-control-sm">
-        <input {...inputProps} type="checkbox" />
+        <input id={inputId} {...inputProps} type="checkbox" />
 
-        <label className="form-check-label">{label}</label>
+        <label htmlFor={inputId} className="form-check-label">
+          {label}
+        </label>
 
         {isInvalid ? (
           <div className="invalid-feedback">{validationError}</div>

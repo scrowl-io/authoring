@@ -198,6 +198,14 @@
           }
         }
 
+        .name:hover {
+          cursor: pointer;
+        }
+
+        .name:hover .inline-input {
+          text-decoration: underline;
+        }
+
         .file-size-label {
           margin-top: 0.5rem;
           display: inline-block;

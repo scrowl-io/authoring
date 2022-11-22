@@ -6,6 +6,7 @@ import { ResourceItem } from '../../pane-details';
 import { Backdrop, Drawer, AssetBrowser } from '.';
 import { Settings } from '../../../../../models';
 import { menu } from '../../../../../services';
+import { hasProp } from '../../../../../utils';
 
 export interface ResourceFormProps
   extends Omit<React.AllHTMLAttributes<HTMLDivElement>, 'onSubmit'> {
@@ -30,14 +31,73 @@ const ResourceFormElement = (
   const isAnimated = !animationSettings.reducedAnimations;
   const modalTitle = resourceItem.isNew ? 'Add New' : 'Edit';
   const [isOpenAssetBrowser, setIsOpenAssetBrowser] = useState(false);
+  const [isDirty, setIsDirty] = useState(false);
   const [resource, setResource] = useState<ResourceItem>(resourceItem);
+  const initialErrorState = {
+    filename: '',
+    title: '',
+  };
+  const [formErrors, setFormErrors] = useState(initialErrorState);
 
   const handleClose = () => {
     onClose();
   };
 
+  const validateForm = (data) => {
+    let isValid = true;
+    const update = {};
+    const errors = {
+      title: '',
+      filename: '',
+    };
+
+    if (hasProp(data, 'title')) {
+      let { title } = data;
+
+      if (title.length) {
+        title = title.trim();
+      }
+
+      if (!title.length) {
+        isValid = false;
+        errors.title = 'Cannot be empty';
+      }
+
+      update['title'] = title;
+      setIsDirty(true);
+    }
+
+    if (hasProp(data, 'filename')) {
+      let { filename } = data;
+
+      if (!filename.length) {
+        isValid = false;
+        errors.filename = 'Attachment must be selected';
+      }
+
+      update['filename'] = filename;
+      setIsDirty(true);
+    }
+
+    setFormErrors(errors);
+    return [isValid, update];
+  };
+
   const handleSubmit = (ev: React.MouseEvent<Element, MouseEvent>) => {
     ev.preventDefault();
+
+    const [isValid, validationUpdate] = validateForm(resource);
+    const update = {
+      ...resource,
+      ...validationUpdate,
+    };
+
+    setResource(update);
+
+    if (!isValid) {
+      return;
+    }
+
     onSubmit(resource);
   };
 
@@ -51,28 +111,36 @@ const ResourceFormElement = (
 
   const handleAssetSelected = (asset) => {
     setIsOpenAssetBrowser(false);
+    let update;
 
     if (resource.filename === resource.title) {
-      setResource({
+      update = {
         ...resource,
         ...asset,
-      });
+      };
     } else {
-      setResource({
+      update = {
         ...resource,
         ...asset,
         title: resource.title,
-      });
+      };
     }
+
+    setResource(update);
+    validateForm(update);
   };
 
   const handleChangeResourceTitle = (
     ev: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setResource({
+    const title = ev.currentTarget.value;
+    const update = {
       ...resource,
-      title: ev.currentTarget.value,
-    });
+      title,
+    };
+
+    setResource(update);
+    validateForm(update);
   };
 
   const handleChangeResourceDescription = (
@@ -123,23 +191,37 @@ const ResourceFormElement = (
 
               <div className="owlui-offcanvas-body content-form">
                 <form className="owlui-offcanvas-form owlui-offcanvas-form--resource">
-                  <div className="owlui-input-group mb-2">
-                    <input
-                      type="text"
-                      readOnly={true}
-                      className="owlui-form-control owlui-read-only"
-                      placeholder="File attachment"
-                      aria-label="File attachment"
-                      value={resource.filename}
-                    />
-                    <div className="owlui-input-group-append">
-                      <Button
-                        variant="outline-primary"
-                        onClick={handleAssetBrowse}
-                      >
-                        Browse
-                      </Button>
+                  <div className="mb-2">
+                    <div
+                      className={`owlui-input-group${
+                        formErrors.filename ? ' is-invalid' : ''
+                      }`}
+                    >
+                      <input
+                        type="text"
+                        name="filename"
+                        readOnly={true}
+                        className={`owlui-form-control owlui-read-only${
+                          formErrors.filename ? ' is-invalid' : ''
+                        }`}
+                        placeholder="File Attachment"
+                        aria-label="File Attachment"
+                        value={resource.filename}
+                      />
+                      <div className="owlui-input-group-append">
+                        <Button
+                          variant="outline-primary"
+                          onClick={handleAssetBrowse}
+                        >
+                          Browse
+                        </Button>
+                      </div>
                     </div>
+                    {formErrors.filename && (
+                      <div className="invalid-feedback">
+                        {formErrors.filename}
+                      </div>
+                    )}
                   </div>
 
                   <div className="mb-2">
@@ -147,14 +229,20 @@ const ResourceFormElement = (
                       Title
                     </label>
                     <input
-                      id="resouce-title"
+                      id="resource-title"
                       type="text"
-                      className="owlui-form-control"
+                      name="title"
+                      className={`owlui-form-control${
+                        formErrors.title ? ' is-invalid' : ''
+                      }`}
                       placeholder="Title"
                       aria-label="Title"
                       value={resource.title}
                       onChange={handleChangeResourceTitle}
                     />
+                    {formErrors.title && (
+                      <div className="invalid-feedback">{formErrors.title}</div>
+                    )}
                   </div>
 
                   <div className="mb-2 owlui-offcanvas-form__textarea">
@@ -166,8 +254,9 @@ const ResourceFormElement = (
                     </label>
                     <textarea
                       id="resource-description"
+                      name="description"
                       className="owlui-form-control form-control-lg"
-                      placeholder="Describe the resource"
+                      placeholder="Describe the Resource"
                       style={{ resize: 'none' }}
                       value={resource.description}
                       onChange={handleChangeResourceDescription}

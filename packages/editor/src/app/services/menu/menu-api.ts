@@ -19,7 +19,11 @@ const ENDPOINTS_FILE: MenuItemEndpointFile = {
   close: '/file/close',
 };
 
-export const contextMenu = (items: Array<ContextMenuItem>, position?: ContextMenuPosition, ...args) => {
+export const contextMenu = (
+  items: Array<ContextMenuItem>,
+  position?: ContextMenuPosition | number[],
+  ...args
+) => {
   return new Promise<rq.ApiResult>((resolve) => {
     const menuItemMap = {};
     const menuItems = items.map((item, idx) => {
@@ -40,8 +44,8 @@ export const contextMenu = (items: Array<ContextMenuItem>, position?: ContextMen
         }
 
         resolve(result);
-      }).
-      catch((e) => {
+      })
+      .catch((e) => {
         console.error('Context Menu Failed', e);
         resolve({
           error: true,

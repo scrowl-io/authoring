@@ -1,7 +1,7 @@
 {
   "name": "@scrowl/editor",
   "productName": "Scrowl",
-  "version": "0.0.12",
+  "version": "0.0.27",
   "license": "MIT",
   "keywords": [],
   "author": {
@@ -31,6 +31,8 @@
     "prepackage": "yarn run clean",
     "package": "yarn run package:backend && yarn run package:frontend",
     "postpackage": "electron-builder build",
+    "package:test": "npx electron-builder build --dir",
+    "postpackage:test": "npx asar extract release/build/mac/Scrowl.app/Contents/Resources/app.asar release/app",
     "package:local:mac": "yarn run package && open release/build/mac",
     "lint": "",
     "postinstall": "yarn electron-builder install-app-deps"
@@ -79,8 +81,6 @@
     "copyright": "Occupational Safety Group Inc.",
     "files": [
       "dist/*",
-      "../../node_modules/**/*",
-      "./node_modules/**/*",
       "./package.json"
     ],
     "extraFiles": [
@@ -116,7 +116,7 @@
     "@parcel/runtime-react-refresh": "^2.7.0",
     "@parcel/transformer-sass": "^2.7.0",
     "@parcel/transformer-typescript-types": "^2.7.0",
-    "@scrowl/config": "^0.0.12",
+    "@scrowl/config": "^0.0.27",
     "@types/adm-zip": "^0.5.0",
     "@types/fs-extra": "^9.0.13",
     "@types/node": "^18.8.4",
@@ -147,13 +147,13 @@
     "@owlui/lib": "^0.0.44",
     "@popperjs/core": "2.11.6",
     "@reduxjs/toolkit": "^1.8.6",
-    "@scrowl/player": "^0.0.12",
-    "@scrowl/runtime": "^0.0.12",
-    "@scrowl/template-block-text": "^1.0.11",
-    "@scrowl/template-core": "^1.0.11",
-    "@scrowl/template-lesson-intro": "^1.0.11",
-    "@scrowl/template-simple-text": "^1.0.11",
-    "@scrowl/template-two-column": "^1.0.11",
+    "@scrowl/player": "^0.0.27",
+    "@scrowl/runtime": "^0.0.27",
+    "@scrowl/template-block-text": "^1.0.26",
+    "@scrowl/template-core": "^1.0.26",
+    "@scrowl/template-lesson-intro": "^1.0.26",
+    "@scrowl/template-simple-text": "^1.0.26",
+    "@scrowl/template-two-column": "^1.0.26",
     "adm-zip": "^0.5.9",
     "bootstrap": "^5.2.2",
     "electron-context-menu": "^3.5.0",

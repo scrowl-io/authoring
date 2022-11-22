@@ -2,9 +2,9 @@ import React, { useState, useRef } from 'react';
 import { Button, Icon } from '@owlui/lib';
 import * as css from '../_pane-details.scss';
 import { Projects } from '../../../../../models';
-import { Elem } from '../../../../../utils';
-import { menu } from '../../../../../services';
+import { menu, sys } from '../../../../../services';
 import { GlossaryOverlay } from '../../overlay';
+import { ContextMenuResult, GlossaryItem } from '../pane-details.types';
 
 export const Glossary = () => {
   const [isOpenGlossaryForm, setIsOpenGlossaryForm] = useState(false);
@@ -31,8 +31,26 @@ export const Glossary = () => {
     { type: 'separator' },
     {
       label: 'Remove Term',
-      click: () => {
-        console.log('remove glossary term');
+      click: (menuItem) => {
+        const res = menuItem as unknown as ContextMenuResult;
+        const editTerm = res.data.item as GlossaryItem;
+
+        sys
+          .messageDialog({
+            message: 'Are you sure?',
+            buttons: ['Remove Term', 'Cancel'],
+            detail: editTerm.word,
+          })
+          .then((res) => {
+            if (res.error) {
+              console.error(res);
+              return;
+            }
+
+            if (res.data.response === 0) {
+              Projects.removeGlossaryItem(editTerm);
+            }
+          });
       },
     },
   ];
@@ -66,16 +84,16 @@ export const Glossary = () => {
     ev.stopPropagation();
 
     const target = ev.target as HTMLElement;
-    const position = Elem.getPosition(target);
 
     if (term) {
       selectedTerm.current = term;
     }
 
-    menu.API.contextMenu(glossaryMenu, position).then((result) => {
-      console.log('menu close', result);
-      target.blur();
-    });
+    menu.API.contextMenu(glossaryMenu, undefined, { item: term }).then(
+      (result) => {
+        target.blur();
+      }
+    );
   };
 
   const handleCloseGlossaryForm = () => {
@@ -102,16 +120,17 @@ export const Glossary = () => {
                 <header className={css.tabGlossaryHeader}>{h}</header>
                 {terms[h].map((item, iIdx: number) => {
                   return (
-                    <div key={iIdx} className={css.tabGlossaryTerm}>
-                      <div
-                        className="d-flex justify-content-between"
-                        onClick={() => {
-                          handleOpenGlossaryForm(item);
-                        }}
-                        onContextMenu={(ev) => {
-                          handleGlossaryMenu(ev, item);
-                        }}
-                      >
+                    <div
+                      key={iIdx}
+                      className={css.tabGlossaryTerm}
+                      onClick={() => {
+                        handleOpenGlossaryForm(item);
+                      }}
+                      onContextMenu={(ev) => {
+                        handleGlossaryMenu(ev, item);
+                      }}
+                    >
+                      <div className="d-flex justify-content-between">
                         <dt className={css.tabGlossaryTermWord}>{item.word}</dt>
                         <Button
                           className={css.actionMenu}

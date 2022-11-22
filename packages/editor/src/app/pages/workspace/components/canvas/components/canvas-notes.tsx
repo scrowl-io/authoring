@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Icon } from '@owlui/lib';
 import * as css from '../_canvas.scss';
 import { useActiveSlide, setActiveSlide } from '../../../';
-import { Settings } from '../../../../../models';
+import { Settings, Projects } from '../../../../../models';
 
 export const CanvasNotes = () => {
   const notes = useActiveSlide('notes');
@@ -58,7 +58,7 @@ export const CanvasNotes = () => {
         >
           <label
             className={`form-label ${css.canvasFooterLinkLabel}`}
-            htmlFor="slideNotes"
+            htmlFor="canvas-slide-notes"
           >
             Slide Notes
           </label>
@@ -76,8 +76,14 @@ export const CanvasNotes = () => {
             style={{ minHeight: '72px' }}
             className={`form-control ${css.canvasFooterTextarea}`}
             value={notes}
-            onChange={(e) => {
-              setActiveSlide({ notes: e.target.value });
+            onChange={(ev: React.ChangeEvent<HTMLTextAreaElement>) => {
+              const notes = ev.target.value;
+
+              setActiveSlide({ notes });
+              Projects.setSlide({
+                id: slideId,
+                notes,
+              });
             }}
           />
         </motion.div>
