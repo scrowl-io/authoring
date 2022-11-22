@@ -498,6 +498,32 @@ export const previewAsset = (data: PreviewAssetReq) => {
   return API.previewAsset(data);
 };
 
+export const useProjectBrowser = () => {
+  return useSelector((data: stateManager.RootState) => {
+    return data.projects.isOpenProjectBrowser;
+  });
+};
+
+export const openProjectBrowser = () => {
+  if (!processor.dispatch) {
+    console.warn('project processor not ready');
+    return;
+  }
+
+  const fn = state.openProjectBrowser as ActionCreatorWithoutPayload;
+  processor.dispatch(fn());
+};
+
+export const closeProjectBrowser = () => {
+  if (!processor.dispatch) {
+    console.warn('project processor not ready');
+    return;
+  }
+
+  const fn = state.closeProjectBrowser as ActionCreatorWithoutPayload;
+  processor.dispatch(fn());
+};
+
 export default {
   useProcessor,
   resetState,
@@ -542,4 +568,7 @@ export default {
   list,
   open,
   previewAsset,
+  useProjectBrowser,
+  openProjectBrowser,
+  closeProjectBrowser
 };

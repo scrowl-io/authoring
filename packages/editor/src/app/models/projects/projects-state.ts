@@ -6,6 +6,7 @@ export const initialState = {
   isDirty: false, // true if the user has made any change
   isUncommitted: false, // true if the user has any unsaved change
   syncScormName: true,
+  isOpenProjectBrowser: false,
   assets: [],
   data: {
     meta: {
@@ -562,6 +563,12 @@ export const config: stateManager.StateConfig = {
       state.isDirty = true;
       state.isUncommitted = true;
     },
+    openProjectBrowser: (state) => {
+      state.isOpenProjectBrowser = true;
+    },
+    closeProjectBrowser: (state) => {
+      state.isOpenProjectBrowser = false;
+    },
   },
 };
 
@@ -588,6 +595,8 @@ export const {
   setAssetItem,
   removeAssetItem,
   resetIsUncommitted,
+  openProjectBrowser,
+  closeProjectBrowser
 } = slice.actions;
 
 export const reducer = slice.reducer;
