@@ -106,7 +106,7 @@ const GlossaryFormElement = (
                         'owlui-form-control form-control-lg ' +
                         (isDirty && termDefinition.trim() === '' ? 'error' : '')
                       }
-                      placeholder="Define the term"
+                      placeholder="Define the Term"
                       style={{ resize: 'none' }}
                       value={termDefinition}
                       onChange={(e) => {
