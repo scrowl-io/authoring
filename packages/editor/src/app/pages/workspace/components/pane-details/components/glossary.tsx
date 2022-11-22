@@ -70,13 +70,12 @@ export const Glossary = () => {
     ev.stopPropagation();
 
     const target = ev.target as HTMLElement;
-    const position = Elem.getPosition(target);
 
     if (term) {
       selectedTerm.current = term;
     }
 
-    menu.API.contextMenu(glossaryMenu, position, { item: term }).then(
+    menu.API.contextMenu(glossaryMenu, undefined, { item: term }).then(
       (result) => {
         target.blur();
       }

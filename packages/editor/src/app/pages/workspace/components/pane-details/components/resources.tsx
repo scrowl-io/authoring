@@ -76,7 +76,8 @@ export const Resources = () => {
     ev.stopPropagation();
 
     const target = ev.target as HTMLElement;
-    const position = Elem.getPosition(target);
+
+    const position = [ev.clientX, ev.clientY];
 
     if (resource) {
       setSelectedResource(resource);
