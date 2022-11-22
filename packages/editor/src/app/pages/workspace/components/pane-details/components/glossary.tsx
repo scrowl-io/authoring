@@ -2,8 +2,7 @@ import React, { useState, useRef } from 'react';
 import { Button, Icon } from '@owlui/lib';
 import * as css from '../_pane-details.scss';
 import { Projects } from '../../../../../models';
-import { Elem } from '../../../../../utils';
-import { menu } from '../../../../../services';
+import { menu, sys } from '../../../../../services';
 import { GlossaryOverlay } from '../../overlay';
 import { ContextMenuResult, GlossaryItem } from '../pane-details.types';
 
@@ -36,7 +35,22 @@ export const Glossary = () => {
         const res = menuItem as unknown as ContextMenuResult;
         const editTerm = res.data.item as GlossaryItem;
 
-        Projects.removeGlossaryItem(editTerm);
+        sys
+          .messageDialog({
+            message: 'Are you sure?',
+            buttons: ['Remove Term', 'Cancel'],
+            detail: editTerm.word,
+          })
+          .then((res) => {
+            if (res.error) {
+              console.error(res);
+              return;
+            }
+
+            if (res.data.response === 0) {
+              Projects.removeGlossaryItem(editTerm);
+            }
+          });
       },
     },
   ];
