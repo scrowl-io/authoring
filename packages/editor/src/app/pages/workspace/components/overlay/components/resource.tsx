@@ -128,8 +128,8 @@ const ResourceFormElement = (
                       type="text"
                       readOnly={true}
                       className="owlui-form-control owlui-read-only"
-                      placeholder="File attachment"
-                      aria-label="File attachment"
+                      placeholder="File Attachment"
+                      aria-label="File Attachment"
                       value={resource.filename}
                     />
                     <div className="owlui-input-group-append">
@@ -167,7 +167,7 @@ const ResourceFormElement = (
                     <textarea
                       id="resource-description"
                       className="owlui-form-control form-control-lg"
-                      placeholder="Describe the resource"
+                      placeholder="Describe the Resource"
                       style={{ resize: 'none' }}
                       value={resource.description}
                       onChange={handleChangeResourceDescription}
