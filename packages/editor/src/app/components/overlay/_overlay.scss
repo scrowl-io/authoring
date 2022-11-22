@@ -1,0 +1,139 @@
+.overlay {
+  &-container {
+    height: 100vh;
+    width: 100vw;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    overflow: hidden;
+    top: 0;
+    left: 0;
+    position: absolute;
+  }
+
+  &-backdrop {
+    background-color: var(--owl-dropdown-color);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1040;
+  }
+
+  &-content {
+    z-index: 1050;
+    background-color: var(--bs-white);
+
+    .owlui-offcanvas-header {
+      padding: 0.5rem 1rem;
+    }
+
+    .owlui-offcanvas-form {
+      margin-bottom: 0;
+    }
+
+    footer {
+      border-top: var(--owl-border-color) solid var(--bs-border-width);
+      margin-top: 0 !important;
+      background-color: var(--bs-modal-bg);
+      padding: 0.5rem;
+    }
+  }
+}
+
+.pane {
+  & .right-overlay-panel {
+    top: -50px;
+  }
+}
+
+.left-overlay-panel {
+  footer {
+    bottom: 0;
+    right: calc(2 * var(--bs-offcanvas-padding-y));
+    position: absolute;
+  }
+
+  .owlui-offcanvas-body {
+    flex-grow: initial;
+    height: calc(100vh - 125px);
+    overflow: auto;
+  }
+
+  .owlui-offcanvas-form {
+    margin: 0;
+    display: grid;
+    min-height: 100%;
+    grid-auto-flow: row;
+    grid-template-rows: auto 1fr;
+
+    &--resource {
+      grid-template-rows: auto auto 1fr;
+    }
+  }
+}
+
+.right-overlay-panel {
+  z-index: 1050;
+
+  .owlui-offcanvas-body {
+    flex-grow: initial;
+    height: calc(100vh - 125px);
+    overflow: auto;
+  }
+
+  .owlui-offcanvas-form {
+    margin: 0;
+    display: grid;
+    min-height: 100%;
+    grid-auto-flow: row;
+    grid-template-rows: auto 1fr;
+  }
+
+  td {
+    &.truncate {
+      white-space: nowrap;
+      overflow: hidden;
+      max-width: 0;
+      text-overflow: ellipsis;
+    }
+  }
+
+  footer {
+    bottom: 0;
+    right: calc(2 * var(--bs-offcanvas-padding-y));
+    position: absolute;
+  }
+
+  textarea {
+    resize: none;
+  }
+
+  .accordion-button {
+    font-weight: 600;
+    font-size: 0.875rem;
+    letter-spacing: 0.0125em;
+  }
+}
+
+.owlui-offcanvas-form__textarea {
+  display: flex;
+  flex-direction: column;
+
+  textarea {
+    flex-grow: 1;
+
+    .form-control {
+      min-height: calc(1.4em + 0.75em + 2px);
+    }
+
+    .form-control-sm {
+      min-height: calc(1.4em + 0.75em + 2px);
+    }
+
+    .form-control-lg {
+      min-height: calc(1.4em + 0.75em + 2px);
+    }
+  }
+}

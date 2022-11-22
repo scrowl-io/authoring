@@ -1,6 +1,6 @@
 import React from 'react';
-import { Accordion } from '../../../../../../components';
-import { Projects } from '../../../../../../models';
+import { Accordion } from '../../../../../components';
+import { Projects } from '../../../../../models';
 
 export type CourseSettingsProps = {
   data: Projects.ProjectScorm;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Accordion } from '../../../../../../components';
+import { Accordion } from '../../../../../components';
 
 export const Reporting = ({ data, onChange }) => {
   const { id, reportStatus, lmsIdentifier } = data;

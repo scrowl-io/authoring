@@ -5,3 +5,4 @@ export * from './accordion';
 export * from './error';
 export * from './asset-icon';
 export *  as InlineInput from './inline-inputs';
+export * from './overlay';

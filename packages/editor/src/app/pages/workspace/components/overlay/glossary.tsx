@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useRef, forwardRef } from 'react';
 import { AnimatePresence } from 'framer-motion';
-import '../_overlay.scss';
-import { Backdrop, Drawer } from '.';
-import { Settings } from '../../../../../models';
-import { menu } from '../../../../../services';
-import { hasProp } from '../../../../../utils';
+import './_overlay.scss';
+import { Backdrop, Drawer } from '../../../../components';
+import { Settings } from '../../../../models';
+import { menu } from '../../../../services';
+import { hasProp } from '../../../../utils';
 
 const GlossaryFormElement = (
   { className, isOpen, onClose, onSubmit, term, ...props },

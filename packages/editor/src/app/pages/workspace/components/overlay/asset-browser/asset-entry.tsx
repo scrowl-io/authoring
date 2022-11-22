@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Button, Icon } from '@owlui/lib';
 import { AssetEntryProps } from './asset.types';
-import { menu, sys } from '../../../../../../services';
-import { AssetIcon, InlineInput } from '../../../../../../components';
-import { Projects } from '../../../../../../models';
+import { menu, sys } from '../../../../../services';
+import { AssetIcon, InlineInput } from '../../../../../components';
+import { Projects } from '../../../../../models';
 
 export const AssetEntry = ({
   asset,
