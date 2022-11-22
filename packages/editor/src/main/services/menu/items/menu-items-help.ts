@@ -1,5 +1,8 @@
-import { MenuItemConstructorOptions, BrowserWindow } from 'electron';
+import { MenuItemConstructorOptions } from 'electron';
 import { log } from '../../';
+const { BrowserWindow } = require('electron');
+
+const isDevEnv = process.env.NODE_ENV === 'development';
 
 export const create = (isMac: boolean) => {
   const menuId = 'help-menu';
@@ -13,8 +16,15 @@ export const create = (isMac: boolean) => {
         accelerator: 'CmdorCtrl+Shift+R',
         click: (menuItem, browserWindow, ev) => {
           log.info('menu event: reload window', ev);
-          const mainWindow = BrowserWindow.getAllWindows()[0];
-          mainWindow.webContents.reloadIgnoringCache();
+
+          if (isDevEnv) {
+            const mainWindow = BrowserWindow.getAllWindows()[0];
+            mainWindow.webContents.reloadIgnoringCache();
+          } else {
+            const mainWindow = BrowserWindow.getAllWindows()[0];
+            mainWindow.webContents.reloadIgnoringCache();
+            // browserWindow?.reload();
+          }
         },
       },
       {
@@ -23,8 +33,9 @@ export const create = (isMac: boolean) => {
         accelerator: 'CmdorCtrl+Shift+I',
         click: (menuItem, browserWindow, ev) => {
           log.info('menu event: show dev tools', ev);
+          // browserWindow?.webContents.toggleDevTools();
           const mainWindow = BrowserWindow.getAllWindows()[0];
-          mainWindow.webContents.openDevTools();
+          mainWindow.webContents.toggleDevTools();
         },
       },
       { type: 'separator' },
