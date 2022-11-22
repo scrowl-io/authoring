@@ -247,11 +247,11 @@ export const AssetDrawerElement = (
                             </th>
                             <th
                               scope="col"
-                              data-sort-field="type"
+                              data-sort-field="originalExt"
                               style={stylesColType}
                             >
                               Type
-                              {sortField === 'type' && (
+                              {sortField === 'originalExt' && (
                                 <Icon
                                   className="sort-indicator"
                                   icon={sortIcon}
