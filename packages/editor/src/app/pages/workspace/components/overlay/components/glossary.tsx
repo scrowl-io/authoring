@@ -4,6 +4,7 @@ import '../_overlay.scss';
 import { Backdrop, Drawer } from '.';
 import { Settings } from '../../../../../models';
 import { menu } from '../../../../../services';
+import { hasProp } from '../../../../../utils';
 
 const GlossaryFormElement = (
   { className, isOpen, onClose, onSubmit, term, ...props },
@@ -13,43 +14,122 @@ const GlossaryFormElement = (
   const isAnimated = !animationSettings.reducedAnimations;
   const isNewTerm = term === undefined || term.id === -1;
   const title = isNewTerm ? 'Add' : 'Edit';
-  const [termWord, setTermWord] = useState(isNewTerm ? '' : term.word);
-  const [termDefinition, setTermDefinition] = useState(
-    isNewTerm ? '' : term.description
-  );
   const [isDirty, setIsDirty] = useState(false);
+  const initialFormTerm = {
+    word: '',
+    definition: '',
+  };
+  const [formTerm, setFormTerm] = useState(isNewTerm ? initialFormTerm : term);
+  const initialErrorState = {
+    word: '',
+    definition: '',
+  };
+  const [formErrors, setFormErrors] = useState(initialErrorState);
 
   const handleClose = () => {
     onClose();
   };
 
+  const validateForm = (data) => {
+    let isValid = true;
+    const update = {};
+    const errors = {
+      word: '',
+      definition: '',
+    };
+
+    if (hasProp(data, 'word')) {
+      let { word } = data;
+
+      if (word.length) {
+        word = word.trim();
+      }
+
+      if (!word.length) {
+        isValid = false;
+        errors.word = 'Cannot be empty';
+      }
+
+      update['word'] = word;
+      setIsDirty(true);
+    }
+
+    if (hasProp(data, 'definition')) {
+      let { definition } = data;
+
+      if (definition.length) {
+        definition = definition.trim();
+      }
+
+      if (!definition.length) {
+        isValid = false;
+        errors.definition = 'Cannot be empty';
+      }
+
+      update['definition'] = definition;
+      setIsDirty(true);
+    }
+
+    setFormErrors(errors);
+    return [isValid, update];
+  };
+
   const handleSubmit = (ev: React.MouseEvent<Element, MouseEvent>) => {
     ev.preventDefault();
 
-    const hasError = termWord.trim() === '' || termDefinition.trim() === '';
+    const [isValid, validationUpdate] = validateForm(formTerm);
+    const update = {
+      ...formTerm,
+      ...validationUpdate,
+    };
 
-    if (hasError) {
-      setIsDirty(true);
+    setFormTerm(update);
+
+    if (!isValid) {
       return;
     }
 
     onSubmit({
-      word: termWord,
-      definition: termDefinition,
+      ...update,
       id: isNewTerm ? -1 : term.id,
     });
   };
 
+  const handleWordChange = (ev: React.FormEvent<HTMLInputElement>) => {
+    const word = ev.currentTarget.value;
+    const update = {
+      ...formTerm,
+      word,
+    };
+
+    setFormTerm(update);
+    validateForm(update);
+  };
+
+  const handleDefinitionChange = (ev: React.FormEvent<HTMLTextAreaElement>) => {
+    const definition = ev.currentTarget.value;
+    const update = {
+      ...formTerm,
+      definition,
+    };
+
+    setFormTerm(update);
+    validateForm(update);
+  };
+
   useEffect(() => {
-    if (term && termWord !== term.word) {
-      setTermWord(term.word);
-      setTermDefinition(term.definition);
+    if (
+      term &&
+      (formTerm.word !== term.word || formTerm.definition !== term.definition)
+    ) {
+      setFormTerm(term);
     }
 
     if (isOpen) {
       menu.API.disableProjectActions();
     } else {
       menu.API.enableProjectActions();
+      setFormErrors(initialErrorState);
     }
   }, [term, isOpen]);
 
@@ -82,18 +162,19 @@ const GlossaryFormElement = (
                     </label>
                     <input
                       id="term-word"
+                      name="word"
                       autoFocus
                       type="text"
-                      className={
-                        'owlui-form-control ' +
-                        (isDirty && termWord.trim() === '' ? 'error' : '')
-                      }
+                      className={`owlui-form-control${
+                        isDirty && formErrors.word ? ' is-invalid' : ''
+                      }`}
                       placeholder="Enter Term"
-                      value={termWord}
-                      onChange={(e) => {
-                        setTermWord(e.target.value);
-                      }}
+                      value={formTerm.word}
+                      onChange={handleWordChange}
                     />
+                    {formErrors.word && (
+                      <div className="invalid-feedback">{formErrors.word}</div>
+                    )}
                   </div>
 
                   <div className="mb-2 owlui-offcanvas-form__textarea">
@@ -102,17 +183,20 @@ const GlossaryFormElement = (
                     </label>
                     <textarea
                       id="glossary-definition"
-                      className={
-                        'owlui-form-control form-control-lg ' +
-                        (isDirty && termDefinition.trim() === '' ? 'error' : '')
-                      }
+                      name="definition"
+                      className={`owlui-form-control${
+                        isDirty && formErrors.definition ? ' is-invalid' : ''
+                      }`}
                       placeholder="Define the Term"
                       style={{ resize: 'none' }}
-                      value={termDefinition}
-                      onChange={(e) => {
-                        setTermDefinition(e.target.value);
-                      }}
+                      value={formTerm.definition}
+                      onChange={handleDefinitionChange}
                     />
+                    {formErrors.definition && (
+                      <div className="invalid-feedback">
+                        {formErrors.definition}
+                      </div>
+                    )}
                   </div>
 
                   <footer className="d-flex justify-content-end my-3">
