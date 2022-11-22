@@ -7,7 +7,7 @@ import {
   ContextMenuResult,
 } from '../pane-details.types';
 import { Projects } from '../../../../../models';
-import { Elem, List } from '../../../../../utils';
+import { List } from '../../../../../utils';
 import { menu, sys } from '../../../../../services';
 import { AssetIcon } from '../../../../../components';
 import { ResourceOverlay } from '../../overlay';
@@ -20,6 +20,7 @@ export const Resources = () => {
     title: '',
     filename: '',
     ext: '',
+    originalExt: '',
     size: 0,
   };
   const [selectedResource, setSelectedResource] =
@@ -61,9 +62,24 @@ export const Resources = () => {
       label: 'Remove Resource',
       click: (menuItem) => {
         const res = menuItem as unknown as ContextMenuResult;
-        const editResource = res.data.item;
+        const editResource = res.data.item as ResourceItem;
 
-        Projects.removeResourceItem(editResource);
+        sys
+          .messageDialog({
+            message: 'Are you sure?',
+            buttons: ['Remove Resource', 'Cancel'],
+            detail: editResource.title || editResource.filename,
+          })
+          .then((res) => {
+            if (res.error) {
+              console.error(res);
+              return;
+            }
+
+            if (res.data.response === 0) {
+              Projects.removeResourceItem(editResource);
+            }
+          });
       },
     },
   ];
