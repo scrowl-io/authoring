@@ -149,6 +149,8 @@ const $b3d1e3300d945f09$export$6ed414b8d8bead88 = {
             message: "SCORM service failed to initialize",
             data: $b3d1e3300d945f09$export$6ed414b8d8bead88.getError()
         };
+        $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.core.score.min", 90.0);
+        // service.setValue('cmi.core.score.max', 100.0);
         return {
             error: false
         };
@@ -156,7 +158,7 @@ const $b3d1e3300d945f09$export$6ed414b8d8bead88 = {
     save: ()=>{
         const res = $b3d1e3300d945f09$export$6ed414b8d8bead88.isAvailable();
         if (res.error) return res;
-        const resSave = res.API.LMSCommit("");
+        const resSave = res.API.LMSCommit();
         if (resSave === $b3d1e3300d945f09$export$6ed414b8d8bead88.STATUSES.update.false) return {
             error: true,
             message: "SCORM service failed to save",
@@ -202,6 +204,8 @@ const $b3d1e3300d945f09$export$6ed414b8d8bead88 = {
         const res = $b3d1e3300d945f09$export$6ed414b8d8bead88.isAvailable();
         if (res.error) return res;
         const getRes = res.API.LMSGetValue(elem);
+        console.log("GET RES");
+        console.log(getRes);
         if (getRes === $b3d1e3300d945f09$export$6ed414b8d8bead88.STATUSES.update.false) return {
             error: true,
             message: `SCORM service failed to get ${elem}`,
@@ -247,16 +251,17 @@ const $b3d1e3300d945f09$export$6ed414b8d8bead88 = {
     },
     finish: ()=>{
         console.log("DONE");
-        $b3d1e3300d945f09$export$6ed414b8d8bead88.updateStatus("success");
-        $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.core.score.raw", 87.00);
+        $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.core.score.raw", 87.0);
+        const scoreVal = $b3d1e3300d945f09$export$6ed414b8d8bead88.getValue("cmi.core.score.raw");
+        const minScore = $b3d1e3300d945f09$export$6ed414b8d8bead88.getValue("cmi.core.score.min");
+        if (scoreVal > minScore) $b3d1e3300d945f09$export$6ed414b8d8bead88.updateStatus("success");
+        else $b3d1e3300d945f09$export$6ed414b8d8bead88.updateStatus("failed");
         // service._time.end = new Date();
+        console.log("SERVICE:");
         console.log($b3d1e3300d945f09$export$6ed414b8d8bead88);
         $b3d1e3300d945f09$export$6ed414b8d8bead88.save();
-        const val = $b3d1e3300d945f09$export$6ed414b8d8bead88.getValue("cmi.core.lesson_status");
-        console.log(val);
+        // const val = service.getValue('cmi.core.lesson_status');
         $b3d1e3300d945f09$export$6ed414b8d8bead88.save();
-        const core = $b3d1e3300d945f09$export$6ed414b8d8bead88.getValue("cmi.core");
-        console.log(core);
         $b3d1e3300d945f09$export$6ed414b8d8bead88.exit();
         console.log($b3d1e3300d945f09$export$6ed414b8d8bead88);
     }
