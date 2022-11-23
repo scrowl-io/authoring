@@ -27,7 +27,8 @@ export const useInteractions = () => {
   return useSelector((data: stateManager.RootState) => {
     return {
       isDirty: data.projects.isDirty,
-      isUncommitted: data.projects.isUncommitted, 
+      isUncommitted: data.projects.isUncommitted,
+      isLoaded: data.projects.isLoaded,
     };
   });
 };

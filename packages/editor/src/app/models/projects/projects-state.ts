@@ -7,6 +7,7 @@ export const initialState = {
   isUncommitted: false, // true if the user has any unsaved change
   syncScormName: true,
   isOpenProjectBrowser: false,
+  isLoaded: false,
   assets: [],
   data: {
     meta: {
@@ -111,6 +112,8 @@ export const config: stateManager.StateConfig = {
       if (!isSame && !isEmptyMeta && state.syncScormName) {
         state.data.scorm.name = state.data.meta.name.slice();
       }
+
+      state.isLoaded = true;
     },
     setMeta: (state, action) => {
       updateObj(state.data.meta, action.payload);
