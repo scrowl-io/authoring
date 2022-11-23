@@ -87,7 +87,7 @@ export const config: stateManager.StateConfig = {
   initialState,
   reducers: {
     resetState: (state) => {
-      state = initialState;
+      updateObj(state, initialState);
     },
     resetIsUncommitted: (state) => {
       state.isUncommitted = false;
