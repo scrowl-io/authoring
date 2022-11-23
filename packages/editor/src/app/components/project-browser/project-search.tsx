@@ -9,12 +9,12 @@ export const ProjectSearch = ({ value, onChange }: ProjectSearchProps) => {
   };
 
   return (
-    <div className="mt-1">
+    <div className="project-searchbar mt-1">
       <input
         id="project-search-input"
         type="search"
         className="form-control form-control-sm"
-        placeholder="Search files..."
+        placeholder="Search Projects..."
         autoComplete="off"
         value={value}
         onChange={onChange}

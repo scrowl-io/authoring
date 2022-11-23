@@ -1,24 +1,30 @@
 import React, { useEffect, useState, forwardRef, useRef } from 'react';
 import { Button, Icon } from '@owlui/lib';
-import { Modal } from '../';
+import './_project-browser.scss';
+import { FormattedProjectFile } from './project-browser.types';
+import { Modal, filter } from '../';
 import { Projects } from '../../models';
 import { ProjectSearch } from './';
 import { List } from '../../utils';
 
 const ProjectBrowserElement = ({ isOpen, ...props }, ref) => {
   const title = 'Project Browser';
-  const projects = [];
+  const listInProgress = useRef(false);
+  const [projects, setProjects] = useState<Array<FormattedProjectFile>>([]);
   const [filteredProjects, setFilteredProjects] = useState<
-    Array<Projects.ProjectFile>
+    Array<FormattedProjectFile>
   >([]);
-  const [selectedProject, setSelectedProject] = useState();
+  const [selectedProject, setSelectedProject] = useState<{
+    idx: number;
+    project: Projects.ProjectFile;
+  } | null>();
   const [filterInput, setFilterInput] = useState('');
-  const [sortField, setSortField] = useState('name');
+  const [sortField, setSortField] = useState('project.name');
   const [sortOrder, setSortOrder] = useState('asc');
   const [sortIcon, setSortIcon] = useState('arrow_drop_down');
 
   const sortList = () => {
-    let sortedList: Array<Projects.ProjectFile> = projects.slice();
+    let sortedList: Array<FormattedProjectFile> = projects.slice();
 
     List.sortBy(sortedList, sortField, sortOrder === 'desc');
 
@@ -26,10 +32,10 @@ const ProjectBrowserElement = ({ isOpen, ...props }, ref) => {
   };
 
   const searchList = () => {
-    let filteredList: Array<Projects.ProjectFile> = [];
+    let filteredList: Array<FormattedProjectFile> = [];
 
-    const filterList = (project: Projects.ProjectFile) => {
-      return project.versions[0].name.indexOf(filterInput) !== -1;
+    const filterList = (project: FormattedProjectFile) => {
+      return project.project.name.indexOf(filterInput) !== -1;
     };
 
     if (!filterInput || !filterInput.length) {
@@ -80,14 +86,51 @@ const ProjectBrowserElement = ({ isOpen, ...props }, ref) => {
 
   const handleSubmit = () => {};
 
+  const handleSelectProject = (project: Projects.ProjectFile, idx: number) => {
+    setSelectedProject({
+      idx,
+      project,
+    });
+  };
+
   useEffect(() => {
     setFilterInput('');
-    // TODO :: call project api endpoint to get list of projects
+
+    const getProjects = () => {
+      Projects.list().then((res) => {
+        listInProgress.current = false;
+
+        if (res.error) {
+          console.error(res);
+          return;
+        }
+
+        if (!isOpen) {
+          return;
+        }
+
+        setProjects(
+          res.data.projects.map((projectFile) => {
+            projectFile.project = projectFile.versions[0];
+            return projectFile;
+          })
+        );
+      });
+    };
+
+    if (!listInProgress.current && isOpen) {
+      listInProgress.current = true;
+      getProjects();
+    }
+
+    if (!isOpen) {
+      setSelectedProject(null);
+    }
   }, [isOpen]);
 
   useEffect(() => {
     searchList();
-  }, [filterInput, sortField, sortOrder]);
+  }, [filterInput, sortField, sortOrder, projects]);
 
   return (
     <div ref={ref}>
@@ -96,6 +139,7 @@ const ProjectBrowserElement = ({ isOpen, ...props }, ref) => {
         title={title}
         isOpen={isOpen}
         onClose={handleClose}
+        modalSize="lg"
       >
         <div className="project-browser-container">
           <ProjectSearch value={filterInput} onChange={handleFilterInput} />
@@ -103,19 +147,31 @@ const ProjectBrowserElement = ({ isOpen, ...props }, ref) => {
             <table className="table">
               <thead>
                 <tr onClick={handleSortOrder}>
-                  <th scope="col" data-sort-field="name">
+                  <th
+                    scope="col"
+                    data-sort-field="project.name"
+                    className="cell-name"
+                  >
                     Name
-                    {sortField === 'name' && (
+                    {sortField === 'project.name' && (
                       <Icon className="sort-indicator" icon={sortIcon} />
                     )}
                   </th>
-                  <th scope="col" data-sort-field="createdAt">
+                  <th
+                    scope="col"
+                    data-sort-field="createdAt"
+                    className="cell-created-at"
+                  >
                     Created
                     {sortField === 'createdAt' && (
                       <Icon className="sort-indicator" icon={sortIcon} />
                     )}
                   </th>
-                  <th scope="col" data-sort-field="updatedAt">
+                  <th
+                    scope="col"
+                    data-sort-field="updatedAt"
+                    className="cell-updated-at"
+                  >
                     Last Modified
                     {sortField === 'updatedAt' && (
                       <Icon className="sort-indicator" icon={sortIcon} />
@@ -125,15 +181,33 @@ const ProjectBrowserElement = ({ isOpen, ...props }, ref) => {
               </thead>
               <tbody>
                 {filteredProjects.length ? (
-                  filteredProjects.map((project, idx) => {
-                    return (
-                      <tr key={idx}>
-                        <td>{project.versions[0].name}</td>
-                        <td>{project.createdAt}</td>
-                        <td>{project.updatedAt}</td>
-                      </tr>
-                    );
-                  })
+                  filteredProjects.map(
+                    (project: FormattedProjectFile, idx: number) => {
+                      let classes = 'project-row';
+
+                      if (idx === selectedProject?.idx) {
+                        classes += ' active';
+                      }
+
+                      return (
+                        <tr
+                          key={idx}
+                          className={classes}
+                          onClick={() => {
+                            handleSelectProject(project, idx);
+                          }}
+                        >
+                          <td className="cell-name">{project.project.name}</td>
+                          <td className="cell-created-at">
+                            <filter.Date>{project.createdAt}</filter.Date>
+                          </td>
+                          <td className="cell-updated-at">
+                            <filter.Date>{project.updatedAt}</filter.Date>
+                          </td>
+                        </tr>
+                      );
+                    }
+                  )
                 ) : (
                   <></>
                 )}

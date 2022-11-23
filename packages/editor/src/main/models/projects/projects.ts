@@ -554,13 +554,48 @@ export const publish = (ev: rq.RequestEvent, data: ProjectData) => {
   });
 };
 
-export const list = (ev: rq.RequestEvent) => {
+export const list = (ev: rq.RequestEvent, limit?: number) => {
   return new Promise<rq.ApiResult>((resolve) => {
-    resolve({
-      error: false,
-      data: {
-        listed: true,
-      },
+    fs.drainProjectFiles().then((drainRes) => {
+      if (drainRes.error) {
+        resolve(drainRes);
+        return;
+      }
+
+      const filePromises: Array<Promise<rq.ApiResult>> = [];
+
+      drainRes.data.filepaths.forEach((filepath, idx) => {
+        if (limit && idx >= limit) {
+          return;
+        }
+
+        filePromises.push(fs.fileRead(filepath));
+      });
+
+      Promise.allSettled(filePromises).then((filePromiseRes) => {
+        let projects: Array<ProjectFile> = [];
+
+        filePromiseRes.forEach((fileRes, idx) => {
+          if (fileRes.status === 'rejected') {
+            log.error(`failed to open: ${drainRes.data.filepaths[idx]}`);
+            return;
+          }
+
+          if (fileRes.value.error) {
+            log.error('failed to open: ${drainRes.data.filepaths[idx]}', fileRes.value);
+            return;
+          }
+
+          projects.push(fileRes.value.data.contents);
+        });
+        
+        resolve({
+          error: false,
+          data: {
+            projects,
+          },
+        });
+      });
     });
   });
 };
