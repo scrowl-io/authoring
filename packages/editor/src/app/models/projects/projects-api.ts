@@ -1,4 +1,4 @@
-import { ProjectsEndpoints, PreviewAssetReq, WindowEndpoints } from './projects.types';
+import { ProjectsEndpoints, PreviewAssetReq, WindowEndpoints, ProjectMeta } from './projects.types';
 import { rq } from '../../services';
 
 const ENDPOINTS: ProjectsEndpoints = {
@@ -45,7 +45,7 @@ export const list = (data?): Promise<rq.ApiResult> => {
   return rq.invoke(ENDPOINTS.list, data);
 };
 
-export const open = (data?): Promise<rq.ApiResult> => {
+export const open = (data: ProjectMeta): Promise<rq.ApiResult> => {
   return rq.invoke(ENDPOINTS.open, data);
 };
 

@@ -432,7 +432,7 @@ export const save = (ev: rq.RequestEvent, { data, assets }: SaveReq) => {
 
       meta.updatedAt = now;
       meta.id = uuid();
-      meta.filename = `${fs.joinPath(infoRes.data.folder, meta.id)}.gzip`;
+      meta.filename = `${fs.joinPath(infoRes.data.folder, meta.id)}.json.gz`;
       info.versions.unshift(meta);
       info.assets = assets || [];
 
@@ -600,13 +600,21 @@ export const list = (ev: rq.RequestEvent, limit?: number) => {
   });
 };
 
-export const open = (ev: rq.RequestEvent) => {
+export const open = (ev: rq.RequestEvent, project: ProjectMeta) => {
   return new Promise<rq.ApiResult>((resolve) => {
-    resolve({
-      error: false,
-      data: {
-        opened: true,
-      },
+
+    fs.archive.uncompress(project.filename).then((res) => {
+      if (res.error) {
+        resolve(res);
+        return;
+      }
+
+      resolve({
+        error: false,
+        data: {
+          project: JSON.parse(res.data.contents),
+        },
+      });
     });
   });
 };

@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { ActionCreatorWithoutPayload } from '@reduxjs/toolkit';
-import { AssetType, UploadReq, SaveReq, ProjectData, ProjectAsset, PreviewAssetReq } from './projects.types';
+import { AssetType, UploadReq, SaveReq, ProjectData, ProjectAsset, PreviewAssetReq, ProjectMeta } from './projects.types';
 import { stateManager, rq } from '../../services';
 import { API, state } from './';
 import { List } from '../../utils';
@@ -481,10 +481,10 @@ export const list = (): Promise<rq.ApiResult> => {
   });
 };
 
-export const open = (): Promise<rq.ApiResult> => {
+export const open = (project: ProjectMeta): Promise<rq.ApiResult> => {
 
   return new Promise((resolve) => {
-    API.open().then((res) => {
+    API.open(project).then((res) => {
       if (res.error) {
         console.error(res);
       }

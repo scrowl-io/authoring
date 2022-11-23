@@ -84,7 +84,17 @@ const ProjectBrowserElement = ({ isOpen, ...props }, ref) => {
     Projects.closeProjectBrowser();
   };
 
-  const handleSubmit = () => {};
+  const handleSubmit = () => {
+    if (!selectedProject) {
+      return;
+    }
+
+    const project = selectedProject.project.versions[0];
+
+    Projects.open(project).then((res) => {
+      console.log('res', res);
+    });
+  };
 
   const handleSelectProject = (project: Projects.ProjectFile, idx: number) => {
     setSelectedProject({

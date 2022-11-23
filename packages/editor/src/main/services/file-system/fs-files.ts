@@ -5,7 +5,6 @@ import { app } from 'electron';
 import fs from 'fs-extra';
 import { rq, log } from '../';
 import { FileDataResult, FileExistsResult, AssetFilters, AssetType } from './fs.types';
-import { responsivePropType } from 'react-bootstrap/esm/createUtilityClasses';
 
 export const APP_PATHS = {
   root: path.join(__dirname, '../../../../'),
