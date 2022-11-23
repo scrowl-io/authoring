@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, Icon } from '@owlui/lib';
 import * as css from './_template-browser.scss';
-import { Modal } from '../modal';
-import { Projects, Templates } from '../../../../../../models';
+import { Modal } from '../../../../../components';
+import { Projects, Templates } from '../../../../../models';
 import {
   useTemplateBrowser,
   openTemplateBrowser,
@@ -12,7 +12,7 @@ import {
   useActiveSlide,
   setActiveSlide,
   resetActiveSlide,
-} from '../../../../page-workspace-hooks';
+} from '../../../page-workspace-hooks';
 
 export const TemplateBrowser = () => {
   const title = 'Template Browser';

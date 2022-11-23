@@ -1,3 +1,10 @@
+.modal-template-browser {
+  .owlui-modal-dialog {
+    width: 70vw;
+    max-width: 1008px;
+  }
+}
+
 .template-browser {
   &__container {
     width: 70vw;

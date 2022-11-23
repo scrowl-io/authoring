@@ -1,7 +1,7 @@
 import React from 'react';
-import { Accordion } from '../../../../../../components';
-import { Projects } from '../../../../../../models';
-import * as css from '../../_overlay.scss';
+import { Accordion } from '../../../../../components';
+import { Projects } from '../../../../../models';
+import * as css from '../_overlay.scss';
 
 export const Overview = () => {
   const modules = Projects.useModules().length;

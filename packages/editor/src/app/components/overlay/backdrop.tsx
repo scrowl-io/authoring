@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import * as css from '../_overlay.scss';
+import * as css from './_overlay.scss';
 
 export const Backdrop = ({ onClick, ...props }) => {
   let classes = `${css.overlayBackdrop}`;

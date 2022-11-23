@@ -533,6 +533,50 @@ export const progressWrite = (src: string, dest: string, onUpdate?: (completed: 
   });
 };
 
+export const drainProjectFiles = () => {
+  return new Promise<rq.ApiResult>((resolve) => {
+    fs.readdir(APP_PATHS.save).then((res) => {
+      const projects = res.filter((dir) => {
+        const path = joinPath(APP_PATHS.save, dir);
+
+        return fs.lstatSync(path).isDirectory() && path !== 'logs';
+      });
+
+      const files: Array<string> = []
+      
+      projects.forEach((dir) => {
+        const filepath = joinPath(APP_PATHS.save, dir, 'project.json');
+        const exists = fileExistsSync(filepath);
+
+        if (exists.error) {
+          return;
+        }
+
+        if (!exists.data.exists) {
+          return;
+        }
+
+        files.push(filepath);
+      });
+
+      resolve({
+        error: false,
+        data: {
+          filepaths: files,
+        },
+      });
+    }).catch((e) => {
+      resolve({
+        error: true,
+        message: 'Unexpected error occurred when getting project files',
+        data: {
+          trace: e,
+        },
+      });
+    });
+  });
+}
+
 export default {
   APP_PATHS,
   ASSET_TYPES,
@@ -555,4 +599,5 @@ export default {
   fileRename,
   fileStatsSync,
   progressWrite,
+  drainProjectFiles,
 };

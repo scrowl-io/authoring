@@ -1,12 +1,13 @@
 import React, { useEffect, useState, useRef, forwardRef } from 'react';
 import { Button } from '@owlui/lib';
 import { AnimatePresence } from 'framer-motion';
-import '../_overlay.scss';
-import { ResourceItem } from '../../pane-details';
-import { Backdrop, Drawer, AssetBrowser } from '.';
-import { Settings } from '../../../../../models';
-import { menu } from '../../../../../services';
-import { hasProp } from '../../../../../utils';
+import './_overlay.scss';
+import { ResourceItem } from '../pane-details';
+import { AssetBrowser } from './asset-browser';
+import { Backdrop, Drawer } from '../../../../components';
+import { Settings } from '../../../../models';
+import { menu } from '../../../../services';
+import { hasProp } from '../../../../utils';
 
 export interface ResourceFormProps
   extends Omit<React.AllHTMLAttributes<HTMLDivElement>, 'onSubmit'> {

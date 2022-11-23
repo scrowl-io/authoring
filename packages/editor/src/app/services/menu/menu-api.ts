@@ -5,7 +5,6 @@ import {
   MenuItemEndpointFile
 } from './menu.types';
 import { rq } from '../../services';
-import list from '../../utils/list';
 
 const ENDPOINTS: MenuEndpoints = {
   contextMenu: '/context-menu',
@@ -116,6 +115,14 @@ export const offProjectSave = () => {
   rq.offAll(ENDPOINTS_FILE.save);
 };
 
+export const onProjectOpen = (listener: rq.Listener) => {
+  rq.on(ENDPOINTS_FILE.open, listener);
+};
+
+export const offProjectOpen = () => {
+  rq.offAll(ENDPOINTS_FILE.open);
+};
+
 export default {
   contextMenu,
   toggleMenu,
@@ -123,4 +130,6 @@ export default {
   enableProjectActions,
   onProjectSave,
   offProjectSave,
+  onProjectOpen,
+  offProjectOpen
 };

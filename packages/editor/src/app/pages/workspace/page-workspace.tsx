@@ -12,6 +12,7 @@ import {
 } from './components';
 import { Projects } from '../../models';
 import { menu } from '../../services';
+import { ProjectBrowser } from '../../components';
 
 export const Path = '/workspace';
 
@@ -48,11 +49,17 @@ export const Page = () => {
       });
     };
 
+    const openListener = () => {
+      Projects.openProjectBrowser();
+    };
+
     menu.API.onProjectSave(saveListener);
+    menu.API.onProjectOpen(openListener);
 
     return () => {
       isListening = false;
       menu.API.offProjectSave();
+      menu.API.offProjectOpen();
     };
   }, [projectData]);
 
@@ -67,6 +74,7 @@ export const Page = () => {
       <TemplateBrowser />
       <PromptProjectName />
       <PublishProgress />
+      <ProjectBrowser />
     </>
   );
 };
