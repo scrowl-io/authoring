@@ -1,7 +1,7 @@
 import { ProjectData } from '../projects.types';
 import { TemplateNames, get as getTemplate } from './templates';
 
-export const slide = (
+export const slide = <T>(
   name: string,
   mId: number,
   lId: number,
@@ -13,7 +13,7 @@ export const slide = (
     moduleId: mId,
     lessonId: lId,
     id: id,
-    template: getTemplate(template),
+    template: getTemplate<T>(template),
     notes: '',
   };
 };

@@ -1,8 +1,7 @@
-import { TemplateSchema } from '../../templates/templates.types';
-import { BlockTextSchema } from '@scrowl/template-block-text/schema';
-import { LessonIntroSchema } from '@scrowl/template-lesson-intro/schema';
-import { SimpleTextSchema } from '@scrowl/template-simple-text/schema';
-import { TwoColumnSchema } from '@scrowl/template-two-column/schema';
+import { BlockTextSchema, BlockTextSchemaProps } from '@scrowl/template-block-text/schema';
+import { LessonIntroSchema, LessonIntroSchemaProps } from '@scrowl/template-lesson-intro/schema';
+import { SimpleTextSchema, SimpleTextSchemaProps } from '@scrowl/template-simple-text/schema';
+import { TwoColumnSchema, TwoColumnSchemaProps } from '@scrowl/template-two-column/schema';
 
 export const TEMPLATES = {
   blockText: JSON.stringify(BlockTextSchema),
@@ -13,7 +12,14 @@ export const TEMPLATES = {
 
 export type TemplateNames = keyof typeof TEMPLATES;
 
-export const get = (template: TemplateNames): TemplateSchema => {
+export type TemplateSchemas = {
+  blockText: BlockTextSchemaProps;
+  lessonIntro: LessonIntroSchemaProps;
+  simpleText: SimpleTextSchemaProps;
+  twoColumn: TwoColumnSchemaProps;
+};
+
+export const get = <T>(template: TemplateNames): T => {
   return JSON.parse(TEMPLATES[template]);
 };
 

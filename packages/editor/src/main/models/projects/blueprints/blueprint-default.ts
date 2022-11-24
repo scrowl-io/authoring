@@ -1,4 +1,5 @@
 import * as create from './create';
+import { TemplateSchemas } from './templates';
 
 export const make = () => {
   const project = create.project();
@@ -12,7 +13,7 @@ export const make = () => {
     id: 0,
     name: 'Introduction',
   });
-  project.slides?.push(create.slide('Introduction', 0, 0, 0, 'lessonIntro'));
+  project.slides?.push(create.slide<TemplateSchemas['lessonIntro']>('Introduction', 0, 0, 0, 'lessonIntro'));
 
   return project;
 };
