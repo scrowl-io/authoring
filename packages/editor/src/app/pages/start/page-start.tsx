@@ -5,7 +5,7 @@ import { Workspace } from '../';
 import { Projects } from '../../models';
 import { menu } from '../../services';
 import { Logo } from '../../components';
-import { StartNew, RecentProjects } from './components';
+import { StartNew, RecentProjects, GettingStarted } from './components';
 
 export const Path = '/start';
 
@@ -61,6 +61,7 @@ export const Page = () => {
         </div>
 
         <StartNew />
+        <GettingStarted />
         {projects.length && <RecentProjects projects={projects} />}
       </div>
     </div>
