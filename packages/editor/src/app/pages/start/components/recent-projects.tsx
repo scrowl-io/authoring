@@ -1,16 +1,24 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Nav } from 'react-bootstrap';
 import * as css from '../_page-start.scss';
 import { RecentProjectsProps } from '../page-start.types';
 import { Icon, Button } from '@owlui/lib';
 import { Projects } from '../../../models';
+import { Workspace } from '../../';
 
 export const RecentProjects = ({ projects, ...props }: RecentProjectsProps) => {
   const projectCnt = projects.length;
+  const navigate = useNavigate();
 
-  const handleOpenProject = (project: Projects.ProjectMeta) => {};
+  const handleOpenProject = (project: Projects.ProjectMeta) => {
+    Workspace.openProject(project);
+    navigate(Workspace.Path);
+  };
 
-  const handleOpenProjectBrowser = () => {};
+  const handleOpenProjectBrowser = () => {
+    Projects.openProjectBrowser();
+  };
 
   return (
     <div className={css.startSection} {...props}>
