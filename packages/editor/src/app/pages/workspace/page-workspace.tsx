@@ -1,6 +1,11 @@
 import React, { useEffect } from 'react';
 import * as css from './_page-workspace.scss';
-import { useProcessor, openPromptProjectName } from './page-workspace-hooks';
+import {
+  useProcessor,
+  openPromptProjectName,
+  resetWorkspace,
+  resetActiveSlide,
+} from './page-workspace-hooks';
 import {
   Header,
   PaneDetails,
@@ -11,10 +16,29 @@ import {
   PublishProgress,
 } from './components';
 import { Projects } from '../../models';
-import { menu } from '../../services';
+import { menu, sys } from '../../services';
 import { ProjectBrowser } from '../../components';
 
 export const Path = '/workspace';
+
+export const openProject = (project: Projects.ProjectMeta) => {
+  Projects.open(project).then((res) => {
+    if (res.error) {
+      sys.messageDialog({
+        message: res.message,
+      });
+      return;
+    }
+
+    Projects.resetState();
+    resetWorkspace();
+    resetActiveSlide();
+
+    setTimeout(() => {
+      Projects.setData(res.data.project);
+    }, 1);
+  });
+};
 
 export const Page = () => {
   useProcessor();
@@ -49,7 +73,12 @@ export const Page = () => {
       });
     };
 
-    const openListener = () => {
+    const openListener = (ev, project?: Projects.ProjectMeta) => {
+      if (project) {
+        openProject(project);
+        return;
+      }
+
       Projects.openProjectBrowser();
     };
 
@@ -82,4 +111,5 @@ export const Page = () => {
 export default {
   Path,
   Page,
+  openProject,
 };
