@@ -25,12 +25,19 @@ export const make = () => {
 
   getStarted.template.content.text.value = `# Let's Get It Started In Here\n\nWe're *so* excited to see what you build with Scrowl! We believe in universal design, and information being accessibile to everyone.\n\n---\n\n*\"Scrowl has changed the way I design and build new courses. Everyone loves them, my boss thinks I'm a genius, and she can't wait to give me a raise 💰.\"*\n>  🤓 *Janet A.*\n\n‍\n*\"I can't believe this software is free! Let me send you a sandwich as a thank you!\"*\n>  🥪 *Peter T.*`;
   getStarted.template.content.options.content.alignment.value = 'center';
+  getStarted.template.content.bgImage.content.url.value = 'abstract-shapes.jpg';
+  // abstract bg
 
   loveDogs.template.content.text.value = `# 🦉➕ 🐶\n‍\n#### 👇\n‍\n## ♥️♥️♥️`;
   loveDogs.template.content.options.content.alignment.value = 'center';
+  loveDogs.template.content.bgImage.content.url.value = 'clouds.jpg';
+  // clouds bg
 
   goodLuck.template.content.text.value = `# Good Luck & See You Later`;
   goodLuck.template.content.options.content.alignment.value = 'center';
+
+  // see you later
+  // beach bg
 
   project.slides.push(
     getStarted,
