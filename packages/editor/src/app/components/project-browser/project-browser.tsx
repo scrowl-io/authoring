@@ -5,7 +5,6 @@ import { FormattedProjectFile } from './project-browser.types';
 import { Modal, filter } from '../';
 import { Projects } from '../../models';
 import { Workspace } from '../../pages';
-import { sys } from '../../services';
 import { ProjectSearch } from './';
 import { List } from '../../utils';
 
