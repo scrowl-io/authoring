@@ -8,10 +8,9 @@ import {
   UploadReq,
   SaveReq,
   PreviewAssetReq,
-  ProjectAsset
 } from './projects.types';
 import { set as setSetting } from '../settings';
-import { createProject } from './project.data';
+import { blueprints } from './blueprints';
 import { rq, fs, log } from '../../services';
 import * as utils from '../../utils';
 import { scorm } from './project-publisher';
@@ -95,12 +94,12 @@ const getProjectInfo = (meta: ProjectMeta): rq.ApiResult => {
   }
 };
 
-export const create = (ev: rq.RequestEvent) => {
+export const create = (ev: rq.RequestEvent, blueprint?: string) => {
   return new Promise<rq.ApiResult>((resolve) => {
     resolve({
       error: false,
       data: {
-        project: createProject(),
+        project: blueprints.get(blueprint),
         assets: [],
       },
     });

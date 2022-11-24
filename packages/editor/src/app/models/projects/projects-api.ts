@@ -17,8 +17,8 @@ const WINDOW_ENDPOINTS: WindowEndpoints = {
   onUnsaved: '/window/unsaved/on', // send to main
 };
 
-export const create = (data?: any): Promise<rq.ApiResult> => {
-  return rq.invoke(ENDPOINTS.create, data);
+export const create = (blueprint?: string): Promise<rq.ApiResult> => {
+  return rq.invoke(ENDPOINTS.create, blueprint);
 };
 
 export const upload = (data?): Promise<rq.ApiResult> => {
