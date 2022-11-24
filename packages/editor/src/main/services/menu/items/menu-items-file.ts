@@ -147,8 +147,8 @@ export const asyncInit = (menu: Menu) => {
       if (!menuItem.submenu) {
         return;
       }
-  
-      res.data.projects.forEach((project: ProjectFile, idx: number) => {
+
+      const appendProject = (project: ProjectFile, idx: number) => {
         const recentProjectItem = new MenuItem({
           id: `${itemId}-${(idx + 1)}`,
           label:  project.versions[0].name,
@@ -156,8 +156,21 @@ export const asyncInit = (menu: Menu) => {
             rq.send(API.open.name, project.versions[0]);
           },
         });
+        
         menuItem.submenu?.append(recentProjectItem);
-      });
+      }
+
+      if (res.data.projects.length) {
+        res.data.projects.forEach(appendProject); 
+      } else {
+        const noRecentProjects = new MenuItem({
+          id: `${itemId}-${1}`,
+          label: 'No Recent Projects',
+          enabled: false,
+        });
+
+        menuItem.submenu?.append(noRecentProjects);
+      }
   
       resolve({
         error: false,
