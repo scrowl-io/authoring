@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, forwardRef } from 'react';
-import { animations } from '../../../../../../components';
-import { Modal } from '../modal';
+import { animations, Modal } from '../../../../../components';
 
 const ConfirmationElement = ({ isOpen, onClose, ...props }, ref) => {
   const title = 'Course Published';

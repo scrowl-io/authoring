@@ -1,10 +1,9 @@
 import React, { useEffect, useRef, forwardRef } from 'react';
-import { animations } from '../../../../../../components';
-import { Modal } from '../modal';
+import { animations, Modal } from '../../../../../components';
 import {
   usePublishProgress,
   closePublishProgress,
-} from '../../../../page-workspace-hooks';
+} from '../../../page-workspace-hooks';
 
 const PublishProgressElement = ({ isOpen, onClose }, ref) => {
   return (

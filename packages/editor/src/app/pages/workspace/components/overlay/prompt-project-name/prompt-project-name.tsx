@@ -1,13 +1,13 @@
 import React, { useEffect, useRef, forwardRef } from 'react';
 import { Button } from '@owlui/lib';
 import * as css from './_prompt-project-name.scss';
-import { Modal } from '../modal';
-import { Projects } from '../../../../../../models';
-import { sys } from '../../../../../../services';
+import { Modal } from '../../../../../components';
+import { Projects } from '../../../../../models';
+import { sys } from '../../../../../services';
 import {
   usePromptProjectName,
   closePromptProjectName,
-} from '../../../../page-workspace-hooks';
+} from '../../../page-workspace-hooks';
 
 const PromptProjectNameElement = ({ isOpen, ...props }, ref) => {
   const title = 'Saving Project';

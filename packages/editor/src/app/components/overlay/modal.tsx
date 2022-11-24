@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import * as css from '../_overlay.scss';
-import { ModalProps } from '../overlay.types';
-import { Backdrop } from '.';
-import { Error } from '../../../../../components';
-import { menu } from '../../../../../services';
+import * as css from './_overlay.scss';
+import { ModalProps } from './overlay.types';
+import { Backdrop } from './backdrop';
+import { Error } from '..';
+import { menu } from '../../services';
 
 export const Modal = ({
   className,

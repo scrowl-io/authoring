@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { DrawerProps, DrawerOpts, DrawerStyles } from '../overlay.types';
+import { DrawerProps, DrawerOpts, DrawerStyles } from './overlay.types';
 
 export const Drawer = ({
   isAnimated,

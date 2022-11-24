@@ -1,19 +1,18 @@
 import React, { useEffect, useState, useRef, forwardRef } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { Icon } from '@owlui/lib';
-import { Backdrop } from '../backdrop';
-import { Drawer } from '..';
-import { Projects, Settings } from '../../../../../../models';
-import { menu, sys } from '../../../../../../services';
-import { List } from '../../../../../../utils';
-import '../../_overlay.scss';
+import { Backdrop, Drawer } from '../../../../../components';
+import { Projects, Settings } from '../../../../../models';
+import { menu, sys } from '../../../../../services';
+import { List } from '../../../../../utils';
+import '../_overlay.scss';
 import {
   AssetSearch,
   AssetProgress,
   AssetEntry,
   AssetBrowserProps,
   AssetType,
-} from './';
+} from '.';
 
 export const AssetDrawerElement = (
   {

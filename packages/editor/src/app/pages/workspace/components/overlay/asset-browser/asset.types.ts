@@ -1,8 +1,8 @@
 import React from 'react';
-import { Projects } from '../../../../../../models';
-import { AssetType } from '../../../../../../../main/services/file-system/fs.types';
+import { Projects } from '../../../../../models';
+import { AssetType } from '../../../../../../main/services/file-system/fs.types';
 
-export type { AssetType } from '../../../../../../../main/services/file-system/fs.types';
+export type { AssetType } from '../../../../../../main/services/file-system/fs.types';
 
 export type AssetProgressProps = {
   progress:  {

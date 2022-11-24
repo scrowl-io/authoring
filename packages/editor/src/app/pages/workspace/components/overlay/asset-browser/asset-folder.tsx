@@ -1,6 +1,6 @@
 import React from 'react';
 import Highlighter from 'react-highlight-words';
-import { menu } from '../../../../../../services';
+import { menu } from '../../../../../services';
 
 export const AssetFolder = (props: any) => {
   const searchTerm = props.searchHighlight || '';
