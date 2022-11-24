@@ -35,6 +35,7 @@ const PublishProgressElement = ({ isOpen, onClose }, ref) => {
 const PublishProgressRef = forwardRef(PublishProgressElement);
 
 export const PublishProgress = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
   const isOpen = usePublishProgress();
 
@@ -48,14 +49,22 @@ export const PublishProgress = () => {
     if (appNode && overlayRef.current) {
       appNode.appendChild(overlayRef.current);
     }
+
+    return () => {
+      if (containerRef.current && overlayRef.current) {
+        containerRef.current.appendChild(overlayRef.current);
+      }
+    };
   }, [overlayRef, isOpen]);
 
   return (
-    <PublishProgressRef
-      ref={overlayRef}
-      isOpen={isOpen}
-      onClose={handleClose}
-    />
+    <div ref={containerRef}>
+      <PublishProgressRef
+        ref={overlayRef}
+        isOpen={isOpen}
+        onClose={handleClose}
+      />
+    </div>
   );
 };
 
