@@ -469,10 +469,10 @@ export const publish = (data): Promise<rq.ApiResult> => {
   });
 };
 
-export const list = (): Promise<rq.ApiResult> => {
+export const list = (limit?: number): Promise<rq.ApiResult> => {
 
   return new Promise((resolve) => {
-    API.list().then((res) => {
+    API.list(limit).then((res) => {
       if (res.error) {
         console.error(res);
       }

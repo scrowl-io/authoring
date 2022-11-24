@@ -1,5 +1,6 @@
 import React from 'react';
 import { Nav } from 'react-bootstrap';
+import * as css from '../_page-start.scss';
 import { StartNewProps } from '../page-start.types';
 import { Icon, Button } from '@owlui/lib';
 
@@ -7,7 +8,7 @@ export const StartNew = ({ hasProjects, ...props }: StartNewProps) => {
   const handleNewProject = () => {};
 
   return (
-    <div {...props}>
+    <div className={css.startSection} {...props}>
       <h2>Start</h2>
       <Nav className="flex-column">
         <Nav.Item>

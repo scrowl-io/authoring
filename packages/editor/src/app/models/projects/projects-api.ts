@@ -41,8 +41,8 @@ export const publish = (data?): Promise<rq.ApiResult> => {
   return rq.invoke(ENDPOINTS.publish, data);
 };
 
-export const list = (data?): Promise<rq.ApiResult> => {
-  return rq.invoke(ENDPOINTS.list, data);
+export const list = (limit?: number): Promise<rq.ApiResult> => {
+  return rq.invoke(ENDPOINTS.list, limit);
 };
 
 export const open = (data: ProjectMeta): Promise<rq.ApiResult> => {

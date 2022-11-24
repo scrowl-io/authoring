@@ -1,16 +1,18 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as css from './_page-start.scss';
 import { Workspace } from '../';
 import { Projects } from '../../models';
 import { menu } from '../../services';
 import { Logo } from '../../components';
-import { StartNew } from './components';
+import { StartNew, RecentProjects } from './components';
 
 export const Path = '/start';
 
 export const Page = () => {
   const navigate = useNavigate();
+  const listInProgress = useRef(false);
+  const [projects, setProjects] = useState<Array<Projects.ProjectFile>>([]);
 
   useEffect(() => {
     const openListener = (ev, project?: Projects.ProjectMeta) => {
@@ -23,7 +25,25 @@ export const Page = () => {
       Projects.openProjectBrowser();
     };
 
+    const getProjects = () => {
+      Projects.list(5).then((res) => {
+        listInProgress.current = false;
+
+        if (res.error) {
+          console.error(res);
+          return;
+        }
+
+        setProjects(res.data.projects);
+      });
+    };
+
     menu.API.onProjectOpen(openListener);
+
+    if (!listInProgress.current) {
+      listInProgress.current = true;
+      getProjects();
+    }
 
     return () => {
       menu.API.offProjectOpen();
@@ -40,7 +60,8 @@ export const Page = () => {
           </h1>
         </div>
 
-        <StartNew className={css.startSection} />
+        <StartNew />
+        {projects.length && <RecentProjects projects={projects} />}
       </div>
     </div>
   );

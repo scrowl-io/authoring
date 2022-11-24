@@ -1,5 +1,6 @@
 import React from 'react';
 import { Nav } from 'react-bootstrap';
+import * as css from '../_page-start.scss';
 import { RecentProjectsProps } from '../page-start.types';
 import { Icon, Button } from '@owlui/lib';
 import { Projects } from '../../../models';
@@ -12,11 +13,11 @@ export const RecentProjects = ({ projects, ...props }: RecentProjectsProps) => {
   const handleOpenProjectBrowser = () => {};
 
   return (
-    <div {...props}>
+    <div className={css.startSection} {...props}>
       <h2>Your Projects</h2>
       <Nav className="flex-column">
         {projects.map((project: Projects.ProjectFile, idx: number) => {
-          const vCnt = project.versions.length;
+          const vCnt = `v${project.versions.length}`;
           const version = project.versions[0];
 
           return (
@@ -29,7 +30,7 @@ export const RecentProjects = ({ projects, ...props }: RecentProjectsProps) => {
               >
                 <Icon display="outlined" icon="pages" />
                 <span>{version.name}</span>
-                <span>{vCnt}</span>
+                <span className={css.projectVersion}>{vCnt}</span>
               </Button>
             </Nav.Item>
           );
