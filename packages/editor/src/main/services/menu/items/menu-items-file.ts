@@ -141,10 +141,22 @@ export const asyncInit = (menu: Menu) => {
       const menuItem = menu.getMenuItemById(itemId);
   
       if (!menuItem) {
+        resolve({
+          error: false,
+          data: {
+            init: false,
+          },
+        });
         return;
       }
   
       if (!menuItem.submenu) {
+        resolve({
+          error: false,
+          data: {
+            init: false,
+          },
+        });
         return;
       }
 
@@ -156,7 +168,7 @@ export const asyncInit = (menu: Menu) => {
             rq.send(API.open.name, project.versions[0]);
           },
         });
-        
+
         menuItem.submenu?.append(recentProjectItem);
       }
 
