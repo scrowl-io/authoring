@@ -68,6 +68,10 @@
     margin-top: 0.5rem;
     list-style: none;
 
+    a {
+      text-decoration: none;
+    }
+
     li:hover {
       background-color: #f9f9f9;
       cursor: pointer;
@@ -80,17 +84,15 @@
       align-items: center;
       margin-bottom: 0.25rem;
 
-      span {
-        transform: rotate(-90deg);
-      }
-
       .lesson-icon {
         color: black;
         margin-right: 0.25rem;
+        transform: rotate(-90deg);
 
         &-active {
           color: #007aba;
           margin-right: 0.25rem;
+          transform: rotate(-90deg);
         }
       }
 

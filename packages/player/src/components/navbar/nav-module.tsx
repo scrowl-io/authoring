@@ -11,8 +11,7 @@ export const NavModule = ({ pageId, config, mIdx }) => {
 
   let moduleSlides: Array<string> = [];
 
-  //@ts-ignore
-  config.lessons.forEach((lesson, i) => {
+  config.lessons.forEach((_lesson, i) => {
     const slide = `module-${mIdx}--lesson-${i}`;
     moduleSlides.push(slide);
   });
@@ -48,26 +47,27 @@ export const NavModule = ({ pageId, config, mIdx }) => {
 
             return (
               <li className={css.lessonListItem} key={lIdx}>
-                <span className={css.lessonButton}>
-                  <Icon
-                    className={
-                      id === currentSlide
-                        ? css.lessonIconActive
-                        : css.lessonIcon
-                    }
-                    icon="arrow_drop_down_circle"
-                  />
-                  <Link
-                    className={
-                      id === currentSlide
-                        ? css.lessonLinkActive
-                        : css.lessonLink
-                    }
-                    to={url}
-                  >
-                    {lessonName}
-                  </Link>
-                </span>
+                <Link to={url}>
+                  <span className={css.lessonButton}>
+                    <Icon
+                      className={
+                        id === currentSlide
+                          ? css.lessonIconActive
+                          : css.lessonIcon
+                      }
+                      icon="arrow_drop_down_circle"
+                    />
+                    <span
+                      className={`${
+                        id === currentSlide
+                          ? css.lessonLinkActive
+                          : css.lessonLink
+                      }`}
+                    >
+                      {lessonName}
+                    </span>
+                  </span>
+                </Link>
               </li>
             );
           })}
