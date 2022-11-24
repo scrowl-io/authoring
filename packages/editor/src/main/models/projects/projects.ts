@@ -8,7 +8,9 @@ import {
   UploadReq,
   SaveReq,
   PreviewAssetReq,
+  ProjectAsset
 } from './projects.types';
+import { Templates } from '../';
 import { set as setSetting } from '../settings';
 import { blueprints } from './blueprints';
 import { rq, fs, log } from '../../services';
@@ -96,11 +98,41 @@ const getProjectInfo = (meta: ProjectMeta): rq.ApiResult => {
 
 export const create = (ev: rq.RequestEvent, blueprint?: string) => {
   return new Promise<rq.ApiResult>((resolve) => {
+    const project = blueprints.get(blueprint);
+    const assets: Array<ProjectAsset> = [];
+
+    // convert asset list
+    // put assets into temp folder
+    const uniqueAssets = new Set<string>();
+
+    const scanContent = (content) => {
+      for (const [key, item] of Object.entries(content)) {
+        const input = item as Templates.InputProps;
+  
+        switch (input.type) {
+          case 'Asset':
+            if (input.value) {
+              uniqueAssets.add(input.value);
+            }
+            break;
+          case 'Fieldset':
+            scanContent(input.content);
+            break;
+        }
+      }
+    };
+
+    project.slides?.forEach((slide) => {
+      scanContent(slide.template.content);
+    });
+
+    console.log('uniqueAssets', uniqueAssets.values());
+
     resolve({
       error: false,
       data: {
-        project: blueprints.get(blueprint),
-        assets: [],
+        project,
+        assets,
       },
     });
   });
