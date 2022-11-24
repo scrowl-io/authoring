@@ -149,8 +149,12 @@ const $b3d1e3300d945f09$export$6ed414b8d8bead88 = {
             message: "SCORM service failed to initialize",
             data: $b3d1e3300d945f09$export$6ed414b8d8bead88.getError()
         };
-        $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.core.score.min", 90.0);
-        // service.setValue('cmi.core.score.max', 100.0);
+        const oldMin = $b3d1e3300d945f09$export$6ed414b8d8bead88.getValue("cmi.student_data_mastery_score");
+        const newMin = $b3d1e3300d945f09$export$6ed414b8d8bead88.getValue("cmi.scaled_passing_score");
+        console.log("old API SCORE:");
+        console.log(oldMin);
+        console.log(newMin);
+        console.log("new API score:");
         return {
             error: false
         };
@@ -253,15 +257,13 @@ const $b3d1e3300d945f09$export$6ed414b8d8bead88 = {
         console.log("DONE");
         $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.core.score.raw", 87.0);
         const scoreVal = $b3d1e3300d945f09$export$6ed414b8d8bead88.getValue("cmi.core.score.raw");
-        const minScore = $b3d1e3300d945f09$export$6ed414b8d8bead88.getValue("cmi.core.score.min");
-        if (scoreVal > minScore) $b3d1e3300d945f09$export$6ed414b8d8bead88.updateStatus("success");
-        else $b3d1e3300d945f09$export$6ed414b8d8bead88.updateStatus("failed");
+        console.log("Score val:");
+        console.log(scoreVal);
+        $b3d1e3300d945f09$export$6ed414b8d8bead88.updateStatus("success");
+        $b3d1e3300d945f09$export$6ed414b8d8bead88.save();
         // service._time.end = new Date();
         console.log("SERVICE:");
         console.log($b3d1e3300d945f09$export$6ed414b8d8bead88);
-        $b3d1e3300d945f09$export$6ed414b8d8bead88.save();
-        // const val = service.getValue('cmi.core.lesson_status');
-        $b3d1e3300d945f09$export$6ed414b8d8bead88.save();
         $b3d1e3300d945f09$export$6ed414b8d8bead88.exit();
         console.log($b3d1e3300d945f09$export$6ed414b8d8bead88);
     }

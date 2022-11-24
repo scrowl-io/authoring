@@ -189,8 +189,13 @@ export const service: RUNTIME_SERVICE = {
       };
     }
 
-    service.setValue('cmi.core.score.min', 90.0);
-    // service.setValue('cmi.core.score.max', 100.0);
+    const oldMin = service.getValue('cmi.student_data_mastery_score');
+    const newMin = service.getValue('cmi.scaled_passing_score');
+
+    console.log('old API SCORE:');
+    console.log(oldMin);
+    console.log(newMin);
+    console.log('new API score:');
 
     return {
       error: false,
@@ -365,20 +370,17 @@ export const service: RUNTIME_SERVICE = {
 
     service.setValue('cmi.core.score.raw', 87.0);
     const scoreVal = service.getValue('cmi.core.score.raw');
-    const minScore = service.getValue('cmi.core.score.min');
 
-    if (scoreVal > minScore) {
-      service.updateStatus('success');
-    } else {
-      service.updateStatus('failed');
-    }
+    console.log('Score val:');
+    console.log(scoreVal);
+
+    service.updateStatus('success');
+
+    service.save();
 
     // service._time.end = new Date();
     console.log('SERVICE:');
     console.log(service);
-    service.save();
-    // const val = service.getValue('cmi.core.lesson_status');
-    service.save();
     service.exit();
     console.log(service);
   },
