@@ -72,15 +72,6 @@ export const useHasWelcomed = () => {
   return useSelector((data: stateManager.RootState) => data.settings.hasWelcomed);
 };
 
-export const setHasWelcomed = (data) => {
-  if (!processor.dispatch) {
-    console.warn('settings processor not ready');
-    return;
-  }
-
-  processor.dispatch(state.setHasWelcomed(data));
-};
-
 export const init = () => {
   return new Promise((resolve) => {
     API.get().then(result => {
@@ -114,7 +105,6 @@ export default {
   useAnimation,
   setAnimation,
   useHasWelcomed,
-  setHasWelcomed,
   init,
   save,
 };

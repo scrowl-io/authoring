@@ -7,8 +7,10 @@ import {
   ProjectMeta,
   UploadReq,
   SaveReq,
-  PreviewAssetReq
+  PreviewAssetReq,
+  ProjectAsset
 } from './projects.types';
+import { set as setSetting } from '../settings';
 import { createProject } from './project.data';
 import { rq, fs, log } from '../../services';
 import * as utils from '../../utils';
@@ -436,6 +438,22 @@ export const save = (ev: rq.RequestEvent, { data, assets }: SaveReq) => {
       info.versions.unshift(meta);
       info.assets = assets || [];
 
+      const updateSettings = () => {
+        setSetting(ev, 'lastUsedAt', data.meta.updatedAt).then((settingRes) => {
+          if (settingRes.error) {
+            log.error(settingRes);
+          }
+
+          resolve({
+            error: false,
+            data: {
+              project: data,
+              assets,
+            },
+          });
+        });
+      }
+
       writeProjectData(data).then((writeDataRes) => {
         if (writeDataRes.error) {
           resolve(writeDataRes);
@@ -445,19 +463,14 @@ export const save = (ev: rq.RequestEvent, { data, assets }: SaveReq) => {
         log.info('writing project file', infoRes.data.fileName);
         fs.fileWrite(infoRes.data.fileName, info).then((writeFileRes) => {
           if (writeFileRes.error) {
+            log.error(writeFileRes);
             resolve(writeFileRes);
             return;
           }
 
           if (infoRes.data.exists || !assets || !assets.length) {
-            resolve({
-              error: false,
-              data: {
-                project: data,
-                assets,
-              },
-            });
-            return; 
+            updateSettings();
+            return;
           }
 
           fs.copy(fs.APP_PATHS.uploads, fs.joinPath(infoRes.data.folder, 'assets')).then((copyRes) => {
@@ -466,13 +479,7 @@ export const save = (ev: rq.RequestEvent, { data, assets }: SaveReq) => {
               return;
             }
 
-            resolve({
-              error: false,
-              data: {
-                project: data,
-                assets,
-              },
-            });
+            updateSettings();
           })
         });
       });
