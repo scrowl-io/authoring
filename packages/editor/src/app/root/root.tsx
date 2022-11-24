@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './_root.scss';
 import {
   MemoryRouter as Router,
@@ -18,6 +19,7 @@ const Loader = () => {
 };
 
 const PageRoutes = () => {
+  const navigate = useNavigate();
   const hasWelcomed = models.Settings.useHasWelcomed();
   let defaultPath = hasWelcomed ? pages.Start.Path : pages.Welcome.Path;
   const pageModules = pages as Pages;
@@ -29,6 +31,24 @@ const PageRoutes = () => {
     if (config.useProcessor) {
       config.useProcessor();
     }
+  });
+
+  useEffect(() => {
+    const closeProject = () => {
+      models.Projects.resetState();
+      pages.Workspace.resetWorkspace();
+      pages.Workspace.resetActiveSlide();
+
+      setTimeout(() => {
+        navigate(defaultPath);
+      }, 1);
+    };
+
+    menu.API.onProjectClose(closeProject);
+
+    return () => {
+      menu.API.offProjectClose();
+    };
   });
 
   return (
