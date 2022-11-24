@@ -1,4 +1,3 @@
-import projects from '../projects';
 import * as create from './create';
 import { TemplateSchemas } from './templates';
 
