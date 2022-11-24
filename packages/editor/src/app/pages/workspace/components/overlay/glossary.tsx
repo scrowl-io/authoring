@@ -228,6 +228,7 @@ const GlossaryFormElement = (
 export const GlossaryForm = forwardRef(GlossaryFormElement);
 
 export const GlossaryOverlay = ({ isOpen, ...props }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -236,9 +237,19 @@ export const GlossaryOverlay = ({ isOpen, ...props }) => {
     if (appNode && overlayRef.current) {
       appNode.appendChild(overlayRef.current);
     }
+
+    return () => {
+      if (containerRef.current && overlayRef.current) {
+        containerRef.current.appendChild(overlayRef.current);
+      }
+    };
   }, [overlayRef, isOpen]);
 
-  return <GlossaryForm ref={overlayRef} isOpen={isOpen} {...props} />;
+  return (
+    <div ref={containerRef}>
+      <GlossaryForm ref={overlayRef} isOpen={isOpen} {...props} />
+    </div>
+  );
 };
 
 export default {

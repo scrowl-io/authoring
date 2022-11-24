@@ -123,6 +123,14 @@ export const offProjectOpen = () => {
   rq.offAll(ENDPOINTS_FILE.open);
 };
 
+export const onProjectClose = (listener: rq.Listener) => {
+  rq.on(ENDPOINTS_FILE.close, listener);
+};
+
+export const offProjectClose = () => {
+  rq.offAll(ENDPOINTS_FILE.close);
+};
+
 export default {
   contextMenu,
   toggleMenu,
@@ -131,5 +139,7 @@ export default {
   onProjectSave,
   offProjectSave,
   onProjectOpen,
-  offProjectOpen
+  offProjectOpen,
+  onProjectClose,
+  offProjectClose
 };

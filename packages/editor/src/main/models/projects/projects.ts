@@ -7,9 +7,12 @@ import {
   ProjectMeta,
   UploadReq,
   SaveReq,
-  PreviewAssetReq
+  PreviewAssetReq,
+  ProjectAsset
 } from './projects.types';
-import { createProject } from './project.data';
+import { Templates } from '../';
+import { set as setSetting } from '../settings';
+import { blueprints } from './blueprints';
 import { rq, fs, log } from '../../services';
 import * as utils from '../../utils';
 import { scorm } from './project-publisher';
@@ -93,13 +96,43 @@ const getProjectInfo = (meta: ProjectMeta): rq.ApiResult => {
   }
 };
 
-export const create = (ev: rq.RequestEvent) => {
+export const create = (ev: rq.RequestEvent, blueprint?: string) => {
   return new Promise<rq.ApiResult>((resolve) => {
+    const project = blueprints.get(blueprint);
+    const assets: Array<ProjectAsset> = [];
+
+    // convert asset list
+    // put assets into temp folder
+    const uniqueAssets = new Set<string>();
+
+    const scanContent = (content) => {
+      for (const [key, item] of Object.entries(content)) {
+        const input = item as Templates.InputProps;
+  
+        switch (input.type) {
+          case 'Asset':
+            if (input.value) {
+              uniqueAssets.add(input.value);
+            }
+            break;
+          case 'Fieldset':
+            scanContent(input.content);
+            break;
+        }
+      }
+    };
+
+    project.slides?.forEach((slide) => {
+      scanContent(slide.template.content);
+    });
+
+    console.log('uniqueAssets', uniqueAssets.values());
+
     resolve({
       error: false,
       data: {
-        project: createProject(),
-        assets: [],
+        project,
+        assets,
       },
     });
   });
@@ -436,6 +469,22 @@ export const save = (ev: rq.RequestEvent, { data, assets }: SaveReq) => {
       info.versions.unshift(meta);
       info.assets = assets || [];
 
+      const updateSettings = () => {
+        setSetting(ev, 'lastUsedAt', data.meta.updatedAt).then((settingRes) => {
+          if (settingRes.error) {
+            log.error(settingRes);
+          }
+
+          resolve({
+            error: false,
+            data: {
+              project: data,
+              assets,
+            },
+          });
+        });
+      }
+
       writeProjectData(data).then((writeDataRes) => {
         if (writeDataRes.error) {
           resolve(writeDataRes);
@@ -445,19 +494,14 @@ export const save = (ev: rq.RequestEvent, { data, assets }: SaveReq) => {
         log.info('writing project file', infoRes.data.fileName);
         fs.fileWrite(infoRes.data.fileName, info).then((writeFileRes) => {
           if (writeFileRes.error) {
+            log.error(writeFileRes);
             resolve(writeFileRes);
             return;
           }
 
           if (infoRes.data.exists || !assets || !assets.length) {
-            resolve({
-              error: false,
-              data: {
-                project: data,
-                assets,
-              },
-            });
-            return; 
+            updateSettings();
+            return;
           }
 
           fs.copy(fs.APP_PATHS.uploads, fs.joinPath(infoRes.data.folder, 'assets')).then((copyRes) => {
@@ -466,13 +510,7 @@ export const save = (ev: rq.RequestEvent, { data, assets }: SaveReq) => {
               return;
             }
 
-            resolve({
-              error: false,
-              data: {
-                project: data,
-                assets,
-              },
-            });
+            updateSettings();
           })
         });
       });

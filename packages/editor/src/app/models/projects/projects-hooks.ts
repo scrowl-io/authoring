@@ -410,9 +410,9 @@ export const removeAsset = (data) => {
   processor.dispatch(state.removeAssetItem(data));
 };
 
-export const create = (): Promise<rq.ApiResult> => {
+export const create = (blueprint?: string): Promise<rq.ApiResult> => {
   return new Promise((resolve) => {
-    API.create().then((res) => {
+    API.create(blueprint).then((res) => {
       if (res.error) {
         console.error(res)
       } else {
@@ -469,10 +469,10 @@ export const publish = (data): Promise<rq.ApiResult> => {
   });
 };
 
-export const list = (): Promise<rq.ApiResult> => {
+export const list = (limit?: number): Promise<rq.ApiResult> => {
 
   return new Promise((resolve) => {
-    API.list().then((res) => {
+    API.list(limit).then((res) => {
       if (res.error) {
         console.error(res);
       }

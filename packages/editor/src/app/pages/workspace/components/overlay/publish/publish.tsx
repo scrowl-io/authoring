@@ -134,6 +134,7 @@ const PublishFormElement = (
 export const PublishForm = forwardRef(PublishFormElement);
 
 export const PublishOverlay = ({ isOpen, ...props }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -142,9 +143,19 @@ export const PublishOverlay = ({ isOpen, ...props }) => {
     if (appNode && overlayRef.current) {
       appNode.appendChild(overlayRef.current);
     }
+
+    return () => {
+      if (containerRef.current && overlayRef.current) {
+        containerRef.current.appendChild(overlayRef.current);
+      }
+    };
   }, [overlayRef, isOpen]);
 
-  return <PublishForm ref={overlayRef} isOpen={isOpen} {...props} />;
+  return (
+    <div ref={containerRef}>
+      <PublishForm ref={overlayRef} isOpen={isOpen} {...props} />
+    </div>
+  );
 };
 
 export default {
