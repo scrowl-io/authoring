@@ -559,26 +559,26 @@ export const drainProjectFiles = (limit?: number) => {
 
       const files: Array<string> = [];
       let fileCnt = 0;
-      
-      projects.forEach((project, idx: number) => {
+
+      for (let i = 0, ii = projects.length; i < ii; i++) {
         if (limit && fileCnt >= limit) {
-          return;
+          break;
         }
 
-        const filepath = joinPath(project.pathname, 'project.json');
+        const filepath = joinPath(projects[i].pathname, 'project.json');
         const exists = fileExistsSync(filepath);
 
         if (exists.error) {
-          return;
+          continue;
         }
 
         if (!exists.data.exists) {
-          return;
+          continue;
         }
 
         fileCnt++;
         files.push(filepath);
-      });
+      }
 
       resolve({
         error: false,
