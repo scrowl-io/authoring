@@ -1,6 +1,7 @@
-import { MenuItemConstructorOptions } from 'electron';
+import { MenuItemConstructorOptions, MenuItem, Menu } from 'electron';
 import { MenuItemApiFile } from '../menu.types';
-import { rq } from '../..';
+import { rq, log, fs } from '../..';
+import { ProjectFile } from '../../../models/projects';
 
 export const API: MenuItemApiFile = {
   create: {
@@ -21,8 +22,9 @@ export const API: MenuItemApiFile = {
   },
 };
 
+const menuId = 'file-menu';
+
 export const create = (isMac: boolean) => {
-  const menuId = 'file-menu';
   const template = {
     id: menuId,
     label: 'File',
@@ -82,6 +84,89 @@ export const create = (isMac: boolean) => {
 
 export const register = () => {
   rq.registerEndpointAll(API);
+};
+
+const getProjects = () => {
+  return new Promise<rq.ApiResult>((resolve) => {
+    fs.drainProjectFiles(5).then((drainRes) => {
+      if (drainRes.error) {
+        resolve(drainRes);
+        return;
+      }
+  
+      const filePromises: Array<Promise<rq.ApiResult>> = [];
+  
+      drainRes.data.filepaths.forEach((filepath) => {
+        filePromises.push(fs.fileRead(filepath));
+      });
+  
+      Promise.allSettled(filePromises).then((filePromiseRes) => {
+        let projects: Array<ProjectFile> = [];
+  
+        filePromiseRes.forEach((fileRes, idx) => {
+          if (fileRes.status === 'rejected') {
+            log.error(`failed to open: ${drainRes.data.filepaths[idx]}`);
+            return;
+          }
+  
+          if (fileRes.value.error) {
+            log.error('failed to open: ${drainRes.data.filepaths[idx]}', fileRes.value);
+            return;
+          }
+  
+          projects.push(fileRes.value.data.contents);
+        });
+  
+        resolve({
+          error: false,
+          data: {
+            projects,
+          },
+        });
+      });
+    });
+  })
+}
+
+export const asyncInit = (menu: Menu) => {
+  return new Promise<rq.ApiResult>((resolve) => {
+    getProjects().then((res) => {
+      if (res.error) {
+        log.error(res);
+        resolve(res);
+        return;
+      }
+  
+      const itemId = `${menuId}-open-recent`;
+      const menuItem = menu.getMenuItemById(itemId);
+  
+      if (!menuItem) {
+        return;
+      }
+  
+      if (!menuItem.submenu) {
+        return;
+      }
+  
+      res.data.projects.forEach((project: ProjectFile, idx: number) => {
+        const recentProjectItem = new MenuItem({
+          id: `${itemId}-${(idx + 1)}`,
+          label:  project.versions[0].name,
+          click: () => {
+            rq.send(API.open.name, project.versions[0]);
+          },
+        });
+        menuItem.submenu?.append(recentProjectItem);
+      });
+  
+      resolve({
+        error: false,
+        data: {
+          init: true,
+        },
+      });
+    });
+  });
 };
 
 export default {

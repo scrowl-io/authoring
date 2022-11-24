@@ -2,6 +2,7 @@ export type JSON_VALUE =
   | string
   | number
   | boolean
+  | Date
   | JSON_DATA
   | Array<JSON_VALUE>;
 
