@@ -556,7 +556,7 @@ export const publish = (ev: rq.RequestEvent, data: ProjectData) => {
 
 export const list = (ev: rq.RequestEvent, limit?: number) => {
   return new Promise<rq.ApiResult>((resolve) => {
-    fs.drainProjectFiles().then((drainRes) => {
+    fs.drainProjectFiles(limit).then((drainRes) => {
       if (drainRes.error) {
         resolve(drainRes);
         return;
@@ -564,11 +564,7 @@ export const list = (ev: rq.RequestEvent, limit?: number) => {
 
       const filePromises: Array<Promise<rq.ApiResult>> = [];
 
-      drainRes.data.filepaths.forEach((filepath, idx) => {
-        if (limit && idx >= limit) {
-          return;
-        }
-
+      drainRes.data.filepaths.forEach((filepath) => {
         filePromises.push(fs.fileRead(filepath));
       });
 

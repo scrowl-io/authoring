@@ -5,6 +5,7 @@ import { app } from 'electron';
 import fs from 'fs-extra';
 import { rq, log } from '../';
 import { FileDataResult, FileExistsResult, AssetFilters, AssetType } from './fs.types';
+import { lt } from '../../utils';
 
 export const APP_PATHS = {
   root: path.join(__dirname, '../../../../'),
@@ -533,31 +534,51 @@ export const progressWrite = (src: string, dest: string, onUpdate?: (completed: 
   });
 };
 
-export const drainProjectFiles = () => {
+export const drainProjectFiles = (limit?: number) => {
   return new Promise<rq.ApiResult>((resolve) => {
     fs.readdir(APP_PATHS.save).then((res) => {
-      const projects = res.filter((dir) => {
-        const path = joinPath(APP_PATHS.save, dir);
+      let projects: Array<{
+        updatedAt: Date,
+        pathname: string,
+      }> = [];
 
-        return fs.lstatSync(path).isDirectory() && path !== 'logs';
+      res.forEach((dir: string, idx: number) => {
+        const pathname = joinPath(APP_PATHS.save, dir);
+        const stats = fs.lstatSync(pathname);
+        const isValid = stats.isDirectory() && pathname.indexOf('logs') === -1;
+
+        if (isValid) {
+          projects.push({
+            updatedAt: stats.mtime,
+            pathname,
+          });
+        }
       });
 
-      const files: Array<string> = []
-      
-      projects.forEach((dir) => {
-        const filepath = joinPath(APP_PATHS.save, dir, 'project.json');
+      lt.sortBy(projects, ['updatedAt'], true);
+
+      const files: Array<string> = [];
+      let fileCnt = 0;
+
+      for (let i = 0, ii = projects.length; i < ii; i++) {
+        if (limit && fileCnt >= limit) {
+          break;
+        }
+
+        const filepath = joinPath(projects[i].pathname, 'project.json');
         const exists = fileExistsSync(filepath);
 
         if (exists.error) {
-          return;
+          continue;
         }
 
         if (!exists.data.exists) {
-          return;
+          continue;
         }
 
+        fileCnt++;
         files.push(filepath);
-      });
+      }
 
       resolve({
         error: false,

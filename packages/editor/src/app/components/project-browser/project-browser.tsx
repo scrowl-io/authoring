@@ -5,7 +5,6 @@ import { FormattedProjectFile } from './project-browser.types';
 import { Modal, filter } from '../';
 import { Projects } from '../../models';
 import { Workspace } from '../../pages';
-import { sys } from '../../services';
 import { ProjectSearch } from './';
 import { List } from '../../utils';
 
@@ -92,24 +91,7 @@ const ProjectBrowserElement = ({ isOpen, ...props }, ref) => {
     }
 
     const project = selectedProject.project.versions[0];
-
-    Projects.open(project).then((res) => {
-      if (res.error) {
-        sys.messageDialog({
-          message: res.message,
-        });
-        return;
-      }
-
-      Projects.resetState();
-      Workspace.resetWorkspace();
-      Workspace.resetActiveSlide();
-
-      setTimeout(() => {
-        Projects.setData(res.data.project);
-        Projects.closeProjectBrowser();
-      }, 1);
-    });
+    Workspace.openProject(project);
   };
 
   const handleSelectProject = (project: Projects.ProjectFile, idx: number) => {

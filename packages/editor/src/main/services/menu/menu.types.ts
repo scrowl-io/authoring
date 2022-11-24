@@ -1,4 +1,4 @@
-import { MenuItemConstructorOptions } from 'electron';
+import { MenuItemConstructorOptions, Menu } from 'electron';
 import { rq } from '../';
 
 export interface MenuApiContextMenu
@@ -28,6 +28,7 @@ export type MenuItemProps = {
   API?: rq.RegisterEndpoints;
   register?: () => void;
   create?: (isMac: boolean) => MenuItemConstructorOptions;
+  asyncInit?: (menu: Menu) => Promise<rq.ApiResult>;
   [key: string]: any;
 };
 
