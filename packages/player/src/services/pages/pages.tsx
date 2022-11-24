@@ -90,7 +90,7 @@ export const create = (
         Element: () => {
           return (
             <>
-              <NavBar rootConfig={rootConfig} />
+              <NavBar pageId={id} rootConfig={rootConfig} />
               <Page id={id} slides={page.slides} templates={templateList} />
               <div className={css.nextLessonContainer}>
                 {lIdx < module.lessons.length - 1 ||

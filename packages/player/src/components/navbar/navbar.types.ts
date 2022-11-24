@@ -3,6 +3,7 @@ import { PlayerRootConfig } from '../../root';
 
 export interface NavbarCommons {
   rootConfig: Array<PlayerRootConfig>;
+  pageId: string;
 }
 
 export type NavbarProps = NavbarCommons &

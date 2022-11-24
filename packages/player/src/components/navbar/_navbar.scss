@@ -1,0 +1,67 @@
+@use '@owlui/lib/src/theme/utils' as *;
+
+.nav-outline {
+  margin-left: 1rem;
+
+  .module-button {
+    display: flex;
+    align-items: center;
+
+    h5 {
+      color: black;
+      margin: 0;
+    }
+
+    span {
+      font-size: 2rem;
+      color: black;
+    }
+  }
+
+  .module-button:hover {
+    cursor: pointer;
+    background-color: #f9f9f9;
+  }
+
+  .lesson-list {
+    margin-left: 0.5rem;
+    margin-top: 0.5rem;
+    list-style: none;
+
+    li:hover {
+      background-color: #f9f9f9;
+      cursor: pointer;
+    }
+
+    .lesson-button {
+      background-color: transparent;
+      border: none;
+      display: flex;
+      align-items: center;
+
+      span {
+        transform: rotate(-90deg);
+      }
+
+      .lesson-icon {
+        color: black;
+        margin-right: 0.25rem;
+      }
+
+      .lesson-icon-active {
+        color: #007aba;
+        margin-right: 0.25rem;
+      }
+
+      .lesson-link {
+        text-decoration: none;
+        color: black;
+      }
+
+      .lesson-link-active {
+        text-decoration: none;
+        color: #007aba;
+      }
+    }
+  }
+}
