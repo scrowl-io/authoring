@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import * as css from './_page-workspace.scss';
 import {
-  useProcessor,
   openPromptProjectName,
   resetWorkspace,
   resetActiveSlide,
@@ -17,7 +16,6 @@ import {
 } from './components';
 import { Projects } from '../../models';
 import { menu, sys } from '../../services';
-import { ProjectBrowser } from '../../components';
 
 export const Path = '/workspace';
 
@@ -41,8 +39,6 @@ export const openProject = (project: Projects.ProjectMeta) => {
 };
 
 export const Page = () => {
-  useProcessor();
-
   const projectData = Projects.useData();
   const assets = Projects.useAssets();
 
@@ -103,7 +99,6 @@ export const Page = () => {
       <TemplateBrowser />
       <PromptProjectName />
       <PublishProgress />
-      <ProjectBrowser />
     </>
   );
 };
