@@ -1,12 +1,10 @@
 import React from 'react';
-// @ts-ignore
-import { Navbar, Offcanvas, Container, Collapse } from 'react-bootstrap';
-// @ts-ignore
-import { Button, Icon } from '@owlui/lib';
+import { Navbar, Offcanvas, Container } from 'react-bootstrap';
 import * as css from './_navbar.scss';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { NavModule } from './nav-module';
+import { Icon } from '@owlui/lib';
 
 export const NavBar = ({ pageId, rootConfig }) => {
   return (
@@ -25,18 +23,18 @@ export const NavBar = ({ pageId, rootConfig }) => {
               </Offcanvas.Title>
             </Offcanvas.Header>
             <Offcanvas.Body>
+              <div className={css.navTitleContainer}>
+                <h3 className={css.navTitle}>Welcome to Scrowl!</h3>
+                <h4 className={css.navSubtitle}>Subtitle Here</h4>
+                <span className={css.navDuration}>
+                  <Icon icon="access_time" />
+                  <h5>60 min</h5>
+                </span>
+              </div>
               {rootConfig.map((config, mIdx) => {
-                const module = config.module;
-
                 return (
                   <div className={css.navOutline}>
-                    <NavModule
-                      pageId={pageId}
-                      rootConfig={rootConfig}
-                      module={module}
-                      mIdx={mIdx}
-                    />
-
+                    <NavModule pageId={pageId} config={config} mIdx={mIdx} />
                     <hr />
                   </div>
                 );

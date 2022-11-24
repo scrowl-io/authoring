@@ -1,7 +1,38 @@
 @use '@owlui/lib/src/theme/utils' as *;
 
+.nav-title-container {
+  margin-bottom: 2em;
+
+  .nav-title {
+    font-weight: 700;
+  }
+
+  .nav-subtitle {
+    font-weight: 300;
+  }
+
+  .nav-duration {
+    margin-top: 1em;
+    display: flex;
+    align-items: center;
+
+    span {
+      color: #72727e;
+      margin-right: 0.25rem;
+      font-size: 1em;
+    }
+
+    h5 {
+      font-size: 1em;
+      font-weight: 200;
+      color: #72727e;
+      margin: 0;
+    }
+  }
+}
+
 .nav-outline {
-  margin-left: 1rem;
+  margin-left: 0.25rem;
 
   .module-button {
     display: flex;
@@ -12,15 +43,24 @@
       margin: 0;
     }
 
-    span {
-      font-size: 2rem;
+    .icon {
+      font-size: 1.5rem;
       color: black;
-    }
-  }
+      margin-right: 0.25em;
+      transition: transform 0.2s;
 
-  .module-button:hover {
-    cursor: pointer;
-    background-color: #f9f9f9;
+      &-expanded {
+        font-size: 1.5rem;
+        margin-right: 0.25em;
+        transform: rotate(90deg);
+        transition: transform 0.2s;
+      }
+    }
+
+    &:hover {
+      cursor: pointer;
+      background-color: #f9f9f9;
+    }
   }
 
   .lesson-list {
@@ -47,21 +87,21 @@
       .lesson-icon {
         color: black;
         margin-right: 0.25rem;
-      }
 
-      .lesson-icon-active {
-        color: #007aba;
-        margin-right: 0.25rem;
+        &-active {
+          color: #007aba;
+          margin-right: 0.25rem;
+        }
       }
 
       .lesson-link {
         text-decoration: none;
         color: black;
-      }
 
-      .lesson-link-active {
-        text-decoration: none;
-        color: #007aba;
+        &-active {
+          text-decoration: none;
+          color: #007aba;
+        }
       }
     }
   }

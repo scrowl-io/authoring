@@ -1,35 +1,47 @@
 import React, { useState } from 'react';
-// @ts-ignore
-import { Navbar, Offcanvas, Container, Collapse } from 'react-bootstrap';
-// @ts-ignore
-import { Button, Icon } from '@owlui/lib';
-
+import { Collapse } from 'react-bootstrap';
+import { Icon } from '@owlui/lib';
 import { Link } from 'react-router-dom';
-// @ts-ignore
 import * as css from './_navbar.scss';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-export const NavModule = ({ pageId, rootConfig, module, mIdx }) => {
-  // @ts-ignore
-  const [isOpen, setOpen] = useState(true);
+export const NavModule = ({ pageId, config, mIdx }) => {
   const currentSlide = pageId;
+
+  let moduleSlides: Array<string> = [];
+
+  //@ts-ignore
+  config.lessons.forEach((lesson, i) => {
+    const slide = `module-${mIdx}--lesson-${i}`;
+    moduleSlides.push(slide);
+  });
+
+  //@ts-ignore
+  const [isOpen, setOpen] = moduleSlides.includes(pageId)
+    ? useState(true)
+    : useState(false);
 
   const handleToggleOpen = (ev) => {
     ev.preventDefault();
-    setOpen(!isOpen);
+    // @ts-ignore
+    if (!moduleSlides.includes(pageId)) {
+      setOpen(!isOpen);
+    }
   };
 
   return (
     <div className={css.navOutline}>
       <span className={css.moduleButton} onClick={handleToggleOpen}>
-        <Icon icon="chevron_right" />
-        <h5>{module.name}</h5>
+        <Icon
+          className={`${isOpen ? 'icon-expanded' : 'icon'}`}
+          icon="chevron_right"
+        />
+        <h5>{config.module.name}</h5>
       </span>
       <Collapse in={isOpen}>
         <ul className={css.lessonList}>
-          {}
-          {rootConfig[mIdx].lessons.map((lesson, lIdx) => {
+          {config.lessons.map((lesson, lIdx) => {
             const id = `module-${mIdx}--lesson-${lIdx}`;
             const url = `/${id}`;
             const lessonName = lesson.lesson.name;
@@ -40,7 +52,7 @@ export const NavModule = ({ pageId, rootConfig, module, mIdx }) => {
                   <Icon
                     className={
                       id === currentSlide
-                        ? 'lesson-icon-active'
+                        ? css.lessonIconActive
                         : css.lessonIcon
                     }
                     icon="arrow_drop_down_circle"
@@ -48,7 +60,7 @@ export const NavModule = ({ pageId, rootConfig, module, mIdx }) => {
                   <Link
                     className={
                       id === currentSlide
-                        ? 'lesson-link-active'
+                        ? css.lessonLinkActive
                         : css.lessonLink
                     }
                     to={url}
