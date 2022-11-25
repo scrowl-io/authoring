@@ -1,9 +1,10 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import * as css from '../../_pane-details.scss';
 import { Projects } from '../../../../../../models';
 import { useActiveSlide } from '../../../../page-workspace-hooks';
 import { OutlineModules } from './';
 import { getContainer } from './utils';
+import { events } from '../../../../../../services';
 
 export const Outline = () => {
   const draggable = useRef<HTMLDivElement>();
@@ -264,6 +265,32 @@ export const Outline = () => {
     draggable.current.remove();
     draggable.current = undefined;
   };
+
+  useEffect(() => {
+    const handleSlideFocus = (ev: CustomEvent) => {
+      setTimeout(() => {
+        requestAnimationFrame(() => {
+          const slideId = ev.detail;
+
+          const slideNavItem = document.querySelector(
+            'div[data-slide-id="' + slideId + '"]'
+          );
+
+          if (!slideNavItem) {
+            return;
+          }
+
+          slideNavItem.scrollIntoView();
+        });
+      }, 250);
+    };
+
+    events.slide.onFocus(handleSlideFocus);
+
+    return () => {
+      events.slide.offFocus(handleSlideFocus);
+    };
+  });
 
   return (
     <div
