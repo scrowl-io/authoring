@@ -4,6 +4,7 @@ import { list as templateList } from './default-templates';
 
 export const TEMPLATE_PATHS = {
   working: fs.joinPath(fs.APP_PATHS.temp, 'templates'),
+  workingAssets: fs.joinPath(fs.APP_PATHS.temp, 'templates', 'assets'),
   project: fs.getSourcePath('assets', 'project'),
   templates: fs.getSourcePath('assets', 'templates'),
 };
@@ -124,12 +125,20 @@ export const load = (ev: rq.RequestEvent, template: TemplateSchema) => {
               resolve(tempCopyRes);
               return;
             }
-  
-            resolve({
-              error: false,
-              data: {
-                url: `${rq.templateServerUrl}/index.html?ver=${cacheBreaker}`
+
+            fs.copy(fs.APP_PATHS.uploads, TEMPLATE_PATHS.workingAssets, { overwrite: false }).then((assetCopyRes) => {
+              if (assetCopyRes.error) {
+                log.error(assetCopyRes);
+                resolve(assetCopyRes);
+                return;
               }
+
+              resolve({
+                error: false,
+                data: {
+                  url: `${rq.templateServerUrl}/index.html?ver=${cacheBreaker}`
+                }
+              });
             });
           });
         });
