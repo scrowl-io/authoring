@@ -223,7 +223,7 @@ export const create = (ev: rq.RequestEvent, blueprint?: string) => {
             }
             break;
           case 'Fieldset':
-            scanContent(input.content);
+            updateContent(input.content);
             break;
         }
       }
@@ -232,23 +232,24 @@ export const create = (ev: rq.RequestEvent, blueprint?: string) => {
     uniqueAssets.forEach((asset) => {
       assetCopyPromises.push(copyAsset(asset));
     });
+    const assetList = Array.from(uniqueAssets);
 
     Promise.allSettled(assetCopyPromises).then((copiesRes) => {
       copiesRes.forEach((copyRes, idx) => {
         if (copyRes.status === 'rejected') {
-          log.error(`failed to copy asset ${uniqueAssets[idx]}`);
+          log.error(`failed to copy asset ${assetList[idx]}`);
           return;
         }
 
         if (copyRes.value.error) {
-          log.error(`failed to copy asset ${uniqueAssets[idx]}`, copyRes.value);
+          log.error(`failed to copy asset ${assetList[idx]}`, copyRes.value);
           return;
         }
 
         const asset = copyRes.value.data as ProjectAsset;
 
         assets.push(asset);
-        assetsMap.set(uniqueAssets[idx], asset.filename);
+        assetsMap.set(assetList[idx], asset.filename);
       });
 
       project.slides?.forEach((slide) => {
