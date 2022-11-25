@@ -108,12 +108,10 @@ export const create = (ev: rq.RequestEvent, blueprint?: string) => {
       const name = fs.getBasename(assetFilename, ext).replace('.', '');
       const type = fs.assetTypeByExt(ext);
       let dest = fs.joinPath(fs.APP_PATHS.uploads, `${name}.`);
-      let destWorking = fs.joinPath(fs.APP_PATHS.temp, 'templates', 'assets', `${name}.`);
 
       switch (type) {
         case 'image':
           dest += 'webp';
-          destWorking += 'webp';
 
           fs.asset.toWebp(sourcePath, dest).then((transformRes) => {
             if (transformRes.error) {
@@ -122,31 +120,22 @@ export const create = (ev: rq.RequestEvent, blueprint?: string) => {
               return;
             }
 
-            fs.fileWrite(dest, destWorking).then((writeRes) => {
-              if (writeRes.error) {
-                log.error('blueprint asset write failed', writeRes);
-                resolve(writeRes);
-                return;
-              }
-
-              resolve({
-                error: false,
-                data: {
-                  title: name,
-                  filename: `${name}.webp`,
-                  type,
-                  ext: 'webp',
-                  size: transformRes.data.size,
-                  sourceExt: ext,
-                  sourceFilename: assetFilename,
-                },
-              });
+            resolve({
+              error: false,
+              data: {
+                title: name,
+                filename: `${name}.webp`,
+                type,
+                ext: 'webp',
+                size: transformRes.data.size,
+                sourceExt: ext,
+                sourceFilename: assetFilename,
+              },
             });
           });
           break;
         default:
           dest += ext;
-          destWorking += ext;
 
           fs.copy(sourcePath, dest).then((copyRes) => {
             if (copyRes.error) {
