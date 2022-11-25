@@ -104,6 +104,7 @@ const PromptProjectNameElement = ({ isOpen, ...props }, ref) => {
 const PromptProjectNameRef = forwardRef(PromptProjectNameElement);
 
 export const PromptProjectName = (props) => {
+  const containerRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
   const isOpen = usePromptProjectName();
 
@@ -113,9 +114,19 @@ export const PromptProjectName = (props) => {
     if (appNode && overlayRef.current) {
       appNode.appendChild(overlayRef.current);
     }
+
+    return () => {
+      if (containerRef.current && overlayRef.current) {
+        containerRef.current.appendChild(overlayRef.current);
+      }
+    };
   }, [overlayRef, isOpen]);
 
-  return <PromptProjectNameRef ref={overlayRef} isOpen={isOpen} {...props} />;
+  return (
+    <div ref={containerRef}>
+      <PromptProjectNameRef ref={overlayRef} isOpen={isOpen} {...props} />
+    </div>
+  );
 };
 
 export default {

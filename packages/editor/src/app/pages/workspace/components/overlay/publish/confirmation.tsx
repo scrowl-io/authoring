@@ -38,6 +38,7 @@ const ConfirmationElement = ({ isOpen, onClose, ...props }, ref) => {
 const ConfirmationRef = forwardRef(ConfirmationElement);
 
 export const Confirmation = ({ isOpen, ...props }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -46,9 +47,19 @@ export const Confirmation = ({ isOpen, ...props }) => {
     if (appNode && overlayRef.current) {
       appNode.appendChild(overlayRef.current);
     }
+
+    return () => {
+      if (containerRef.current && overlayRef.current) {
+        containerRef.current.appendChild(overlayRef.current);
+      }
+    };
   }, [overlayRef, isOpen]);
 
-  return <ConfirmationRef ref={overlayRef} isOpen={isOpen} {...props} />;
+  return (
+    <div ref={containerRef}>
+      <ConfirmationRef ref={overlayRef} isOpen={isOpen} {...props} />
+    </div>
+  );
 };
 
 export default {

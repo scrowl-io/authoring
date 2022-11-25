@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 1.0.31 (2022-11-25)
+
+**Note:** Version bump only for package @scrowl/template-core
+
+
+
+
+
+## 1.0.30 (2022-11-25)
+
+**Note:** Version bump only for package @scrowl/template-core
+
+
+
+
+
+## 1.0.29 (2022-11-24)
+
+**Note:** Version bump only for package @scrowl/template-core
+
+
+
+
+
 ## 1.0.28 (2022-11-24)
 
 **Note:** Version bump only for package @scrowl/template-core

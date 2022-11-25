@@ -246,11 +246,11 @@ export const AssetDrawerElement = (
                             </th>
                             <th
                               scope="col"
-                              data-sort-field="originalExt"
+                              data-sort-field="sourceExt"
                               style={stylesColType}
                             >
                               Type
-                              {sortField === 'originalExt' && (
+                              {sortField === 'sourceExt' && (
                                 <Icon
                                   className="sort-indicator"
                                   icon={sortIcon}
@@ -329,6 +329,7 @@ export const AssetDrawerElement = (
 export const AssetDrawer = forwardRef(AssetDrawerElement);
 
 export const AssetBrowser = ({ isOpen, ...props }: AssetBrowserProps) => {
+  const containerRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -337,9 +338,19 @@ export const AssetBrowser = ({ isOpen, ...props }: AssetBrowserProps) => {
     if (appNode && overlayRef.current && isOpen) {
       appNode.appendChild(overlayRef.current);
     }
+
+    return () => {
+      if (containerRef.current && overlayRef.current) {
+        containerRef.current.appendChild(overlayRef.current);
+      }
+    };
   }, [overlayRef, isOpen]);
 
-  return <AssetDrawer {...props} isOpen={isOpen} ref={overlayRef} />;
+  return (
+    <div ref={containerRef}>
+      <AssetDrawer {...props} isOpen={isOpen} ref={overlayRef} />
+    </div>
+  );
 };
 
 export default {

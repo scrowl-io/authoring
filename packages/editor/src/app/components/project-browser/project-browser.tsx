@@ -1,4 +1,5 @@
 import React, { useEffect, useState, forwardRef, useRef } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Button, Icon } from '@owlui/lib';
 import './_project-browser.scss';
 import { FormattedProjectFile } from './project-browser.types';
@@ -9,6 +10,8 @@ import { ProjectSearch } from './';
 import { List } from '../../utils';
 
 const ProjectBrowserElement = ({ isOpen, ...props }, ref) => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const title = 'Project Browser';
   const listInProgress = useRef(false);
   const [projects, setProjects] = useState<Array<FormattedProjectFile>>([]);
@@ -92,6 +95,10 @@ const ProjectBrowserElement = ({ isOpen, ...props }, ref) => {
 
     const project = selectedProject.project.versions[0];
     Workspace.openProject(project);
+
+    if (location.pathname !== Workspace.Path) {
+      navigate(Workspace.Path);
+    }
   };
 
   const handleSelectProject = (project: Projects.ProjectFile, idx: number) => {

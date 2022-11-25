@@ -20,7 +20,7 @@ export const Resources = () => {
     title: '',
     filename: '',
     ext: '',
-    originalExt: '',
+    sourceExt: '',
     size: 0,
   };
   const [selectedResource, setSelectedResource] =

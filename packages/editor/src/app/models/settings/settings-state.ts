@@ -9,6 +9,7 @@ export enum ASPECT_RATIO {
 
 export const initialState = {
   hasWelcomed: false,
+  lastUsedAt: '',
   theme: 'light',
   aspect: ASPECT_RATIO.Fit,
   reducedAnimations: false,
@@ -20,10 +21,15 @@ export const config: stateManager.StateConfig = {
   initialState,
   reducers: {
     setState: (state, action) => {
-      state = Object.assign(state, action.payload);
+      utils.updateObj(state, action.payload);
+      console.log('settings data', action.payload);
+      if (action.payload.lastUsedAt) {
+        state.hasWelcomed = true;
+      }
     },
-    setHasWelcomed: (state, action) => {
-      state.hasWelcomed = action.payload;
+    setLastUsedAt: (state, action) => {
+      state.lastUsedAt = action.payload;
+      state.hasWelcomed = true;
     },
     setTheme: (state, action) => {
       state.theme = action.payload;
@@ -45,7 +51,13 @@ export const config: stateManager.StateConfig = {
 
 export const slice = createSlice(config);
 
-export const { setState, setTheme, setAspect, setAnimation, setHasWelcomed } = slice.actions;
+export const {
+  setState,
+  setTheme,
+  setAspect,
+  setAnimation,
+  setLastUsedAt,
+} = slice.actions;
 
 export const reducer = slice.reducer;
 
