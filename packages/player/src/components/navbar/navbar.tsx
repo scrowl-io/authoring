@@ -5,16 +5,18 @@ import * as css from './_navbar.scss';
 // import 'bootstrap/dist/css/bootstrap.min.css';
 import { NavModule } from './nav-module';
 import { NavResource } from './nav-resource';
-import { NavGlossaryTerm } from './nav-glossary-term';
+import { NavGlossaryItem } from './nav-glossary-term';
 
 import { Icon } from '@owlui/lib';
 
 export const NavBar = ({ pageId, rootConfig }) => {
   const [tabKey, setTabKey] = useState('outline');
 
+  console.log(tabKey);
+
   return (
     <>
-      <Navbar key={'1'} bg="light" expand={false} className="mb-3">
+      <Navbar key={'1'} bg="dark" expand={false} className="mb-3">
         <Container fluid>
           <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-${false}`} />
           <Navbar.Offcanvas
@@ -76,10 +78,10 @@ export const NavBar = ({ pageId, rootConfig }) => {
                     <h3 className={css.navTitle}>Glossary</h3>
                     {/* @ts-ignore */}
                     {rootConfig[0].glossary &&
-                      rootConfig[0].glossary.map((term) => {
+                      rootConfig[0].glossary.map((item) => {
                         return (
-                          <div className={css.navOutline}>
-                            <NavGlossaryTerm glossaryTerm={term} />
+                          <div className={css.navGlossary}>
+                            <NavGlossaryItem glossaryItem={item} />
                             <hr />
                           </div>
                         );

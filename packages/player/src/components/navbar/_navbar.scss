@@ -1,5 +1,9 @@
 @use '@owlui/lib/src/theme/utils' as *;
 
+.navbar-toggle-icon {
+  background-image: var(--bs-navbar-toggler-icon-bg);
+}
+
 .tabs-container {
   display: flex;
   flex-direction: row !important;
@@ -20,6 +24,10 @@
       border: none;
       text-decoration: underline;
       color: #007aba !important;
+    }
+
+    button:focus {
+      font-weight: 700;
     }
   }
 }
@@ -129,6 +137,18 @@
           color: #007aba;
         }
       }
+    }
+  }
+}
+
+.nav-glossary {
+  .glossary-item {
+    &-term {
+      font-weight: 700;
+    }
+
+    &-definition {
+      font-weight: 400;
     }
   }
 }

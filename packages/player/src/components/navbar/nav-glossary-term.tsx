@@ -1,14 +1,15 @@
 import React from 'react';
+import * as css from './_navbar.scss';
 
-export const NavGlossaryTerm = ({ glossaryTerm }) => {
+export const NavGlossaryItem = ({ glossaryItem }) => {
   return (
     <div>
-      <p>{glossaryTerm.word}</p>
-      <p>{glossaryTerm.definition}</p>
+      <p className={css.glossaryItemTerm}>{glossaryItem.word}</p>
+      <p className={css.glossaryItemDefinition}>{glossaryItem.definition}</p>
     </div>
   );
 };
 
 export default {
-  NavGlossaryTerm,
+  NavGlossaryItem,
 };
