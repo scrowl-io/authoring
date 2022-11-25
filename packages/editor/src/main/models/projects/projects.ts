@@ -17,6 +17,10 @@ import { rq, fs, log } from '../../services';
 import * as utils from '../../utils';
 import { scorm } from './project-publisher';
 
+const PROJECT_PATHS = {
+  blueprints: fs.getSourcePath('assets', 'blueprints'),
+};
+
 const projectMetaFilename = 'project.json';
 
 const getProjectPath = (name) => {
@@ -97,9 +101,87 @@ const getProjectInfo = (meta: ProjectMeta): rq.ApiResult => {
 };
 
 export const create = (ev: rq.RequestEvent, blueprint?: string) => {
+  const copyAsset = (assetFilename: string) => {
+    return new Promise<rq.ApiResult>((resolve) => {
+      const sourcePath = fs.joinPath(PROJECT_PATHS.blueprints, assetFilename);
+      const ext = fs.getExt(assetFilename).replace('.', '');
+      const name = fs.getBasename(assetFilename, ext).replace('.', '');
+      const type = fs.assetTypeByExt(ext);
+      let dest = fs.joinPath(fs.APP_PATHS.uploads, `${name}.`);
+      let destWorking = fs.joinPath(fs.APP_PATHS.temp, 'templates', 'assets', `${name}.`);
+
+      switch (type) {
+        case 'image':
+          dest += 'webp';
+          destWorking += 'webp';
+
+          fs.asset.toWebp(sourcePath, dest).then((transformRes) => {
+            if (transformRes.error) {
+              log.error('asset conversion failed', transformRes);
+              resolve(transformRes);
+              return;
+            }
+
+            fs.fileWrite(dest, destWorking).then((writeRes) => {
+              if (writeRes.error) {
+                log.error('blueprint asset write failed', writeRes);
+                resolve(writeRes);
+                return;
+              }
+
+              resolve({
+                error: false,
+                data: {
+                  title: name,
+                  filename: `${name}.webp`,
+                  type,
+                  ext: 'webp',
+                  size: transformRes.data.size,
+                  sourceExt: ext,
+                  sourceFilename: assetFilename,
+                },
+              });
+            });
+          });
+          break;
+        default:
+          dest += ext;
+          destWorking += ext;
+
+          fs.copy(sourcePath, dest).then((copyRes) => {
+            if (copyRes.error) {
+              log.error('blueprint asset copy failed', copyRes);
+              resolve(copyRes);
+              return;
+            }
+
+            const statsRes = fs.fileStatsSync(sourcePath);
+
+            if (statsRes.error) {
+              resolve(statsRes);
+              return;
+            }
+
+            resolve({
+              error: false,
+              data: {
+                title: name,
+                filename: `${name}.${ext}`,
+                type,
+                ext,
+                size: statsRes.data.stats.size,
+                sourceExt: ext,
+                sourceFilename: assetFilename,
+              },
+            });
+          });
+          break;
+      }
+    });
+  };
+
   return new Promise<rq.ApiResult>((resolve) => {
     const project = blueprints.get(blueprint);
-    const assets: Array<ProjectAsset> = [];
 
     // convert asset list
     // put assets into temp folder
@@ -126,14 +208,60 @@ export const create = (ev: rq.RequestEvent, blueprint?: string) => {
       scanContent(slide.template.content);
     });
 
-    console.log('uniqueAssets', uniqueAssets.values());
+    const assetCopyPromises: Array<Promise<rq.ApiResult>> = [];
+    const assets: Array<ProjectAsset> = [];
+    const assetsMap = new Map();
 
-    resolve({
-      error: false,
-      data: {
-        project,
-        assets,
-      },
+    const updateContent = (content) => {
+      for (const [key, item] of Object.entries(content)) {
+        const input = item as Templates.InputProps;
+  
+        switch (input.type) {
+          case 'Asset':
+            if (input.value) {
+              input.value = assetsMap.get(input.value);
+            }
+            break;
+          case 'Fieldset':
+            scanContent(input.content);
+            break;
+        }
+      }
+    };
+
+    uniqueAssets.forEach((asset) => {
+      assetCopyPromises.push(copyAsset(asset));
+    });
+
+    Promise.allSettled(assetCopyPromises).then((copiesRes) => {
+      copiesRes.forEach((copyRes, idx) => {
+        if (copyRes.status === 'rejected') {
+          log.error(`failed to copy asset ${uniqueAssets[idx]}`);
+          return;
+        }
+
+        if (copyRes.value.error) {
+          log.error(`failed to copy asset ${uniqueAssets[idx]}`, copyRes.value);
+          return;
+        }
+
+        const asset = copyRes.value.data as ProjectAsset;
+
+        assets.push(asset);
+        assetsMap.set(uniqueAssets[idx], asset.filename);
+      });
+
+      project.slides?.forEach((slide) => {
+        updateContent(slide.template.content);
+      });
+
+      resolve({
+        error: false,
+        data: {
+          project,
+          assets,
+        },
+      });
     });
   });
 };
@@ -262,7 +390,8 @@ export const upload = (ev: rq.RequestEvent, req: UploadReq) => {
                   type,
                   ext: 'webp',
                   size: transformRes.data.size,
-                  originalExt: ext,
+                  sourceExt: ext,
+                  sourceFilename: `${name}.${ext}`,
                 },
               });
             });
@@ -342,11 +471,13 @@ export const upload = (ev: rq.RequestEvent, req: UploadReq) => {
             resolve({
               error: false,
               data: {
-                title: name.replace('.', ''),
+                title: name,
                 filename: `${name}.${ext}`,
                 type,
                 ext,
                 size: statsRes.data.stats.size,
+                sourceExt: ext,
+                sourceFilename: `${name}.${ext}`,
               },
             })
           });

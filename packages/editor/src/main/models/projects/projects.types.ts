@@ -96,7 +96,8 @@ export type ProjectAsset = {
   type: fs.AssetType;
   size: number;
   isDeleted?: boolean;
-  originalExt: string;
+  sourceExt: string;
+  sourceFilename: string;
 };
 
 export interface ProjectResource extends ProjectAsset {
