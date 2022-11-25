@@ -79,4 +79,6 @@ export type PlayerRootConfig = {
     lesson: ProjectLesson;
     slides: Array<ProjectSlide>;
   }>;
+  resources?: Array<ProjectResource>;
+  glossary?: Array<ProjectGlossaryItem>;
 };

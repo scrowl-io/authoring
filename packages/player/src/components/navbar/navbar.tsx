@@ -1,12 +1,17 @@
-import React from 'react';
-import { Navbar, Offcanvas, Container } from 'react-bootstrap';
+import React, { useState } from 'react';
+import { Navbar, Offcanvas, Container, Tabs, Tab } from 'react-bootstrap';
 import * as css from './_navbar.scss';
 
-import 'bootstrap/dist/css/bootstrap.min.css';
+// import 'bootstrap/dist/css/bootstrap.min.css';
 import { NavModule } from './nav-module';
+import { NavResource } from './nav-resource';
+import { NavGlossaryTerm } from './nav-glossary-term';
+
 import { Icon } from '@owlui/lib';
 
 export const NavBar = ({ pageId, rootConfig }) => {
+  const [tabKey, setTabKey] = useState('outline');
+
   return (
     <>
       <Navbar key={'1'} bg="light" expand={false} className="mb-3">
@@ -17,29 +22,72 @@ export const NavBar = ({ pageId, rootConfig }) => {
             aria-labelledby={`offcanvasNavbarLabel-expand-${false}`}
             placement="start"
           >
-            <Offcanvas.Header closeButton>
-              <Offcanvas.Title id={`offcanvasNavbarLabel-expand-${false}`}>
-                Outline
-              </Offcanvas.Title>
-            </Offcanvas.Header>
-            <Offcanvas.Body>
-              <div className={css.navTitleContainer}>
-                <h3 className={css.navTitle}>Welcome to Scrowl!</h3>
-                <h4 className={css.navSubtitle}>Subtitle Here</h4>
-                <span className={css.navDuration}>
-                  <Icon icon="access_time" />
-                  <h5>60 min</h5>
-                </span>
-              </div>
-              {rootConfig.map((config, mIdx) => {
-                return (
-                  <div className={css.navOutline}>
-                    <NavModule pageId={pageId} config={config} mIdx={mIdx} />
-                    <hr />
+            <Tabs
+              className={css.tabsContainer}
+              activeKey={tabKey}
+              // @ts-ignore
+              onSelect={(k) => setTabKey(k)}
+            >
+              <Tab eventKey="outline" title="Outline">
+                <Offcanvas.Body>
+                  <div className={css.navTitleContainer}>
+                    <h3 className={css.navTitle}>Welcome to Scrowl!</h3>
+                    <h4 className={css.navSubtitle}>Subtitle Here</h4>
+                    <span className={css.navDuration}>
+                      <Icon icon="access_time" />
+                      <h5>60 min</h5>
+                    </span>
                   </div>
-                );
-              })}
-            </Offcanvas.Body>
+                  {rootConfig &&
+                    rootConfig.map((config, mIdx) => {
+                      return (
+                        <div className={css.navOutline}>
+                          <NavModule
+                            pageId={pageId}
+                            config={config}
+                            mIdx={mIdx}
+                          />
+                          <hr />
+                        </div>
+                      );
+                    })}
+                </Offcanvas.Body>
+              </Tab>
+              <Tab eventKey="resources" title="Resources">
+                <Offcanvas.Body>
+                  <div className={css.navTitleContainer}>
+                    <h3 className={css.navTitle}>Additional Resources</h3>
+                    {/* @ts-ignore */}
+                    {rootConfig[0].resources &&
+                      rootConfig[0].resources.map((resource) => {
+                        return (
+                          <div className={css.navOutline}>
+                            <NavResource resource={resource} />
+                            <hr />
+                          </div>
+                        );
+                      })}
+                  </div>
+                </Offcanvas.Body>
+              </Tab>
+              <Tab eventKey="glossary" title="Glossary">
+                <Offcanvas.Body>
+                  <div className={css.navTitleContainer}>
+                    <h3 className={css.navTitle}>Glossary</h3>
+                    {/* @ts-ignore */}
+                    {rootConfig[0].glossary &&
+                      rootConfig[0].glossary.map((term) => {
+                        return (
+                          <div className={css.navOutline}>
+                            <NavGlossaryTerm glossaryTerm={term} />
+                            <hr />
+                          </div>
+                        );
+                      })}
+                  </div>
+                </Offcanvas.Body>
+              </Tab>
+            </Tabs>
           </Navbar.Offcanvas>
         </Container>
       </Navbar>

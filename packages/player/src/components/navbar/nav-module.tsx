@@ -46,7 +46,7 @@ export const NavModule = ({ pageId, config, mIdx }) => {
             const lessonName = lesson.lesson.name;
 
             return (
-              <li className={css.lessonListItem} key={lIdx}>
+              <li key={lIdx}>
                 <Link to={url}>
                   <span className={css.lessonButton}>
                     <Icon

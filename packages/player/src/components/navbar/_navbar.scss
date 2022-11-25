@@ -1,5 +1,29 @@
 @use '@owlui/lib/src/theme/utils' as *;
 
+.tabs-container {
+  display: flex;
+  flex-direction: row !important;
+
+  li {
+    padding: 1em;
+
+    button {
+      border: none !important;
+      font-weight: 500;
+    }
+
+    button:active,
+    button:focus,
+    button:hover,
+    button:target,
+    button:visited {
+      border: none;
+      text-decoration: underline;
+      color: #007aba !important;
+    }
+  }
+}
+
 .nav-title-container {
   margin-bottom: 2em;
 

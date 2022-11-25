@@ -8,7 +8,9 @@ import {
 export const create = (
   slides: Array<ProjectSlide>,
   lessons: Array<ProjectLesson>,
-  modules: Array<ProjectModule>
+  modules: Array<ProjectModule>,
+  resources,
+  glossary
 ) => {
   const rootConfig: Array<PlayerRootConfig> = [];
 
@@ -22,6 +24,8 @@ export const create = (
     const config: PlayerRootConfig = {
       module: module,
       lessons: [],
+      resources: resources,
+      glossary: glossary,
     };
     const lCnt = lessons.length;
     let l = 0;

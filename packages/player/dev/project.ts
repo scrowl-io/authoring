@@ -107,8 +107,35 @@ export const create = () => {
       createSlide('Slide 6.1', 2, 6, 12, 'twoColumn'),
       createSlide('Slide 6.2', 2, 6, 13, 'twoColumn'),
     ],
-    glossary: [],
-    resources: [],
+    glossary: [
+      {
+        id: 0,
+        word: 'Agent',
+        definition:
+          'One who acts for, or in the place of, another, by authority from him or her; one entrusted with the business of another; a substitute; a deputy. Managers and supervisors are agents of the employer.',
+      },
+      {
+        id: 1,
+        word: 'Discrimination',
+        definition:
+          'Any action that unlawfully or unjustly results in unequal treatment of persons or groups based on race, color, gender, national origin, religion, age, disability or other factors protected under federal, state or local laws, such as marital status or gender identity..',
+      },
+    ],
+    resources: [
+      {
+        id: 0,
+        filename: 'icon_1024.png',
+        title: 'mac icon',
+        description: 'this is the mac icon',
+      },
+      {
+        id: 1,
+        filename:
+          'OSG-Logo-with-Slogan-Horizontal-_Secondary-Color-Version.png',
+        title: 'OSG Logo',
+        description: 'this is the OSG logo',
+      },
+    ],
   };
 
   return data;
