@@ -18,7 +18,10 @@ export const NavBar = ({ pageId, rootConfig }) => {
     <>
       <Navbar key="1" bg="dark" expand={false} className="mb-3">
         <Container fluid>
-          <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-${false}`} />
+          <Navbar.Toggle
+            className={css.navButton}
+            aria-controls={`offcanvasNavbar-expand-${false}`}
+          />
           <Navbar.Offcanvas
             id={`offcanvasNavbar-expand-${false}`}
             aria-labelledby={`offcanvasNavbarLabel-expand-${false}`}
@@ -32,10 +35,10 @@ export const NavBar = ({ pageId, rootConfig }) => {
             >
               <Tab eventKey="outline" title="Outline">
                 <Offcanvas.Body>
-                  <div className={css.navTitleContainer}>
+                  <div className={css.titleContainer}>
                     <h3 className={css.navTitle}>Welcome to Scrowl!</h3>
-                    <h4 className={css.navSubtitle}>Subtitle Here</h4>
-                    <span className={css.navDuration}>
+                    <h4 className={css.outlineSubtitle}>Subtitle Here</h4>
+                    <span className={css.outlineDuration}>
                       <Icon icon="access_time" />
                       <h5>60 min</h5>
                     </span>
@@ -58,7 +61,7 @@ export const NavBar = ({ pageId, rootConfig }) => {
               </Tab>
               <Tab eventKey="resources" title="Resources">
                 <Offcanvas.Body>
-                  <div className={css.navTitleContainer}>
+                  <div className={css.titleContainer}>
                     <h3 className={css.navTitle}>Additional Resources</h3>
                     {rootConfig[0].resources &&
                       rootConfig[0].resources.map((resource) => {
@@ -74,7 +77,7 @@ export const NavBar = ({ pageId, rootConfig }) => {
               </Tab>
               <Tab eventKey="glossary" title="Glossary">
                 <Offcanvas.Body>
-                  <div className={css.navTitleContainer}>
+                  <div className={css.titleContainer}>
                     <h3 className={css.navTitle}>Glossary</h3>
                     {rootConfig[0].glossary &&
                       rootConfig[0].glossary.map((item) => {

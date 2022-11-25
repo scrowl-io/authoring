@@ -1,9 +1,13 @@
 @use '@owlui/lib/src/theme/utils' as *;
 
+.nav-button:focus {
+  box-shadow: none !important;
+}
+
 .active-tab {
   button {
     border: none;
-    text-decoration: underline;
+    text-decoration: underline !important;
     color: #007aba !important;
   }
 }
@@ -36,18 +40,18 @@
   }
 }
 
-.nav-title-container {
+.nav-title {
+  font-weight: 700;
+}
+
+.title-container {
   margin-bottom: 2em;
 
-  .nav-title {
-    font-weight: 700;
-  }
-
-  .nav-subtitle {
+  .outline-subtitle {
     font-weight: 300;
   }
 
-  .nav-duration {
+  .outline-duration {
     margin-top: 1em;
     display: flex;
     align-items: center;
