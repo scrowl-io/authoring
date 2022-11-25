@@ -4,6 +4,7 @@ import { Icon } from '@owlui/lib';
 import * as css from '../_canvas.scss';
 import { useActiveSlide } from '../../..';
 import { Settings, Projects } from '../../../../../models';
+import { events } from '../../../../../services';
 
 export const CanvasBreadcrumb = () => {
   const slide = useActiveSlide();
@@ -14,9 +15,8 @@ export const CanvasBreadcrumb = () => {
   const reducedAnimations = animationSettings.reducedAnimations;
   const animationDelay = animationSettings.animationDelay;
 
-  const handleSlideSelection = (ev: React.MouseEvent<HTMLButtonElement>) => {
-    // TODO; Move cursor focus to the slide
-    ev.currentTarget.blur();
+  const handleSlideFocus = (ev: React.MouseEvent<HTMLButtonElement>) => {
+    events.slide.focus(slide.id);
   };
 
   return (
@@ -66,8 +66,8 @@ export const CanvasBreadcrumb = () => {
             <li className="breadcrumb-item active dropup" aria-current="page">
               <button
                 className="breadcrumb-item__content dropdown-toggle active"
-                onClick={handleSlideSelection}
-                onContextMenu={handleSlideSelection}
+                onClick={handleSlideFocus}
+                onContextMenu={handleSlideFocus}
               >
                 <Icon
                   icon="rectangle"
