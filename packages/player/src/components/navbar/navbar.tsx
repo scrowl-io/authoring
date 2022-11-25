@@ -12,11 +12,11 @@ import { Icon } from '@owlui/lib';
 export const NavBar = ({ pageId, rootConfig }) => {
   const [tabKey, setTabKey] = useState('outline');
 
-  console.log(tabKey);
+  console.log(rootConfig);
 
   return (
     <>
-      <Navbar key={'1'} bg="dark" expand={false} className="mb-3">
+      <Navbar key="1" bg="dark" expand={false} className="mb-3">
         <Container fluid>
           <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-${false}`} />
           <Navbar.Offcanvas
@@ -28,7 +28,7 @@ export const NavBar = ({ pageId, rootConfig }) => {
               className={css.tabsContainer}
               activeKey={tabKey}
               // @ts-ignore
-              onSelect={(k) => setTabKey(k)}
+              onSelect={(tab) => setTabKey(tab)}
             >
               <Tab eventKey="outline" title="Outline">
                 <Offcanvas.Body>
@@ -48,6 +48,7 @@ export const NavBar = ({ pageId, rootConfig }) => {
                             pageId={pageId}
                             config={config}
                             mIdx={mIdx}
+                            key={mIdx}
                           />
                           <hr />
                         </div>
@@ -59,7 +60,6 @@ export const NavBar = ({ pageId, rootConfig }) => {
                 <Offcanvas.Body>
                   <div className={css.navTitleContainer}>
                     <h3 className={css.navTitle}>Additional Resources</h3>
-                    {/* @ts-ignore */}
                     {rootConfig[0].resources &&
                       rootConfig[0].resources.map((resource) => {
                         return (
@@ -76,7 +76,6 @@ export const NavBar = ({ pageId, rootConfig }) => {
                 <Offcanvas.Body>
                   <div className={css.navTitleContainer}>
                     <h3 className={css.navTitle}>Glossary</h3>
-                    {/* @ts-ignore */}
                     {rootConfig[0].glossary &&
                       rootConfig[0].glossary.map((item) => {
                         return (
