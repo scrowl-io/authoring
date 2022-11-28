@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { PageDefinition, PageProps } from './pages.types';
 import {
+  // @ts-ignore
   PlayerRootConfig,
   PlayerTemplateList,
   TemplateComponent,
@@ -54,15 +55,10 @@ const finishCourse = () => {
   runtime?.finish();
 };
 
-export const create = (
-  rootConfig: Array<PlayerRootConfig>,
-  templateList: PlayerTemplateList
-) => {
+export const create = (project, templateList: PlayerTemplateList) => {
   const data: Array<PageDefinition> = [];
 
-  console.log(rootConfig);
-
-  rootConfig.forEach((module, mIdx) => {
+  project.outlineConfig.forEach((module, mIdx) => {
     module.lessons.forEach((page, lIdx) => {
       const id = `module-${mIdx}--lesson-${lIdx}`;
       const url = `/${id}`;
@@ -71,13 +67,19 @@ export const create = (
       let nextLessonId;
       let nextLessonText;
 
-      if (lIdx < module.lessons.length - 1 || mIdx < rootConfig.length - 1) {
+      if (
+        lIdx < module.lessons.length - 1 ||
+        mIdx < project.outlineConfig.length - 1
+      ) {
         nextLessonId = `module-${mIdx}--lesson-${lIdx + 1}`;
         nextLessonUrl = `/${nextLessonId}`;
         nextLessonText = `Continue to the next lesson`;
       }
 
-      if (lIdx === module.lessons.length - 1 && mIdx <= rootConfig.length - 1) {
+      if (
+        lIdx === module.lessons.length - 1 &&
+        mIdx <= project.outlineConfig.length - 1
+      ) {
         nextLessonId = `module-${mIdx + 1}--lesson-0`;
         nextLessonUrl = `/${nextLessonId}`;
         nextLessonText = `Continue to the first Lesson of Module ${mIdx + 1}`;
@@ -90,11 +92,11 @@ export const create = (
         Element: () => {
           return (
             <>
-              <NavBar pageId={id} rootConfig={rootConfig} />
+              <NavBar pageId={id} project={project} />
               <Page id={id} slides={page.slides} templates={templateList} />
               <div className={css.nextLessonContainer}>
                 {lIdx < module.lessons.length - 1 ||
-                mIdx < rootConfig.length - 1 ? (
+                mIdx < project.outlineConfig.length - 1 ? (
                   <Link to={nextLessonUrl}>{nextLessonText}</Link>
                 ) : (
                   <button onClick={finishCourse}>Finish Course</button>

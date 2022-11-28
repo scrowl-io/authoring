@@ -4,14 +4,6 @@
   box-shadow: none !important;
 }
 
-.active-tab {
-  button {
-    border: none;
-    text-decoration: underline !important;
-    color: #007aba !important;
-  }
-}
-
 .tabs-container {
   display: flex;
   flex-direction: row !important;
@@ -23,32 +15,25 @@
       border: none !important;
       font-weight: 500;
     }
-
-    button:active,
-    button:focus,
-    button:hover,
-    button:target,
-    button:visited {
-      border: none;
-      text-decoration: underline;
-      color: #007aba !important;
-    }
-
-    button:focus {
-      font-weight: 700;
-    }
   }
-}
 
-.nav-title {
-  font-weight: 700;
+  .nav-item .active {
+    text-decoration: underline;
+    color: #007aba !important;
+    font-weight: 700;
+  }
 }
 
 .title-container {
   margin-bottom: 2em;
 
+  h3 {
+    font-weight: 700;
+  }
+
   .outline-subtitle {
     font-weight: 300;
+    font-size: 1.2em;
   }
 
   .outline-duration {
@@ -71,7 +56,7 @@
   }
 }
 
-.nav-outline {
+.module-lessons {
   margin-left: 0.25rem;
 
   .module-button {

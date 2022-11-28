@@ -1,18 +1,14 @@
 import React, { useState } from 'react';
 import { Navbar, Offcanvas, Container, Tabs, Tab } from 'react-bootstrap';
 import * as css from './_navbar.scss';
-
-// import 'bootstrap/dist/css/bootstrap.min.css';
 import { NavModule } from './nav-module';
 import { NavResource } from './nav-resource';
-import { NavGlossaryItem } from './nav-glossary-term';
+import { NavGlossaryItem } from './nav-glossary-item';
 
-import { Icon } from '@owlui/lib';
-
-export const NavBar = ({ pageId, rootConfig }) => {
+export const NavBar = ({ pageId, project }) => {
   const [tabKey, setTabKey] = useState('outline');
 
-  console.log(rootConfig);
+  console.log(project);
 
   return (
     <>
@@ -36,17 +32,17 @@ export const NavBar = ({ pageId, rootConfig }) => {
               <Tab eventKey="outline" title="Outline">
                 <Offcanvas.Body>
                   <div className={css.titleContainer}>
-                    <h3 className={css.navTitle}>Welcome to Scrowl!</h3>
+                    <h3>{project.name}</h3>
                     <h4 className={css.outlineSubtitle}>Subtitle Here</h4>
                     <span className={css.outlineDuration}>
-                      <Icon icon="access_time" />
+                      <span className="owlui-icons-outlined">access_time</span>
                       <h5>60 min</h5>
                     </span>
                   </div>
-                  {rootConfig &&
-                    rootConfig.map((config, mIdx) => {
+                  {project &&
+                    project.outlineConfig.map((config, mIdx) => {
                       return (
-                        <div className={css.navOutline}>
+                        <div className={css.moduleLessons}>
                           <NavModule
                             pageId={pageId}
                             config={config}
@@ -62,11 +58,11 @@ export const NavBar = ({ pageId, rootConfig }) => {
               <Tab eventKey="resources" title="Resources">
                 <Offcanvas.Body>
                   <div className={css.titleContainer}>
-                    <h3 className={css.navTitle}>Additional Resources</h3>
-                    {rootConfig[0].resources &&
-                      rootConfig[0].resources.map((resource) => {
+                    <h3>Additional Resources</h3>
+                    {project.resources &&
+                      project.resources.map((resource) => {
                         return (
-                          <div className={css.navOutline}>
+                          <div>
                             <NavResource resource={resource} />
                             <hr />
                           </div>
@@ -78,9 +74,9 @@ export const NavBar = ({ pageId, rootConfig }) => {
               <Tab eventKey="glossary" title="Glossary">
                 <Offcanvas.Body>
                   <div className={css.titleContainer}>
-                    <h3 className={css.navTitle}>Glossary</h3>
-                    {rootConfig[0].glossary &&
-                      rootConfig[0].glossary.map((item) => {
+                    <h3>Glossary</h3>
+                    {project.glossary &&
+                      project.glossary.map((item) => {
                         return (
                           <div className={css.navGlossary}>
                             <NavGlossaryItem glossaryItem={item} />

@@ -33,6 +33,7 @@ const createSlide = (
 
 export const create = () => {
   const data: ProjectData = {
+    name: 'Welcome to Scrowl!!',
     modules: [
       {
         id: 0,

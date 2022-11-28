@@ -59,6 +59,7 @@ export type ProjectResource = {
 };
 
 export type ProjectData = {
+  name?: string;
   modules?: Array<ProjectModule>;
   lessons?: Array<ProjectLesson>;
   slides?: Array<ProjectSlide>;
@@ -71,7 +72,8 @@ export interface PlayerRootCommons {
   templateList: PlayerTemplateList;
 }
 
-export type PlayerRootProps = PlayerRootCommons & React.AllHTMLAttributes<HTMLDivElement>;
+export type PlayerRootProps = PlayerRootCommons &
+  React.AllHTMLAttributes<HTMLDivElement>;
 
 export type PlayerRootConfig = {
   module: ProjectModule;
@@ -79,6 +81,4 @@ export type PlayerRootConfig = {
     lesson: ProjectLesson;
     slides: Array<ProjectSlide>;
   }>;
-  resources?: Array<ProjectResource>;
-  glossary?: Array<ProjectGlossaryItem>;
 };

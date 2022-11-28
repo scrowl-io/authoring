@@ -45,8 +45,16 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
   const modules = project.modules;
   const resources = project.resources;
   const glossary = project.glossary;
+  const name = project.name;
 
-  const config = Config.create(slides, lessons, modules, resources, glossary);
+  const config = Config.create(
+    slides,
+    lessons,
+    modules,
+    resources,
+    glossary,
+    name
+  );
   const pages = Pages.create(config, templateList);
 
   return (

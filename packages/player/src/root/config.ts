@@ -10,7 +10,8 @@ export const create = (
   lessons: Array<ProjectLesson>,
   modules: Array<ProjectModule>,
   resources,
-  glossary
+  glossary,
+  name
 ) => {
   const rootConfig: Array<PlayerRootConfig> = [];
 
@@ -24,8 +25,6 @@ export const create = (
     const config: PlayerRootConfig = {
       module: module,
       lessons: [],
-      resources: resources,
-      glossary: glossary,
     };
     const lCnt = lessons.length;
     let l = 0;
@@ -75,7 +74,14 @@ export const create = (
     rootConfig.push(config);
   }
 
-  return rootConfig;
+  const projectConfig = {
+    name: name,
+    outlineConfig: rootConfig,
+    resources: resources,
+    glossary: glossary,
+  };
+
+  return projectConfig;
 };
 
 export default {
