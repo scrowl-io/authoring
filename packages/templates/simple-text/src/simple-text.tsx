@@ -109,7 +109,7 @@ export const SimpleText = ({ id, schema, ...props }: SimpleTextProps) => {
       {...props}
     >
       <div id={contentId} className="inner-content">
-        <div className="row row-cols-2">
+        <div className="row row-cols-1">
           {bgUrl && <div className="overlay" />}
 
           <div className={`text__wrapper ${alignmentCss}`}>
