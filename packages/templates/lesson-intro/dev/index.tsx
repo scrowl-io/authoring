@@ -1,30 +1,27 @@
-import '@owlui/lib/dist/owl.lib.css';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { createRoot } from 'react-dom/client';
+import '@owlui/lib/dist/owl.lib.css';
+import './_index.scss';
 import Scrowl from '@scrowl/template-core';
-import * as css from './_index.scss';
 import { LessonIntro, LessonIntroSchema, LessonIntroSchemaProps } from '../src';
 
-document.body.className = `${css.body} owlui-theme--default`;
-
-const container = document.getElementById('app') as HTMLElement;
+const container = document.getElementById('scrowl-player') as HTMLElement;
 const root = createRoot(container);
-const App = () => {
-  const schema = LessonIntroSchema as LessonIntroSchemaProps;
-  const controller = new Scrowl.core.scroll.Controller();
 
-  useEffect(() => {
-    return () => {
-      controller.destroy(true);
-    };
-  });
+const App = () => {
+  const controller = new Scrowl.core.scroll.Controller();
+  const schema = LessonIntroSchema as LessonIntroSchemaProps;
 
   return (
-    <LessonIntro
-      id="template-block-text"
-      controller={controller}
-      schema={schema}
-    />
+    <div id="lesson-wrapper">
+      <div className="lesson">
+        <LessonIntro
+          id="template-lesson-intro"
+          controller={controller}
+          schema={schema}
+        />
+      </div>
+    </div>
   );
 };
 
