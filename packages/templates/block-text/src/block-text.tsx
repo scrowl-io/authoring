@@ -49,13 +49,6 @@ export const BlockText = ({ id, schema, ...props }: BlockTextProps) => {
   };
 
   const handleSlideProgress = (ev) => {
-    if (showProgressBar) {
-      setProgressBarStyles({
-        ...progressBarStyles,
-        width: `${ev.progress}%`,
-      });
-    }
-
     if (bgRef.current) {
       if (ev.scene.rect.y < 0) {
         const top = ev.scene.rect.y * -1 + (bg ? 0 : 32);
@@ -65,6 +58,13 @@ export const BlockText = ({ id, schema, ...props }: BlockTextProps) => {
           bgRef.current.style.top = `${top}px`;
         }
       }
+    }
+
+    if (showProgressBar) {
+      setProgressBarStyles({
+        ...progressBarStyles,
+        width: `${ev.progress}%`,
+      });
     }
   };
 
