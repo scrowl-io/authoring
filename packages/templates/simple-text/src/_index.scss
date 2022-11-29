@@ -7,22 +7,27 @@
     z-index: 10;
   }
 
-  .text__container {
-    margin: 0 1.5rem;
-
-    .progress {
-      &-indictor {
-        width: 100%;
+  .text {
+    &__wrapper {
+      &.center {
+        text-align: center;
       }
 
-      &-bar {
-        width: 0%;
-        border: none;
-        height: 0.4rem;
-        background: var(--bs-body-color);
-        padding: 0;
-        margin: 1rem 0 2rem 0;
+      &.left {
+        text-align: left;
       }
+
+      &.right {
+        text-align: right;
+      }
+
+      &.justify {
+        text-align: justify;
+      }
+    }
+
+    &__container {
+      margin: 0 1.5rem;
     }
   }
 

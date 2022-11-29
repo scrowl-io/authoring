@@ -137,7 +137,7 @@ export const Template = ({
           start: sceneStart,
           time: sceneTime,
           end: sceneEnd,
-          progress: sceneProgress,
+          progress: sceneProgress / 100,
         };
 
         if (onProgress) {
