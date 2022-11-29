@@ -154,6 +154,16 @@ export const Template = ({
         .on('progress', handleSceneProgress)
         .on('end', handleSceneEnd);
 
+      pins.forEach((pin) => {
+        const elem = document.getElementById(pin);
+
+        if (!elem) {
+          return;
+        }
+
+        scene.setPin(elem);
+      });
+
       scene.addTo(controller);
     };
 
@@ -169,7 +179,7 @@ export const Template = ({
   }, [windowSize, duration, isReady.current, slideRef.current]);
 
   return (
-    <div ref={slideRef} className={classes}>
+    <div ref={slideRef} className={classes} {...props}>
       {children}
     </div>
   );
