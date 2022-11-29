@@ -5,12 +5,12 @@ import { SimpleTextProps } from './simple-text.types';
 
 export const SimpleText = ({ id, schema, ...props }: SimpleTextProps) => {
   let classes = `template-simple-text`;
+  const Markdown = Scrowl.core.Markdown;
   const editMode = props.editMode ? true : false;
   const focusElement = editMode ? props.focusElement : null;
   const contentId = `${id}-block-text`;
   const text = schema.content.text.value;
   const textFocusCss = focusElement === 'text' && 'has-focus';
-  const bg = schema.content.bgImage.content.bg.value;
   const bgUrl = schema.content.bgImage.content.url.value;
   const bgLabel = schema.content.bgImage.content.alt.value || '';
   const bgFocusCss = focusElement === 'bgImage.url' && 'has-focus';
@@ -41,14 +41,14 @@ export const SimpleText = ({ id, schema, ...props }: SimpleTextProps) => {
   };
 
   const handleSlideProgress = (ev) => {
+    console.log('');
+    console.log('progress', ev.scene);
+
     if (bgRef.current) {
       if (ev.scene.rect.y < 0) {
-        const top = ev.scene.rect.y * -1 + (bg ? 0 : 32);
-        const bottom = top + window.innerHeight;
+        const top = ev.scene.rect.y * -1;
 
-        if (bg || bottom < ev.scene.end) {
-          bgRef.current.style.top = `${top}px`;
-        }
+        bgRef.current.style.top = `${top}px`;
       }
     }
   };
@@ -62,16 +62,14 @@ export const SimpleText = ({ id, schema, ...props }: SimpleTextProps) => {
     >
       <div id={contentId} className="inner-content">
         <div className="row row-cols-2">
-          {bg && <div className="overlay" />}
+          {bgUrl && <div className="overlay" />}
 
           <div className={`text__wrapper ${alignmentCss}`}>
-            <div className="text__container">
-              <p
-                className={`text__value can-focus ${textFocusCss}`}
-                onMouseDown={handleFocusText}
-              >
-                {text}
-              </p>
+            <div
+              className={`text__container can-focus ${textFocusCss}`}
+              onMouseDown={handleFocusText}
+            >
+              <Markdown>{text}</Markdown>
             </div>
           </div>
         </div>
@@ -79,9 +77,7 @@ export const SimpleText = ({ id, schema, ...props }: SimpleTextProps) => {
       {(bgUrl || editMode) && (
         <div
           ref={bgRef}
-          className={`img__wrapper ${alignmentCss} can-focus ${bgFocusCss} ${
-            bg ? 'as-bg' : 'as-side'
-          }`}
+          className={`img__wrapper ${alignmentCss} can-focus ${bgFocusCss} as-bg`}
           onMouseDown={handleFocusBg}
         >
           <img

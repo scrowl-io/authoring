@@ -5,7 +5,6 @@ import {
   InputTextboxProps,
   InputFieldsetProps,
   InputSelectProps,
-  InputCheckboxProps,
   InputAssetProps,
 } from '@scrowl/template-core';
 
@@ -13,7 +12,6 @@ export interface SimpleTextContentBgImage extends InputFieldsetProps {
   content: {
     alt: InputTextboxProps;
     url: InputAssetProps;
-    bg: InputCheckboxProps;
   };
 }
 
