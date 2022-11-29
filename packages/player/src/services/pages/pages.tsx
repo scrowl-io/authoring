@@ -9,17 +9,18 @@ import {
 import { Error } from '../../components';
 
 const Page = ({ slides, templates, ...props }: PageProps) => {
-  let controller;
-
-  if (window['Scrowl'] && window['Scrowl'].core) {
-    controller = useRef(new window['Scrowl'].core.scroll.Controller());
-  }
-
+  const controller = new window['Scrowl'].core.scroll.Controller();
   const player = document.querySelector('.player-main');
 
   useEffect(() => {
     player?.scrollTo({ top: 0 });
   }, [slides]);
+
+  useEffect(() => {
+    return () => {
+      controller.destroy(true);
+    };
+  });
 
   return (
     <div>
@@ -38,8 +39,7 @@ const Page = ({ slides, templates, ...props }: PageProps) => {
             key={idx}
             id={id}
             schema={slide.template}
-            controller={controller.current}
-            duration={0}
+            controller={controller}
           />
         );
       })}
