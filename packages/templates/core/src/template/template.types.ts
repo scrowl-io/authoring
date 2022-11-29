@@ -1,5 +1,5 @@
 import React from 'react';
-import { Controller, ScrollDirection } from 'scrollmagic';
+import { Controller, ScrollDirection, StartEvent, ProgressEvent, EndEvent } from 'scrollmagic';
 import { InputProps } from '../core.types';
 
 export type TemplateSchemaContent = {
@@ -32,15 +32,15 @@ export type TemplateOnStateChangeEvent = {
 };
 
 export interface TemplateCommons {
-  templateKey: string;
-  duration: number;
+  controller: Controller;
+  pins?: Array<string>;
+  duration?: number;
   editMode?: boolean;
-  ready?: boolean;
   focusElement?: any;
   validationErrors?: any;
-  controller: Controller;
-  onScroll?: (TemplateOnScrollEvent) => void;
-  onStateChange?: (TemplateOnStateChangeEvent) => void;
+  onStart?: (ev: StartEvent) => void;
+  onProgress?: (ev: ProgressEvent) => void;
+  onEnd?: (ev: EndEvent) => void;
 };
 
 export type TemplateProps = TemplateCommons & React.AllHTMLAttributes<HTMLDivElement>;
