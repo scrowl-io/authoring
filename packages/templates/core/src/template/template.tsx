@@ -16,7 +16,7 @@ export const Template = ({
 }: TemplateProps) => {
   let classes = `${css.slide}`;
   const [duration, setDuration] = useState(
-    (props.duration || 0) + window.innerHeight
+    (props.duration || window.innerHeight) + window.innerHeight
   );
   const isReady = useRef(false);
   const slideRef = useRef<HTMLDivElement>(null);

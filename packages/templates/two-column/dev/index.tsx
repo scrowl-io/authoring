@@ -22,8 +22,6 @@ const App = () => {
   return (
     <TwoColumn
       id="template-two-column"
-      templateKey="TwoColumn@1.0.0"
-      duration={0}
       controller={controller}
       schema={schema}
     />

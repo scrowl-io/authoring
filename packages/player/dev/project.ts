@@ -59,7 +59,7 @@ export const create = () => {
     slides: [
       createSlide('Slide 1.1', 0, 0, 1, 'lessonIntro'),
       // not using the broken templates for now
-      // createSlide('Slide 1.2', 0, 0, 0, 'blockText'),
+      createSlide('Slide 1.2', 0, 0, 0, 'blockText'),
       // createSlide('Slide 1.3', 0, 0, 1, 'simpleText'),
       createSlide('Slide 1.2', 0, 0, 2, 'twoColumn'),
       createSlide('Slide 2.1', 0, 1, 3, 'twoColumn'),

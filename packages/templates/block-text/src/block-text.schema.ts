@@ -59,7 +59,7 @@ export const BlockTextSchema: BlockTextSchemaProps = {
         showProgress: {
           type: 'Checkbox',
           label: 'Show Progress Bar',
-          value: false,
+          value: true,
         },
       },
     },

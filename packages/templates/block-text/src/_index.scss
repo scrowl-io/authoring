@@ -1,24 +1,22 @@
 .template-block-text {
-  .slide-container {
-  }
+  padding: 0 2rem 2rem;
 
   .hero {
-    width: 100vw;
-    height: 100vh;
-
     background-position: 50% 50%;
     background-size: cover;
-
     background-color: #fbfbfb;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
-    .overlay {
-      background-color: rgba(0, 0, 0, 0.1);
+    .text {
+      margin: 0 1.5rem;
       position: absolute;
       top: 0;
       left: 0;
       bottom: 0;
-      right: 0;
-      z-index: 1;
+      z-index: 5;
+      width: 50%;
     }
 
     .img {
@@ -36,65 +34,29 @@
       }
     }
 
-    .text {
-      margin: 0 5%;
+    .overlay {
+      background-color: rgba(0, 0, 0, 0.1);
       position: absolute;
       top: 0;
       left: 0;
       bottom: 0;
-      z-index: 5;
-      width: 50%;
-      // min-width: 250px;
-
-      display: flex;
-      flex-flow: column;
-      justify-content: center;
-      height: 100vh;
-
-      font-size: min(3.5vw, 24px);
-
-      font-weight: 400;
-      line-height: min(4.1vw, 3rem);
-      // line-height: 3rem;
-
-      &.right {
-        left: initial;
-        right: 0;
-      }
-
-      .wrapper {
-        background-color: rgba(251, 251, 251, 0.9);
-        padding: 2rem;
-        max-height: calc(100vh - 32px);
-        overflow: hidden;
-
-        hr {
-          width: 0%;
-          border: none;
-          height: 0.4rem;
-          background: var(--bs-body-color);
-          padding: 0;
-          margin: 1rem 0 2rem 0;
-        }
-
-        p {
-          color: var(--bs-body-color);
-          padding: 0;
-          margin: 0;
-          margin: min(3vw, 20px) 0;
-
-          &.header {
-            font-size: min(3.5vw, 26px);
-            font-weight: 600;
-          }
-        }
-      }
+      right: 0;
+      z-index: 1;
     }
   }
 
-  &:not(.show-progress) {
-    hr {
-      width: 100% !important;
+  .progress {
+    &-indictor {
+      width: 100%;
+    }
+
+    &-bar {
+      width: 0%;
+      border: none;
+      height: 0.4rem;
+      background: var(--bs-body-color);
+      padding: 0;
+      margin: 1rem 0 2rem 0;
     }
   }
 

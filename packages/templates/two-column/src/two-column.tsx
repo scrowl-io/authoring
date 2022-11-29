@@ -53,7 +53,7 @@ export const TwoColumn = ({ schema, ...props }: TwoColumnProps) => {
   const thirdColumn = schema.content.thirdColumn.content;
 
   return (
-    <Scrowl.core.Template {...props} className={classes} ready={true}>
+    <Scrowl.core.Template {...props} className={classes}>
       <div className="slide-container">
         <div
           className={`column-wrapper ${

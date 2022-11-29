@@ -1,5 +1,5 @@
 {{#with . as | data |}}
-const domContainer = document.querySelector('#app');
+const domContainer = document.querySelector('#scrowl-player');
 const root = ReactDOM.createRoot(domContainer);
 const e = React.createElement;
 
@@ -57,20 +57,20 @@ class App extends React.Component {
     const controller = new Scrowl.core.scroll.Controller();
     const schema = this.state.schema;
     const focusElement = this.state.focusElement;
-
-    return e(
+    const Template = e(
       {{data.templateComponent}},
       {
         id: 'canvas-template',
         editMode: true,
-        templateKey: '{{data.templateComponent}}@1.0.0',
-        duration: 0,
         controller,
         schema,
         focusElement,
       },
       null
     );
+    const Lesson = e('div', { className: 'lesson' }, Template);
+
+    return e('main', { className: 'lesson-wrapper' }, Lesson);
   }
 }
 

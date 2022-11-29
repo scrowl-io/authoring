@@ -22,8 +22,6 @@ const App = () => {
   return (
     <SimpleText
       id="template-block-text"
-      templateKey="BlockText@1.0.0"
-      duration={0}
       controller={controller}
       schema={schema}
     />

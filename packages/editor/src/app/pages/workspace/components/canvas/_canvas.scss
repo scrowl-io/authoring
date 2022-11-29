@@ -96,6 +96,7 @@
     background: var(--bs-body-bg);
     box-shadow: var(--owl-box-shadow);
     overflow: hidden;
+    height: 500px;
 
     .slide {
       width: var(--workspace-canvas-width) !important;

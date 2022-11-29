@@ -24,20 +24,6 @@ export const SimpleText = ({ schema, ...props }: SimpleTextProps) => {
     return props.id + '-' + id;
   }
 
-  const handleScrollUpdate = (e: any) => {
-    if (e.stage === 'body') {
-      timeline.current.seek(timeline.current.duration * e.stageProgress);
-    }
-  };
-
-  const handleStateChange = (e: any) => {
-    if (e.state === 'visible') {
-      scrollScenes.current.map((scene: any) => scene.enabled(true));
-    } else {
-      scrollScenes.current.map((scene: any) => scene.enabled(false));
-    }
-  };
-
   React.useEffect(() => {
     if (!animateLists) {
       return;
@@ -130,9 +116,6 @@ export const SimpleText = ({ schema, ...props }: SimpleTextProps) => {
       {...props}
       className={classes}
       duration={slideDuration}
-      onStateChange={handleStateChange}
-      onScroll={handleScrollUpdate}
-      ready={true}
     >
       <div className="slide-container">
         <div

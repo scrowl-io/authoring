@@ -22,8 +22,6 @@ const App = () => {
   return (
     <LessonIntro
       id="template-block-text"
-      templateKey="LessonIntro@1.0.0"
-      duration={0}
       controller={controller}
       schema={schema}
     />

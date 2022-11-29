@@ -51,7 +51,7 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
 
   return (
     <Router>
-      <div className="scrowl-player" {...props}>
+      <div id="scrowl-player" {...props}>
         <main className="lesson-wrapper">
           <Routes>
             {pages.map((page, idx) => {

@@ -7,8 +7,6 @@ export const LessonIntro = ({ schema, ...props }: LessonIntroProps) => {
   let classes = `${css.templateLessonIntro} `;
   const editMode = props.editMode ? true : false;
   const focusElement = editMode ? props.focusElement : null;
-  const scrollScenes: any = React.useRef([]);
-  const timeline: any = React.useRef();
 
   let title = schema.content.title.value;
   let subtitle = schema.content.subtitle.value;
@@ -16,28 +14,8 @@ export const LessonIntro = ({ schema, ...props }: LessonIntroProps) => {
   let startLabel = schema.content.startLabel.value;
   const heroImage = schema.content.heroImage.content;
 
-  const handleScrollUpdate = (e: any) => {
-    if (e.stage === 'body') {
-      timeline.current.seek(timeline.current.duration * e.stageProgress);
-    }
-  };
-
-  const handleStateChange = (e: any) => {
-    if (e.state === 'visible') {
-      scrollScenes.current.map((scene: any) => scene.enabled(true));
-    } else {
-      scrollScenes.current.map((scene: any) => scene.enabled(false));
-    }
-  };
-
   return (
-    <Scrowl.core.Template
-      {...props}
-      className={classes}
-      onStateChange={handleStateChange}
-      onScroll={handleScrollUpdate}
-      ready={true}
-    >
+    <Scrowl.core.Template {...props} className={classes}>
       <div className="slide-container">
         <div className="layout">
           <header>
