@@ -131,6 +131,14 @@ export const Template = ({
           sceneProgress > 100 ? 100 : sceneProgress < 0 ? 0 : sceneProgress;
 
         ev.progress = sceneProgress;
+        ev.scene = {
+          rect: slideRect,
+          startingRect,
+          start: sceneStart,
+          time: sceneTime,
+          end: sceneEnd,
+          progress: sceneProgress,
+        };
 
         if (onProgress) {
           onProgress(ev);

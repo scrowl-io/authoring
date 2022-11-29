@@ -1,28 +1,27 @@
-import '@owlui/lib/dist/owl.lib.css';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
+import '@owlui/lib/dist/owl.lib.css';
+import './_index.scss';
 import Scrowl from '@scrowl/template-core';
-import * as css from './_index.scss';
 import { BlockText, BlockTextSchema, BlockTextSchemaProps } from '../src';
 
-document.body.className = `${css.body} owlui-theme--default`;
-
-const container = document.getElementById('app') as HTMLElement;
+const container = document.getElementById('scrowl-player') as HTMLElement;
 const root = createRoot(container);
-const App = () => {
-  const schema = BlockTextSchema as BlockTextSchemaProps;
-  const controller = new Scrowl.core.scroll.Controller();
 
-  schema.content.options.content.showProgress.value = true;
+const App = () => {
+  const controller = new Scrowl.core.scroll.Controller();
+  const schema = BlockTextSchema as BlockTextSchemaProps;
 
   return (
-    <BlockText
-      id="template-block-text"
-      templateKey="BlockText@1.0.0"
-      duration={0}
-      controller={controller}
-      schema={schema}
-    />
+    <div id="lesson-wrapper">
+      <div className="lesson">
+        <BlockText
+          id="template-block-text"
+          controller={controller}
+          schema={schema}
+        />
+      </div>
+    </div>
   );
 };
 

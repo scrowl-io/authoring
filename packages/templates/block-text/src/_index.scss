@@ -1,62 +1,72 @@
 .template-block-text {
-  padding: 0 2rem 2rem;
+  position: relative;
 
-  .hero {
-    background-position: 50% 50%;
-    background-size: cover;
-    background-color: #fbfbfb;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  .inner-content {
+    top: 0;
+    width: 100%;
+    z-index: 10;
+  }
 
-    .text {
-      margin: 0 1.5rem;
-      position: absolute;
-      top: 0;
-      left: 0;
-      bottom: 0;
-      z-index: 5;
-      width: 50%;
-    }
+  .text__container {
+    margin: 0 1.5rem;
 
-    .img {
-      height: calc(100vh - 32px);
-      width: calc(45% - 10px - 4rem);
-      background-size: cover;
-      background-position: 50% 50%;
-      top: 16px;
-      right: 16px;
-      position: absolute;
-
-      &.right {
-        left: 16px;
-        right: initial;
+    .progress {
+      &-indictor {
+        width: 100%;
       }
-    }
 
-    .overlay {
-      background-color: rgba(0, 0, 0, 0.1);
-      position: absolute;
-      top: 0;
-      left: 0;
-      bottom: 0;
-      right: 0;
-      z-index: 1;
+      &-bar {
+        width: 0%;
+        border: none;
+        height: 0.4rem;
+        background: var(--bs-body-color);
+        padding: 0;
+        margin: 1rem 0 2rem 0;
+      }
     }
   }
 
-  .progress {
-    &-indictor {
-      width: 100%;
+  .overlay {
+    background-color: rgba(0, 0, 0, 0.1);
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 5;
+  }
+
+  .img {
+    &__wrapper {
+      position: absolute;
+
+      &.as-bg {
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 100vw;
+        z-index: 0;
+      }
+
+      &.as-side {
+        right: 2rem;
+        top: 2rem;
+        border: 1px solid #fff;
+        height: calc(100vh - 4rem);
+        width: 300px;
+
+        &.right {
+          left: 2rem;
+          right: initial;
+        }
+      }
     }
 
-    &-bar {
-      width: 0%;
-      border: none;
-      height: 0.4rem;
-      background: var(--bs-body-color);
-      padding: 0;
-      margin: 1rem 0 2rem 0;
+    &__container {
+      height: 100%;
+      width: 100%;
+      background-size: cover;
+      background-position: 50% 50%;
     }
   }
 

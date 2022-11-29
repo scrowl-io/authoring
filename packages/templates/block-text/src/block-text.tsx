@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import Scrowl from '@scrowl/template-core';
 import './_index.scss';
 import { BlockTextProps } from './block-text.types';
@@ -14,20 +14,12 @@ export const BlockText = ({ id, schema, ...props }: BlockTextProps) => {
   const bgUrl = schema.content.bgImage.content.url.value;
   const bgLabel = schema.content.bgImage.content.alt.value || '';
   const bgFocusCss = focusElement === 'bgImage.url' && 'has-focus';
-  const bgStylesFull = !bg
-    ? {}
-    : {
-        width: '100vw',
-        height: '100vh',
-        backgroundImage: `url("./assets/${bgUrl}")`,
-      };
-  const bgStylesHero = bg
-    ? {}
-    : {
-        backgroundImage: bgStylesFull.backgroundImage,
-      };
+  const bgRef = useRef<HTMLDivElement>(null);
+  const bgStyles = {
+    backgroundImage: `url("${bgUrl}")`,
+  };
   const alignment = schema.content.options.content.alignment.value;
-  const alignmentCss = alignment === 'right' ? 'right' : '';
+  const alignmentCss = alignment === 'right' ? 'right' : 'left';
   const showProgressBar = schema.content.options.content.showProgress.value;
   const [progressBarStyles, setProgressBarStyles] = useState({
     width: showProgressBar ? '0%' : '100%',
@@ -57,14 +49,23 @@ export const BlockText = ({ id, schema, ...props }: BlockTextProps) => {
   };
 
   const handleSlideProgress = (ev) => {
-    if (!showProgressBar) {
-      return;
+    if (showProgressBar) {
+      setProgressBarStyles({
+        ...progressBarStyles,
+        width: `${ev.progress}%`,
+      });
     }
 
-    setProgressBarStyles({
-      ...progressBarStyles,
-      width: `${ev.progress}%`,
-    });
+    if (bgRef.current) {
+      if (ev.scene.rect.y < 0) {
+        const top = ev.scene.rect.y * -1 + (bg ? 0 : 32);
+        const bottom = top + window.innerHeight;
+
+        if (bg || bottom < ev.scene.end) {
+          bgRef.current.style.top = `${top}px`;
+        }
+      }
+    }
   };
 
   const handleSlideEnd = () => {
@@ -86,40 +87,40 @@ export const BlockText = ({ id, schema, ...props }: BlockTextProps) => {
       pins={pins}
       {...props}
     >
-      <div
-        id={contentId}
-        className="hero"
-        aria-label={bgLabel}
-        style={bgStylesFull}
-      >
-        <div className="inner-content">
+      <div id={contentId} className="inner-content">
+        <div className="row row-cols-2">
           {bg && <div className="overlay" />}
 
-          <div className={`text ${alignmentCss}`}>
-            <div className="wrapper">
+          <div className={`text__wrapper ${alignmentCss}`}>
+            <div className="text__container">
               <div className="progress-indictor">
                 <div className="progress-bar" style={progressBarStyles}></div>
               </div>
               <p
-                className={`can-focus ${textFocusCss}`}
+                className={`text__value can-focus ${textFocusCss}`}
                 onMouseDown={handleFocusText}
               >
                 {text}
               </p>
             </div>
           </div>
-
-          {!bg && (
-            <div
-              role="img"
-              aria-label={bgLabel}
-              className={`img ${alignmentCss} can-focus ${bgFocusCss}`}
-              onMouseDown={handleFocusBg}
-              style={bgStylesHero}
-            />
-          )}
         </div>
       </div>
+      {(bgUrl || editMode) && (
+        <div
+          ref={bgRef}
+          className={`img__wrapper ${alignmentCss} can-focus ${bgFocusCss} ${
+            bg ? 'as-bg' : 'as-side'
+          }`}
+          onMouseDown={handleFocusBg}
+        >
+          <img
+            className="img__container"
+            aria-label={bgLabel}
+            style={bgStyles}
+          />
+        </div>
+      )}
     </Scrowl.core.Template>
   );
 };
