@@ -5,7 +5,7 @@ import {
   Route,
   Navigate,
 } from 'react-router-dom';
-import * as css from './_root.scss';
+import './_root.scss';
 import { PlayerRootProps } from './root.types';
 import Config from './config';
 import { Error } from '../components';
@@ -51,8 +51,8 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
 
   return (
     <Router>
-      <div className={css.player} {...props}>
-        <main className={css.playerMain}>
+      <div className="scrowl-player" {...props}>
+        <main className="lesson-wrapper">
           <Routes>
             {pages.map((page, idx) => {
               return (

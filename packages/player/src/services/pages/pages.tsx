@@ -23,7 +23,7 @@ const Page = ({ slides, templates, ...props }: PageProps) => {
   });
 
   return (
-    <div>
+    <div className="lesson">
       {slides.map((slide, idx) => {
         const id = `${props.id}--slide-${idx}`;
         const component = slide.template.meta.component;
