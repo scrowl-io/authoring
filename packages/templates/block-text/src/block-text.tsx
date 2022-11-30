@@ -5,6 +5,7 @@ import { BlockTextProps } from './block-text.types';
 
 export const BlockText = ({ id, schema, ...props }: BlockTextProps) => {
   let classes = 'template-block-text';
+  const Markdown = Scrowl.core.Markdown;
   const editMode = props.editMode ? true : false;
   const focusElement = editMode ? props.focusElement : null;
   const contentId = `${id}-block-text`;
@@ -96,12 +97,12 @@ export const BlockText = ({ id, schema, ...props }: BlockTextProps) => {
               <div className="progress-indictor">
                 <div className="progress-bar" style={progressBarStyles}></div>
               </div>
-              <p
+              <div
                 className={`text__value can-focus ${textFocusCss}`}
                 onMouseDown={handleFocusText}
               >
-                {text}
-              </p>
+                <Markdown>{text}</Markdown>
+              </div>
             </div>
           </div>
         </div>
