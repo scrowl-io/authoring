@@ -376,7 +376,7 @@ export const upload = (ev: rq.RequestEvent, req: UploadReq) => {
                 error: false,
                 data: {
                   title: name,
-                  filename: `${name}.webp`,
+                  filename: `./assets/${name}.webp`,
                   type,
                   ext: 'webp',
                   size: transformRes.data.size,
