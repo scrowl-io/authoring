@@ -462,7 +462,7 @@ export const upload = (ev: rq.RequestEvent, req: UploadReq) => {
               error: false,
               data: {
                 title: name,
-                filename: `${name}.${ext}`,
+                filename: `./assets/${name}.${ext}`,
                 type,
                 ext,
                 size: statsRes.data.stats.size,
