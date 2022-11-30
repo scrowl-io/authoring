@@ -85,8 +85,11 @@ export type RUNTIME_SERVICE = {
             logout: 'logout';
         };
     };
+    courseProgress: number;
+    lessonLocation: string;
     isAvailable: () => RUNTIME_SERVICE_API_RESULT;
     getError: (printError?: boolean) => RUNTIME_SERVICE_RESULT;
+    getProgress: () => number | RUNTIME_SERVICE_API_RESULT_ERROR;
     _findAPI: (source: Window) => RUNTIME_SERVICE_API_RESULT;
     start: () => RUNTIME_SERVICE_RESULT;
     save: () => RUNTIME_SERVICE_RESULT;
@@ -94,6 +97,7 @@ export type RUNTIME_SERVICE = {
     setValue: (elem: CMIELement, val: string | number) => RUNTIME_SERVICE_RESULT;
     getValue: (elem: CMIELement) => RUNTIME_SERVICE_RESULT;
     updateStatus: (status: SCORM_STATUS_LESSON) => RUNTIME_SERVICE_RESULT;
+    updateProgress: (percentageCompleted: number) => void;
     finish: () => void;
     exit: () => RUNTIME_SERVICE_RESULT;
 };

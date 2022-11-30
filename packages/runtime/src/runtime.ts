@@ -87,6 +87,8 @@ export const service: RUNTIME_SERVICE = {
       logout: 'logout',
     },
   },
+  courseProgress: 0,
+  lessonLocation: '',
   isAvailable: () => {
     const isReady = service.init && !service.finished;
 
@@ -189,13 +191,57 @@ export const service: RUNTIME_SERVICE = {
       };
     }
 
-    const oldMin = service.getValue('cmi.student_data_mastery_score');
-    const newMin = service.getValue('cmi.scaled_passing_score');
+    console.log('cmi version:');
+    const version = service.getValue('cmi._version');
+    console.log(version);
 
-    console.log('old API SCORE:');
-    console.log(oldMin);
-    console.log(newMin);
-    console.log('new API score:');
+    console.log('lesson Status (1.2):');
+    const lessonStatus = service.getValue('cmi.core.lesson_status');
+    console.log(lessonStatus);
+
+    console.log('completion Status (2004):');
+    const completionStatus = service.getValue('cmi.completion_status');
+    console.log(completionStatus);
+
+    console.log('success Status (2004):');
+    const successStatus = service.getValue('cmi.success_status');
+    console.log(successStatus);
+
+    console.log('lesson location:');
+    const lessonLocation = service.getValue('cmi.core.lesson_location');
+    console.log(lessonLocation);
+
+    console.log('session time (1.2):');
+    const sessionTime = service.getValue('cmi.core.session_time');
+    console.log(sessionTime);
+
+    console.log('total time (1.2):');
+    const totalTime = service.getValue('cmi.core.totalTime');
+    console.log(totalTime);
+
+    console.log('session time (2004):');
+    const sessionTime2004 = service.getValue('cmi.session_time');
+    console.log(sessionTime2004);
+
+    // console.log('score raw (1.2):');
+    // const score_raw = service.getValue('cmi.core.score_raw');
+    // console.log(score_raw);
+
+    // console.log('score to pass (2004):');
+    // const score_pass_1 = service.getValue('cmi.scaled_passing_score');
+    // console.log(score_pass_1);
+
+    // console.log('score mastery (1.2):');
+    // const score_mastery = service.getValue('cmi.student_data.mastery_score');
+    // console.log(score_mastery);
+
+    console.log('course progress (2004):');
+    const progress_measure = service.getValue('cmi.progress_measure');
+    console.log(progress_measure);
+
+    console.log('score (2004):');
+    const scoreVal2004 = service.getValue('cmi.score.raw');
+    console.log(scoreVal2004);
 
     return {
       error: false,
@@ -298,6 +344,21 @@ export const service: RUNTIME_SERVICE = {
       error: false,
     };
   },
+  getProgress: () => {
+    const res = service.isAvailable();
+
+    if (res.error) {
+      return res;
+    }
+
+    const getRes = res.API.LMSGetValue('cmi.progress_measure');
+    const numberRes = parseFloat(getRes);
+    if (numberRes > 0) {
+      return numberRes;
+    } else {
+      return 0;
+    }
+  },
   updateStatus: (status) => {
     const res = service.isAvailable();
 
@@ -365,24 +426,37 @@ export const service: RUNTIME_SERVICE = {
 
     return service.stop();
   },
+  updateProgress: (percentageCompleted) => {
+    console.log('new percentage');
+    console.log(percentageCompleted);
+    console.log('old percentage');
+    console.log(service.getProgress());
+    const oldRes = service.getProgress();
+    if (percentageCompleted > oldRes) {
+      console.log('higher?');
+      // service.courseProgress = percentageCompleted;
+      service.setValue('cmi.progress_measure', percentageCompleted);
+    }
+    console.log(percentageCompleted);
+    service.save();
+  },
   finish: () => {
     console.log('DONE');
 
-    service.setValue('cmi.core.score.raw', 87.0);
-    const scoreVal = service.getValue('cmi.core.score.raw');
+    // SCORM 2004
+    service.courseProgress = 1;
+    service.setValue('cmi.score.raw', 90.0);
+    service.setValue('cmi.success_status', 'passed');
 
-    console.log('Score val:');
-    console.log(scoreVal);
-
+    // SCORM 1.2 (status is handled separately, but multiple scores will conflict)
     service.updateStatus('success');
+    // service.setValue('cmi.core.score.raw', 87.0);
 
     service.save();
 
-    // service._time.end = new Date();
     console.log('SERVICE:');
     console.log(service);
     service.exit();
-    console.log(service);
   },
 };
 
