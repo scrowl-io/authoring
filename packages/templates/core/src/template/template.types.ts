@@ -38,9 +38,10 @@ export interface TemplateCommons {
   editMode?: boolean;
   focusElement?: any;
   validationErrors?: any;
+  notScene?: boolean;
   onStart?: (ev: StartEvent) => void;
   onProgress?: (ev: ProgressEvent) => void;
   onEnd?: (ev: EndEvent) => void;
-};
+}
 
 export type TemplateProps = TemplateCommons & React.AllHTMLAttributes<HTMLDivElement>;

@@ -1,136 +1,133 @@
-import React from 'react';
+import React, { useRef } from 'react';
+import { Icon } from '@owlui/lib';
 import Scrowl from '@scrowl/template-core';
-import * as css from './_index.scss';
+import './_index.scss';
 import { LessonIntroProps } from './lesson-intro.types';
 
-export const LessonIntro = ({ schema, ...props }: LessonIntroProps) => {
-  let classes = `${css.templateLessonIntro} `;
+export const LessonIntro = ({ id, schema, ...props }: LessonIntroProps) => {
+  let classes = 'template-lesson-intro';
   const editMode = props.editMode ? true : false;
   const focusElement = editMode ? props.focusElement : null;
+  const contentId = `${id}-lesson-intro`;
+  const title = schema.content.title.value;
+  let titleClasses = 'lesson-title can-focus';
+  const subtitle = schema.content.subtitle.value;
+  let subtitleClasses = 'lesson-subtitle can-focus';
+  const time = schema.content.time.value;
+  let timeClasses = 'lesson-time can-focus';
+  const startLabel = schema.content.startLabel.value;
+  let startLabelClasses = 'lesson-start-button can-focus';
+  const bg = schema.content.bgImage.content.bg.value;
+  const bgUrl = schema.content.bgImage.content.url.value;
+  const bgLabel = schema.content.bgImage.content.alt.value || '';
+  let bgClasses = `img__wrapper can-focus ${bg ? 'as-bg' : 'as-hero'}`;
+  const bgRef = useRef<HTMLDivElement>(null);
+  const bgStyles = {
+    backgroundImage: `url("${bgUrl}")`,
+  };
 
-  let title = schema.content.title.value;
-  let subtitle = schema.content.subtitle.value;
-  let time = schema.content.time.value;
-  let startLabel = schema.content.startLabel.value;
-  const heroImage = schema.content.heroImage.content;
+  if (focusElement === 'title') {
+    titleClasses += ' has-focus';
+  }
+
+  switch (focusElement) {
+    case 'title':
+      titleClasses += ' has-focus';
+      break;
+    case 'subtitle':
+      subtitleClasses += ' has-focus';
+      break;
+    case 'time':
+      timeClasses += ' has-focus';
+      break;
+    case 'startLabel':
+      startLabelClasses += ' has-focus';
+      break;
+    case 'bgImage.url':
+      bgClasses += ' has-focus';
+      break;
+    default:
+      console.warn('Unsupported element', focusElement);
+      break;
+  }
+
+  const handleFocusTitle = () => {
+    if (editMode) {
+      Scrowl.core.host.sendMessage({
+        type: 'focus',
+        field: 'title',
+      });
+    }
+  };
+
+  const handleFocusSubtitle = () => {
+    if (editMode) {
+      Scrowl.core.host.sendMessage({
+        type: 'focus',
+        field: 'subtitle',
+      });
+    }
+  };
+
+  const handleFocusTime = () => {
+    if (editMode) {
+      Scrowl.core.host.sendMessage({
+        type: 'focus',
+        field: 'time',
+      });
+    }
+  };
+
+  const handleFocusStartLabel = () => {
+    if (editMode) {
+      Scrowl.core.host.sendMessage({
+        type: 'focus',
+        field: 'startLabel',
+      });
+    }
+  };
+
+  const handleFocusBg = () => {
+    if (editMode) {
+      Scrowl.core.host.sendMessage({
+        type: 'focus',
+        field: 'bgImage.url',
+      });
+    }
+  };
 
   return (
-    <Scrowl.core.Template {...props} className={classes}>
-      <div className="slide-container">
-        <div className="layout">
-          <header>
-            <h1
-              className={
-                'lesson-title can-focus ' +
-                (focusElement === 'text' && ' has-focus')
-              }
-              onMouseDown={() => {
-                if (editMode) {
-                  Scrowl.core.host.sendMessage({
-                    type: 'focus',
-                    field: 'text',
-                  });
-                }
-              }}
-            >
-              {title}
-            </h1>
-            <h2
-              className={
-                'lesson-subtitle can-focus ' +
-                (focusElement === 'text' && ' has-focus')
-              }
-              onMouseDown={() => {
-                if (editMode) {
-                  Scrowl.core.host.sendMessage({
-                    type: 'focus',
-                    field: 'text',
-                  });
-                }
-              }}
-            >
-              {subtitle}
-            </h2>
-            {time && time.length > 0 && (
-              <span
-                className={
-                  'time can-focus ' + (focusElement === 'text' && ' has-focus')
-                }
-                onMouseDown={() => {
-                  if (editMode) {
-                    Scrowl.core.host.sendMessage({
-                      type: 'focus',
-                      field: 'text',
-                    });
-                  }
-                }}
-              >
-                <svg
-                  className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiBox-root css-uqopch"
-                  focusable="false"
-                  aria-hidden="true"
-                  viewBox="0 0 24 24"
-                  data-testid="ScheduleOutlinedIcon"
-                >
-                  <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"></path>
-                </svg>
-                <span>{time}</span>
-              </span>
-            )}
-            <button
-              className={
-                'lesson-start-button can-focus ' +
-                (focusElement === 'startLabel' && ' has-focus')
-              }
-              onClick={() => {
-                if (editMode) {
-                  Scrowl.core.host.sendMessage({
-                    type: 'focus',
-                    field: 'startLabel',
-                  });
-                  return;
-                }
-
-                // TODO:: go to next slide
-              }}
-            >
-              {startLabel}
-            </button>
-          </header>
-          <div
-            className="img-container hero can-focus"
-            role="img"
-            aria-label={heroImage.alt.value}
-            style={
-              heroImage.url.value
-                ? {
-                    backgroundImage: `url("./assets/${heroImage.url.value}")`,
-                  }
-                : {}
-            }
-            onMouseDown={() => {
-              if (editMode) {
-                Scrowl.core.host.sendMessage({
-                  type: 'focus',
-                  field: 'heroImage.url',
-                });
-              }
-            }}
+    <Scrowl.core.Template className={classes} notScene={true} {...props}>
+      <div id={contentId} className="inner-content">
+        <header>
+          <h1 className={titleClasses} onMouseDown={handleFocusTitle}>
+            {title}
+          </h1>
+          <h2 className={subtitleClasses} onMouseDown={handleFocusSubtitle}>
+            {subtitle}
+          </h2>
+          {time && time.length > 0 && (
+            <span className={timeClasses} onMouseDown={handleFocusTime}>
+              <Icon icon="schedule" display="outlined" />
+              <span className="lesson-time-value">{time}</span>
+            </span>
+          )}
+          <button
+            className={startLabelClasses}
+            onMouseDown={handleFocusStartLabel}
           >
-            {!heroImage.url.value && editMode ? (
-              <div
-                style={{
-                  paddingTop: '40%',
-                  width: '100%',
-                  height: '100%',
-                  border: '2px dashed #c2c2c2',
-                }}
-              >
-                <span style={{ color: '#9f9f9f' }}>Select an Image</span>
-              </div>
-            ) : null}
+            {startLabel}
+          </button>
+        </header>
+        {(bgUrl || editMode) && (
+          <div ref={bgRef} className={bgClasses} onMouseDown={handleFocusBg}>
+            <img
+              className="img__container"
+              aria-label={bgLabel}
+              style={bgStyles}
+            />
           </div>
-        </div>
+        )}
       </div>
     </Scrowl.core.Template>
   );

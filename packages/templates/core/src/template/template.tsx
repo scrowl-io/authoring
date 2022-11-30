@@ -12,9 +12,11 @@ export const Template = ({
   onProgress,
   onEnd,
   children,
+  notScene,
   ...props
 }: TemplateProps) => {
   let classes = `${css.slide}`;
+  const isNotScene = notScene ? notScene : false;
   const [duration, setDuration] = useState(
     (props.duration || window.innerHeight) + window.innerHeight
   );
@@ -54,6 +56,10 @@ export const Template = ({
     let scene: Scene;
 
     const createScene = () => {
+      if (isNotScene) {
+        return;
+      }
+
       if (isReady.current) {
         return;
       }
