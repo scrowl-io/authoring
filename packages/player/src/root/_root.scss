@@ -2,10 +2,11 @@ html,
 body {
   margin: 0;
   padding: 0;
+  height: 100%;
 }
 
 #scrowl-player,
-#lesson-wrapper {
+.lesson-wrapper {
   height: 100%;
 }
 
