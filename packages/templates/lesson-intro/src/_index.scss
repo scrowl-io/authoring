@@ -7,17 +7,19 @@
     top: 0;
     width: 100%;
     z-index: 10;
+    height: 100vh;
+    overflow: hidden;
 
     header {
       height: 34vh;
       padding: 1rem;
       padding-top: 10vh;
-
+      z-index: 10;
       align-items: center;
       display: flex;
       flex-flow: column;
       justify-content: center;
-      margin-bottom: 8vh;
+      margin-bottom: 6vh;
     }
   }
 
@@ -76,7 +78,7 @@
 
   .img {
     &__wrapper {
-      position: absolute;
+      z-index: 0;
 
       &.as-bg {
         top: 0;
@@ -84,13 +86,12 @@
         height: 100vh;
         width: 100vw;
         z-index: 0;
+        position: absolute;
       }
 
       &.as-hero {
-        top: 2rem;
-        border: 1px solid #fff;
         width: 100%;
-        height: 50rem;
+        height: 60vh;
       }
     }
 
