@@ -14321,6 +14321,7 @@ var $ff693a6bb3e7d9ea$export$2e2bcd8739ae039 = {
 };
 
 
+
 const $295d848437c8676c$export$8b251419efc915eb = (props)=>{
     return /*#__PURE__*/ $8rr3U$react.createElement("thead", null, /*#__PURE__*/ $8rr3U$react.createElement("tr", null, props.columns.map((col, idx)=>/*#__PURE__*/ $8rr3U$react.createElement("th", {
             scope: "col",
@@ -14332,6 +14333,9 @@ const $295d848437c8676c$export$8b251419efc915eb = (props)=>{
 var $295d848437c8676c$export$2e2bcd8739ae039 = {
     Header: $295d848437c8676c$export$8b251419efc915eb
 };
+
+
+
 
 
 
