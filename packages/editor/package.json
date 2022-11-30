@@ -144,7 +144,7 @@
     "wait-on": "^6.0.1"
   },
   "dependencies": {
-    "@owlui/lib": "^0.0.44",
+    "@owlui/lib": "^0.0.46",
     "@popperjs/core": "2.11.6",
     "@reduxjs/toolkit": "^1.8.6",
     "@scrowl/player": "^0.0.32",
