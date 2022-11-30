@@ -86,8 +86,8 @@ export const Template = ({
         const slideRect = slideRef.current.children[0].getBoundingClientRect();
         let sceneTime = window.scrollY;
         let sceneEnd = sceneStart + slideRect.height;
-        let docEnd = document.body.clientHeight;
-        const endDiff = document.body.clientHeight - sceneEnd;
+        let docEnd = document.body.scrollHeight;
+        const endDiff = document.body.scrollHeight - sceneEnd;
 
         if (endDiff < 0) {
           // height may change after scrolling past the first slide
@@ -120,7 +120,7 @@ export const Template = ({
               sceneTime += slideRect.y;
             }
           } else {
-            sceneEnd = document.body.clientHeight - window.innerHeight;
+            sceneEnd = document.body.scrollHeight - window.innerHeight;
           }
         } else if (sceneStart !== 0) {
           // not the first or last slide
