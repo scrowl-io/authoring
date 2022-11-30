@@ -11,15 +11,15 @@
     overflow: hidden;
 
     header {
-      height: 34vh;
-      padding: 1rem;
-      padding-top: 10vh;
+      position: relative;
+      height: 33vh;
+      padding: 10vh 1vh 6vh;
+      margin-top: 4vh;
       z-index: 10;
       align-items: center;
       display: flex;
       flex-flow: column;
       justify-content: center;
-      margin-bottom: 6vh;
     }
   }
 
@@ -30,14 +30,14 @@
     }
 
     &-subtitle {
-      font-size: 18px;
+      font-size: 1.25rem;
       font-weight: 400;
-      padding-top: 3rem;
+      padding-top: 1rem;
       padding-bottom: 0.5rem;
     }
 
     &-time {
-      margin-top: 2rem;
+      margin-top: 1rem;
       display: flex;
       align-items: center;
 
@@ -74,11 +74,17 @@
     bottom: 0;
     right: 0;
     z-index: 5;
+    width: 50%;
+    margin: 0rem auto;
+    pointer-events: none;
+    user-select: none;
   }
 
   .img {
     &__wrapper {
       z-index: 0;
+      pointer-events: none;
+      user-select: none;
 
       &.as-bg {
         top: 0;
@@ -91,7 +97,7 @@
 
       &.as-hero {
         width: 100%;
-        height: 60vh;
+        height: 63vh;
       }
     }
 

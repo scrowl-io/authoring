@@ -100,6 +100,7 @@ export const LessonIntro = ({ id, schema, ...props }: LessonIntroProps) => {
     <Scrowl.core.Template className={classes} notScene={true} {...props}>
       <div id={contentId} className="inner-content">
         <header>
+          {bg && <div className="overlay" />}
           <h1 className={titleClasses} onMouseDown={handleFocusTitle}>
             {title}
           </h1>
