@@ -44,11 +44,6 @@ export const SimpleTextSchema: SimpleTextSchemaProps = {
           assetTypes: ['image'],
           label: 'Image',
         },
-        bg: {
-          type: 'Checkbox',
-          label: 'Use as Background',
-          value: false,
-        },
       },
     },
     options: {

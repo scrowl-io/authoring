@@ -1,182 +1,127 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import Scrowl from '@scrowl/template-core';
-import * as css from './_index.scss';
+import './_index.scss';
 import { BlockTextProps } from './block-text.types';
 
-export const BlockText = ({ schema, ...props }: BlockTextProps) => {
-  let classes = `${css.templateBlockText} `;
+export const BlockText = ({ id, schema, ...props }: BlockTextProps) => {
+  let classes = 'template-block-text';
+  const Markdown = Scrowl.core.Markdown;
   const editMode = props.editMode ? true : false;
   const focusElement = editMode ? props.focusElement : null;
-  const scrollScenes: any = React.useRef([]);
-  const timeline: any = React.useRef();
-
-  let schemaText = schema.content.text.value;
-  let useImageAsBG = schema.content.bgImage.content.bg.value;
-  let alignment = schema.content.options.content.alignment.value;
-  let showProgressBar = schema.content.options.content.showProgress.value;
-  const slideDuration = showProgressBar ? 1000 : 0;
+  const contentId = `${id}-block-text`;
+  const text = schema.content.text.value;
+  const textFocusCss = focusElement === 'text' && 'has-focus';
+  const bg = schema.content.bgImage.content.bg.value;
+  const bgUrl = schema.content.bgImage.content.url.value;
+  const bgLabel = schema.content.bgImage.content.alt.value || '';
+  const bgFocusCss = focusElement === 'bgImage.url' && 'has-focus';
+  const bgRef = useRef<HTMLDivElement>(null);
+  const bgStyles = {
+    backgroundImage: `url("${bgUrl}")`,
+  };
+  const alignment = schema.content.options.content.alignment.value;
+  const alignmentCss = alignment === 'right' ? 'right' : 'left';
+  const showProgressBar = schema.content.options.content.showProgress.value;
+  const [progressBarStyles, setProgressBarStyles] = useState({
+    width: showProgressBar ? '0%' : '100%',
+  });
+  const pins = [contentId];
 
   if (showProgressBar) {
     classes += ' show-progress';
   }
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  function getId(id?: String) {
-    if (!id) {
-      return props.id;
-    }
-    return props.id + '-' + id;
-  }
-
-  const handleScrollUpdate = (e: any) => {
-    if (e.stage === 'body') {
-      timeline.current.seek(timeline.current.duration * e.stageProgress);
+  const handleFocusText = () => {
+    if (editMode) {
+      Scrowl.core.host.sendMessage({
+        type: 'focus',
+        field: 'text',
+      });
     }
   };
 
-  const handleStateChange = (e: any) => {
-    if (e.state === 'visible') {
-      scrollScenes.current.map((scene: any) => scene.enabled(true));
-    } else {
-      scrollScenes.current.map((scene: any) => scene.enabled(false));
+  const handleFocusBg = () => {
+    if (editMode) {
+      Scrowl.core.host.sendMessage({
+        type: 'focus',
+        field: 'bgImage.url',
+      });
     }
   };
 
-  React.useEffect(() => {
+  const handleSlideProgress = (ev) => {
+    if (bgRef.current) {
+      if (ev.scene.rect.y < 0) {
+        const top = ev.scene.rect.y * -1 + (bg ? 0 : 32);
+        const bottom = top + window.innerHeight;
+
+        if (bg || bottom < ev.scene.end) {
+          bgRef.current.style.top = `${top}px`;
+        }
+      }
+    }
+
+    if (showProgressBar) {
+      setProgressBarStyles({
+        ...progressBarStyles,
+        width: `${ev.progress}%`,
+      });
+    }
+  };
+
+  const handleSlideEnd = () => {
     if (!showProgressBar) {
-      return () => {};
+      return;
     }
 
-    scrollScenes.current.push(
-      new Scrowl.core.scroll.Scene({
-        triggerElement: '#' + getId(),
-        duration: slideDuration,
-        offset: 0,
-        triggerHook: 0,
-      })
-        .setPin('#' + getId('pinned-body'), { pushFollowers: false })
-        .addTo(props.controller)
-        .enabled(false)
-    );
-
-    timeline.current = Scrowl.core.anime.timeline({
-      easing: 'easeInOutQuad',
-      autoplay: false,
+    setProgressBarStyles({
+      ...progressBarStyles,
+      width: `100%`,
     });
-    const currentTimeline = timeline.current;
-    const target = {
-      targets: '#' + getId('bar'),
-      width: '100%',
-      duration: slideDuration,
-    };
-
-    currentTimeline.add(target);
-
-    return () => {
-      scrollScenes.current.forEach((scene) => {
-        scene.destroy(true);
-        props.controller.removeScene(scene);
-      });
-
-      scrollScenes.current = [];
-
-      currentTimeline.children.map((child: any) => {
-        child.remove(target);
-        child.reset();
-        currentTimeline.remove(child);
-      });
-
-      currentTimeline.reset();
-    };
-  }, [showProgressBar]);
+  };
 
   return (
     <Scrowl.core.Template
-      {...props}
       className={classes}
-      duration={slideDuration}
-      onStateChange={handleStateChange}
-      onScroll={handleScrollUpdate}
-      ready={true}
+      onProgress={handleSlideProgress}
+      onEnd={handleSlideEnd}
+      pins={pins}
+      {...props}
     >
-      <div className="slide-container">
-        <div
-          id={getId('pinned-body')}
-          className="hero"
-          aria-label={
-            useImageAsBG ? schema.content.bgImage.content.alt.value : ''
-          }
-          style={
-            useImageAsBG && schema.content.bgImage.content.url.value
-              ? {
-                  width: '100vw',
-                  height: '100vh',
-                  backgroundImage:
-                    'url("./assets/' +
-                    schema.content.bgImage.content.url.value +
-                    '")',
-                }
-              : {}
-          }
-        >
-          {useImageAsBG ? <div className="overlay" /> : null}
+      <div id={contentId} className="inner-content">
+        <div className="row row-cols-2">
+          {bg && <div className="overlay" />}
 
-          <div className={'text ' + (alignment === 'right' ? ' right' : '')}>
-            <div className="wrapper">
-              <hr
-                id={getId('bar')}
-                style={{ width: showProgressBar ? '0%' : '100%' }}
-              />
-              <p
-                className={
-                  'can-focus ' + (focusElement === 'text' && ' has-focus')
-                }
-                onMouseDown={() => {
-                  if (editMode) {
-                    Scrowl.core.host.sendMessage({
-                      type: 'focus',
-                      field: 'text',
-                    });
-                  }
-                }}
+          <div className={`text__wrapper ${alignmentCss}`}>
+            <div className="text__container">
+              <div className="progress-indictor">
+                <div className="progress-bar" style={progressBarStyles}></div>
+              </div>
+              <div
+                className={`text__value can-focus ${textFocusCss}`}
+                onMouseDown={handleFocusText}
               >
-                <Scrowl.core.Markdown children={schemaText} />
-              </p>
+                <Markdown>{text}</Markdown>
+              </div>
             </div>
           </div>
-
-          {useImageAsBG ? null : (
-            <div
-              role="img"
-              aria-label={schema.content.bgImage.content.alt.value}
-              className={
-                'img ' +
-                (alignment === 'right' ? ' right' : '') +
-                ' can-focus ' +
-                (focusElement === 'bgImage.url' && ' has-focus')
-              }
-              onMouseDown={() => {
-                if (editMode) {
-                  Scrowl.core.host.sendMessage({
-                    type: 'focus',
-                    field: 'bgImage.url',
-                  });
-                }
-              }}
-              style={
-                schema.content.bgImage.content.url.value
-                  ? {
-                      backgroundImage:
-                        'url("./assets/' +
-                        schema.content.bgImage.content.url.value +
-                        '")',
-                    }
-                  : {}
-              }
-            />
-          )}
         </div>
       </div>
+      {(bgUrl || editMode) && (
+        <div
+          ref={bgRef}
+          className={`img__wrapper ${alignmentCss} can-focus ${bgFocusCss} ${
+            bg ? 'as-bg' : 'as-side'
+          }`}
+          onMouseDown={handleFocusBg}
+        >
+          <img
+            className="img__container"
+            aria-label={bgLabel}
+            style={bgStyles}
+          />
+        </div>
+      )}
     </Scrowl.core.Template>
   );
 };

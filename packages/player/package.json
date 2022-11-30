@@ -31,8 +31,8 @@
   "exports": {
     ".": {
       "require": "./lib/scrowl.player.js",
-      "default": "./lib/scrowl.player.js",
-      "import": "./lib/scrowl.player.module.js"
+      "import": "./lib/scrowl.player.module.js",
+      "default": "./lib/scrowl.player.js"
     },
     "./src": "./src/index.ts",
     "./web": "./dist/scrowl.player.js"
@@ -78,7 +78,7 @@
     "typescript": "4.7.4"
   },
   "dependencies": {
-    "@owlui/lib": "^0.0.44",
+    "@owlui/lib": "^0.0.46",
     "@scrowl/template-core": "^1.0.31",
     "bootstrap": "^5.2.2",
     "react": "^18.2.0",

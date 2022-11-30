@@ -1,100 +1,72 @@
 .template-block-text {
-  .slide-container {
+  position: relative;
+
+  .inner-content {
+    top: 0;
+    width: 100%;
+    z-index: 10;
   }
 
-  .hero {
-    width: 100vw;
-    height: 100vh;
+  .text__container {
+    margin: 0 1.5rem;
 
-    background-position: 50% 50%;
-    background-size: cover;
+    .progress {
+      &-indictor {
+        width: 100%;
+      }
 
-    background-color: #fbfbfb;
+      &-bar {
+        width: 0%;
+        border: none;
+        height: 0.4rem;
+        background: var(--bs-body-color);
+        padding: 0;
+        margin: 1rem 0 2rem 0;
+      }
+    }
+  }
 
-    .overlay {
-      background-color: rgba(0, 0, 0, 0.1);
+  .overlay {
+    background-color: rgba(0, 0, 0, 0.1);
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 5;
+  }
+
+  .img {
+    &__wrapper {
       position: absolute;
-      top: 0;
-      left: 0;
-      bottom: 0;
-      right: 0;
-      z-index: 1;
+
+      &.as-bg {
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 100vw;
+        z-index: 0;
+      }
+
+      &.as-side {
+        right: 2rem;
+        top: 2rem;
+        border: 1px solid #fff;
+        height: calc(100vh - 4rem);
+        width: 300px;
+
+        &.right {
+          left: 2rem;
+          right: initial;
+        }
+      }
     }
 
-    .img {
-      height: calc(100vh - 32px);
-      width: calc(45% - 10px - 4rem);
+    &__container {
+      height: 100%;
+      width: 100%;
       background-size: cover;
       background-position: 50% 50%;
-      top: 16px;
-      right: 16px;
-      position: absolute;
-
-      &.right {
-        left: 16px;
-        right: initial;
-      }
-    }
-
-    .text {
-      margin: 0 5%;
-      position: absolute;
-      top: 0;
-      left: 0;
-      bottom: 0;
-      z-index: 5;
-      width: 50%;
-      // min-width: 250px;
-
-      display: flex;
-      flex-flow: column;
-      justify-content: center;
-      height: 100vh;
-
-      font-size: min(3.5vw, 24px);
-
-      font-weight: 400;
-      line-height: min(4.1vw, 3rem);
-      // line-height: 3rem;
-
-      &.right {
-        left: initial;
-        right: 0;
-      }
-
-      .wrapper {
-        background-color: rgba(251, 251, 251, 0.9);
-        padding: 2rem;
-        max-height: calc(100vh - 32px);
-        overflow: hidden;
-
-        hr {
-          width: 0%;
-          border: none;
-          height: 0.4rem;
-          background: var(--bs-body-color);
-          padding: 0;
-          margin: 1rem 0 2rem 0;
-        }
-
-        p {
-          color: var(--bs-body-color);
-          padding: 0;
-          margin: 0;
-          margin: min(3vw, 20px) 0;
-
-          &.header {
-            font-size: min(3.5vw, 26px);
-            font-weight: 600;
-          }
-        }
-      }
-    }
-  }
-
-  &:not(.show-progress) {
-    hr {
-      width: 100% !important;
     }
   }
 
