@@ -7,7 +7,7 @@ export const Slide = ({
   options,
   ...props
 }: SlideProps) => {
-  let classes = 'slide';
+  let classes = '';
 
   if (className) {
     classes += ` ${className}`;

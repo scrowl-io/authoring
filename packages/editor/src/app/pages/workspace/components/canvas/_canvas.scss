@@ -100,13 +100,13 @@
     .slide {
       width: var(--workspace-canvas-width) !important;
       height: var(--workspace-canvas-height) !important;
+    }
 
-      iframe {
-        width: 100%;
-        margin: 0;
-        padding: 0;
-        height: var(--workspace-slide-height);
-      }
+    iframe {
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      height: var(--workspace-slide-height);
     }
   }
 

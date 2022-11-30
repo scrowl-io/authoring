@@ -5,12 +5,14 @@ import {
   InputTextboxProps,
   InputFieldsetProps,
   InputAssetProps,
+  InputCheckboxProps,
 } from '@scrowl/template-core';
 
 export interface LessonIntroContentBgImage extends InputFieldsetProps {
   content: {
     alt: InputTextboxProps;
     url: InputAssetProps;
+    bg: InputCheckboxProps;
   };
 }
 
@@ -21,7 +23,7 @@ export type LessonIntroSchemaProps = {
     subtitle: InputTextboxProps;
     time: InputTextboxProps;
     startLabel: InputTextboxProps;
-    heroImage: LessonIntroContentBgImage;
+    bgImage: LessonIntroContentBgImage;
   };
 };
 

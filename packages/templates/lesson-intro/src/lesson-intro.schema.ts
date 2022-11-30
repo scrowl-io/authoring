@@ -47,9 +47,9 @@ export const LessonIntroSchema: LessonIntroSchemaProps = {
       autoGrow: 10,
       allowLinebreaks: true,
     },
-    heroImage: {
+    bgImage: {
       type: 'Fieldset',
-      label: 'Hero Image',
+      label: 'Background Image',
       content: {
         alt: {
           type: 'Textbox',
@@ -61,6 +61,11 @@ export const LessonIntroSchema: LessonIntroSchemaProps = {
           assetTypes: ['image'],
           label: 'Image',
         },
+        bg: {
+          type: 'Checkbox',
+          label: 'Use as Background',
+          value: false,
+        }
       },
     },
   },

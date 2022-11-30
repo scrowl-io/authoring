@@ -1,151 +1,200 @@
-import React, { useEffect, useState } from 'react';
-import ScrollMagic from 'scrollmagic';
+import React, { useEffect, useState, useRef } from 'react';
+import magic, { Scene } from 'scrollmagic';
 import * as css from './_template.scss';
 import { TemplateProps } from './template.types';
 
 export const Template = ({
   id,
   className,
-  duration,
   editMode,
-  ready,
   controller,
-  templateKey,
-  onScroll,
-  onStateChange,
+  onStart,
+  onProgress,
+  onEnd,
   children,
+  notScene,
   ...props
 }: TemplateProps) => {
-  let classes = `${css.slideContainer}`;
-  const [slideDuration, setSlideDiration] = useState(
-    duration + window.innerHeight * 2
+  let classes = `${css.slide}`;
+  const isNotScene = notScene ? notScene : false;
+  const [duration, setDuration] = useState(
+    (props.duration || window.innerHeight) + window.innerHeight
   );
-  const styles = {
-    height: `calc(100vh + ${duration}px)`,
-  };
+  const isReady = useRef(false);
+  const slideRef = useRef<HTMLDivElement>(null);
+  const [windowSize, setWindowSize] = useState({
+    height: window.innerHeight,
+    width: window.innerWidth,
+  });
+  const pins = props.pins ? props.pins : [''];
 
   if (className) {
     classes += ` ${className}`;
   }
 
-  if (templateKey) {
-    classes += ` ${templateKey}`;
-  }
-
   if (editMode) {
-    classes += ` ${css.editMode}`;
+    classes += ` edit-mode`;
   }
 
   useEffect(() => {
-    const windowHeight = window.innerHeight;
-    let lastStageName = '';
-    let slideVisible = false;
-
-    const setSlideVisible = (visible: boolean) => {
-      if (visible === slideVisible) {
-        return;
-      }
-      slideVisible = visible;
+    const updateWindowSize = () => {
+      setDuration((props.duration || 0) + window.innerHeight);
+      setWindowSize({
+        height: window.innerHeight,
+        width: window.innerWidth,
+      });
     };
 
-    const sceneTrigger = new ScrollMagic.Scene({
-      triggerElement: '#' + id,
-      duration: slideDuration,
-      triggerHook: 1,
-    })
-      .on('progress', function (e: any) {
-        const progressPixels = e.progress * slideDuration;
-        let stageName = '';
-        let stageProgress = 0;
-        if (progressPixels <= windowHeight) {
-          if (lastStageName === 'body' && onScroll) {
-            const progressEvent = {
-              progress: e.progress,
-              stage: 'body',
-              stageProgress: 0,
-            };
-            onScroll(progressEvent);
-          }
-          stageName = 'in_view';
-          stageProgress = progressPixels / windowHeight;
-        } else if (progressPixels >= slideDuration - windowHeight) {
-          if (lastStageName === 'body' && onScroll) {
-            const progressEvent = {
-              progress: e.progress,
-              stage: 'body',
-              stageProgress: 1,
-            };
-            onScroll(progressEvent);
-          }
-          stageName = 'out_view';
-          stageProgress =
-            (progressPixels - (slideDuration - windowHeight)) / windowHeight;
-        } else if (slideDuration > 0) {
-          if (onScroll) {
-            const progressEvent = {
-              progress: e.progress,
-              stage: 'body',
-              stageProgress: 0,
-            };
-            if (lastStageName === 'in_view') {
-              onScroll(progressEvent);
-            } else if (lastStageName === 'out_view') {
-              progressEvent.stageProgress = 1;
-              onScroll(progressEvent);
-            }
-          }
-          stageProgress = (progressPixels - windowHeight) / slideDuration;
-          stageName = 'body';
-        }
-        lastStageName = stageName;
-        if (onScroll) {
-          const progressEvent = {
-            progress: e.progress,
-            stage: stageName,
-            stageProgress,
-          };
-          onScroll(progressEvent);
-        }
-      })
-      .on('enter leave ', function (e: any) {
-        if (!controller || !onStateChange) {
-          return;
-        }
-        let scrollDirection = controller.info('scrollDirection');
-        if (typeof scrollDirection === 'string') {
-          scrollDirection = scrollDirection.toLowerCase();
-        }
-        if (e.type === 'enter') {
-          setSlideVisible(true);
-          onStateChange({
-            state: 'visible',
-            direction: scrollDirection,
-          });
-        } else {
-          setSlideVisible(false);
-          onStateChange({
-            state: 'hidden',
-            direction: scrollDirection,
-          });
-        }
-      })
-      .addTo(controller);
+    window.addEventListener('resize', updateWindowSize);
+
     return () => {
-      controller.removeScene(sceneTrigger);
+      window.removeEventListener('resize', updateWindowSize);
     };
   });
 
-  const handleResize = () => {
-    setSlideDiration(duration + window.innerHeight * 2);
-  };
+  useEffect(() => {
+    let scene: Scene;
 
-  window.addEventListener('resize', handleResize);
+    const createScene = () => {
+      if (isNotScene) {
+        return;
+      }
+
+      if (isReady.current) {
+        return;
+      }
+
+      if (!slideRef.current) {
+        return;
+      }
+
+      isReady.current = true;
+
+      const scene = new magic.Scene({
+        triggerElement: slideRef.current,
+        duration,
+      });
+
+      const startingRect = slideRef.current.getBoundingClientRect();
+      const sceneStart = startingRect.y;
+
+      const handleSceneProgress = (ev) => {
+        if (!slideRef.current) {
+          return;
+        }
+
+        const slideRect = slideRef.current.children[0].getBoundingClientRect();
+        let sceneTime = window.scrollY;
+        let sceneEnd = sceneStart + slideRect.height;
+        let docEnd = document.body.scrollHeight;
+        const endDiff = document.body.scrollHeight - sceneEnd;
+
+        if (endDiff < 0) {
+          // height may change after scrolling past the first slide
+          // this change has side effects on the startingRect
+          // so we need to account for the possible difference
+          docEnd -= endDiff;
+        }
+
+        if (sceneStart === 0 && slideRect.height !== docEnd) {
+          // if its the first slide but not the last one
+          // we need to take account of the scroll start position
+          sceneEnd = slideRect.height - window.innerWidth / 2;
+        }
+
+        if (slideRect.height < window.innerHeight) {
+          // if the slide isn't scrollable, the progress is 100%
+          sceneTime = slideRect.height;
+          sceneEnd = slideRect.height;
+        }
+
+        if (sceneEnd === docEnd) {
+          // last slide
+          if (sceneStart !== 0) {
+            // not first slide
+            sceneTime =
+              (window.scrollY + window.innerHeight / 2 - sceneStart) * 2;
+            sceneEnd = slideRect.height;
+
+            if (slideRect.y < 0) {
+              sceneTime += slideRect.y;
+            }
+          } else {
+            sceneEnd = document.body.scrollHeight - window.innerHeight;
+          }
+        } else if (sceneStart !== 0) {
+          // not the first or last slide
+          // we need to take account of the "start" being in the middle of the screen
+          sceneTime = window.scrollY - sceneStart + window.innerHeight / 2;
+          sceneEnd = slideRect.height;
+        }
+
+        let sceneProgress = Math.round(
+          parseFloat(((sceneTime / sceneEnd) * 100).toFixed(2))
+        );
+
+        sceneProgress =
+          sceneProgress > 100 ? 100 : sceneProgress < 0 ? 0 : sceneProgress;
+
+        ev.progress = sceneProgress;
+        ev.scene = {
+          rect: slideRect,
+          startingRect,
+          start: sceneStart,
+          time: sceneTime,
+          end: sceneEnd,
+          progress: sceneProgress / 100,
+        };
+
+        if (onProgress) {
+          onProgress(ev);
+        }
+      };
+
+      const handleSceneStart = (ev) => {
+        if (onStart) {
+          onStart(ev);
+        }
+      };
+
+      const handleSceneEnd = (ev) => {
+        if (onEnd) {
+          onEnd(ev);
+        }
+      };
+
+      scene
+        .on('start', handleSceneStart)
+        .on('progress', handleSceneProgress)
+        .on('end', handleSceneEnd);
+
+      pins.forEach((pin) => {
+        const elem = document.getElementById(pin);
+
+        if (!elem) {
+          return;
+        }
+
+        scene.setPin(elem);
+      });
+
+      scene.addTo(controller);
+    };
+
+    createScene();
+
+    return () => {
+      if (scene) {
+        scene.destroy(true);
+        controller.removeScene(scene);
+        isReady.current = false;
+      }
+    };
+  }, [windowSize, duration, isReady.current, slideRef.current]);
 
   return (
-    <div className={css.sldHost}>
-      <section id={id} className={classes} style={styles} {...props}>
-        {children}
-      </section>
+    <div ref={slideRef} className={classes} {...props}>
+      {children}
     </div>
   );
 };
