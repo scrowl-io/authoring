@@ -11,9 +11,6 @@ import * as css from '../../root/_root.scss';
 import { Error } from '../../components';
 import { NavBar } from '../../components/navbar';
 
-// @ts-ignore
-let slideProgress = 0;
-
 const Page = ({ slides, templates, ...props }: PageProps) => {
   const controller = new window['Scrowl'].core.scroll.Controller();
   const player = document.querySelector('.player-main');
@@ -53,18 +50,35 @@ const Page = ({ slides, templates, ...props }: PageProps) => {
   );
 };
 
-const updateCourseProgress = (project) => {
+const updateCourseProgress = (project, id) => {
   console.log('inside pages:');
-  slideProgress++;
-  console.log(project);
-  console.log(slideProgress);
-  let numberOfLessons = 0;
-  project.outlineConfig.forEach((mod) => {
-    mod.lessons.forEach((_les) => {
-      numberOfLessons++;
+
+  let lessonsArray: { index: number; targetId: string }[] = [];
+  let counter = 1;
+  project.outlineConfig.forEach((module, mIdx) => {
+    module.lessons.forEach((_lesson, lIdx) => {
+      const lessonObj = {
+        index: counter,
+        targetId: `module-${mIdx}--lesson-${lIdx}`,
+      };
+      counter++;
+      lessonsArray.push(lessonObj);
     });
   });
-  const percentageCompleted = slideProgress / numberOfLessons;
+
+  const currentSlide = lessonsArray.find((lesson) => {
+    return lesson.targetId === id;
+  });
+
+  const currentSlideIndex = currentSlide?.index;
+  const totalLessons = lessonsArray.length;
+
+  let percentageCompleted;
+
+  if (currentSlideIndex) {
+    percentageCompleted = currentSlideIndex / totalLessons;
+  }
+
   console.log(percentageCompleted);
   const runtime = window['Scrowl'].runtime;
   runtime?.updateProgress(percentageCompleted);
@@ -120,7 +134,7 @@ export const create = (project, templateList: PlayerTemplateList) => {
                   <Link
                     to={nextLessonUrl}
                     // @ts-ignore
-                    onClick={() => updateCourseProgress(project)}
+                    onClick={() => updateCourseProgress(project, id)}
                   >
                     {nextLessonText}
                   </Link>

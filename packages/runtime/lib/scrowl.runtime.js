@@ -314,9 +314,10 @@ const $b3d1e3300d945f09$export$6ed414b8d8bead88 = {
         console.log("DONE");
         // SCORM 2004
         $b3d1e3300d945f09$export$6ed414b8d8bead88.courseProgress = 1;
+        $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.progress_measure", $b3d1e3300d945f09$export$6ed414b8d8bead88.courseProgress);
         $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.score.raw", 90.0);
         $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.success_status", "passed");
-        // SCORM 1.2 (status is handled separately, but multiple scores will conflict)
+        // SCORM 1.2 (status is handled separately, but scores will conflict, so only update 1)
         $b3d1e3300d945f09$export$6ed414b8d8bead88.updateStatus("success");
         // service.setValue('cmi.core.score.raw', 87.0);
         $b3d1e3300d945f09$export$6ed414b8d8bead88.save();

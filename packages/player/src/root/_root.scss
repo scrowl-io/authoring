@@ -36,14 +36,17 @@ body {
   margin: auto;
   position: relative;
   z-index: 0;
+}
 
-  .next-lesson-container {
-    display: flex;
-    justify-content: center;
-    height: 5em;
+.next-lesson-container {
+  position: fixed;
+  bottom: 10px;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  height: 5em;
 
-    button {
-      height: 3em;
-    }
+  button {
+    height: 3em;
   }
 }
