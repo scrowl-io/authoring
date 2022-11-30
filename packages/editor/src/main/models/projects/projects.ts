@@ -103,68 +103,80 @@ const getProjectInfo = (meta: ProjectMeta): rq.ApiResult => {
 export const create = (ev: rq.RequestEvent, blueprint?: string) => {
   const copyAsset = (assetFilename: string) => {
     return new Promise<rq.ApiResult>((resolve) => {
-      const sourcePath = fs.joinPath(PROJECT_PATHS.blueprints, assetFilename);
-      const ext = fs.getExt(assetFilename).replace('.', '');
-      const name = fs.getBasename(assetFilename, ext).replace('.', '');
-      const type = fs.assetTypeByExt(ext);
-      let dest = fs.joinPath(fs.APP_PATHS.uploads, `${name}.`);
+      try {
+        const sourcePath = fs.joinPath(PROJECT_PATHS.blueprints, assetFilename);
+        const ext = fs.getExt(assetFilename).replace('.', '');
+        const name = fs.getBasename(assetFilename, ext).replace('.', '');
+        const type = fs.assetTypeByExt(ext);
+        let dest = fs.joinPath(fs.APP_PATHS.uploads, `${name}.`);
 
-      switch (type) {
-        case 'image':
-          dest += 'webp';
+        switch (type) {
+          case 'image':
+            dest += 'webp';
 
-          fs.asset.toWebp(sourcePath, dest).then((transformRes) => {
-            if (transformRes.error) {
-              log.error('asset conversion failed', transformRes);
-              resolve(transformRes);
-              return;
-            }
+            fs.asset.toWebp(sourcePath, dest).then((transformRes) => {
+              if (transformRes.error) {
+                log.error('asset conversion failed', transformRes);
+                resolve(transformRes);
+                return;
+              }
 
-            resolve({
-              error: false,
-              data: {
-                title: name,
-                filename: `./assets/${name}.webp`,
-                type,
-                ext: 'webp',
-                size: transformRes.data.size,
-                sourceExt: ext,
-                sourceFilename: assetFilename,
-              },
+              resolve({
+                error: false,
+                data: {
+                  title: name,
+                  filename: `./assets/${name}.webp`,
+                  type,
+                  ext: 'webp',
+                  size: transformRes.data.size,
+                  sourceExt: ext,
+                  sourceFilename: assetFilename,
+                },
+              });
             });
-          });
-          break;
-        default:
-          dest += ext;
+            break;
+          default:
+            dest += ext;
 
-          fs.copy(sourcePath, dest).then((copyRes) => {
-            if (copyRes.error) {
-              log.error('blueprint asset copy failed', copyRes);
-              resolve(copyRes);
-              return;
-            }
+            fs.copy(sourcePath, dest).then((copyRes) => {
+              if (copyRes.error) {
+                log.error('blueprint asset copy failed', copyRes);
+                resolve(copyRes);
+                return;
+              }
 
-            const statsRes = fs.fileStatsSync(sourcePath);
+              const statsRes = fs.fileStatsSync(sourcePath);
 
-            if (statsRes.error) {
-              resolve(statsRes);
-              return;
-            }
+              if (statsRes.error) {
+                resolve(statsRes);
+                return;
+              }
 
-            resolve({
-              error: false,
-              data: {
-                title: name,
-                filename: `./assets/${name}.${ext}`,
-                type,
-                ext,
-                size: statsRes.data.stats.size,
-                sourceExt: ext,
-                sourceFilename: assetFilename,
-              },
+              resolve({
+                error: false,
+                data: {
+                  title: name,
+                  filename: `./assets/${name}.${ext}`,
+                  type,
+                  ext,
+                  size: statsRes.data.stats.size,
+                  sourceExt: ext,
+                  sourceFilename: assetFilename,
+                },
+              });
             });
-          });
-          break;
+            break;
+        }
+      } catch (e) {
+        log.error('Failed to copy asset during create: Unexpected error', e);
+        resolve({
+          error: true,
+          message: 'Failed to copy asset during create: Unexpected error',
+          data: {
+            trace: e,
+          },
+        });
+        return;
       }
     });
   };
@@ -177,19 +189,23 @@ export const create = (ev: rq.RequestEvent, blueprint?: string) => {
     const uniqueAssets = new Set<string>();
 
     const scanContent = (content) => {
-      for (const [key, item] of Object.entries(content)) {
-        const input = item as Templates.InputProps;
-  
-        switch (input.type) {
-          case 'Asset':
-            if (input.value) {
-              uniqueAssets.add(input.value);
-            }
-            break;
-          case 'Fieldset':
-            scanContent(input.content);
-            break;
+      try {
+        for (const [key, item] of Object.entries(content)) {
+          const input = item as Templates.InputProps;
+    
+          switch (input.type) {
+            case 'Asset':
+              if (input.value) {
+                uniqueAssets.add(input.value);
+              }
+              break;
+            case 'Fieldset':
+              scanContent(input.content);
+              break;
+          }
         }
+      } catch (e) {
+        log.error('Failed to scan blueprint for assets: unexpected error', e);
       }
     };
 
@@ -202,19 +218,23 @@ export const create = (ev: rq.RequestEvent, blueprint?: string) => {
     const assetsMap = new Map();
 
     const updateContent = (content) => {
-      for (const [key, item] of Object.entries(content)) {
-        const input = item as Templates.InputProps;
-  
-        switch (input.type) {
-          case 'Asset':
-            if (input.value) {
-              input.value = assetsMap.get(input.value);
-            }
-            break;
-          case 'Fieldset':
-            updateContent(input.content);
-            break;
+      try {
+        for (const [key, item] of Object.entries(content)) {
+          const input = item as Templates.InputProps;
+    
+          switch (input.type) {
+            case 'Asset':
+              if (input.value) {
+                input.value = assetsMap.get(input.value);
+              }
+              break;
+            case 'Fieldset':
+              updateContent(input.content);
+              break;
+          }
         }
+      } catch (e) {
+        log.error('Failed to update content during create: unexpected error', e);
       }
     };
 
@@ -244,7 +264,7 @@ export const create = (ev: rq.RequestEvent, blueprint?: string) => {
       project.slides?.forEach((slide) => {
         updateContent(slide.template.content);
       });
-
+      
       resolve({
         error: false,
         data: {
