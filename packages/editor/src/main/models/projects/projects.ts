@@ -124,7 +124,7 @@ export const create = (ev: rq.RequestEvent, blueprint?: string) => {
               error: false,
               data: {
                 title: name,
-                filename: `${name}.webp`,
+                filename: `./assets/${name}.webp`,
                 type,
                 ext: 'webp',
                 size: transformRes.data.size,
@@ -155,7 +155,7 @@ export const create = (ev: rq.RequestEvent, blueprint?: string) => {
               error: false,
               data: {
                 title: name,
-                filename: `${name}.${ext}`,
+                filename: `./assets/${name}.${ext}`,
                 type,
                 ext,
                 size: statsRes.data.stats.size,
