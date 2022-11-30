@@ -39,9 +39,9 @@ const Column = ({ field, className, heading, body, isEdit, focusElement }) => {
       <h2 className={headingClasses} onMouseDown={handleFocusHeading}>
         {heading.value}
       </h2>
-      <p className={bodyClasses} onMouseDown={handleFocusBody}>
+      <div className={bodyClasses} onMouseDown={handleFocusBody}>
         <Markdown>{body.value}</Markdown>
-      </p>
+      </div>
     </div>
   );
 };
