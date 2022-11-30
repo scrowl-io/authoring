@@ -8,11 +8,9 @@ import { NavGlossaryItem } from './nav-glossary-item';
 export const NavBar = ({ pageId, project }) => {
   const [tabKey, setTabKey] = useState('outline');
 
-  console.log(project);
-
   return (
     <>
-      <Navbar key="1" bg="dark" expand={false} className="mb-3">
+      <Navbar key="1" expand={false} className="mb-3">
         <Container fluid>
           <Navbar.Toggle
             className={css.navButton}
