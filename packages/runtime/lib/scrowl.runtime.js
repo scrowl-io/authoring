@@ -149,6 +149,12 @@ const $b3d1e3300d945f09$export$6ed414b8d8bead88 = {
             message: "SCORM service failed to initialize",
             data: $b3d1e3300d945f09$export$6ed414b8d8bead88.getError()
         };
+        const oldMin = $b3d1e3300d945f09$export$6ed414b8d8bead88.getValue("cmi.student_data_mastery_score");
+        const newMin = $b3d1e3300d945f09$export$6ed414b8d8bead88.getValue("cmi.scaled_passing_score");
+        console.log("old API SCORE:");
+        console.log(oldMin);
+        console.log(newMin);
+        console.log("new API score:");
         return {
             error: false
         };
@@ -178,6 +184,9 @@ const $b3d1e3300d945f09$export$6ed414b8d8bead88 = {
             data: $b3d1e3300d945f09$export$6ed414b8d8bead88.getError()
         };
         $b3d1e3300d945f09$export$6ed414b8d8bead88.finished = true;
+        $b3d1e3300d945f09$export$6ed414b8d8bead88.save();
+        console.log("terminating");
+        res.API.Commit();
         return {
             error: false
         };
@@ -199,6 +208,8 @@ const $b3d1e3300d945f09$export$6ed414b8d8bead88 = {
         const res = $b3d1e3300d945f09$export$6ed414b8d8bead88.isAvailable();
         if (res.error) return res;
         const getRes = res.API.LMSGetValue(elem);
+        console.log("GET RES");
+        console.log(getRes);
         if (getRes === $b3d1e3300d945f09$export$6ed414b8d8bead88.STATUSES.update.false) return {
             error: true,
             message: `SCORM service failed to get ${elem}`,
@@ -241,6 +252,20 @@ const $b3d1e3300d945f09$export$6ed414b8d8bead88 = {
         const exitRes = $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.core.exit", $b3d1e3300d945f09$export$6ed414b8d8bead88.STATUSES.exit.save);
         if (exitRes.error) return exitRes;
         return $b3d1e3300d945f09$export$6ed414b8d8bead88.stop();
+    },
+    finish: ()=>{
+        console.log("DONE");
+        $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.core.score.raw", 87.0);
+        const scoreVal = $b3d1e3300d945f09$export$6ed414b8d8bead88.getValue("cmi.core.score.raw");
+        console.log("Score val:");
+        console.log(scoreVal);
+        $b3d1e3300d945f09$export$6ed414b8d8bead88.updateStatus("success");
+        $b3d1e3300d945f09$export$6ed414b8d8bead88.save();
+        // service._time.end = new Date();
+        console.log("SERVICE:");
+        console.log($b3d1e3300d945f09$export$6ed414b8d8bead88);
+        $b3d1e3300d945f09$export$6ed414b8d8bead88.exit();
+        console.log($b3d1e3300d945f09$export$6ed414b8d8bead88);
     }
 };
 var $b3d1e3300d945f09$export$2e2bcd8739ae039 = {

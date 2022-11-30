@@ -18,7 +18,7 @@ export type SCORM_API = {
   LMSGetLastError: () => CMIErrorCode;
   LMSGetValue: (element: CMIELement) => string;
   LMSInitialize: (msg?: string) => SCORM_STATUS_UPDATE;
-  LMSSetValue: (element: CMIELement, value: string) => string;
+  LMSSetValue: (element: CMIELement, value: string | number) => string;
   SetValue: (element: CMIELement, value: string) => string;
   Terminate: (msg?: string) => SCORM_STATUS_UPDATE;
   apolloClient: {
@@ -44,7 +44,7 @@ export type SCORM_API = {
 
 export type GENERIC_DATA = {
   [key: string]: any;
-}
+};
 
 export interface RUNTIME_SERVICE_API_RESULT_READY {
   error: false;
@@ -56,13 +56,15 @@ export interface RUNTIME_SERVICE_API_RESULT_ERROR {
   message: string;
 }
 
-export type RUNTIME_SERVICE_API_RESULT = RUNTIME_SERVICE_API_RESULT_READY | RUNTIME_SERVICE_API_RESULT_ERROR;
+export type RUNTIME_SERVICE_API_RESULT =
+  | RUNTIME_SERVICE_API_RESULT_READY
+  | RUNTIME_SERVICE_API_RESULT_ERROR;
 
 export type RUNTIME_SERVICE_RESULT = {
   error: boolean;
   message?: string;
   data?: string | GENERIC_DATA;
-}
+};
 
 export type RUNTIME_SERVICE = {
   API?: SCORM_API;
@@ -72,12 +74,12 @@ export type RUNTIME_SERVICE = {
     start: undefined | Date;
     end: undefined | Date;
     convert: (total: number) => string;
-  },
+  };
   STATUSES: {
     update: {
       true: 'true';
       false: 'false';
-    },
+    };
     lesson: {
       success: 'passed';
       failed: 'failed';
@@ -85,21 +87,22 @@ export type RUNTIME_SERVICE = {
       active: 'incomplete';
       viewed: 'browsed';
       unseen: 'not attempted';
-    },
+    };
     exit: {
       timeout: 'time-out';
       save: 'suspend';
       logout: 'logout';
-    }
-  },
+    };
+  };
   isAvailable: () => RUNTIME_SERVICE_API_RESULT;
   getError: (printError?: boolean) => RUNTIME_SERVICE_RESULT;
   _findAPI: (source: Window) => RUNTIME_SERVICE_API_RESULT;
   start: () => RUNTIME_SERVICE_RESULT;
   save: () => RUNTIME_SERVICE_RESULT;
   stop: () => RUNTIME_SERVICE_RESULT;
-  setValue: (elem: CMIELement, val: string) => RUNTIME_SERVICE_RESULT;
+  setValue: (elem: CMIELement, val: string | number) => RUNTIME_SERVICE_RESULT;
   getValue: (elem: CMIELement) => RUNTIME_SERVICE_RESULT;
   updateStatus: (status: SCORM_STATUS_LESSON) => RUNTIME_SERVICE_RESULT;
+  finish: () => void;
   exit: () => RUNTIME_SERVICE_RESULT;
 };

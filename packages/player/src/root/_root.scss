@@ -10,10 +10,40 @@ body {
   height: 100%;
 }
 
+#scrowl-player {
+  max-height: 100%;
+  display: flex;
+  overflow: hidden;
+}
+
+.lesson-wrapper {
+  .navbar {
+    position: fixed;
+    width: 100%;
+    z-index: 10;
+  }
+}
+
+.navbar + .lesson {
+  padding-top: 56px;
+}
+
 .lesson {
   overflow-y: auto;
   overflow-x: hidden;
   width: 100%;
   height: 100%;
   margin: auto;
+  position: relative;
+  z-index: 0;
+
+  .next-lesson-container {
+    display: flex;
+    justify-content: center;
+    height: 5em;
+
+    button {
+      height: 3em;
+    }
+  }
 }

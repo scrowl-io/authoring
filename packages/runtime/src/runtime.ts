@@ -189,6 +189,14 @@ export const service: RUNTIME_SERVICE = {
       };
     }
 
+    const oldMin = service.getValue('cmi.student_data_mastery_score');
+    const newMin = service.getValue('cmi.scaled_passing_score');
+
+    console.log('old API SCORE:');
+    console.log(oldMin);
+    console.log(newMin);
+    console.log('new API score:');
+
     return {
       error: false,
     };
@@ -238,6 +246,9 @@ export const service: RUNTIME_SERVICE = {
     }
 
     service.finished = true;
+    service.save();
+    console.log('terminating');
+    res.API.Commit();
     return {
       error: false,
     };
@@ -271,6 +282,9 @@ export const service: RUNTIME_SERVICE = {
     }
 
     const getRes = res.API.LMSGetValue(elem);
+
+    console.log('GET RES');
+    console.log(getRes);
 
     if (getRes === service.STATUSES.update.false) {
       return {
@@ -350,6 +364,25 @@ export const service: RUNTIME_SERVICE = {
     }
 
     return service.stop();
+  },
+  finish: () => {
+    console.log('DONE');
+
+    service.setValue('cmi.core.score.raw', 87.0);
+    const scoreVal = service.getValue('cmi.core.score.raw');
+
+    console.log('Score val:');
+    console.log(scoreVal);
+
+    service.updateStatus('success');
+
+    service.save();
+
+    // service._time.end = new Date();
+    console.log('SERVICE:');
+    console.log(service);
+    service.exit();
+    console.log(service);
   },
 };
 
