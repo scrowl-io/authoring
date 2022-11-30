@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Navbar, Offcanvas, Container, Tabs, Tab } from 'react-bootstrap';
+import { Icon } from '@owlui/lib';
 import * as css from './_navbar.scss';
 import { NavModule } from './nav-module';
 import { NavResource } from './nav-resource';
@@ -33,7 +34,7 @@ export const NavBar = ({ pageId, project }) => {
                     <h3>{project.name}</h3>
                     <h4 className={css.outlineSubtitle}>Subtitle Here</h4>
                     <span className={css.outlineDuration}>
-                      <span className="owlui-icons-outlined">access_time</span>
+                      <Icon icon="access_time" display="outlined" />
                       <h5>60 min</h5>
                     </span>
                   </div>
