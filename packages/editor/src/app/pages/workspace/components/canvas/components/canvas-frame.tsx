@@ -26,10 +26,6 @@ export const CanvasFrame = () => {
   const [slideOpts, setSlideOpts] = useState<SlideCommons>({
     aspect: '16:9',
   });
-  const frameStyles = {
-    width: '100%',
-    height: '100%',
-  };
 
   const updateFrameUrl = (res: rq.ApiResult) => {
     if (res.error) {
@@ -148,7 +144,6 @@ export const CanvasFrame = () => {
           >
             <iframe
               id="template-iframe"
-              style={frameStyles}
               ref={frameRef}
               onLoad={connect}
               src={frameUrl}
