@@ -11,6 +11,9 @@ import * as css from '../../root/_root.scss';
 import { Error } from '../../components';
 import { NavBar } from '../../components/navbar';
 
+// @ts-ignore
+let slideProgress = 0;
+
 const Page = ({ slides, templates, ...props }: PageProps) => {
   let controller;
 
@@ -48,6 +51,23 @@ const Page = ({ slides, templates, ...props }: PageProps) => {
       })}
     </div>
   );
+};
+
+const updateCourseProgress = (project) => {
+  console.log('inside pages:');
+  slideProgress++;
+  console.log(project);
+  console.log(slideProgress);
+  let numberOfLessons = 0;
+  project.outlineConfig.forEach((mod) => {
+    mod.lessons.forEach((_les) => {
+      numberOfLessons++;
+    });
+  });
+  const percentageCompleted = slideProgress / numberOfLessons;
+  console.log(percentageCompleted);
+  const runtime = window['Scrowl'].runtime;
+  runtime?.updateProgress(percentageCompleted);
 };
 
 const finishCourse = () => {
@@ -97,7 +117,13 @@ export const create = (project, templateList: PlayerTemplateList) => {
               <div className={css.nextLessonContainer}>
                 {lIdx < module.lessons.length - 1 ||
                 mIdx < project.outlineConfig.length - 1 ? (
-                  <Link to={nextLessonUrl}>{nextLessonText}</Link>
+                  <Link
+                    to={nextLessonUrl}
+                    // @ts-ignore
+                    onClick={() => updateCourseProgress(project)}
+                  >
+                    {nextLessonText}
+                  </Link>
                 ) : (
                   <button onClick={finishCourse}>Finish Course</button>
                 )}

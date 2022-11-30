@@ -49,6 +49,8 @@ const $defce2f29876acb7$export$6ed414b8d8bead88 = {
             return timespan;
         }
     },
+    courseProgress: 0,
+    lessonLocation: "",
     STATUSES: {
         update: {
             true: "true",
@@ -133,12 +135,45 @@ const $defce2f29876acb7$export$6ed414b8d8bead88 = {
             message: "SCORM service failed to initialize",
             data: $defce2f29876acb7$export$6ed414b8d8bead88.getError()
         };
-        const oldMin = $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.student_data_mastery_score");
-        const newMin = $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.scaled_passing_score");
-        console.log("old API SCORE:");
-        console.log(oldMin);
-        console.log(newMin);
-        console.log("new API score:");
+        console.log("cmi version:");
+        const version = $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi._version");
+        console.log(version);
+        console.log("lesson Status (1.2):");
+        const lessonStatus = $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.core.lesson_status");
+        console.log(lessonStatus);
+        console.log("completion Status (2004):");
+        const completionStatus = $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.completion_status");
+        console.log(completionStatus);
+        console.log("success Status (2004):");
+        const successStatus = $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.success_status");
+        console.log(successStatus);
+        console.log("lesson location:");
+        const lessonLocation = $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.core.lesson_location");
+        console.log(lessonLocation);
+        console.log("session time (1.2):");
+        const sessionTime = $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.core.session_time");
+        console.log(sessionTime);
+        console.log("total time (1.2):");
+        const totalTime = $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.core.totalTime");
+        console.log(totalTime);
+        console.log("session time (2004):");
+        const sessionTime2004 = $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.session_time");
+        console.log(sessionTime2004);
+        console.log("score raw (1.2):");
+        const score_raw = $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.core.score_raw");
+        console.log(score_raw);
+        console.log("score to pass (2004):");
+        const score_pass_1 = $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.scaled_passing_score");
+        console.log(score_pass_1);
+        console.log("score mastery (1.2):");
+        const score_mastery = $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.student_data.mastery_score");
+        console.log(score_mastery);
+        console.log("course progress (2004):");
+        const progress_measure = $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.progress_measure");
+        console.log(progress_measure);
+        console.log("score (2004):");
+        const scoreVal2004 = $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.score.raw");
+        console.log(scoreVal2004);
         return {
             error: false
         };
@@ -157,6 +192,7 @@ const $defce2f29876acb7$export$6ed414b8d8bead88 = {
         };
     },
     stop: ()=>{
+        console.log("STOPPING");
         const res = $defce2f29876acb7$export$6ed414b8d8bead88.isAvailable();
         if (res.error) return res;
         const saveRes = $defce2f29876acb7$export$6ed414b8d8bead88.save();
@@ -203,6 +239,14 @@ const $defce2f29876acb7$export$6ed414b8d8bead88 = {
             error: false
         };
     },
+    getProgress: ()=>{
+        const res = $defce2f29876acb7$export$6ed414b8d8bead88.isAvailable();
+        if (res.error) return res;
+        const getRes = res.API.LMSGetValue("cmi.progress_measure");
+        const numberRes = parseFloat(getRes);
+        if (numberRes > 0) return numberRes;
+        else return 0;
+    },
     updateStatus: (status)=>{
         const res = $defce2f29876acb7$export$6ed414b8d8bead88.isAvailable();
         if (res.error) return res;
@@ -217,12 +261,15 @@ const $defce2f29876acb7$export$6ed414b8d8bead88 = {
         }
         const lessonStatus = $defce2f29876acb7$export$6ed414b8d8bead88.STATUSES.lesson[status];
         const setRes = $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.core.lesson_status", lessonStatus);
+        console.log("SET RES:");
+        console.log(setRes);
         if (setRes.error) return setRes;
         return {
             error: false
         };
     },
     exit: ()=>{
+        console.log("exitinggg");
         const res = $defce2f29876acb7$export$6ed414b8d8bead88.isAvailable();
         if (res.error) return res;
         $defce2f29876acb7$export$6ed414b8d8bead88._time.end = new Date();
@@ -232,18 +279,34 @@ const $defce2f29876acb7$export$6ed414b8d8bead88 = {
         };
         const totalTime = $defce2f29876acb7$export$6ed414b8d8bead88._time.end.getTime() - $defce2f29876acb7$export$6ed414b8d8bead88._time.start.getTime();
         const endRes = $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.core.session_time", $defce2f29876acb7$export$6ed414b8d8bead88._time.convert(totalTime));
+        $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.core.lesson_location", $defce2f29876acb7$export$6ed414b8d8bead88.getProgress().toString());
         if (endRes.error) return endRes;
         const exitRes = $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.core.exit", $defce2f29876acb7$export$6ed414b8d8bead88.STATUSES.exit.save);
         if (exitRes.error) return exitRes;
         return $defce2f29876acb7$export$6ed414b8d8bead88.stop();
     },
+    updateProgress: (percentageCompleted)=>{
+        console.log("new percentage");
+        console.log(percentageCompleted);
+        console.log("old percentage");
+        console.log($defce2f29876acb7$export$6ed414b8d8bead88.getProgress());
+        const oldRes = $defce2f29876acb7$export$6ed414b8d8bead88.getProgress();
+        if (percentageCompleted > oldRes) {
+            console.log("higher?");
+            // service.courseProgress = percentageCompleted;
+            $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.progress_measure", percentageCompleted);
+        }
+        console.log(percentageCompleted);
+        $defce2f29876acb7$export$6ed414b8d8bead88.save();
+    },
     finish: ()=>{
         console.log("DONE");
-        $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.core.score.raw", 87.0);
-        const scoreVal = $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.core.score.raw");
-        console.log("Score val:");
-        console.log(scoreVal);
+        // service.setValue('cmi.core.score.raw', 87.0);
+        $defce2f29876acb7$export$6ed414b8d8bead88.courseProgress = 1;
+        $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.progress_measure", $defce2f29876acb7$export$6ed414b8d8bead88.courseProgress);
+        $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.score.raw", 90.0);
         $defce2f29876acb7$export$6ed414b8d8bead88.updateStatus("success");
+        $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.success_status", "passed");
         $defce2f29876acb7$export$6ed414b8d8bead88.save();
         // service._time.end = new Date();
         console.log("SERVICE:");
