@@ -8,15 +8,15 @@ export const LessonIntro = ({ id, schema, ...props }: LessonIntroProps) => {
   let classes = 'template-lesson-intro';
   const editMode = props.editMode ? true : false;
   const focusElement = editMode ? props.focusElement : null;
-  const contentId = `${id}-lesson-intro`;
+  const contentId = `${id}-template-lesson-intro-intro`;
   const title = schema.content.title.value;
-  let titleClasses = 'lesson-title can-focus';
+  let titleClasses = 'template-lesson-intro-title can-focus';
   const subtitle = schema.content.subtitle.value;
-  let subtitleClasses = 'lesson-subtitle can-focus';
+  let subtitleClasses = 'template-lesson-intro-subtitle can-focus';
   const time = schema.content.time.value;
-  let timeClasses = 'lesson-time can-focus';
+  let timeClasses = 'template-lesson-intro-time can-focus';
   const startLabel = schema.content.startLabel.value;
-  let startLabelClasses = 'lesson-start-button can-focus';
+  let startLabelClasses = 'template-lesson-intro-start-button can-focus';
   const bg = schema.content.bgImage.content.bg.value;
   const bgUrl = schema.content.bgImage.content.url.value;
   const bgLabel = schema.content.bgImage.content.alt.value || '';
@@ -97,8 +97,13 @@ export const LessonIntro = ({ id, schema, ...props }: LessonIntroProps) => {
   };
 
   return (
-    <Scrowl.core.Template className={classes} notScene={true} {...props}>
-      <div id={contentId} className="inner-content">
+    <Scrowl.core.Template
+      id={`slide-${contentId}`}
+      className={classes}
+      notScene={true}
+      {...props}
+    >
+      <div id={contentId} className="content">
         <header>
           {bg && <div className="overlay" />}
           <h1 className={titleClasses} onMouseDown={handleFocusTitle}>
@@ -110,7 +115,7 @@ export const LessonIntro = ({ id, schema, ...props }: LessonIntroProps) => {
           {time && time.length > 0 && (
             <span className={timeClasses} onMouseDown={handleFocusTime}>
               <Icon icon="schedule" display="outlined" />
-              <span className="lesson-time-value">{time}</span>
+              <span className="template-lesson-intro-time-value">{time}</span>
             </span>
           )}
           <button

@@ -29,8 +29,8 @@
   "exports": {
     ".": {
       "require": "./lib/scrowl.template-core.js",
-      "default": "./lib/scrowl.template-core.js",
-      "import": "./lib/scrowl.template-core.module.js"
+      "import": "./lib/scrowl.template-core.module.js",
+      "default": "./lib/scrowl.template-core.js"
     },
     "./src": "./src/index.ts",
     "./web": "./dist/scrowl.template-core.js"

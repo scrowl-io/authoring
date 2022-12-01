@@ -25,7 +25,6 @@ export const BlockText = ({ id, schema, ...props }: BlockTextProps) => {
   const [progressBarStyles, setProgressBarStyles] = useState({
     width: showProgressBar ? '0%' : '100%',
   });
-  const pins = [contentId];
 
   if (showProgressBar) {
     classes += ' show-progress';
@@ -82,13 +81,13 @@ export const BlockText = ({ id, schema, ...props }: BlockTextProps) => {
 
   return (
     <Scrowl.core.Template
+      id={`slide-${contentId}`}
       className={classes}
       onProgress={handleSlideProgress}
       onEnd={handleSlideEnd}
-      pins={pins}
       {...props}
     >
-      <div id={contentId} className="inner-content">
+      <div id={contentId}>
         <div className="row row-cols-2">
           {bg && <div className="overlay" />}
 

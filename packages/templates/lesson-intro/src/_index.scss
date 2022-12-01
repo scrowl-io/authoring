@@ -3,66 +3,60 @@
   position: relative;
   color: var(--text-dark-a11y-color);
 
-  .inner-content {
-    top: 0;
-    width: 100%;
+  header {
+    position: relative;
+    height: 33vh;
+    padding: 10vh 1vh 6vh;
+    margin-top: 4vh;
     z-index: 10;
-    height: 100vh;
-    overflow: hidden;
+    align-items: center;
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+  }
 
-    header {
-      position: relative;
-      height: 33vh;
-      padding: 10vh 1vh 6vh;
-      margin-top: 4vh;
-      z-index: 10;
-      align-items: center;
-      display: flex;
-      flex-flow: column;
-      justify-content: center;
+  .content {
+    width: 100%;
+  }
+
+  &-title {
+    font-size: 30px;
+    margin: 0;
+  }
+
+  &-subtitle {
+    font-size: 1.25rem;
+    font-weight: 400;
+    padding-top: 1rem;
+    padding-bottom: 0.5rem;
+  }
+
+  &-time {
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+
+    &-value {
+      margin-left: 0.5rem;
     }
   }
 
-  .lesson {
-    &-title {
-      font-size: 30px;
-      margin: 0;
+  &-start-button {
+    user-select: none;
+    cursor: pointer;
+    background: unset;
+    margin-top: 5vh;
+    border: none;
+    color: var(--link-color);
+    font-weight: 400;
+    font-size: min(5vw, 1.25rem);
+
+    &.hide {
+      opacity: 0;
     }
 
-    &-subtitle {
-      font-size: 1.25rem;
-      font-weight: 400;
-      padding-top: 1rem;
-      padding-bottom: 0.5rem;
-    }
-
-    &-time {
-      margin-top: 1rem;
-      display: flex;
-      align-items: center;
-
-      &-value {
-        margin-left: 0.5rem;
-      }
-    }
-
-    &-start-button {
-      user-select: none;
-      cursor: pointer;
-      background: unset;
-      margin-top: 5vh;
-      border: none;
-      color: var(--link-color);
-      font-weight: 400;
+    .link {
       font-size: min(5vw, 1.25rem);
-
-      &.hide {
-        opacity: 0;
-      }
-
-      .link {
-        font-size: min(5vw, 1.25rem);
-      }
     }
   }
 

@@ -2,18 +2,15 @@ html,
 body {
   margin: 0;
   padding: 0;
-  height: 100%;
+  height: initial;
+  overflow: visible;
+  position: relative;
 }
 
 #scrowl-player,
 .lesson-wrapper {
-  height: 100%;
-}
-
-#scrowl-player {
-  max-height: 100%;
-  display: flex;
-  overflow: hidden;
+  position: relative;
+  z-index: 1;
 }
 
 .lesson-wrapper {
@@ -21,6 +18,10 @@ body {
     position: fixed;
     width: 100%;
     z-index: 10;
+
+    &-light {
+      background-color: var(--bs-gray-100);
+    }
   }
 }
 
@@ -29,11 +30,8 @@ body {
 }
 
 .lesson {
-  overflow-y: auto;
   overflow-x: hidden;
   width: 100%;
-  height: 100%;
-  margin: auto;
   position: relative;
   z-index: 0;
 
