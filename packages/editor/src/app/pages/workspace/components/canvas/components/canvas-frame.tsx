@@ -137,19 +137,49 @@ export const CanvasFrame = () => {
   return (
     <>
       {hasSlide && (
-        <div className={css.canvasBody}>
-          <Slide
-            options={slideOpts}
-            className="aspect-ratio aspect-ratio--16x9"
+        <div
+          style={{
+            display: 'flex',
+            width: 'var(--workspace-canvas-width)',
+            height: 'var(--workspace-canvas-height)',
+            margin: '0 auto',
+            flexDirection: 'column',
+            boxSizing: 'border-box',
+          }}
+        >
+          <div
+            style={{
+              flexGrow: 1,
+              position: 'relative',
+              boxSizing: 'border-box',
+            }}
           >
-            <iframe
-              id="template-iframe"
-              ref={frameRef}
-              onLoad={connect}
-              src={frameUrl}
-              title="Scrowl Editor Canvas"
-            ></iframe>
-          </Slide>
+            <div
+              style={{
+                height: '100%',
+                width: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                boxSizing: 'border-box',
+              }}
+            >
+              <iframe
+                style={{
+                  border: 0,
+                  width: '100%',
+                  height: '100%',
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                }}
+                id="template-iframe"
+                ref={frameRef}
+                onLoad={connect}
+                src={frameUrl}
+                title="Scrowl Editor Canvas"
+              ></iframe>
+            </div>
+          </div>
         </div>
       )}
     </>
