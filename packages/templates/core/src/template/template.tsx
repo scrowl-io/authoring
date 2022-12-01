@@ -6,27 +6,30 @@ import { TemplateProps } from './template.types';
 export const Template = ({
   id,
   className,
-  editMode,
   controller,
+  onEnter,
   onStart,
   onProgress,
   onEnd,
+  onLeave,
   children,
   notScene,
   ...props
 }: TemplateProps) => {
   let classes = `${css.slide}`;
+  const editMode = props.editMode ? true : false;
   const isNotScene = notScene ? notScene : false;
   const [duration, setDuration] = useState(
     (props.duration || window.innerHeight) + window.innerHeight
   );
   const isReady = useRef(false);
   const slideRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLDivElement>(null);
+  const sceneRef = useRef<HTMLDivElement>(null);
   const [windowSize, setWindowSize] = useState({
     height: window.innerHeight,
     width: window.innerWidth,
   });
-  const pins = props.pins ? props.pins : [''];
 
   if (className) {
     classes += ` ${className}`;
@@ -53,6 +56,7 @@ export const Template = ({
   });
 
   useEffect(() => {
+    let sceneTrigger: Scene;
     let scene: Scene;
 
     const createScene = () => {
@@ -64,87 +68,76 @@ export const Template = ({
         return;
       }
 
-      if (!slideRef.current) {
+      if (!slideRef.current || !triggerRef.current || !sceneRef.current) {
         return;
       }
 
       isReady.current = true;
 
-      const scene = new magic.Scene({
-        triggerElement: slideRef.current,
+      scene = new magic.Scene({
+        triggerElement: triggerRef.current,
         duration,
       });
 
-      const startingRect = slideRef.current.getBoundingClientRect();
-      const sceneStart = startingRect.y;
-
-      const handleSceneProgress = (ev) => {
-        if (!slideRef.current) {
+      const reCalcStats = () => {
+        if (!slideRef.current || !triggerRef.current || !sceneRef.current) {
           return;
         }
 
-        const slideRect = slideRef.current.children[0].getBoundingClientRect();
+        const sceneController = sceneRef.current.parentElement;
+
+        if (!sceneController) {
+          return;
+        }
+
+        const sceneRect = sceneController.getBoundingClientRect();
+        const startingRect = slideRef.current.getBoundingClientRect();
+        const sceneStart = slideRef.current.offsetTop;
         let sceneTime = window.scrollY;
-        let sceneEnd = sceneStart + slideRect.height;
-        let docEnd = document.body.scrollHeight;
-        const endDiff = document.body.scrollHeight - sceneEnd;
-
-        if (endDiff < 0) {
-          // height may change after scrolling past the first slide
-          // this change has side effects on the startingRect
-          // so we need to account for the possible difference
-          docEnd -= endDiff;
-        }
-
-        if (sceneStart === 0 && slideRect.height !== docEnd) {
-          // if its the first slide but not the last one
-          // we need to take account of the scroll start position
-          sceneEnd = slideRect.height - window.innerWidth / 2;
-        }
-
-        if (slideRect.height < window.innerHeight) {
-          // if the slide isn't scrollable, the progress is 100%
-          sceneTime = slideRect.height;
-          sceneEnd = slideRect.height;
-        }
-
-        if (sceneEnd === docEnd) {
-          // last slide
-          if (sceneStart !== 0) {
-            // not first slide
-            sceneTime =
-              (window.scrollY + window.innerHeight / 2 - sceneStart) * 2;
-            sceneEnd = slideRect.height;
-
-            if (slideRect.y < 0) {
-              sceneTime += slideRect.y;
-            }
-          } else {
-            sceneEnd = document.body.scrollHeight - window.innerHeight;
-          }
-        } else if (sceneStart !== 0) {
-          // not the first or last slide
-          // we need to take account of the "start" being in the middle of the screen
-          sceneTime = window.scrollY - sceneStart + window.innerHeight / 2;
-          sceneEnd = slideRect.height;
-        }
-
-        let sceneProgress = Math.round(
-          parseFloat(((sceneTime / sceneEnd) * 100).toFixed(2))
+        let sceneEnd =
+          sceneStart -
+          window.innerHeight / 2 +
+          sceneRect.height -
+          window.innerHeight;
+        const sceneProgress = parseFloat(
+          (((sceneTime - sceneStart) / (sceneEnd - sceneStart)) * 100).toFixed(
+            2
+          )
         );
 
-        sceneProgress =
-          sceneProgress > 100 ? 100 : sceneProgress < 0 ? 0 : sceneProgress;
-
-        ev.progress = sceneProgress;
-        ev.scene = {
-          rect: slideRect,
+        return {
+          rect: sceneRect,
           startingRect,
+          currentTarget: sceneController,
           start: sceneStart,
           time: sceneTime,
           end: sceneEnd,
-          progress: sceneProgress / 100,
+          progress: sceneProgress,
         };
+      };
+
+      const handleSceneProgress = (ev) => {
+        const stats = reCalcStats();
+
+        if (!stats) {
+          return;
+        }
+
+        if (stats.rect.y >= 0) {
+          ev.progress = 0;
+        } else {
+          ev.progress = stats.progress;
+        }
+
+        ev.scene = stats;
+
+        if (sceneRef.current) {
+          if (stats.rect.y <= 0) {
+            sceneRef.current.style.top = '0px';
+          } else {
+            sceneRef.current.style.top = `${stats.rect.y}px`;
+          }
+        }
 
         if (onProgress) {
           onProgress(ev);
@@ -152,49 +145,130 @@ export const Template = ({
       };
 
       const handleSceneStart = (ev) => {
+        const stats = reCalcStats();
+
+        if (!stats) {
+          return;
+        }
+
+        ev.progress = 0;
+        stats.progress = 0;
+        ev.scene = stats;
+
+        stats.currentTarget.style.marginBottom = `0px`;
+
         if (onStart) {
           onStart(ev);
         }
       };
 
       const handleSceneEnd = (ev) => {
+        const stats = reCalcStats();
+
+        if (!stats) {
+          return;
+        }
+
+        ev.progress = 100;
+        stats.progress = 100;
+        ev.scene = stats;
+
         if (onEnd) {
           onEnd(ev);
         }
       };
 
-      scene
-        .on('start', handleSceneStart)
-        .on('progress', handleSceneProgress)
-        .on('end', handleSceneEnd);
+      const handleSceneEnter = (ev) => {
+        const stats = reCalcStats();
 
-      pins.forEach((pin) => {
-        const elem = document.getElementById(pin);
-
-        if (!elem) {
+        if (!stats) {
           return;
         }
 
-        scene.setPin(elem);
-      });
+        if (!sceneRef.current) {
+          return;
+        }
 
+        switch (ev.scrollDirection) {
+          case 'REVERSE':
+            ev.progress = 100;
+            stats.progress = 1;
+            break;
+          case 'FORWARD':
+            ev.progress = 0;
+            stats.progress = 0;
+            break;
+        }
+
+        ev.scene = stats;
+
+        if (onEnter) {
+          onEnter(ev);
+        }
+      };
+
+      const handleSceneLeave = (ev) => {
+        const stats = reCalcStats();
+
+        if (!stats) {
+          return;
+        }
+
+        if (!sceneRef.current) {
+          return;
+        }
+
+        const reposition = (window.innerHeight / (editMode ? 1 : 2)) * -1;
+
+        switch (ev.scrollDirection) {
+          case 'REVERSE':
+            ev.progress = 0;
+            stats.progress = 0;
+            sceneRef.current.style.top = '0px';
+            break;
+          case 'FORWARD':
+            ev.progress = 100;
+            stats.progress = 1;
+            sceneRef.current.style.top = `${reposition}px`;
+            stats.currentTarget.style.marginBottom = `${reposition}px`;
+            break;
+        }
+
+        ev.scene = stats;
+
+        if (onLeave) {
+          onLeave(ev);
+        }
+      };
+
+      scene
+        .on('enter', handleSceneEnter)
+        .on('start', handleSceneStart)
+        .on('progress', handleSceneProgress)
+        .on('end', handleSceneEnd)
+        .on('leave', handleSceneLeave);
+
+      scene.setPin(sceneRef.current);
       scene.addTo(controller);
     };
 
     createScene();
 
     return () => {
-      if (scene) {
-        scene.destroy(true);
-        controller.removeScene(scene);
+      if (sceneTrigger) {
+        sceneTrigger.destroy(true);
+        controller.removeScene(sceneTrigger);
         isReady.current = false;
       }
     };
-  }, [windowSize, duration, isReady.current, slideRef.current]);
+  }, [windowSize, duration, isReady.current, triggerRef.current]);
 
   return (
     <div ref={slideRef} className={classes} {...props}>
-      {children}
+      <div ref={triggerRef} className="scene-trigger"></div>
+      <div ref={sceneRef} className="inner-content">
+        {children}
+      </div>
     </div>
   );
 };

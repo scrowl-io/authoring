@@ -97,7 +97,12 @@ export const LessonIntro = ({ id, schema, ...props }: LessonIntroProps) => {
   };
 
   return (
-    <Scrowl.core.Template className={classes} notScene={true} {...props}>
+    <Scrowl.core.Template
+      id={`slide-${contentId}`}
+      className={classes}
+      notScene={true}
+      {...props}
+    >
       <div id={contentId} className="inner-content">
         <header>
           {bg && <div className="overlay" />}

@@ -3,24 +3,16 @@
   position: relative;
   color: var(--text-dark-a11y-color);
 
-  .inner-content {
-    top: 0;
-    width: 100%;
+  header {
+    position: relative;
+    height: 33vh;
+    padding: 10vh 1vh 6vh;
+    margin-top: 4vh;
     z-index: 10;
-    height: 100vh;
-    overflow: hidden;
-
-    header {
-      position: relative;
-      height: 33vh;
-      padding: 10vh 1vh 6vh;
-      margin-top: 4vh;
-      z-index: 10;
-      align-items: center;
-      display: flex;
-      flex-flow: column;
-      justify-content: center;
-    }
+    align-items: center;
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
   }
 
   .lesson {

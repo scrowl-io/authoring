@@ -29,7 +29,6 @@ export const SimpleText = ({ id, schema, ...props }: SimpleTextProps) => {
   };
   const alignment = schema.content.options.content.alignment.value;
   const alignmentCss = alignment;
-  const pins = [contentId];
 
   const handleFocusText = () => {
     if (editMode) {
@@ -50,16 +49,8 @@ export const SimpleText = ({ id, schema, ...props }: SimpleTextProps) => {
   };
 
   const handleSlideProgress = (ev) => {
-    if (bgRef.current) {
-      if (ev.scene.rect.y < 0) {
-        const top = ev.scene.rect.y * -1;
-
-        bgRef.current.style.top = `${top}px`;
-      }
-    }
-
-    if (textAnimation.current) {
-      const seekValue = textAnimiationDuration * ev.scene.progress;
+    if (textAnimation.current && ev.scene.progress >= 0) {
+      const seekValue = textAnimiationDuration * 2 * (ev.scene.progress / 100);
 
       textAnimation.current.seek(seekValue);
     }
@@ -103,12 +94,25 @@ export const SimpleText = ({ id, schema, ...props }: SimpleTextProps) => {
 
   return (
     <Scrowl.core.Template
+      id={`slide-${contentId}`}
       className={classes}
       onProgress={handleSlideProgress}
-      pins={pins}
       {...props}
     >
-      <div id={contentId} className="inner-content">
+      <div id={contentId}>
+        {(bgUrl || editMode) && (
+          <div
+            ref={bgRef}
+            className={`img__wrapper ${alignmentCss} can-focus ${bgFocusCss} as-bg`}
+            onMouseDown={handleFocusBg}
+          >
+            <img
+              className="img__container"
+              aria-label={bgLabel}
+              style={bgStyles}
+            />
+          </div>
+        )}
         <div className="row row-cols-1">
           {bgUrl && <div className="overlay" />}
 
@@ -123,19 +127,6 @@ export const SimpleText = ({ id, schema, ...props }: SimpleTextProps) => {
           </div>
         </div>
       </div>
-      {(bgUrl || editMode) && (
-        <div
-          ref={bgRef}
-          className={`img__wrapper ${alignmentCss} can-focus ${bgFocusCss} as-bg`}
-          onMouseDown={handleFocusBg}
-        >
-          <img
-            className="img__container"
-            aria-label={bgLabel}
-            style={bgStyles}
-          />
-        </div>
-      )}
     </Scrowl.core.Template>
   );
 };

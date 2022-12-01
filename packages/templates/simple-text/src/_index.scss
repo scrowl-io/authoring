@@ -1,12 +1,6 @@
 .template-simple-text {
   position: relative;
 
-  .inner-content {
-    top: 0;
-    width: 100%;
-    z-index: 10;
-  }
-
   .text {
     &__wrapper {
       &.center {
