@@ -1,12 +1,6 @@
 .template-two-columns {
   position: relative;
 
-  .inner-content {
-    top: 0;
-    width: 100%;
-    z-index: 10;
-  }
-
   .column-wrapper {
     display: flex;
     justify-content: center;

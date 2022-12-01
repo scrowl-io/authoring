@@ -1,6 +1,6 @@
 {
   "name": "@scrowl/template-core",
-  "version": "1.0.33",
+  "version": "1.0.34",
   "description": "",
   "license": "MIT",
   "keywords": [],
@@ -29,8 +29,8 @@
   "exports": {
     ".": {
       "require": "./lib/scrowl.template-core.js",
-      "default": "./lib/scrowl.template-core.js",
-      "import": "./lib/scrowl.template-core.module.js"
+      "import": "./lib/scrowl.template-core.module.js",
+      "default": "./lib/scrowl.template-core.js"
     },
     "./src": "./src/index.ts",
     "./web": "./dist/scrowl.template-core.js"
@@ -57,7 +57,7 @@
     "@parcel/transformer-sass": "2.7.0",
     "@parcel/transformer-typescript-types": "2.7.0",
     "@parcel/validator-typescript": "2.7.0",
-    "@scrowl/config": "^0.0.34",
+    "@scrowl/config": "^0.0.35",
     "@types/animejs": "^3.1.6",
     "@types/react": "^18.0.21",
     "@types/react-dom": "^18.0.6",

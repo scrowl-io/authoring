@@ -1,6 +1,6 @@
 {
   "name": "@scrowl/template-two-column",
-  "version": "1.0.33",
+  "version": "1.0.34",
   "meta": {
     "label": "Two Column",
     "component": "TwoColumn",
@@ -37,14 +37,14 @@
   "exports": {
     ".": {
       "require": "./lib/scrowl.template-two-column.js",
-      "default": "./lib/scrowl.template-two-column.js",
-      "import": "./lib/scrowl.template-two-column.module.js"
+      "import": "./lib/scrowl.template-two-column.module.js",
+      "default": "./lib/scrowl.template-two-column.js"
     },
     "./web": "./dist/scrowl.template-two-column.js",
     "./schema": {
       "require": "./lib/schema.js",
-      "default": "./lib/schema.js",
-      "import": "./lib/schema.module.js"
+      "import": "./lib/schema.module.js",
+      "default": "./lib/schema.js"
     }
   },
   "eslintConfig": {
@@ -69,7 +69,7 @@
     "@parcel/transformer-sass": "2.7.0",
     "@parcel/transformer-typescript-types": "2.7.0",
     "@parcel/validator-typescript": "2.7.0",
-    "@scrowl/config": "^0.0.34",
+    "@scrowl/config": "^0.0.35",
     "@types/react": "^18.0.21",
     "@types/react-dom": "^18.0.6",
     "eslint": "^8.25.0",
@@ -86,7 +86,7 @@
   },
   "dependencies": {
     "@owlui/lib": "^0.0.46",
-    "@scrowl/template-core": "^1.0.33",
+    "@scrowl/template-core": "^1.0.34",
     "react": "^18.2.0"
   }
 }

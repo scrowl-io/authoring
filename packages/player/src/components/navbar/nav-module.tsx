@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Collapse } from 'react-bootstrap';
+import { Icon } from '@owlui/lib';
 import { Link } from 'react-router-dom';
 import * as css from './_navbar.scss';
 
@@ -31,13 +32,11 @@ export const NavModule = ({ pageId, config, mIdx }) => {
   return (
     <div>
       <span className={css.moduleButton} onClick={handleToggleOpen}>
-        <span
-          className={`owlui-icons-outlined ${
-            isOpen ? 'icon-expanded' : 'icon'
-          }`}
-        >
-          chevron_right
-        </span>
+        <Icon
+          icon="chevron_right"
+          display="outlined"
+          className={isOpen ? 'icon-expanded' : 'icon'}
+        />
         <h5>{config.module.name}</h5>
       </span>
       <Collapse in={isOpen}>
@@ -51,17 +50,15 @@ export const NavModule = ({ pageId, config, mIdx }) => {
               <li key={lIdx}>
                 <Link to={url}>
                   <span className={css.lessonButton}>
-                    <span
-                      className={`owlui-icons-outlined
-                        ${
-                          id === currentSlide
-                            ? css.lessonIconActive
-                            : css.lessonIcon
-                        }
-                      `}
-                    >
-                      arrow_drop_down_circle
-                    </span>
+                    <Icon
+                      icon="arrow_drop_down_circle"
+                      display="outlined"
+                      className={
+                        id === currentSlide
+                          ? css.lessonIconActive
+                          : css.lessonIcon
+                      }
+                    />
                     <span
                       className={`${
                         id === currentSlide

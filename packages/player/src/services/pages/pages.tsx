@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import Scrowl from '@scrowl/template-core';
 import { PageDefinition, PageProps } from './pages.types';
 import {
   // @ts-ignore
@@ -11,8 +12,7 @@ import * as css from '../../root/_root.scss';
 import { Error } from '../../components';
 import { NavBar } from '../../components/navbar';
 
-const Page = ({ slides, templates, ...props }: PageProps) => {
-  const controller = new window['Scrowl'].core.scroll.Controller();
+const Page = ({ slides, controller, templates, ...props }: PageProps) => {
   const player = document.querySelector('.player-main');
 
   useEffect(() => {
@@ -26,7 +26,7 @@ const Page = ({ slides, templates, ...props }: PageProps) => {
   });
 
   return (
-    <div className="lesson">
+    <>
       {slides.map((slide, idx) => {
         const id = `${props.id}--slide-${idx}`;
         const component = slide.template.meta.component;
@@ -46,7 +46,7 @@ const Page = ({ slides, templates, ...props }: PageProps) => {
           />
         );
       })}
-    </div>
+    </>
   );
 };
 
@@ -91,6 +91,7 @@ const finishCourse = () => {
 
 export const create = (project, templateList: PlayerTemplateList) => {
   const data: Array<PageDefinition> = [];
+  const controller = new window['Scrowl'].core.scroll.Controller();
 
   project.outlineConfig.forEach((module, mIdx) => {
     module.lessons.forEach((page, lIdx) => {
@@ -127,20 +128,34 @@ export const create = (project, templateList: PlayerTemplateList) => {
           return (
             <>
               <NavBar pageId={id} project={project} />
-              <Page id={id} slides={page.slides} templates={templateList} />
-              <div className={css.nextLessonContainer}>
-                {lIdx < module.lessons.length - 1 ||
-                mIdx < project.outlineConfig.length - 1 ? (
-                  <Link
-                    to={nextLessonUrl}
-                    // @ts-ignore
-                    onClick={() => updateCourseProgress(project, id)}
-                  >
-                    {nextLessonText}
-                  </Link>
-                ) : (
-                  <button onClick={finishCourse}>Finish Course</button>
-                )}
+              <div className="lesson">
+                <Page
+                  id={id}
+                  slides={page.slides}
+                  controller={controller}
+                  templates={templateList}
+                />
+                <Scrowl.core.Template
+                  className="last"
+                  id={`slide-end-${id}`}
+                  controller={controller}
+                  notScene={true}
+                >
+                  <div className={css.nextLessonContainer}>
+                    {lIdx < module.lessons.length - 1 ||
+                    mIdx < project.outlineConfig.length - 1 ? (
+                      <Link
+                        to={nextLessonUrl}
+                        // @ts-ignore
+                        onClick={() => updateCourseProgress(project, id)}
+                      >
+                        {nextLessonText}
+                      </Link>
+                    ) : (
+                      <button onClick={finishCourse}>Finish Course</button>
+                    )}
+                  </div>
+                </Scrowl.core.Template>
               </div>
             </>
           );

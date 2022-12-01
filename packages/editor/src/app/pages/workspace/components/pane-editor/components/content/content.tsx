@@ -17,8 +17,8 @@ export const Content = () => {
   const templateContent = useActiveTemplateContent();
   const activeSlide = useActiveSlide();
 
-  const handleContentUpdate = (field, value) => {
-    setActiveTemplateContent({ field, value });
+  const handleContentUpdate = (field, value, prop?: string) => {
+    setActiveTemplateContent({ field, value, prop });
     isDirty.current = true;
     isUncommitted.current = true;
   };

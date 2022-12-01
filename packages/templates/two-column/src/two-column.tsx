@@ -59,7 +59,6 @@ export const TwoColumn = ({ id, schema, ...props }: TwoColumnProps) => {
   const firstColumn = schema.content.firstColumn.content;
   const secondColumn = schema.content.secondColumn.content;
   const thirdColumn = schema.content.thirdColumn.content;
-  const pins = [contentId];
 
   if (stackOnMobile) {
     switch (numberOfColumns) {
@@ -80,8 +79,12 @@ export const TwoColumn = ({ id, schema, ...props }: TwoColumnProps) => {
   }
 
   return (
-    <Scrowl.core.Template className={classes} pins={pins} {...props}>
-      <div id={contentId} className="inner-content">
+    <Scrowl.core.Template
+      id={`slide-${contentId}`}
+      className={classes}
+      {...props}
+    >
+      <div id={contentId}>
         <div className={columnClasses}>
           <Column
             isEdit={editMode}
