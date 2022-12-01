@@ -28,7 +28,7 @@ export const NavBar = ({ pageId, project }) => {
               // @ts-ignore
               onSelect={(tab) => setTabKey(tab)}
             >
-              <Tab eventKey="outline" title="Outline">
+              <Tab eventKey="outline" key="outline" title="Outline">
                 <Offcanvas.Body>
                   <div className={css.titleContainer}>
                     <h3>{project.name}</h3>
@@ -54,7 +54,7 @@ export const NavBar = ({ pageId, project }) => {
                     })}
                 </Offcanvas.Body>
               </Tab>
-              <Tab eventKey="resources" title="Resources">
+              <Tab eventKey="resources" key="resources" title="Resources">
                 <Offcanvas.Body>
                   <div className={css.titleContainer}>
                     <h3>Additional Resources</h3>
@@ -70,7 +70,7 @@ export const NavBar = ({ pageId, project }) => {
                   </div>
                 </Offcanvas.Body>
               </Tab>
-              <Tab eventKey="glossary" title="Glossary">
+              <Tab eventKey="glossary" key="glossary" title="Glossary">
                 <Offcanvas.Body>
                   <div className={css.titleContainer}>
                     <h3>Glossary</h3>

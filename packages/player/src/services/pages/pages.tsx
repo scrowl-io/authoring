@@ -50,6 +50,40 @@ const Page = ({ slides, controller, templates, ...props }: PageProps) => {
   );
 };
 
+const updateCourseProgress = (project, id) => {
+  console.log('inside pages:');
+
+  let lessonsArray: { index: number; targetId: string }[] = [];
+  let counter = 1;
+  project.outlineConfig.forEach((module, mIdx) => {
+    module.lessons.forEach((_lesson, lIdx) => {
+      const lessonObj = {
+        index: counter,
+        targetId: `module-${mIdx}--lesson-${lIdx}`,
+      };
+      counter++;
+      lessonsArray.push(lessonObj);
+    });
+  });
+
+  const currentSlide = lessonsArray.find((lesson) => {
+    return lesson.targetId === id;
+  });
+
+  const currentSlideIndex = currentSlide?.index;
+  const totalLessons = lessonsArray.length;
+
+  let percentageCompleted;
+
+  if (currentSlideIndex) {
+    percentageCompleted = currentSlideIndex / totalLessons;
+  }
+
+  console.log(percentageCompleted);
+  const runtime = window['Scrowl'].runtime;
+  runtime?.updateProgress(percentageCompleted);
+};
+
 const finishCourse = () => {
   const runtime = window['Scrowl'].runtime;
   runtime?.finish();
@@ -110,7 +144,13 @@ export const create = (project, templateList: PlayerTemplateList) => {
                   <div className={css.nextLessonContainer}>
                     {lIdx < module.lessons.length - 1 ||
                     mIdx < project.outlineConfig.length - 1 ? (
-                      <Link to={nextLessonUrl}>{nextLessonText}</Link>
+                      <Link
+                        to={nextLessonUrl}
+                        // @ts-ignore
+                        onClick={() => updateCourseProgress(project, id)}
+                      >
+                        {nextLessonText}
+                      </Link>
                     ) : (
                       <button onClick={finishCourse}>Finish Course</button>
                     )}
