@@ -4,6 +4,8 @@ import { AssetType } from '../../../../../../main/services/file-system/fs.types'
 
 export type { AssetType } from '../../../../../../main/services/file-system/fs.types';
 
+export type AssetProps = Projects.ProjectAsset;
+
 export type AssetProgressProps = {
   progress:  {
     filename: string;
