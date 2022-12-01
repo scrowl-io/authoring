@@ -37,14 +37,14 @@
   "exports": {
     ".": {
       "require": "./lib/scrowl.template-two-column.js",
-      "default": "./lib/scrowl.template-two-column.js",
-      "import": "./lib/scrowl.template-two-column.module.js"
+      "import": "./lib/scrowl.template-two-column.module.js",
+      "default": "./lib/scrowl.template-two-column.js"
     },
     "./web": "./dist/scrowl.template-two-column.js",
     "./schema": {
       "require": "./lib/schema.js",
-      "default": "./lib/schema.js",
-      "import": "./lib/schema.module.js"
+      "import": "./lib/schema.module.js",
+      "default": "./lib/schema.js"
     }
   },
   "eslintConfig": {
