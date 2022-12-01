@@ -44,7 +44,7 @@ export const config: stateManager.StateConfig = {
       let pointer = typeof action.payload.field === 'string' ? action.payload.field : action.payload.field.join('.content.');
       const value = action.payload.value;
 
-      pointer += '.value';
+      pointer += action.payload.prop ? action.payload.prop : '.value';
       setObjField(state.template.content, pointer, value);
     },
   },

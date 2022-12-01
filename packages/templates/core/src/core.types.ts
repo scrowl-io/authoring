@@ -37,6 +37,7 @@ export interface InputAssetProps extends BaseInputProps {
   type: 'Asset';
   assetTypes: Array<'image' | 'document' | 'video' | 'audio' | 'json'>
   value?: string;
+  displayValue?: string;
   placeholder?: string;
 }
 
