@@ -84,7 +84,7 @@ export const TwoColumn = ({ id, schema, ...props }: TwoColumnProps) => {
       className={classes}
       {...props}
     >
-      <div id={contentId} className="inner-content">
+      <div id={contentId}>
         <div className={columnClasses}>
           <Column
             isEdit={editMode}
