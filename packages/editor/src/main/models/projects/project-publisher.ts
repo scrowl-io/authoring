@@ -38,7 +38,11 @@ export const getProjectTemplates = (project: ProjectData): [false | Set<string>,
   return [templatePaths, templateList];
 };
 
-export const getProjectUploads = (project: ProjectData, meta: ProjectFile, src: string) => {
+export const getProjectUploads = (
+  project: ProjectData,
+  meta: ProjectFile,
+  src: string
+) => {
   const assets = new Set<string>();
 
   if (!project.slides) {
@@ -59,7 +63,9 @@ export const getProjectUploads = (project: ProjectData, meta: ProjectFile, src: 
       return false;
     }
 
-    return assetPath;
+    const formattedAssetPath = assetPath.replace('/assets/', '/');
+
+    return formattedAssetPath;
   };
 
   const scanContent = (content, list: Set<string>) => {
@@ -85,7 +91,7 @@ export const getProjectUploads = (project: ProjectData, meta: ProjectFile, src: 
     }
 
     return list;
-  }
+  };
 
   const scanResources = () => {
     if (!project.resources || !project.resources.length) {
@@ -111,7 +117,12 @@ export const getProjectUploads = (project: ProjectData, meta: ProjectFile, src: 
   return assets;
 };
 
-const createScormSource = (project: ProjectData, meta: ProjectFile, source: string, dest: string) => {
+const createScormSource = (
+  project: ProjectData,
+  meta: ProjectFile,
+  source: string,
+  dest: string
+) => {
   return new Promise<rq.ApiResult>((resolve) => {
     const appSource = Templates.TEMPLATE_PATHS.project;
     const appCopyOpts = {
