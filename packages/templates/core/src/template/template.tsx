@@ -94,11 +94,12 @@ export const Template = ({
         const startingRect = slideRef.current.getBoundingClientRect();
         const sceneStart = slideRef.current.offsetTop;
         let sceneTime = window.scrollY;
-        let sceneEnd =
-          sceneStart -
-          window.innerHeight / 2 +
-          sceneRect.height -
-          window.innerHeight;
+        let sceneEnd = editMode
+          ? duration
+          : sceneStart -
+            window.innerHeight / 2 +
+            sceneRect.height -
+            window.innerHeight;
         const sceneProgress = parseFloat(
           (((sceneTime - sceneStart) / (sceneEnd - sceneStart)) * 100).toFixed(
             2
@@ -117,10 +118,27 @@ export const Template = ({
       };
 
       const handleSceneProgress = (ev) => {
-        const stats = reCalcStats();
+        let stats = reCalcStats();
 
         if (!stats) {
           return;
+        }
+
+        let reposition = (window.innerHeight / 2) * -1;
+
+        switch (ev.scrollDirection) {
+          case 'REVERSE':
+            if (editMode) {
+              reposition = stats.end + reposition;
+              stats.currentTarget.style.paddingTop = `${reposition}px`;
+              stats.progress = parseFloat(
+                (
+                  ((stats.time - stats.start) / (reposition - stats.start)) *
+                  100
+                ).toFixed(2)
+              );
+            }
+            break;
         }
 
         if (stats.rect.y >= 0) {
@@ -197,6 +215,10 @@ export const Template = ({
           case 'FORWARD':
             ev.progress = 0;
             stats.progress = 0;
+
+            if (editMode) {
+              stats.currentTarget.style.paddingTop = `0px`;
+            }
             break;
         }
 
@@ -218,7 +240,7 @@ export const Template = ({
           return;
         }
 
-        const reposition = (window.innerHeight / (editMode ? 1 : 2)) * -1;
+        let reposition = (window.innerHeight / 2) * -1;
 
         switch (ev.scrollDirection) {
           case 'REVERSE':
@@ -229,8 +251,14 @@ export const Template = ({
           case 'FORWARD':
             ev.progress = 100;
             stats.progress = 1;
-            sceneRef.current.style.top = `${reposition}px`;
-            stats.currentTarget.style.marginBottom = `${reposition}px`;
+
+            if (editMode) {
+              reposition = stats.end + reposition;
+              stats.currentTarget.style.paddingTop = `${reposition}px`;
+            } else {
+              sceneRef.current.style.top = `${reposition}px`;
+              stats.currentTarget.style.marginBottom = `${reposition}px`;
+            }
             break;
         }
 
