@@ -1,22 +1,10 @@
-import { MenuItemConstructorOptions } from 'electron';
+import { MenuItemConstructorOptions, MenuItem } from 'electron';
 import { MenuItemApiPreview } from '../menu.types';
 import { rq } from '../..';
 
 export const API: MenuItemApiPreview = {
-  slide: {
-    name: '/preview/slide',
-    type: 'send',
-  },
-  lesson: {
-    name: '/preview/lesson',
-    type: 'send',
-  },
-  module: {
-    name: '/preview/module',
-    type: 'send',
-  },
-  project: {
-    name: '/preview/project',
+  open: {
+    name: '/preview/open',
     type: 'send',
   },
 };
@@ -28,45 +16,65 @@ export const create = (isMac: boolean) => {
     label: "Preview",
     submenu: [
       {
+        id: `${menuId}-open`,
+        label: 'Preview...',
+        accelerator: 'CmdorCtrl+Shift+P',
+        click: (ev) => {
+          let selectedItem: MenuItem | undefined = undefined;
+
+          for (var i = 0,  ii = ev.menu.items.length; i < ii; i++) {
+            if (ev.menu.items[i].type === 'radio' && ev.menu.items[i].checked) {
+              selectedItem = ev.menu.items[i];
+              break;
+            }
+          }
+
+          if (!selectedItem) {
+            return;
+          }
+
+          rq.send(API.open.name, selectedItem.id.replace(`${menuId}-`, ''));
+        },
+      },
+      { type: "separator" },
+      {
         id: `${menuId}-slide`,
-        type: "checkbox",
+        type: "radio",
         label: "Current Slide",
-        checked: false,
+        checked: true,
         enabled: false,
         click: () => {
-          rq.send(API.slide.name);
+          rq.send(API.open.name, 'slide');
         },
       },
       {
         id: `${menuId}-lesson`,
-        type: "checkbox",
+        type: "radio",
         label: "Current Lesson",
         checked: false,
         enabled: false,
         click: () => {
-          rq.send(API.lesson.name);
+          rq.send(API.open.name, 'lesson');
         },
       },
       {
         id: `${menuId}-module`,
-        type: "checkbox",
+        type: "radio",
         label: "Current Module",
         checked: false,
         enabled: false,
         click: () => {
-          rq.send(API.module.name);
+          rq.send(API.open.name, 'module');
         },
       },
-
-      { type: "separator" },
       {
         id: `${menuId}-project`,
-        type: "checkbox",
+        type: "radio",
         label: "Entire Project",
         checked: false,
         enabled: false,
         click: () => {
-          rq.send(API.project.name);
+          rq.send(API.open.name, 'project');
         },
       },
     ],

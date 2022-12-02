@@ -20,10 +20,7 @@ const ENDPOINTS_FILE: MenuItemEndpointFile = {
 };
 
 const ENDPOINTS_PREVIEW: MenuItemEndpointPreview = {
-  slide: '/preview/slide',
-  lesson: '/preview/lesson',
-  module: '/preview/module',
-  project: '/preview/project',
+  open: '/preview/open',
 };
 
 export const contextMenu = (
@@ -99,6 +96,7 @@ const projectMenuIds = [
   'outline-menu-dup-slide',
   'outline-menu-rename-slide',
   'outline-menu-delete-slide',
+  'preview-menu-open',
   'preview-menu-slide',
   'preview-menu-lesson',
   'preview-menu-module',
@@ -139,36 +137,12 @@ export const offProjectClose = () => {
   rq.offAll(ENDPOINTS_FILE.close);
 };
 
-export const onPreviewSlide = (listener: rq.Listener) => {
-  rq.on(ENDPOINTS_PREVIEW.slide, listener);
+export const onPreviewOpen = (listener: rq.Listener) => {
+  rq.on(ENDPOINTS_PREVIEW.open, listener);
 }
 
-export const offPreviewSlide = () => {
-  rq.offAll(ENDPOINTS_PREVIEW.slide);
-};
-
-export const onPreviewLesson = (listener: rq.Listener) => {
-  rq.on(ENDPOINTS_PREVIEW.lesson, listener);
-}
-
-export const offPreviewLesson = () => {
-  rq.offAll(ENDPOINTS_PREVIEW.lesson);
-};
-
-export const onPreviewModule = (listener: rq.Listener) => {
-  rq.on(ENDPOINTS_PREVIEW.module, listener);
-}
-
-export const offPreviewModule = () => {
-  rq.offAll(ENDPOINTS_PREVIEW.module);
-};
-
-export const onPreviewProject = (listener: rq.Listener) => {
-  rq.on(ENDPOINTS_PREVIEW.project, listener);
-}
-
-export const offPreviewProject = () => {
-  rq.offAll(ENDPOINTS_PREVIEW.project);
+export const offPreviewOpen = () => {
+  rq.offAll(ENDPOINTS_PREVIEW.open);
 };
 
 export default {
@@ -182,12 +156,6 @@ export default {
   offProjectOpen,
   onProjectClose,
   offProjectClose,
-  onPreviewSlide,
-  offPreviewSlide,
-  onPreviewLesson,
-  offPreviewLesson,
-  onPreviewModule,
-  offPreviewModule,
-  onPreviewProject,
-  offPreviewProject
+  onPreviewOpen,
+  offPreviewOpen,
 };

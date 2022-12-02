@@ -78,13 +78,19 @@ export const Page = () => {
       Projects.openProjectBrowser();
     };
 
+    const previewListener = (ev, type: keyof menu.MenuItemEndpointPreview) => {
+      console.log('listening to', ev, type);
+    };
+
     menu.API.onProjectSave(saveListener);
     menu.API.onProjectOpen(openListener);
+    menu.API.onPreviewOpen(previewListener);
 
     return () => {
       isListening = false;
       menu.API.offProjectSave();
       menu.API.offProjectOpen();
+      menu.API.offPreviewOpen();
     };
   }, [projectData]);
 
