@@ -3,6 +3,46 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 1.0.40 (2022-12-02)
+
+**Note:** Version bump only for package @scrowl/template-lesson-intro
+
+
+
+
+
+## 1.0.39 (2022-12-02)
+
+**Note:** Version bump only for package @scrowl/template-lesson-intro
+
+
+
+
+
+## 1.0.38 (2022-12-02)
+
+**Note:** Version bump only for package @scrowl/template-lesson-intro
+
+
+
+
+
+## 1.0.37 (2022-12-02)
+
+**Note:** Version bump only for package @scrowl/template-lesson-intro
+
+
+
+
+
+## 1.0.36 (2022-12-01)
+
+**Note:** Version bump only for package @scrowl/template-lesson-intro
+
+
+
+
+
 ## 1.0.35 (2022-12-01)
 
 **Note:** Version bump only for package @scrowl/template-lesson-intro

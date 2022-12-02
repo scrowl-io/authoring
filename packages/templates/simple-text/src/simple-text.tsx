@@ -7,7 +7,7 @@ export const SimpleText = ({ id, schema, ...props }: SimpleTextProps) => {
   let classes = `template-simple-text`;
   const Markdown = Scrowl.core.Markdown;
   const Anime = Scrowl.core.anime;
-  const textAnimation = useRef<anime.AnimeInstance>();
+  const textAnimation = useRef<any>();
   const editMode = props.editMode ? true : false;
   const focusElement = editMode ? props.focusElement : null;
   const contentId = `${id}-block-text`;
@@ -30,6 +30,13 @@ export const SimpleText = ({ id, schema, ...props }: SimpleTextProps) => {
   const alignment = schema.content.options.content.alignment.value;
   const alignmentCss = alignment;
 
+  switch (animations) {
+    case 'none':
+      textStyles.transform = 'translateX(0%)';
+      textStyles.opacity = '1';
+      break;
+  }
+
   const handleFocusText = () => {
     if (editMode) {
       Scrowl.core.host.sendMessage({
@@ -49,16 +56,25 @@ export const SimpleText = ({ id, schema, ...props }: SimpleTextProps) => {
   };
 
   const handleSlideProgress = (ev) => {
-    if (textAnimation.current && ev.scene.progress >= 0) {
-      const seekValue = textAnimiationDuration * 2 * (ev.scene.progress / 100);
+    const updateTextAnimation = () => {
+      if (animations === 'none') {
+        return;
+      }
 
-      textAnimation.current.seek(seekValue);
-    }
+      if (textAnimation.current && ev.scene.progress >= 0) {
+        const seekValue =
+          textAnimiationDuration * 2 * (ev.scene.progress / 100);
+
+        textAnimation.current.seek(seekValue);
+      }
+    };
+
+    updateTextAnimation();
   };
 
   useEffect(() => {
     const createAnimation = () => {
-      if (!textRef.current || !textRef.current.childNodes || !animations) {
+      if (!textRef.current || !textRef.current.childNodes) {
         return;
       }
 
@@ -79,18 +95,27 @@ export const SimpleText = ({ id, schema, ...props }: SimpleTextProps) => {
         nodeList.push(node);
       });
 
-      textAnimation.current = Anime({
-        targets: nodeList,
-        autoplay: false,
-        easing: 'easeInOutQuad',
-        opacity: '1',
-        translateX: '0',
-        duration: textAnimiationDuration,
-      });
+      switch (animations) {
+        case 'all':
+          textAnimation.current = Anime({
+            targets: nodeList,
+            autoplay: false,
+            easing: 'easeInOutQuad',
+            opacity: '1',
+            translateX: '0',
+            duration: textAnimiationDuration,
+          });
+          break;
+        case 'none':
+          if (textAnimation) {
+            textAnimation.current.remove(nodeList);
+          }
+          break;
+      }
     };
 
     createAnimation();
-  }, [textRef.current]);
+  }, [textRef.current, animations]);
 
   return (
     <Scrowl.core.Template

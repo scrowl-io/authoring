@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Scrowl from '@scrowl/template-core';
 import './_index.scss';
 import { BlockTextProps } from './block-text.types';
@@ -22,6 +22,8 @@ export const BlockText = ({ id, schema, ...props }: BlockTextProps) => {
   const alignment = schema.content.options.content.alignment.value;
   const alignmentCss = alignment === 'right' ? 'right' : 'left';
   const showProgressBar = schema.content.options.content.showProgress.value;
+  const showProgressRef = useRef(showProgressBar);
+  const slideProgress = useRef(0);
   const [progressBarStyles, setProgressBarStyles] = useState({
     width: showProgressBar ? '0%' : '100%',
   });
@@ -49,18 +51,9 @@ export const BlockText = ({ id, schema, ...props }: BlockTextProps) => {
   };
 
   const handleSlideProgress = (ev) => {
-    if (bgRef.current) {
-      if (ev.scene.rect.y < 0) {
-        const top = ev.scene.rect.y * -1 + (bg ? 0 : 32);
-        const bottom = top + window.innerHeight;
+    slideProgress.current = ev.progress;
 
-        if (bg || bottom < ev.scene.end) {
-          bgRef.current.style.top = `${top}px`;
-        }
-      }
-    }
-
-    if (showProgressBar) {
+    if (showProgressRef.current) {
       setProgressBarStyles({
         ...progressBarStyles,
         width: `${ev.progress}%`,
@@ -69,7 +62,9 @@ export const BlockText = ({ id, schema, ...props }: BlockTextProps) => {
   };
 
   const handleSlideEnd = () => {
-    if (!showProgressBar) {
+    slideProgress.current = 100;
+
+    if (!showProgressRef.current) {
       return;
     }
 
@@ -78,6 +73,14 @@ export const BlockText = ({ id, schema, ...props }: BlockTextProps) => {
       width: `100%`,
     });
   };
+
+  useEffect(() => {
+    showProgressRef.current = showProgressBar;
+    setProgressBarStyles({
+      ...progressBarStyles,
+      width: showProgressBar ? `${slideProgress.current}%` : `100%`,
+    });
+  }, [showProgressBar]);
 
   return (
     <Scrowl.core.Template
@@ -88,10 +91,10 @@ export const BlockText = ({ id, schema, ...props }: BlockTextProps) => {
       {...props}
     >
       <div id={contentId}>
-        <div className="row row-cols-2">
+        <div className={`row row-cols-2 ${alignmentCss}`}>
           {bg && <div className="overlay" />}
 
-          <div className={`text__wrapper ${alignmentCss}`}>
+          <div className={`text__wrapper`}>
             <div className="text__container">
               <div className="progress-indictor">
                 <div className="progress-bar" style={progressBarStyles}></div>
