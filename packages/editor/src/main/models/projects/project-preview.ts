@@ -1,13 +1,28 @@
-import { createScormSource } from './project-publisher';
+import { createScormSource, createScormEntry } from './project-publisher';
 import { ProjectData, ProjectFile } from './projects.types';
 import { rq, fs, log, mu } from '../../services';
 import { lt, obj } from '../../utils';
 
 export const createPreviewSource = (project: ProjectData, meta: ProjectFile, source: string, dest: string) => {
   return new Promise<rq.ApiResult>((resolve) => {
-    createScormSource(project, meta, source, dest).then((res) => {
-      log.info('createScormSource', res);
-      resolve(res);
+    createScormSource(project, meta, source, dest).then((sourceRes) => {
+      if (sourceRes.error) {
+        log.error(sourceRes);
+        resolve(sourceRes);
+        return;
+      }
+      
+      const templates = sourceRes.data.templates;
+
+      createScormEntry(project, source, dest, templates).then((entryRes) => {
+        if (entryRes.error) {
+          log.error(entryRes);
+          resolve(entryRes);
+          return;
+        }
+        console.log(entryRes);
+        resolve(entryRes);
+      })
     });
   });
 };
