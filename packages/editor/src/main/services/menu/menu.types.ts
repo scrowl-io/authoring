@@ -61,3 +61,33 @@ export type MenuItemEndpointFile = {
   open: MenuItemApiFileOpen['name'];
   close: MenuItemApiFileClose['name'];
 }
+
+export interface MenuItemApiPreviewSlide extends Omit<rq.RegisterEndpoint, 'name'> {
+  name: '/preview/slide';
+}
+
+export interface MenuItemApiPreviewLesson extends Omit<rq.RegisterEndpoint, 'name'> {
+  name: '/preview/lesson';
+}
+
+export interface MenuItemApiPreviewModule extends Omit<rq.RegisterEndpoint, 'name'> {
+  name: '/preview/module';
+}
+
+export interface MenuItemApiPreviewProject extends Omit<rq.RegisterEndpoint, 'name'> {
+  name: '/preview/project';
+}
+
+export type MenuItemApiPreview = {
+  slide: MenuItemApiPreviewSlide;
+  lesson: MenuItemApiPreviewLesson;
+  module: MenuItemApiPreviewModule;
+  project: MenuItemApiPreviewProject;
+}
+
+export type MenuItemEndpointPreview = {
+  slide: MenuItemApiPreviewSlide['name'];
+  lesson: MenuItemApiPreviewLesson['name'];
+  module: MenuItemApiPreviewModule['name'];
+  project: MenuItemApiPreviewProject['name'];
+}
