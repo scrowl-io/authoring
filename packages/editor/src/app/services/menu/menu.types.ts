@@ -3,4 +3,6 @@ export type {
   ContextMenuItem,
   ContextMenuPosition,
   MenuItemEndpointFile,
+  MenuItemEndpointPreview,
+  PreviewTypes
 } from '../../../main/services/menu/menu.types';

@@ -2,7 +2,8 @@ import {
   MenuEndpoints,
   ContextMenuItem,
   ContextMenuPosition,
-  MenuItemEndpointFile
+  MenuItemEndpointFile,
+  MenuItemEndpointPreview
 } from './menu.types';
 import { rq } from '../../services';
 
@@ -16,6 +17,10 @@ const ENDPOINTS_FILE: MenuItemEndpointFile = {
   save: '/file/save',
   open: '/file/open',
   close: '/file/close',
+};
+
+const ENDPOINTS_PREVIEW: MenuItemEndpointPreview = {
+  open: '/preview/open',
 };
 
 export const contextMenu = (
@@ -91,6 +96,7 @@ const projectMenuIds = [
   'outline-menu-dup-slide',
   'outline-menu-rename-slide',
   'outline-menu-delete-slide',
+  'preview-menu-open',
   'preview-menu-slide',
   'preview-menu-lesson',
   'preview-menu-module',
@@ -131,6 +137,14 @@ export const offProjectClose = () => {
   rq.offAll(ENDPOINTS_FILE.close);
 };
 
+export const onPreviewOpen = (listener: rq.Listener) => {
+  rq.on(ENDPOINTS_PREVIEW.open, listener);
+}
+
+export const offPreviewOpen = () => {
+  rq.offAll(ENDPOINTS_PREVIEW.open);
+};
+
 export default {
   contextMenu,
   toggleMenu,
@@ -141,5 +155,7 @@ export default {
   onProjectOpen,
   offProjectOpen,
   onProjectClose,
-  offProjectClose
+  offProjectClose,
+  onPreviewOpen,
+  offPreviewOpen,
 };

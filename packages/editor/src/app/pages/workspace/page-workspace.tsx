@@ -4,6 +4,7 @@ import {
   openPromptProjectName,
   resetWorkspace,
   resetActiveSlide,
+  useActiveSlide,
 } from './page-workspace-hooks';
 import {
   Header,
@@ -41,6 +42,7 @@ export const openProject = (project: Projects.ProjectMeta) => {
 export const Page = () => {
   const projectData = Projects.useData();
   const assets = Projects.useAssets();
+  const activeSlide = useActiveSlide() as Projects.ProjectSlide;
 
   useEffect(() => {
     let isListening = true;
@@ -78,15 +80,48 @@ export const Page = () => {
       Projects.openProjectBrowser();
     };
 
+    const previewListener = (ev, type: menu.PreviewTypes) => {
+      const payload: Projects.PreviewProjectReq = {
+        type,
+        project: projectData,
+        assets,
+      };
+
+      switch (type) {
+        case 'slide':
+          payload.id = activeSlide.id;
+          break;
+        case 'lesson':
+          payload.id = activeSlide.lessonId;
+          break;
+        case 'module':
+          payload.id = activeSlide.moduleId;
+          break;
+      }
+
+      Projects.preview(payload).then((res) => {
+        if (res.error) {
+          sys.messageDialog({
+            message: res.message,
+          });
+          return;
+        }
+
+        console.log('preview result', res);
+      });
+    };
+
     menu.API.onProjectSave(saveListener);
     menu.API.onProjectOpen(openListener);
+    menu.API.onPreviewOpen(previewListener);
 
     return () => {
       isListening = false;
       menu.API.offProjectSave();
       menu.API.offProjectOpen();
+      menu.API.offPreviewOpen();
     };
-  }, [projectData]);
+  }, [projectData, assets, activeSlide]);
 
   return (
     <>

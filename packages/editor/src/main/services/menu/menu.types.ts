@@ -61,3 +61,17 @@ export type MenuItemEndpointFile = {
   open: MenuItemApiFileOpen['name'];
   close: MenuItemApiFileClose['name'];
 }
+
+export interface MenuItemApiPreviewOpen extends Omit<rq.RegisterEndpoint, 'name'> {
+  name: '/preview/open';
+}
+
+export type MenuItemApiPreview = {
+  open: MenuItemApiPreviewOpen;
+}
+
+export type MenuItemEndpointPreview = {
+  open: MenuItemApiPreviewOpen['name'];
+}
+
+export type PreviewTypes = 'slide' | 'lesson' | 'module' | 'project';
