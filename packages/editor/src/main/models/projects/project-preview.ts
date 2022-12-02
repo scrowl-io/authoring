@@ -26,7 +26,7 @@ export const createPreviewSource = (project: ProjectData, meta: ProjectFile, sou
         resolve({
           error: false,
           data: {
-            url: `${rq.templateServerUrl}/index.html?ver=${cacheBreaker}`
+            url: `${rq.previewServerUrl}/index.html?ver=${cacheBreaker}`
           }
         });
       })
