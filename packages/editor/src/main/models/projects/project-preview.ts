@@ -20,8 +20,15 @@ export const createPreviewSource = (project: ProjectData, meta: ProjectFile, sou
           resolve(entryRes);
           return;
         }
-        console.log(entryRes);
-        resolve(entryRes);
+
+        const cacheBreaker = new Date().valueOf();
+        
+        resolve({
+          error: false,
+          data: {
+            url: `${rq.templateServerUrl}/index.html?ver=${cacheBreaker}`
+          }
+        });
       })
     });
   });
