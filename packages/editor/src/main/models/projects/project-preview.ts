@@ -1,29 +1,19 @@
-import { createScormSource, createScormEntry } from './project-publisher';
+import { createScormSource } from './project-publisher';
 import { ProjectData, ProjectFile } from './projects.types';
 import { rq, fs, log, mu } from '../../services';
 import { lt, obj } from '../../utils';
 
 export const createPreviewSource = (project: ProjectData, meta: ProjectFile, source: string, dest: string) => {
   return new Promise<rq.ApiResult>((resolve) => {
-    log.info('creating preview:');
-    log.info('source', source);
-    log.info('dest', dest);
-    log.info('project', project);
-    resolve({
-      error: false,
-      data: {
-        project,
-        meta,
-        source,
-        dest,
-      },
+    createScormSource(project, meta, source, dest).then((res) => {
+      log.info('createScormSource', res);
+      resolve(res);
     });
   });
 };
 
-export const preview = (project: ProjectData, meta: ProjectFile, type: mu.PreviewTypes, id?: number) => {
+export const preview = (project: ProjectData, meta: ProjectFile, source: string, type: mu.PreviewTypes, id?: number) => {
   return new Promise<rq.ApiResult>((resolve) => {
-    const projectSource = fs.getDirname(project.meta.filename || '');
     const previewDest = fs.APP_PATHS.preview;
     let previewData: ProjectData | undefined = undefined;
     let entityId = id !== undefined && Number.isInteger(id) ? id : -1;
@@ -33,6 +23,7 @@ export const preview = (project: ProjectData, meta: ProjectFile, type: mu.Previe
       data: {
         project,
         meta,
+        source,
         type,
         id,
       }
@@ -165,7 +156,7 @@ export const preview = (project: ProjectData, meta: ProjectFile, type: mu.Previe
       return;
     }
 
-    createPreviewSource(previewData, meta, projectSource, previewDest).then(resolve);
+    createPreviewSource(previewData, meta, source, previewDest).then(resolve);
   });
 };
 

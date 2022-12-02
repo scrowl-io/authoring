@@ -852,9 +852,27 @@ export const previewProject = (ev: rq.RequestEvent, req: PreviewProjectReq) => {
       return;
     }
 
-    const meta = infoRes.data.info;
+    let assetSrc = '';
+    let meta: ProjectFile = {
+      createdAt: '',
+      openedAt: '',
+      updatedAt: '',
+      versions: [],
+      assets: [],
+    };
 
-    createPreview(req.project, meta, req.type, req.id).then(resolve);
+    if (infoRes.data.isNew || infoRes.data.uncommitted) {
+      assetSrc = fs.APP_PATHS.uploads;
+      meta.assets = req.assets;
+    } else {
+      assetSrc = fs.joinPath(infoRes.data.folder, 'assets');
+      meta = {
+        ...infoRes.data.info,
+        assets: req.assets,
+      };
+    }
+    
+    createPreview(req.project, meta, assetSrc, req.type, req.id).then(resolve);
   });
 };
 

@@ -185,6 +185,7 @@ export type PreviewAssetReq = {
 
 export type PreviewProjectReq = {
   project: ProjectData;
+  assets: Array<ProjectAsset>;
   type: mu.PreviewTypes;
   id?: number;
 };

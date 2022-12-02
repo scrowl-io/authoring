@@ -84,6 +84,7 @@ export const Page = () => {
       const payload: Projects.PreviewProjectReq = {
         type,
         project: projectData,
+        assets,
       };
 
       switch (type) {
@@ -120,7 +121,7 @@ export const Page = () => {
       menu.API.offProjectOpen();
       menu.API.offPreviewOpen();
     };
-  }, [projectData, activeSlide]);
+  }, [projectData, assets, activeSlide]);
 
   return (
     <>

@@ -52,13 +52,18 @@ export const getProjectUploads = (project: ProjectData, meta: ProjectFile, src: 
       return false;
     }
 
-    const assetPath = fs.joinPath(src, asset);
-    const assetExists = fs.fileExistsSync(assetPath);
+    let assetPath = fs.joinPath(src, asset);
+    let assetExists = fs.fileExistsSync(assetPath);
 
-    if (!assetExists) {
+    if (assetExists.error || !assetExists.data.exists) {
+      assetPath = fs.joinPath(src, fs.getBasename(asset));
+      assetExists = fs.fileExistsSync(assetPath);
+    }
+    
+    if (assetExists.error || !assetExists.data.exists) {
       return false;
     }
-
+    
     return assetPath;
   };
 
@@ -120,7 +125,7 @@ export const createScormSource = (project: ProjectData, meta: ProjectFile, sourc
         return src.indexOf('.hbs') === -1;
       },
     };
-    const uploadSource = fs.joinPath(source, 'assets');
+    const uploadSource = source;
     const uploadDest = fs.joinPath(dest, 'assets');
 
     fs.copy(appSource, dest, appCopyOpts).then((appRes) => {
