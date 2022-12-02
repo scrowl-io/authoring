@@ -1,6 +1,6 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import '@owlui/lib/dist/owl.lib.css';
+import '@owlui/lib/src/theme/_index.scss';
 import './_index.scss';
 import Scrowl from '@scrowl/template-core';
 import { LessonIntro, LessonIntroSchema, LessonIntroSchemaProps } from '../src';
@@ -16,6 +16,7 @@ const App = () => {
     <div id="lesson-wrapper">
       <div className="lesson">
         <LessonIntro
+          editMode={true}
           id="template-lesson-intro"
           controller={controller}
           schema={schema}
