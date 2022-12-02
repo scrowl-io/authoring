@@ -8,7 +8,8 @@ import {
   UploadReq,
   SaveReq,
   PreviewAssetReq,
-  ProjectAsset
+  ProjectAsset,
+  PreviewProjectReq
 } from './projects.types';
 import { Templates } from '../';
 import { set as setSetting } from '../settings';
@@ -16,6 +17,7 @@ import { blueprints } from './blueprints';
 import { rq, fs, log } from '../../services';
 import * as utils from '../../utils';
 import { scorm } from './project-publisher';
+import { preview as createPreview } from './project-preview';
 
 const PROJECT_PATHS = {
   blueprints: fs.getSourcePath('assets', 'blueprints'),
@@ -840,6 +842,22 @@ export const previewAsset = (ev: rq.RequestEvent, req: PreviewAssetReq) => {
   });
 };
 
+export const previewProject = (ev: rq.RequestEvent, req: PreviewProjectReq) => {
+  return new Promise<rq.ApiResult>((resolve) => {
+    const projectMeta = req.project.meta as ProjectMeta;
+    const infoRes = getProjectInfo(projectMeta);
+
+    if (infoRes.error) {
+      resolve(infoRes);
+      return;
+    }
+
+    const meta = infoRes.data.info;
+
+    createPreview(req.project, meta, req.type, req.id).then(resolve);
+  });
+};
+
 export const API: ProjectsApi = {
   create: {
     name: '/projects/create',
@@ -879,7 +897,12 @@ export const API: ProjectsApi = {
     name: '/projects/preview-asset',
     type: 'invoke',
     fn: previewAsset,
-  }
+  },
+  preview: {
+    name: '/projects/preview',
+    type: 'invoke',
+    fn: previewProject,
+  },
 };
 
 export const init = () => {

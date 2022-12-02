@@ -26,6 +26,7 @@ export const preview = (project: ProjectData, meta: ProjectFile, type: mu.Previe
     const projectSource = fs.getDirname(project.meta.filename || '');
     const previewDest = fs.APP_PATHS.preview;
     let previewData: ProjectData | undefined = undefined;
+    let entityId = id !== undefined && Number.isInteger(id) ? id : -1;
     const previewError = {
       error: true,
       message: '',
@@ -46,7 +47,7 @@ export const preview = (project: ProjectData, meta: ProjectFile, type: mu.Previe
           return;
         }
 
-        if (!id) {
+        if (entityId === -1) {
           previewError.message = 'Unable to create preview: slide id required';
           log.error(previewError);
           resolve(previewError);
@@ -54,7 +55,7 @@ export const preview = (project: ProjectData, meta: ProjectFile, type: mu.Previe
         }
 
         const slides = project.slides as unknown as Array<obj.JSON_DATA>;
-        const slideIdx = lt.indexOf(slides, 'id', id);
+        const slideIdx = lt.indexOf(slides, 'id', entityId);
 
         if (slideIdx === -1) {
           previewError.message = 'Unable to create preview: slide not found';
@@ -84,7 +85,7 @@ export const preview = (project: ProjectData, meta: ProjectFile, type: mu.Previe
           return;
         }
 
-        if (!id) {
+        if (entityId === -1) {
           previewError.message = 'Unable to create preview: lesson id required';
           log.error(previewError);
           resolve(previewError);
@@ -92,7 +93,7 @@ export const preview = (project: ProjectData, meta: ProjectFile, type: mu.Previe
         }
 
         const lessons = project.lessons as unknown as Array<obj.JSON_DATA>;
-        const lessonIdx = lt.indexOf(lessons, 'id', id);
+        const lessonIdx = lt.indexOf(lessons, 'id', entityId);
 
         if (lessonIdx === -1) {
           previewError.message = 'Unable to create preview: lesson not found';
@@ -122,7 +123,7 @@ export const preview = (project: ProjectData, meta: ProjectFile, type: mu.Previe
           return;
         }
 
-        if (!id) {
+        if (entityId === -1) {
           previewError.message = 'Unable to create preview: module id required';
           log.error(previewError);
           resolve(previewError);
@@ -130,7 +131,7 @@ export const preview = (project: ProjectData, meta: ProjectFile, type: mu.Previe
         }
 
         const modules = project.modules as unknown as Array<obj.JSON_DATA>;
-        const moduleIdx = lt.indexOf(modules, 'id', id);
+        const moduleIdx = lt.indexOf(modules, 'id', entityId);
 
         if (moduleIdx === -1) {
           previewError.message = 'Unable to create preview: module not found';

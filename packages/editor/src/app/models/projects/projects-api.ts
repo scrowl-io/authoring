@@ -1,4 +1,4 @@
-import { ProjectsEndpoints, PreviewAssetReq, WindowEndpoints, ProjectMeta } from './projects.types';
+import { ProjectsEndpoints, PreviewAssetReq, WindowEndpoints, ProjectMeta, PreviewProjectReq } from './projects.types';
 import { rq } from '../../services';
 
 const ENDPOINTS: ProjectsEndpoints = {
@@ -10,6 +10,7 @@ const ENDPOINTS: ProjectsEndpoints = {
   list: '/projects/list',
   open: '/projects/open',
   previewAsset: '/projects/preview-asset',
+  preview: '/projects/preview',
 };
 
 const WINDOW_ENDPOINTS: WindowEndpoints = {
@@ -53,6 +54,10 @@ export const previewAsset = (data: PreviewAssetReq) => {
   return rq.invoke(ENDPOINTS.previewAsset, data);
 };
 
+export const preview = (payload: PreviewProjectReq) => {
+  return rq.invoke(ENDPOINTS.preview, payload);
+};
+
 export const onUnsavedCheck = (listener: rq.Listener) => {
   rq.on(WINDOW_ENDPOINTS.unsaved, listener);
 };
@@ -75,6 +80,7 @@ export default {
   list,
   open,
   previewAsset,
+  preview,
   onUnsavedCheck,
   offUnsavedCheck,
   sendUnsavedStatus
