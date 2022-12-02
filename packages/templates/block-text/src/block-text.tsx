@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Scrowl from '@scrowl/template-core';
 import './_index.scss';
 import { BlockTextProps } from './block-text.types';
@@ -22,6 +22,8 @@ export const BlockText = ({ id, schema, ...props }: BlockTextProps) => {
   const alignment = schema.content.options.content.alignment.value;
   const alignmentCss = alignment === 'right' ? 'right' : 'left';
   const showProgressBar = schema.content.options.content.showProgress.value;
+  const showProgressRef = useRef(showProgressBar);
+  const slideProgress = useRef(0);
   const [progressBarStyles, setProgressBarStyles] = useState({
     width: showProgressBar ? '0%' : '100%',
   });
@@ -49,7 +51,9 @@ export const BlockText = ({ id, schema, ...props }: BlockTextProps) => {
   };
 
   const handleSlideProgress = (ev) => {
-    if (showProgressBar) {
+    slideProgress.current = ev.progress;
+
+    if (showProgressRef.current) {
       setProgressBarStyles({
         ...progressBarStyles,
         width: `${ev.progress}%`,
@@ -58,7 +62,9 @@ export const BlockText = ({ id, schema, ...props }: BlockTextProps) => {
   };
 
   const handleSlideEnd = () => {
-    if (!showProgressBar) {
+    slideProgress.current = 100;
+
+    if (!showProgressRef.current) {
       return;
     }
 
@@ -67,6 +73,14 @@ export const BlockText = ({ id, schema, ...props }: BlockTextProps) => {
       width: `100%`,
     });
   };
+
+  useEffect(() => {
+    showProgressRef.current = showProgressBar;
+    setProgressBarStyles({
+      ...progressBarStyles,
+      width: showProgressBar ? `${slideProgress.current}%` : `100%`,
+    });
+  }, [showProgressBar]);
 
   return (
     <Scrowl.core.Template

@@ -26,7 +26,7 @@ export const SimpleTextSchema: SimpleTextSchemaProps = {
       label: 'Animations',
       value: 'all',
       options: [
-        { name: 'No Animation', value: '' },
+        { name: 'No Animation', value: 'none' },
         { name: 'Lists & Paragraphs', value: 'all' },
       ],
     },
