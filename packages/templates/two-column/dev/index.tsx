@@ -1,6 +1,6 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import '@owlui/lib/dist/owl.lib.css';
+import '@owlui/lib/src/theme/_index.scss';
 import './_index.scss';
 import Scrowl from '@scrowl/template-core';
 import { TwoColumn, TwoColumnSchema, TwoColumnSchemaProps } from '../src';
@@ -16,6 +16,7 @@ const App = () => {
     <div id="lesson-wrapper">
       <div className="lesson">
         <TwoColumn
+          editMode={true}
           id="template-two-columns"
           controller={controller}
           schema={schema}
