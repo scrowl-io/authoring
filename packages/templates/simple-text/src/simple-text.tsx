@@ -7,7 +7,7 @@ export const SimpleText = ({ id, schema, ...props }: SimpleTextProps) => {
   let classes = `template-simple-text`;
   const Markdown = Scrowl.core.Markdown;
   const Anime = Scrowl.core.anime;
-  const textAnimation = useRef<anime.AnimeInstance>();
+  const textAnimation = useRef<any>();
   const editMode = props.editMode ? true : false;
   const focusElement = editMode ? props.focusElement : null;
   const contentId = `${id}-block-text`;
@@ -74,7 +74,7 @@ export const SimpleText = ({ id, schema, ...props }: SimpleTextProps) => {
 
   useEffect(() => {
     const createAnimation = () => {
-      if (!textRef.current || !textRef.current.childNodes || !animations) {
+      if (!textRef.current || !textRef.current.childNodes) {
         return;
       }
 
@@ -106,11 +106,16 @@ export const SimpleText = ({ id, schema, ...props }: SimpleTextProps) => {
             duration: textAnimiationDuration,
           });
           break;
+        case 'none':
+          if (textAnimation) {
+            textAnimation.current.remove(nodeList);
+          }
+          break;
       }
     };
 
     createAnimation();
-  }, [textRef.current]);
+  }, [textRef.current, animations]);
 
   return (
     <Scrowl.core.Template
