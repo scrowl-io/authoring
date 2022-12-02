@@ -78,7 +78,7 @@ export const Page = () => {
       Projects.openProjectBrowser();
     };
 
-    const previewListener = (ev, type: keyof menu.MenuItemEndpointPreview) => {
+    const previewListener = (ev, type: menu.PreviewTypes) => {
       console.log('listening to', ev, type);
     };
 

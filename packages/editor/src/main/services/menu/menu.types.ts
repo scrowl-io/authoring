@@ -73,3 +73,5 @@ export type MenuItemApiPreview = {
 export type MenuItemEndpointPreview = {
   open: MenuItemApiPreviewOpen['name'];
 }
+
+export type PreviewTypes = 'slide' | 'lesson' | 'module' | 'project';
