@@ -2,7 +2,8 @@ import {
   MenuEndpoints,
   ContextMenuItem,
   ContextMenuPosition,
-  MenuItemEndpointFile
+  MenuItemEndpointFile,
+  MenuItemEndpointPreview
 } from './menu.types';
 import { rq } from '../../services';
 
@@ -16,6 +17,13 @@ const ENDPOINTS_FILE: MenuItemEndpointFile = {
   save: '/file/save',
   open: '/file/open',
   close: '/file/close',
+};
+
+const ENDPOINTS_PREVIEW: MenuItemEndpointPreview = {
+  slide: '/preview/slide',
+  lesson: '/preview/lesson',
+  module: '/preview/module',
+  project: '/preview/project',
 };
 
 export const contextMenu = (
@@ -131,6 +139,38 @@ export const offProjectClose = () => {
   rq.offAll(ENDPOINTS_FILE.close);
 };
 
+export const onPreviewSlide = (listener: rq.Listener) => {
+  rq.on(ENDPOINTS_PREVIEW.slide, listener);
+}
+
+export const offPreviewSlide = () => {
+  rq.offAll(ENDPOINTS_PREVIEW.slide);
+};
+
+export const onPreviewLesson = (listener: rq.Listener) => {
+  rq.on(ENDPOINTS_PREVIEW.lesson, listener);
+}
+
+export const offPreviewLesson = () => {
+  rq.offAll(ENDPOINTS_PREVIEW.lesson);
+};
+
+export const onPreviewModule = (listener: rq.Listener) => {
+  rq.on(ENDPOINTS_PREVIEW.module, listener);
+}
+
+export const offPreviewModule = () => {
+  rq.offAll(ENDPOINTS_PREVIEW.module);
+};
+
+export const onPreviewProject = (listener: rq.Listener) => {
+  rq.on(ENDPOINTS_PREVIEW.project, listener);
+}
+
+export const offPreviewProject = () => {
+  rq.offAll(ENDPOINTS_PREVIEW.project);
+};
+
 export default {
   contextMenu,
   toggleMenu,
@@ -141,5 +181,13 @@ export default {
   onProjectOpen,
   offProjectOpen,
   onProjectClose,
-  offProjectClose
+  offProjectClose,
+  onPreviewSlide,
+  offPreviewSlide,
+  onPreviewLesson,
+  offPreviewLesson,
+  onPreviewModule,
+  offPreviewModule,
+  onPreviewProject,
+  offPreviewProject
 };
