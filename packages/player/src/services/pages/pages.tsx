@@ -13,10 +13,8 @@ import { Error } from '../../components';
 import { NavBar } from '../../components/navbar';
 
 const Page = ({ slides, controller, templates, ...props }: PageProps) => {
-  const player = document.querySelector('.player-main');
-
   useEffect(() => {
-    player?.scrollTo({ top: 0 });
+    window.scrollTo({ top: 0, behavior: 'auto' });
   }, [slides]);
 
   useEffect(() => {
