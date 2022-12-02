@@ -77,10 +77,10 @@ export const BlockText = ({ id, schema, ...props }: BlockTextProps) => {
       {...props}
     >
       <div id={contentId}>
-        <div className="row row-cols-2">
+        <div className={`row row-cols-2 ${alignmentCss}`}>
           {bg && <div className="overlay" />}
 
-          <div className={`text__wrapper ${alignmentCss}`}>
+          <div className={`text__wrapper`}>
             <div className="text__container">
               <div className="progress-indictor">
                 <div className="progress-bar" style={progressBarStyles}></div>
