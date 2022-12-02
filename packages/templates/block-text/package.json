@@ -1,6 +1,6 @@
 {
   "name": "@scrowl/template-block-text",
-  "version": "1.0.41",
+  "version": "1.0.42",
   "description": "",
   "license": "MIT",
   "keywords": [],
@@ -64,7 +64,7 @@
     "@parcel/transformer-sass": "2.7.0",
     "@parcel/transformer-typescript-types": "2.7.0",
     "@parcel/validator-typescript": "2.7.0",
-    "@scrowl/config": "^0.0.42",
+    "@scrowl/config": "^0.0.43",
     "@types/react": "^18.0.21",
     "@types/react-dom": "^18.0.6",
     "eslint": "^8.25.0",
@@ -81,7 +81,7 @@
   },
   "dependencies": {
     "@owlui/lib": "^0.0.46",
-    "@scrowl/template-core": "^1.0.41",
+    "@scrowl/template-core": "^1.0.42",
     "react": "^18.2.0"
   }
 }
