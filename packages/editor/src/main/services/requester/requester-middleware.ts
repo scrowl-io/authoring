@@ -128,18 +128,105 @@ const createTemplateServer = () => {
   });
 };
 
+const createPreviewServer = () => {
+  log.info('creating preview server');
+  return new Promise<ApiResult>(resolve => {
+    try {
+      const address = '127.0.0.1';
+      const previewWorkingPath = fs.joinPath(fs.APP_PATHS.preview);
+      const server = http.createServer((req, res) => {
+        try {
+          const pathname = new URL(`http://${req.headers.host}${req.url}`)
+            .pathname;
+
+          const contentType = getContentType(pathname);
+          const filename = fs.joinPath(previewWorkingPath, pathname);
+
+          fs.fileExists(filename)
+            .then(existRes => {
+              if (existRes.error) {
+                responseInternalError(existRes, res);
+                return;
+              }
+
+              if (!existRes.data.exists) {
+                responseNotFound(req.url || filename, res);
+                return;
+              }
+
+              responseOk(filename, contentType, res);
+            })
+            .catch(e => {
+              responseInternalError(e, res);
+            });
+        } catch (e) {
+          log.error('Failed to parse template request', e);
+          responseInternalError(e, res);
+        }
+      });
+
+      log.info('preview server created');
+      server.listen(0, address, () => {
+        const port = (server.address() as AddressInfo).port;
+        log.info('preview server ready');
+        resolve({
+          error: false,
+          data: {
+            url: `http://${address}:${port}`,
+            server,
+          },
+        });
+      });
+    } catch (e) {
+      resolve({
+        error: true,
+        message: 'failed to create template server',
+        data: {
+          trace: e,
+        },
+      });
+    }
+  });
+};
+
 export let templateServerUrl = '';
 export let templateServer: http.Server;
+export let previewServerUrl = '';
+export let previewServer: http.Server;
 
 export const useTemplateMiddleware = () => {
-  createTemplateServer().then(serverRes => {
-    if (serverRes.error) {
-      log.error('failed to create template server', serverRes);
-      return;
+  const serverPromises = [
+    createTemplateServer(),
+    createPreviewServer(),
+  ];
+
+  Promise.allSettled(serverPromises).then((serverRes) => {
+    const templateServerRes = serverRes[0];
+    const previewServerRes = serverRes[1];
+
+    if (templateServerRes.status === 'rejected') {
+      log.error('failed to create template server');
+    } else {
+
+      if (templateServerRes.value.error) {
+        log.error('failed to create template server', templateServerRes.value);
+      } else {
+        templateServerUrl = templateServerRes.value.data.url;
+        templateServer = templateServerRes.value.data.server;
+      }
     }
 
-    templateServerUrl = serverRes.data.url;
-    templateServer = serverRes.data.server;
+    if (previewServerRes.status === 'rejected') {
+      log.error('failed to create preview server');
+    } else {
+
+      if (previewServerRes.value.error) {
+        log.error('failed to create preview server', previewServerRes.value);
+      } else {
+        previewServerUrl = previewServerRes.value.data.url;
+        previewServer = previewServerRes.value.data.server;
+      }
+    }
   });
 };
 
