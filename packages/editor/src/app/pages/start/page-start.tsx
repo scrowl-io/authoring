@@ -86,7 +86,7 @@ export const Page = () => {
 
         <StartNew />
         <GettingStarted />
-        {projects.length && <RecentProjects projects={projects} />}
+        {projects.length > 0 && <RecentProjects projects={projects} />}
       </div>
     </div>
   );
