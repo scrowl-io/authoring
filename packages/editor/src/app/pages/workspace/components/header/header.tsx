@@ -25,9 +25,9 @@ export const Header = () => {
   const [projectNameSize, setProjectNameSize] = useState(
     projectNameLn - 3 < 13 ? 13 : projectNameLn - 3
   );
-  const [previewMode, setPreviewMode] = useState<menu.PreviewTypes>('slide');
   const [isOpenPublish, setIsOpenPublish] = useState(false);
   const [isOpenConfirmation, setIsOpenConfirmation] = useState(false);
+  const previewMode = Settings.usePreviewMode();
   const animationSettings = Settings.useAnimation();
   const isAnimated = !animationSettings.reducedAnimations;
   const animationDelay = animationSettings.animationDelay;
@@ -76,7 +76,7 @@ export const Header = () => {
   };
 
   const handleProjectPreview = (payload: Projects.PreviewProjectReq) => {
-    setPreviewMode(payload.type);
+    Settings.setPreviewMode(payload.type);
     Projects.preview(payload).then((res) => {
       if (res.error) {
         sys.messageDialog({
