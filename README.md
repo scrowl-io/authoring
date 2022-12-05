@@ -1,6 +1,12 @@
-# Scrowl Authoring
+# Scrowl
+
+
 
 This project is an Content Authoring tool built with [Electron](https://www.electronjs.org/). This application can be used to create courses for Learning Management Systems (LMSs). What makes this tool different than others, is the dynamic template system. Our template system allows developers to code their own, offering a great degree of flexibility.
+
+## Acknowledgement
+![tri-wordmark](https://raw.githubusercontent.com/scrowl-io/authoring/main/eo-tri-wordmark-english-black.png)
+This Employment Ontario project is funded in part by the Government of Canada and the Government of Ontario
 
 ## Getting Started
 

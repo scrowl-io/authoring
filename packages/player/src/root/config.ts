@@ -8,7 +8,10 @@ import {
 export const create = (
   slides: Array<ProjectSlide>,
   lessons: Array<ProjectLesson>,
-  modules: Array<ProjectModule>
+  modules: Array<ProjectModule>,
+  resources,
+  glossary,
+  name
 ) => {
   const rootConfig: Array<PlayerRootConfig> = [];
 
@@ -71,7 +74,14 @@ export const create = (
     rootConfig.push(config);
   }
 
-  return rootConfig;
+  const projectConfig = {
+    name: name,
+    outlineConfig: rootConfig,
+    resources: resources,
+    glossary: glossary,
+  };
+
+  return projectConfig;
 };
 
 export default {

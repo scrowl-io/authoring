@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { } from './settings.types';
-import { stateManager } from '../../services';
+import { stateManager, menu } from '../../services';
 import { API, state } from './';
 
 const processor: stateManager.StateProcessor = {};
@@ -72,13 +72,24 @@ export const useHasWelcomed = () => {
   return useSelector((data: stateManager.RootState) => data.settings.hasWelcomed);
 };
 
-export const setHasWelcomed = (data) => {
+export const usePreviewMode = () => {
+  return useSelector((data: stateManager.RootState) => {
+    return data.settings.previewMode;
+  });
+};
+
+export const setPreviewMode = (type: menu.PreviewTypes) => {
   if (!processor.dispatch) {
     console.warn('settings processor not ready');
     return;
   }
 
-  processor.dispatch(state.setHasWelcomed(data));
+  processor.dispatch(state.setPreviewMode(type));
+  API.set('previewMode', type).then((res) => {
+    if (res.error) {
+      console.error(res);
+    }
+  });
 };
 
 export const init = () => {
@@ -114,7 +125,8 @@ export default {
   useAnimation,
   setAnimation,
   useHasWelcomed,
-  setHasWelcomed,
+  usePreviewMode,
+  setPreviewMode,
   init,
   save,
 };

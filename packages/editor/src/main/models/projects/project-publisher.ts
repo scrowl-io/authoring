@@ -52,13 +52,18 @@ export const getProjectUploads = (project: ProjectData, meta: ProjectFile, src: 
       return false;
     }
 
-    const assetPath = fs.joinPath(src, asset);
-    const assetExists = fs.fileExistsSync(assetPath);
+    let assetPath = fs.joinPath(src, asset);
+    let assetExists = fs.fileExistsSync(assetPath);
 
-    if (!assetExists) {
+    if (assetExists.error || !assetExists.data.exists) {
+      assetPath = fs.joinPath(src, fs.getBasename(asset));
+      assetExists = fs.fileExistsSync(assetPath);
+    }
+    
+    if (assetExists.error || !assetExists.data.exists) {
       return false;
     }
-
+    
     return assetPath;
   };
 
@@ -111,7 +116,7 @@ export const getProjectUploads = (project: ProjectData, meta: ProjectFile, src: 
   return assets;
 };
 
-const createScormSource = (project: ProjectData, meta: ProjectFile, source: string, dest: string) => {
+export const createScormSource = (project: ProjectData, meta: ProjectFile, source: string, dest: string) => {
   return new Promise<rq.ApiResult>((resolve) => {
     const appSource = Templates.TEMPLATE_PATHS.project;
     const appCopyOpts = {
@@ -120,7 +125,7 @@ const createScormSource = (project: ProjectData, meta: ProjectFile, source: stri
         return src.indexOf('.hbs') === -1;
       },
     };
-    const uploadSource = fs.joinPath(source, 'assets');
+    const uploadSource = source;
     const uploadDest = fs.joinPath(dest, 'assets');
 
     fs.copy(appSource, dest, appCopyOpts).then((appRes) => {
@@ -189,7 +194,7 @@ const createScormSource = (project: ProjectData, meta: ProjectFile, source: stri
   });
 };
 
-const createScormEntry = ({ scorm, meta, ...project}: ProjectData, source: string, dest: string, templates: TemplateList) => {
+export const createScormEntry = ({ scorm, meta, ...project}: ProjectData, source: string, dest: string, templates: TemplateList) => {
   // create project files [html, js] and add them to publish folder
   return new Promise<rq.ApiResult>((resolve) => {
     const entryHtmlSrc = fs.joinPath(Templates.TEMPLATE_PATHS.project, 'scorm.html.hbs');
@@ -271,7 +276,7 @@ const createScormEntry = ({ scorm, meta, ...project}: ProjectData, source: strin
   });
 };
 
-const createScormPackage = (src: string, dest: string, project: ProjectData, meta: ProjectFile) => {
+export const createScormPackage = (src: string, dest: string, project: ProjectData, meta: ProjectFile) => {
   return new Promise<rq.ApiResult>((resolve) => {
     const config = project.scorm;
     const today = dt.getDateStampLocal();
@@ -357,5 +362,10 @@ export const scorm = (project: ProjectData, meta: ProjectFile, pubDest: string, 
 };
 
 export default {
+  getProjectTemplates,
+  getProjectUploads,
+  createScormSource,
+  createScormEntry,
+  createScormPackage,
   scorm,
 };

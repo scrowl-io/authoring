@@ -5,7 +5,10 @@ import { updateObj, List } from '../../utils';
 export const initialState = {
   isDirty: false, // true if the user has made any change
   isUncommitted: false, // true if the user has any unsaved change
+  isNew: true,
   syncScormName: true,
+  isOpenProjectBrowser: false,
+  isLoaded: false,
   assets: [],
   data: {
     meta: {
@@ -54,7 +57,11 @@ const generateNewId = (list) => {
 }
 
 const copyListItems = (list, field, fromId, toId) => {
-  const copy: Array<{[key: string]: any}> = List.filterBy(list, field, fromId);
+  const copy: Array<{ [key: string]: any }> = List.filterBy(
+    list,
+    field,
+    fromId
+  );
 
   if (!copy.length) {
     return;
@@ -65,7 +72,7 @@ const copyListItems = (list, field, fromId, toId) => {
 
   copy.forEach(({ name, ...item }) => {
     newId = generateNewId(list);
-    newName = `${name} copy`;
+    newName = name;
     const itemCopy = {
       ...item,
       name: newName,
@@ -82,7 +89,7 @@ export const config: stateManager.StateConfig = {
   initialState,
   reducers: {
     resetState: (state) => {
-      state = initialState
+      updateObj(state, initialState);
     },
     resetIsUncommitted: (state) => {
       state.isUncommitted = false;
@@ -90,11 +97,18 @@ export const config: stateManager.StateConfig = {
     setData: (state, action) => {
       updateObj(state.data, action.payload);
 
-      if (action.payload.meta
-        && action.payload.meta.name
-        && action.payload.scorm
-        && action.payload.scorm.name) {
-        state.syncScormName = action.payload.meta.name === action.payload.scorm.name;
+      if (action.payload.meta && action.payload.meta.name) {
+        state.isNew = false;
+      }
+
+      if (
+        action.payload.meta &&
+        action.payload.meta.name &&
+        action.payload.scorm &&
+        action.payload.scorm.name
+      ) {
+        state.syncScormName =
+          action.payload.meta.name === action.payload.scorm.name;
       }
 
       const isEmptyMeta = state.data.meta.name.length <= 0;
@@ -103,6 +117,8 @@ export const config: stateManager.StateConfig = {
       if (!isSame && !isEmptyMeta && state.syncScormName) {
         state.data.scorm.name = state.data.meta.name.slice();
       }
+
+      state.isLoaded = true;
     },
     setMeta: (state, action) => {
       updateObj(state.data.meta, action.payload);
@@ -166,15 +182,18 @@ export const config: stateManager.StateConfig = {
         }
 
         const newId = generateNewId(outlineList);
-        const addPosition = id !== -1 ? (List.indexBy(outlineList, 'id', id) + 1) : outlineList.length;
+        const addPosition =
+          id !== -1
+            ? List.indexBy(outlineList, 'id', id) + 1
+            : outlineList.length;
         const newItem = {
           ...data,
           name,
           id: newId,
         };
-        outlineList.splice(addPosition , 0, newItem);
+        outlineList.splice(addPosition, 0, newItem);
         return newItem;
-      }
+      };
 
       let newSlide;
       let newLesson;
@@ -234,8 +253,8 @@ export const config: stateManager.StateConfig = {
       for (let i = 0; i < listLn; i++) {
         if (id === outlineList[i].id) {
           outlineList[i] = {
+            ...outlineList[i],
             ...data,
-            id,
           };
           break;
         }
@@ -263,7 +282,10 @@ export const config: stateManager.StateConfig = {
       switch (type) {
         case 'slide':
           outlineList = state.data.slides;
-          movePosition = moveTo.id === -1 ? outlineList.length : List.indexBy(outlineList, 'id', moveTo.id);
+          movePosition =
+            moveTo.id === -1
+              ? outlineList.length
+              : List.indexBy(outlineList, 'id', moveTo.id);
           fromPosition = List.indexBy(outlineList, 'id', moveFrom.id);
           outlineData = {
             ...outlineList.splice(fromPosition, 1)[0],
@@ -273,7 +295,10 @@ export const config: stateManager.StateConfig = {
           break;
         case 'lesson':
           outlineList = state.data.lessons;
-          movePosition = moveTo.id === -1 ? outlineList.length : List.indexBy(outlineList, 'id', moveTo.id);
+          movePosition =
+            moveTo.id === -1
+              ? outlineList.length
+              : List.indexBy(outlineList, 'id', moveTo.id);
           fromPosition = List.indexBy(outlineList, 'id', moveFrom.id);
           outlineData = {
             ...outlineList.splice(fromPosition, 1)[0],
@@ -284,14 +309,17 @@ export const config: stateManager.StateConfig = {
             moveSlides(moveTo.moduleId, 'lessonId', moveFrom.id);
           }
           break;
-          case 'module':
-            outlineList = state.data.modules;
-            movePosition = moveTo.id === -1 ? outlineList.length : List.indexBy(outlineList, 'id', moveTo.id);
-            fromPosition = List.indexBy(outlineList, 'id', moveFrom.id);
-            outlineData = {
-              ...outlineList.splice(fromPosition, 1)[0],
-            };
-            break;
+        case 'module':
+          outlineList = state.data.modules;
+          movePosition =
+            moveTo.id === -1
+              ? outlineList.length
+              : List.indexBy(outlineList, 'id', moveTo.id);
+          fromPosition = List.indexBy(outlineList, 'id', moveFrom.id);
+          outlineData = {
+            ...outlineList.splice(fromPosition, 1)[0],
+          };
+          break;
       }
 
       if (outlineList) {
@@ -317,7 +345,7 @@ export const config: stateManager.StateConfig = {
           outlineList = state.data.lessons;
           break;
         case 'module':
-          outlineList = state.data.modules
+          outlineList = state.data.modules;
           break;
       }
 
@@ -336,17 +364,21 @@ export const config: stateManager.StateConfig = {
           break;
         case 'module':
           const copyLessons = List.filterBy(state.data.lessons, 'moduleId', id);
-          
+
           copyLessons.forEach((lesson: { [key: string]: any }) => {
             const lessonData = {
               ...lesson,
               moduleId: newId,
-              name: `${lesson.name} copy`,
+              name: lesson.name,
               id: generateNewId(state.data.lessons),
             };
 
-            const copySlides = List.filterBy(state.data.slides, 'lessonId', lesson.id);
-            
+            const copySlides = List.filterBy(
+              state.data.slides,
+              'lessonId',
+              lesson.id
+            );
+
             copySlides.forEach((slide: { [key: string]: any }) => {
               const slideData = {
                 ...slide,
@@ -374,16 +406,46 @@ export const config: stateManager.StateConfig = {
 
       switch (type) {
         case 'module':
-          state.data.modules = List.filterBy(state.data.modules, 'id', data.id, 'NE');
-          state.data.lessons = List.filterBy(state.data.lessons, 'moduleId', data.id, 'NE');
-          state.data.slides = List.filterBy(state.data.slides, 'moduleId', data.id, 'NE');
+          state.data.modules = List.filterBy(
+            state.data.modules,
+            'id',
+            data.id,
+            'NE'
+          );
+          state.data.lessons = List.filterBy(
+            state.data.lessons,
+            'moduleId',
+            data.id,
+            'NE'
+          );
+          state.data.slides = List.filterBy(
+            state.data.slides,
+            'moduleId',
+            data.id,
+            'NE'
+          );
           break;
         case 'lesson':
-          state.data.lessons = List.filterBy(state.data.lessons, 'id', data.id, 'NE');
-          state.data.slides = List.filterBy(state.data.slides, 'lessonId', data.id, 'NE');
+          state.data.lessons = List.filterBy(
+            state.data.lessons,
+            'id',
+            data.id,
+            'NE'
+          );
+          state.data.slides = List.filterBy(
+            state.data.slides,
+            'lessonId',
+            data.id,
+            'NE'
+          );
           break;
         case 'slide':
-          state.data.slides = List.filterBy(state.data.slides, 'id', data.id, 'NE');
+          state.data.slides = List.filterBy(
+            state.data.slides,
+            'id',
+            data.id,
+            'NE'
+          );
           break;
       }
 
@@ -396,7 +458,7 @@ export const config: stateManager.StateConfig = {
       if (lastIdx === 0) {
         action.payload.id = 0;
       } else {
-        action.payload.id = state.data.glossary[(lastIdx - 1)].id + 1;
+        action.payload.id = state.data.glossary[lastIdx - 1].id + 1;
       }
 
       state.data.glossary.push(action.payload);
@@ -409,7 +471,10 @@ export const config: stateManager.StateConfig = {
       const idx = List.indexBy(state.data.glossary, 'id', glossaryItem.id);
 
       if (idx === -1) {
-        console.error('unable to update: glossary item not found', action.payload);
+        console.error(
+          'unable to update: glossary item not found',
+          action.payload
+        );
         return;
       }
 
@@ -422,7 +487,10 @@ export const config: stateManager.StateConfig = {
       const idx = List.indexBy(state.data.glossary, 'id', glossaryItem.id);
 
       if (idx === -1) {
-        console.error('unable to remove: glossary item not found', action.payload);
+        console.error(
+          'unable to remove: glossary item not found',
+          action.payload
+        );
         return;
       }
 
@@ -438,7 +506,11 @@ export const config: stateManager.StateConfig = {
     },
     setResourceItem: (state, action) => {
       const { isNew, ...resourceItem } = action.payload;
-      const idx = List.indexBy(state.data.resources, 'filename', resourceItem.filename);
+      const idx = List.indexBy(
+        state.data.resources,
+        'filename',
+        resourceItem.filename
+      );
 
       if (idx === -1) {
         console.error('unable to update: resource not found', action.payload);
@@ -449,7 +521,11 @@ export const config: stateManager.StateConfig = {
     },
     removeResourceItem: (state, action) => {
       const resourceItem = action.payload;
-      const idx = List.indexBy(state.data.resources, 'filename', resourceItem.filename);
+      const idx = List.indexBy(
+        state.data.resources,
+        'filename',
+        resourceItem.filename
+      );
 
       if (idx === -1) {
         console.error('unable to remove: resource not found', action.payload);
@@ -477,7 +553,7 @@ export const config: stateManager.StateConfig = {
         console.error('unable to update: asset not found', action.payload);
         return;
       }
-      
+
       state.assets[idx] = assetItem;
       state.isDirty = true;
       state.isUncommitted = true;
@@ -494,6 +570,12 @@ export const config: stateManager.StateConfig = {
       state.assets[idx].isDeleted = true;
       state.isDirty = true;
       state.isUncommitted = true;
+    },
+    openProjectBrowser: (state) => {
+      state.isOpenProjectBrowser = true;
+    },
+    closeProjectBrowser: (state) => {
+      state.isOpenProjectBrowser = false;
     },
   },
 };
@@ -521,6 +603,8 @@ export const {
   setAssetItem,
   removeAssetItem,
   resetIsUncommitted,
+  openProjectBrowser,
+  closeProjectBrowser
 } = slice.actions;
 
 export const reducer = slice.reducer;

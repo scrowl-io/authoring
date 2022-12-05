@@ -21,7 +21,7 @@ export const config: stateManager.StateConfig = {
       updateObj(state, action.payload);
     },
     resetData: (state) => {
-      state = initialState;
+      updateObj(state, initialState);
     },
     setContentFocus: (state, action) => {
       state.contentFocus = action.payload;

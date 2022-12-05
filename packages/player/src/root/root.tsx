@@ -5,7 +5,7 @@ import {
   Route,
   Navigate,
 } from 'react-router-dom';
-import * as css from './_root.scss';
+import './_root.scss';
 import { PlayerRootProps } from './root.types';
 import Config from './config';
 import { Error } from '../components';
@@ -40,19 +40,27 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
     return <Error msg="Modules missing" />;
   }
 
-  console.log('project:');
-  console.log(project);
-
   const slides = project.slides;
   const lessons = project.lessons;
   const modules = project.modules;
-  const config = Config.create(slides, lessons, modules);
+  const resources = project.resources;
+  const glossary = project.glossary;
+  const name = project.name;
+
+  const config = Config.create(
+    slides,
+    lessons,
+    modules,
+    resources,
+    glossary,
+    name
+  );
   const pages = Pages.create(config, templateList);
 
   return (
     <Router>
-      <div className={css.player} {...props}>
-        <main className={css.playerMain}>
+      <div id="scrowl-player" {...props}>
+        <main className="lesson-wrapper">
           <Routes>
             {pages.map((page, idx) => {
               return (

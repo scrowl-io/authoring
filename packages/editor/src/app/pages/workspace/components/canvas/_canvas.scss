@@ -5,7 +5,7 @@
   --workspace-canvas-height: calc(
     100vh - 224px - var(--workspace-notes-height, 0px)
   );
-  --workspace-canvas-width: 100%;
+  --workspace-canvas-width: calc(100% - 3rem);
   --workspace-slide-height: calc(var(--workspace-canvas-height) - 2px);
   position: relative;
   display: flex;
@@ -100,13 +100,13 @@
     .slide {
       width: var(--workspace-canvas-width) !important;
       height: var(--workspace-canvas-height) !important;
+    }
 
-      iframe {
-        width: 100%;
-        margin: 0;
-        padding: 0;
-        height: var(--workspace-slide-height);
-      }
+    iframe {
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      height: var(--workspace-slide-height);
     }
   }
 

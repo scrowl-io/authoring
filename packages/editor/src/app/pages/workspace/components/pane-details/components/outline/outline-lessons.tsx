@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Icon } from '@owlui/lib';
 import { Collapse } from 'react-bootstrap';
 import { OutlineLessonsProps, OutlineLessonItemProps } from './outline.types';
@@ -6,8 +6,7 @@ import * as css from '../../_pane-details.scss';
 import { OutlineSlides } from './outline-slides';
 import { resetActiveSlide } from '../../../../';
 import { Projects } from '../../../../../../models';
-import { Elem } from '../../../../../../utils';
-import { menu, sys } from '../../../../../../services';
+import { menu, sys, events } from '../../../../../../services';
 import { InlineInput } from '../../../../../../components';
 
 export const OutlineLessonItem = ({
@@ -98,9 +97,8 @@ export const OutlineLessonItem = ({
     ev.preventDefault();
 
     const target = ev.target as HTMLElement;
-    const position = Elem.getPosition(target);
 
-    menu.API.contextMenu(lessonMenuItems, position).then((result) => {
+    menu.API.contextMenu(lessonMenuItems).then((result) => {
       console.log('menu close', result);
       target.blur();
     });
@@ -118,6 +116,18 @@ export const OutlineLessonItem = ({
   const handleNameClose = () => {
     setIsEdit(false);
   };
+
+  useEffect(() => {
+    const handleSlideFocus = (ev: CustomEvent) => {
+      setOpen(true);
+    };
+
+    events.slide.onFocus(handleSlideFocus);
+
+    return () => {
+      events.slide.offFocus(handleSlideFocus);
+    };
+  });
 
   return (
     <div

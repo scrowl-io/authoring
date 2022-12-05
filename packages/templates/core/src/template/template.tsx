@@ -1,151 +1,302 @@
-import React, { useEffect, useState } from 'react';
-import ScrollMagic from 'scrollmagic';
+import React, { useEffect, useState, useRef } from 'react';
+import magic, { Scene } from 'scrollmagic';
 import * as css from './_template.scss';
 import { TemplateProps } from './template.types';
 
 export const Template = ({
   id,
   className,
-  duration,
-  editMode,
-  ready,
   controller,
-  templateKey,
-  onScroll,
-  onStateChange,
+  onEnter,
+  onStart,
+  onProgress,
+  onEnd,
+  onLeave,
   children,
+  notScene,
   ...props
 }: TemplateProps) => {
-  let classes = `${css.slideContainer}`;
-  const [slideDuration, setSlideDiration] = useState(
-    duration + window.innerHeight * 2
+  let classes = `${css.slide}`;
+  const editMode = props.editMode ? true : false;
+  const isNotScene = notScene ? notScene : false;
+  const [duration, setDuration] = useState(
+    (props.duration || window.innerHeight) + window.innerHeight
   );
-  const styles = {
-    height: `calc(100vh + ${duration}px)`,
-  };
+  const isReady = useRef(false);
+  const slideRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLDivElement>(null);
+  const sceneRef = useRef<HTMLDivElement>(null);
+  const [windowSize, setWindowSize] = useState({
+    height: window.innerHeight,
+    width: window.innerWidth,
+  });
 
   if (className) {
     classes += ` ${className}`;
   }
 
-  if (templateKey) {
-    classes += ` ${templateKey}`;
-  }
-
   if (editMode) {
-    classes += ` ${css.editMode}`;
+    classes += ` edit-mode`;
   }
 
   useEffect(() => {
-    const windowHeight = window.innerHeight;
-    let lastStageName = '';
-    let slideVisible = false;
-
-    const setSlideVisible = (visible: boolean) => {
-      if (visible === slideVisible) {
-        return;
-      }
-      slideVisible = visible;
+    const updateWindowSize = () => {
+      setDuration((props.duration || 0) + window.innerHeight);
+      setWindowSize({
+        height: window.innerHeight,
+        width: window.innerWidth,
+      });
     };
 
-    const sceneTrigger = new ScrollMagic.Scene({
-      triggerElement: '#' + id,
-      duration: slideDuration,
-      triggerHook: 1,
-    })
-      .on('progress', function (e: any) {
-        const progressPixels = e.progress * slideDuration;
-        let stageName = '';
-        let stageProgress = 0;
-        if (progressPixels <= windowHeight) {
-          if (lastStageName === 'body' && onScroll) {
-            const progressEvent = {
-              progress: e.progress,
-              stage: 'body',
-              stageProgress: 0,
-            };
-            onScroll(progressEvent);
-          }
-          stageName = 'in_view';
-          stageProgress = progressPixels / windowHeight;
-        } else if (progressPixels >= slideDuration - windowHeight) {
-          if (lastStageName === 'body' && onScroll) {
-            const progressEvent = {
-              progress: e.progress,
-              stage: 'body',
-              stageProgress: 1,
-            };
-            onScroll(progressEvent);
-          }
-          stageName = 'out_view';
-          stageProgress =
-            (progressPixels - (slideDuration - windowHeight)) / windowHeight;
-        } else if (slideDuration > 0) {
-          if (onScroll) {
-            const progressEvent = {
-              progress: e.progress,
-              stage: 'body',
-              stageProgress: 0,
-            };
-            if (lastStageName === 'in_view') {
-              onScroll(progressEvent);
-            } else if (lastStageName === 'out_view') {
-              progressEvent.stageProgress = 1;
-              onScroll(progressEvent);
-            }
-          }
-          stageProgress = (progressPixels - windowHeight) / slideDuration;
-          stageName = 'body';
-        }
-        lastStageName = stageName;
-        if (onScroll) {
-          const progressEvent = {
-            progress: e.progress,
-            stage: stageName,
-            stageProgress,
-          };
-          onScroll(progressEvent);
-        }
-      })
-      .on('enter leave ', function (e: any) {
-        if (!controller || !onStateChange) {
-          return;
-        }
-        let scrollDirection = controller.info('scrollDirection');
-        if (typeof scrollDirection === 'string') {
-          scrollDirection = scrollDirection.toLowerCase();
-        }
-        if (e.type === 'enter') {
-          setSlideVisible(true);
-          onStateChange({
-            state: 'visible',
-            direction: scrollDirection,
-          });
-        } else {
-          setSlideVisible(false);
-          onStateChange({
-            state: 'hidden',
-            direction: scrollDirection,
-          });
-        }
-      })
-      .addTo(controller);
+    window.addEventListener('resize', updateWindowSize);
+
     return () => {
-      controller.removeScene(sceneTrigger);
+      window.removeEventListener('resize', updateWindowSize);
     };
   });
 
-  const handleResize = () => {
-    setSlideDiration(duration + window.innerHeight * 2);
-  };
+  useEffect(() => {
+    let sceneTrigger: Scene;
+    let scene: Scene;
 
-  window.addEventListener('resize', handleResize);
+    const createScene = () => {
+      if (isNotScene) {
+        return;
+      }
+
+      if (isReady.current) {
+        return;
+      }
+
+      if (!slideRef.current || !triggerRef.current || !sceneRef.current) {
+        return;
+      }
+
+      isReady.current = true;
+
+      scene = new magic.Scene({
+        triggerElement: triggerRef.current,
+        duration,
+      });
+
+      const reCalcStats = () => {
+        if (!slideRef.current || !triggerRef.current || !sceneRef.current) {
+          return;
+        }
+
+        const sceneController = sceneRef.current.parentElement;
+
+        if (!sceneController) {
+          return;
+        }
+
+        const sceneRect = sceneController.getBoundingClientRect();
+        const startingRect = slideRef.current.getBoundingClientRect();
+        const sceneStart = slideRef.current.offsetTop;
+        let sceneTime = window.scrollY;
+        let sceneEnd = editMode
+          ? duration
+          : sceneStart -
+            window.innerHeight / 2 +
+            sceneRect.height -
+            window.innerHeight;
+        const sceneProgress = parseFloat(
+          (((sceneTime - sceneStart) / (sceneEnd - sceneStart)) * 100).toFixed(
+            2
+          )
+        );
+
+        return {
+          rect: sceneRect,
+          startingRect,
+          currentTarget: sceneController,
+          start: sceneStart,
+          time: sceneTime,
+          end: sceneEnd,
+          progress: sceneProgress,
+        };
+      };
+
+      const handleSceneProgress = (ev) => {
+        let stats = reCalcStats();
+
+        if (!stats) {
+          return;
+        }
+
+        let reposition = (window.innerHeight / 2) * -1;
+
+        switch (ev.scrollDirection) {
+          case 'REVERSE':
+            if (editMode) {
+              reposition = stats.end + reposition;
+              stats.currentTarget.style.paddingTop = `${reposition}px`;
+              stats.progress = parseFloat(
+                (
+                  ((stats.time - stats.start) / (reposition - stats.start)) *
+                  100
+                ).toFixed(2)
+              );
+            }
+            break;
+        }
+
+        if (stats.rect.y >= 0) {
+          ev.progress = 0;
+        } else {
+          ev.progress = stats.progress;
+        }
+
+        ev.scene = stats;
+
+        if (sceneRef.current) {
+          if (stats.rect.y <= 0) {
+            sceneRef.current.style.top = '0px';
+          } else {
+            sceneRef.current.style.top = `${stats.rect.y}px`;
+          }
+        }
+
+        if (onProgress) {
+          onProgress(ev);
+        }
+      };
+
+      const handleSceneStart = (ev) => {
+        const stats = reCalcStats();
+
+        if (!stats) {
+          return;
+        }
+
+        ev.progress = 0;
+        stats.progress = 0;
+        ev.scene = stats;
+
+        stats.currentTarget.style.marginBottom = `0px`;
+
+        if (onStart) {
+          onStart(ev);
+        }
+      };
+
+      const handleSceneEnd = (ev) => {
+        const stats = reCalcStats();
+
+        if (!stats) {
+          return;
+        }
+
+        ev.progress = 100;
+        stats.progress = 100;
+        ev.scene = stats;
+
+        if (onEnd) {
+          onEnd(ev);
+        }
+      };
+
+      const handleSceneEnter = (ev) => {
+        const stats = reCalcStats();
+
+        if (!stats) {
+          return;
+        }
+
+        if (!sceneRef.current) {
+          return;
+        }
+
+        switch (ev.scrollDirection) {
+          case 'REVERSE':
+            ev.progress = 100;
+            stats.progress = 1;
+            break;
+          case 'FORWARD':
+            ev.progress = 0;
+            stats.progress = 0;
+
+            if (editMode) {
+              stats.currentTarget.style.paddingTop = `0px`;
+            }
+            break;
+        }
+
+        ev.scene = stats;
+
+        if (onEnter) {
+          onEnter(ev);
+        }
+      };
+
+      const handleSceneLeave = (ev) => {
+        const stats = reCalcStats();
+
+        if (!stats) {
+          return;
+        }
+
+        if (!sceneRef.current) {
+          return;
+        }
+
+        let reposition = (window.innerHeight / 2) * -1;
+
+        switch (ev.scrollDirection) {
+          case 'REVERSE':
+            ev.progress = 0;
+            stats.progress = 0;
+            sceneRef.current.style.top = '0px';
+            break;
+          case 'FORWARD':
+            ev.progress = 100;
+            stats.progress = 1;
+
+            if (editMode) {
+              reposition = stats.end + reposition;
+              stats.currentTarget.style.paddingTop = `${reposition}px`;
+            } else {
+              sceneRef.current.style.top = `${reposition}px`;
+              stats.currentTarget.style.marginBottom = `${reposition}px`;
+            }
+            break;
+        }
+
+        ev.scene = stats;
+
+        if (onLeave) {
+          onLeave(ev);
+        }
+      };
+
+      scene
+        .on('enter', handleSceneEnter)
+        .on('start', handleSceneStart)
+        .on('progress', handleSceneProgress)
+        .on('end', handleSceneEnd)
+        .on('leave', handleSceneLeave);
+
+      scene.setPin(sceneRef.current);
+      scene.addTo(controller);
+    };
+
+    createScene();
+
+    return () => {
+      if (sceneTrigger) {
+        sceneTrigger.destroy(true);
+        controller.removeScene(sceneTrigger);
+        isReady.current = false;
+      }
+    };
+  }, [windowSize, duration, isReady.current, triggerRef.current]);
 
   return (
-    <div className={css.sldHost}>
-      <section id={id} className={classes} style={styles} {...props}>
+    <div ref={slideRef} className={classes} {...props}>
+      <div ref={triggerRef} className="scene-trigger"></div>
+      <div ref={sceneRef} className="inner-content">
         {children}
-      </section>
+      </div>
     </div>
   );
 };

@@ -7,7 +7,7 @@ import {
   ContextMenuResult,
 } from '../pane-details.types';
 import { Projects } from '../../../../../models';
-import { Elem, List } from '../../../../../utils';
+import { List } from '../../../../../utils';
 import { menu, sys } from '../../../../../services';
 import { AssetIcon } from '../../../../../components';
 import { ResourceOverlay } from '../../overlay';
@@ -20,6 +20,8 @@ export const Resources = () => {
     title: '',
     filename: '',
     ext: '',
+    sourceExt: '',
+    sourceFilename: '',
     size: 0,
   };
   const [selectedResource, setSelectedResource] =
@@ -32,7 +34,7 @@ export const Resources = () => {
       label: 'Edit Resource',
       click: (menuItem) => {
         const res = menuItem as unknown as ContextMenuResult;
-        const editResource = res.data.resource;
+        const editResource = res.data.item as ResourceItem;
 
         setSelectedResource(editResource);
         setIsOpenResourceBrowser(true);
@@ -42,7 +44,8 @@ export const Resources = () => {
       label: 'Preview',
       click: (menuItem) => {
         const res = menuItem as unknown as ContextMenuResult;
-        const previewResource = res.data.resource as ProjectResource;
+        const previewResource = res.data.item as ProjectResource;
+
         Projects.previewAsset({
           asset: previewResource,
           meta: projectMeta,
@@ -60,9 +63,24 @@ export const Resources = () => {
       label: 'Remove Resource',
       click: (menuItem) => {
         const res = menuItem as unknown as ContextMenuResult;
-        const editResource = res.data.resource;
+        const editResource = res.data.item as ResourceItem;
 
-        Projects.removeResourceItem(editResource);
+        sys
+          .messageDialog({
+            message: 'Are you sure?',
+            buttons: ['Remove Resource', 'Cancel'],
+            detail: editResource.title || editResource.filename,
+          })
+          .then((res) => {
+            if (res.error) {
+              console.error(res);
+              return;
+            }
+
+            if (res.data.response === 0) {
+              Projects.removeResourceItem(editResource);
+            }
+          });
       },
     },
   ];
@@ -75,13 +93,14 @@ export const Resources = () => {
     ev.stopPropagation();
 
     const target = ev.target as HTMLElement;
-    const position = Elem.getPosition(target);
+
+    const position = [ev.clientX, ev.clientY];
 
     if (resource) {
       setSelectedResource(resource);
     }
 
-    menu.API.contextMenu(resourceMenu, position, { resource: resource }).then(
+    menu.API.contextMenu(resourceMenu, position, { item: resource }).then(
       (result) => {
         target.blur();
       }
@@ -117,16 +136,17 @@ export const Resources = () => {
               isNew: false,
             };
             return (
-              <div key={idx} className={css.tabResourcesItem}>
-                <div
-                  className="d-flex justify-content-between"
-                  onClick={() => {
-                    handleOpenResourceBrowser(editableResource);
-                  }}
-                  onContextMenu={(ev) => {
-                    handleResourceMenu(ev, editableResource);
-                  }}
-                >
+              <div
+                key={idx}
+                className={css.tabResourcesItem}
+                onClick={() => {
+                  handleOpenResourceBrowser(editableResource);
+                }}
+                onContextMenu={(ev) => {
+                  handleResourceMenu(ev, editableResource);
+                }}
+              >
+                <div className="d-flex justify-content-between">
                   <dt className={css.tabResourcesItemTitle}>
                     <AssetIcon
                       type={editableResource.type}

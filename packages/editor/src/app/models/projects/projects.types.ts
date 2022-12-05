@@ -12,6 +12,8 @@ export type {
   UploadReq,
   SaveReq,
   PreviewAssetReq,
+  ProjectFile,
+  PreviewProjectReq
 } from '../../../main/models/projects/projects.types';
 
 export type { AssetType } from '../../../main/services/file-system/fs.types';

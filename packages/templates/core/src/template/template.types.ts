@@ -1,5 +1,5 @@
 import React from 'react';
-import { Controller, ScrollDirection } from 'scrollmagic';
+import { Controller, StartEvent, ProgressEvent, EndEvent, EnterEvent, LeaveEvent } from 'scrollmagic';
 import { InputProps } from '../core.types';
 
 export type TemplateSchemaContent = {
@@ -20,27 +20,49 @@ export type TemplateSchema = {
   content: TemplateSchemaContent;
 };
 
-export type TemplateOnScrollEvent = {
-  progress: ProgressEvent;
-  stage: string;
-  stageProgrogress: number;
+export type SceneStats = {
+  start: number;
+  time: number;
+  end: number;
+  progress: number;
+  rect: DOMRect;
+  startingRect: DOMRect;
+  currentTarget: HTMLElement;
 };
 
-export type TemplateOnStateChangeEvent = {
-  state: 'visible' | 'hidden';
-  direction: ScrollDirection;
+export interface TemplateEventEnter extends EnterEvent {
+  scene: SceneStats;
+};
+
+export interface TemplateEventStart extends StartEvent {
+  scene: SceneStats;
+};
+
+export interface TemplateEventProgress extends ProgressEvent {
+  scene: SceneStats;
+};
+
+export interface TemplateEventEnd extends EndEvent {
+  scene: SceneStats;
+};
+
+export interface TemplateEventLeave extends LeaveEvent {
+  scene: SceneStats;
 };
 
 export interface TemplateCommons {
-  templateKey: string;
-  duration: number;
+  controller: Controller;
+  pins?: Array<string>;
+  duration?: number;
   editMode?: boolean;
-  ready?: boolean;
   focusElement?: any;
   validationErrors?: any;
-  controller: Controller;
-  onScroll?: (TemplateOnScrollEvent) => void;
-  onStateChange?: (TemplateOnStateChangeEvent) => void;
-};
+  notScene?: boolean;
+  onEnter?: (ev: TemplateEventEnter) => void;
+  onStart?: (ev: TemplateEventStart) => void;
+  onProgress?: (ev: TemplateEventProgress) => void;
+  onEnd?: (ev: TemplateEventEnd) => void;
+  onLeave?: (ev: TemplateEventLeave) => void;
+}
 
 export type TemplateProps = TemplateCommons & React.AllHTMLAttributes<HTMLDivElement>;

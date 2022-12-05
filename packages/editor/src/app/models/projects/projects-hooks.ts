@@ -1,6 +1,15 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { ActionCreatorWithoutPayload } from '@reduxjs/toolkit';
-import { AssetType, UploadReq, SaveReq, ProjectData, ProjectAsset, PreviewAssetReq } from './projects.types';
+import {
+  AssetType,
+  UploadReq,
+  SaveReq,
+  ProjectData,
+  ProjectAsset,
+  PreviewAssetReq,
+  ProjectMeta,
+  PreviewProjectReq
+} from './projects.types';
 import { stateManager, rq } from '../../services';
 import { API, state } from './';
 import { List } from '../../utils';
@@ -27,7 +36,9 @@ export const useInteractions = () => {
   return useSelector((data: stateManager.RootState) => {
     return {
       isDirty: data.projects.isDirty,
-      isUncommitted: data.projects.isUncommitted, 
+      isUncommitted: data.projects.isUncommitted,
+      isLoaded: data.projects.isLoaded,
+      isNew: data.projects.isNew,
     };
   });
 };
@@ -36,7 +47,7 @@ export const useData = ():ProjectData  => {
   return useSelector((data: stateManager.RootState) => data.projects.data);
 };
 
-const setData = (data) => {
+export const setData = (data) => {
   if (!processor.dispatch) {
     console.warn('projects processor not ready');
     return;
@@ -409,9 +420,9 @@ export const removeAsset = (data) => {
   processor.dispatch(state.removeAssetItem(data));
 };
 
-export const create = (): Promise<rq.ApiResult> => {
+export const create = (blueprint?: string): Promise<rq.ApiResult> => {
   return new Promise((resolve) => {
-    API.create().then((res) => {
+    API.create(blueprint).then((res) => {
       if (res.error) {
         console.error(res)
       } else {
@@ -468,10 +479,10 @@ export const publish = (data): Promise<rq.ApiResult> => {
   });
 };
 
-export const list = (): Promise<rq.ApiResult> => {
+export const list = (limit?: number): Promise<rq.ApiResult> => {
 
   return new Promise((resolve) => {
-    API.list().then((res) => {
+    API.list(limit).then((res) => {
       if (res.error) {
         console.error(res);
       }
@@ -481,10 +492,10 @@ export const list = (): Promise<rq.ApiResult> => {
   });
 };
 
-export const open = (): Promise<rq.ApiResult> => {
+export const open = (project: ProjectMeta): Promise<rq.ApiResult> => {
 
   return new Promise((resolve) => {
-    API.open().then((res) => {
+    API.open(project).then((res) => {
       if (res.error) {
         console.error(res);
       }
@@ -498,10 +509,41 @@ export const previewAsset = (data: PreviewAssetReq) => {
   return API.previewAsset(data);
 };
 
+export const preview = (payload: PreviewProjectReq) => {
+  return API.preview(payload);
+};
+
+export const useProjectBrowser = () => {
+  return useSelector((data: stateManager.RootState) => {
+    return data.projects.isOpenProjectBrowser;
+  });
+};
+
+export const openProjectBrowser = () => {
+  if (!processor.dispatch) {
+    console.warn('project processor not ready');
+    return;
+  }
+
+  const fn = state.openProjectBrowser as ActionCreatorWithoutPayload;
+  processor.dispatch(fn());
+};
+
+export const closeProjectBrowser = () => {
+  if (!processor.dispatch) {
+    console.warn('project processor not ready');
+    return;
+  }
+
+  const fn = state.closeProjectBrowser as ActionCreatorWithoutPayload;
+  processor.dispatch(fn());
+};
+
 export default {
   useProcessor,
   resetState,
   useData,
+  setData,
   useMeta,
   setMeta,
   useScorm,
@@ -542,4 +584,8 @@ export default {
   list,
   open,
   previewAsset,
+  preview,
+  useProjectBrowser,
+  openProjectBrowser,
+  closeProjectBrowser
 };

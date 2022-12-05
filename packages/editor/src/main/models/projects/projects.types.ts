@@ -1,4 +1,4 @@
-import { rq, fs } from '../../services';
+import { rq, fs, mu } from '../../services';
 import { TemplateSchema } from '../templates';
 import { AssetType } from '../../services/file-system';
 
@@ -42,6 +42,11 @@ export interface ProjectsApiPreviewAsset
   name: '/projects/preview-asset';
 }
 
+export interface ProjectsApiPreview
+  extends Omit<rq.RegisterEndpoint, 'name'> {
+  name: '/projects/preview';
+}
+
 export type ProjectsApi = {
   create: ProjectsApiCreate;
   upload: ProjectsApiUpload;
@@ -51,6 +56,7 @@ export type ProjectsApi = {
   list: ProjectsApiList;
   open: ProjectsApiOpen;
   previewAsset: ProjectsApiPreviewAsset;
+  preview: ProjectsApiPreview;
 };
 
 export type ProjectsEndpoints = {
@@ -62,6 +68,7 @@ export type ProjectsEndpoints = {
   list: ProjectsApiList['name'];
   open: ProjectsApiOpen['name'];
   previewAsset: ProjectsApiPreviewAsset['name'];
+  preview: ProjectsApiPreview['name'];
 };
 
 export type ProjectMeta = {
@@ -96,6 +103,8 @@ export type ProjectAsset = {
   type: fs.AssetType;
   size: number;
   isDeleted?: boolean;
+  sourceExt: string;
+  sourceFilename: string;
 };
 
 export interface ProjectResource extends ProjectAsset {
@@ -172,4 +181,11 @@ export type SaveReq = {
 export type PreviewAssetReq = {
   asset: ProjectAsset | ProjectResource;
   meta: ProjectMeta;
+};
+
+export type PreviewProjectReq = {
+  project: ProjectData;
+  assets: Array<ProjectAsset>;
+  type: mu.PreviewTypes;
+  id?: number;
 };

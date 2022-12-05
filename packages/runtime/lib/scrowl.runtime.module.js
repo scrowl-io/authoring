@@ -68,6 +68,8 @@ const $defce2f29876acb7$export$6ed414b8d8bead88 = {
             logout: "logout"
         }
     },
+    courseProgress: 0,
+    lessonLocation: "",
     isAvailable: ()=>{
         const isReady = $defce2f29876acb7$export$6ed414b8d8bead88.init && !$defce2f29876acb7$export$6ed414b8d8bead88.finished;
         if (!isReady || !$defce2f29876acb7$export$6ed414b8d8bead88.API) return {
@@ -133,6 +135,45 @@ const $defce2f29876acb7$export$6ed414b8d8bead88 = {
             message: "SCORM service failed to initialize",
             data: $defce2f29876acb7$export$6ed414b8d8bead88.getError()
         };
+        console.log("cmi version:");
+        const version = $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi._version");
+        console.log(version);
+        console.log("lesson Status (1.2):");
+        const lessonStatus = $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.core.lesson_status");
+        console.log(lessonStatus);
+        console.log("completion Status (2004):");
+        const completionStatus = $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.completion_status");
+        console.log(completionStatus);
+        console.log("success Status (2004):");
+        const successStatus = $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.success_status");
+        console.log(successStatus);
+        console.log("lesson location:");
+        const lessonLocation = $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.core.lesson_location");
+        console.log(lessonLocation);
+        console.log("session time (1.2):");
+        const sessionTime = $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.core.session_time");
+        console.log(sessionTime);
+        console.log("total time (1.2):");
+        const totalTime = $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.core.totalTime");
+        console.log(totalTime);
+        console.log("session time (2004):");
+        const sessionTime2004 = $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.session_time");
+        console.log(sessionTime2004);
+        // console.log('score raw (1.2):');
+        // const score_raw = service.getValue('cmi.core.score_raw');
+        // console.log(score_raw);
+        // console.log('score to pass (2004):');
+        // const score_pass_1 = service.getValue('cmi.scaled_passing_score');
+        // console.log(score_pass_1);
+        // console.log('score mastery (1.2):');
+        // const score_mastery = service.getValue('cmi.student_data.mastery_score');
+        // console.log(score_mastery);
+        console.log("course progress (2004):");
+        const progress_measure = $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.progress_measure");
+        console.log(progress_measure);
+        console.log("score (2004):");
+        const scoreVal2004 = $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.score.raw");
+        console.log(scoreVal2004);
         return {
             error: false
         };
@@ -162,6 +203,9 @@ const $defce2f29876acb7$export$6ed414b8d8bead88 = {
             data: $defce2f29876acb7$export$6ed414b8d8bead88.getError()
         };
         $defce2f29876acb7$export$6ed414b8d8bead88.finished = true;
+        $defce2f29876acb7$export$6ed414b8d8bead88.save();
+        console.log("terminating");
+        res.API.Commit();
         return {
             error: false
         };
@@ -183,6 +227,8 @@ const $defce2f29876acb7$export$6ed414b8d8bead88 = {
         const res = $defce2f29876acb7$export$6ed414b8d8bead88.isAvailable();
         if (res.error) return res;
         const getRes = res.API.LMSGetValue(elem);
+        console.log("GET RES");
+        console.log(getRes);
         if (getRes === $defce2f29876acb7$export$6ed414b8d8bead88.STATUSES.update.false) return {
             error: true,
             message: `SCORM service failed to get ${elem}`,
@@ -191,6 +237,14 @@ const $defce2f29876acb7$export$6ed414b8d8bead88 = {
         return {
             error: false
         };
+    },
+    getProgress: ()=>{
+        const res = $defce2f29876acb7$export$6ed414b8d8bead88.isAvailable();
+        if (res.error) return res;
+        const getRes = res.API.LMSGetValue("cmi.progress_measure");
+        const numberRes = parseFloat(getRes);
+        if (numberRes > 0) return numberRes;
+        else return 0;
     },
     updateStatus: (status)=>{
         const res = $defce2f29876acb7$export$6ed414b8d8bead88.isAvailable();
@@ -225,6 +279,35 @@ const $defce2f29876acb7$export$6ed414b8d8bead88 = {
         const exitRes = $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.core.exit", $defce2f29876acb7$export$6ed414b8d8bead88.STATUSES.exit.save);
         if (exitRes.error) return exitRes;
         return $defce2f29876acb7$export$6ed414b8d8bead88.stop();
+    },
+    updateProgress: (percentageCompleted)=>{
+        console.log("new percentage");
+        console.log(percentageCompleted);
+        console.log("old percentage");
+        console.log($defce2f29876acb7$export$6ed414b8d8bead88.getProgress());
+        const oldRes = $defce2f29876acb7$export$6ed414b8d8bead88.getProgress();
+        if (percentageCompleted > oldRes) {
+            console.log("higher?");
+            // service.courseProgress = percentageCompleted;
+            $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.progress_measure", percentageCompleted);
+        }
+        console.log(percentageCompleted);
+        $defce2f29876acb7$export$6ed414b8d8bead88.save();
+    },
+    finish: ()=>{
+        console.log("DONE");
+        // SCORM 2004
+        $defce2f29876acb7$export$6ed414b8d8bead88.courseProgress = 1;
+        $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.progress_measure", $defce2f29876acb7$export$6ed414b8d8bead88.courseProgress);
+        $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.score.raw", 90.0);
+        $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.success_status", "passed");
+        // SCORM 1.2 (status is handled separately, but scores will conflict, so only update 1)
+        $defce2f29876acb7$export$6ed414b8d8bead88.updateStatus("success");
+        // service.setValue('cmi.core.score.raw', 87.0);
+        $defce2f29876acb7$export$6ed414b8d8bead88.save();
+        console.log("SERVICE:");
+        console.log($defce2f29876acb7$export$6ed414b8d8bead88);
+        $defce2f29876acb7$export$6ed414b8d8bead88.exit();
     }
 };
 var $defce2f29876acb7$export$2e2bcd8739ae039 = {

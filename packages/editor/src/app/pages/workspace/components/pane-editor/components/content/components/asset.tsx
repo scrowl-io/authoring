@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { Icon } from '@owlui/lib';
 import { InputAssetProps } from '../../../pane-editor.types';
 import { useContentFocus } from '../../../../../page-workspace-hooks';
-import { AssetBrowser } from '../../../../../components';
+import { AssetBrowser, AssetProps } from '../../../../../components';
 
 export const Asset = ({
   field,
   type,
   value,
+  displayValue,
   label,
   hint,
   disabled,
@@ -24,12 +25,18 @@ export const Asset = ({
   const contentFocus = useContentFocus();
   const isFocused = contentFocus === field;
   const inputRef = React.useRef<HTMLInputElement>(null);
-  const [assetName, setAssetName] = useState(value || '');
+  const formattedValue = displayValue
+    ? displayValue
+    : value
+    ? value.replace('./assets/', '')
+    : '';
+  const [assetName, setAssetName] = useState(formattedValue);
   const [isOpenAssetBrowser, setIsOpenAssetBrowser] = useState(false);
   const isInvalid =
     validationError !== null &&
     validationError !== undefined &&
     validationError.length;
+  const inputId = `input-checkbox-${field.replace(/\./g, '-')}`;
 
   const showAssetBrowser = () => {
     setIsOpenAssetBrowser(true);
@@ -47,12 +54,15 @@ export const Asset = ({
     }
   };
 
-  const handleAssetSelected = (asset) => {
-    setAssetName(asset.filename);
+  const handleAssetSelected = (asset: AssetProps) => {
+    const displayValue = asset.sourceFilename;
+
+    setAssetName(displayValue);
     setIsOpenAssetBrowser(false);
 
     if (onChange) {
       onChange(field, asset.filename);
+      onChange(field, displayValue, 'displayValue');
     }
 
     if (onBlur) {
@@ -107,6 +117,7 @@ export const Asset = ({
 
     if (onChange) {
       onChange(field, '');
+      onChange(field, '', 'displayValue');
     }
 
     if (onBlur) {
@@ -123,7 +134,9 @@ export const Asset = ({
   return (
     <>
       <div className={controlClasses}>
-        <label className="form-label">{label}</label>
+        <label htmlFor={inputId} className="form-label">
+          {label}
+        </label>
         <div className={groupClasses}>
           {assetName ? (
             <button
@@ -137,7 +150,7 @@ export const Asset = ({
             </button>
           ) : null}
 
-          <input {...inputProps} />
+          <input id={inputId} {...inputProps} />
 
           <button
             style={{ width: '25%', maxWidth: '75px' }}

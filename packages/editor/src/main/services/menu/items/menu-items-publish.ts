@@ -1,4 +1,6 @@
 import { MenuItemConstructorOptions } from 'electron';
+import { MenuItemApiPublish } from '../menu.types';
+import { rq } from '../..';
 
 export const create = (isMac: boolean) => {
   const menuId = 'publish-menu';
@@ -10,7 +12,9 @@ export const create = (isMac: boolean) => {
         id: `${menuId}-advanced`,
         label: "Publish Project",
         enabled: false,
-        click: () => {},
+        click: () => {
+          rq.send(API.publish.name);
+        },
       },
       { type: "separator" },
       {
@@ -18,12 +22,29 @@ export const create = (isMac: boolean) => {
         label: "Quick Publish",
         accelerator: "CmdorCtrl+Alt+P",
         enabled: false,
-        click: () => {},
+        click: () => {
+          rq.send(API.publishQuick.name);
+        },
       },
     ],
   };
 
   return template;
+};
+
+export const API: MenuItemApiPublish = {
+  publish: {
+    name: '/publish',
+    type: 'send',
+  },
+  publishQuick: {
+    name: '/publish/quick',
+    type: 'send',
+  },
+};
+
+export const register = () => {
+  rq.registerEndpointAll(API);
 };
 
 export default {

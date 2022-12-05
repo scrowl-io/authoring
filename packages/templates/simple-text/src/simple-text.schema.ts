@@ -26,7 +26,7 @@ export const SimpleTextSchema: SimpleTextSchemaProps = {
       label: 'Animations',
       value: 'all',
       options: [
-        { name: 'No Animation', value: '' },
+        { name: 'No Animation', value: 'none' },
         { name: 'Lists & Paragraphs', value: 'all' },
       ],
     },
@@ -43,11 +43,6 @@ export const SimpleTextSchema: SimpleTextSchemaProps = {
           type: 'Asset',
           assetTypes: ['image'],
           label: 'Image',
-        },
-        bg: {
-          type: 'Checkbox',
-          label: 'Use as Background',
-          value: false,
         },
       },
     },

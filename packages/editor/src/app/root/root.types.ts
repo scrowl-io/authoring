@@ -3,6 +3,7 @@ import { rq } from '../services';
 export type PageModule = {
   Path: string;
   Page: () => JSX.Element;
+  useProcessor?: () => void;
 };
 
 export type Pages = {

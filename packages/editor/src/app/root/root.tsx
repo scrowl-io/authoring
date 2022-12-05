@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './_root.scss';
 import {
   MemoryRouter as Router,
@@ -11,16 +12,44 @@ import { rq } from '../services';
 import * as pages from '../pages';
 import * as models from '../models';
 import { menu } from '../services';
+import { ProjectBrowser } from '../components';
 
 const Loader = () => {
   return <div>Loading...</div>;
 };
 
 const PageRoutes = () => {
+  const navigate = useNavigate();
   const hasWelcomed = models.Settings.useHasWelcomed();
   let defaultPath = hasWelcomed ? pages.Start.Path : pages.Welcome.Path;
   const pageModules = pages as Pages;
   const pageNames = Object.keys(pageModules);
+
+  pageNames.map((page: string) => {
+    const config = pageModules[page];
+
+    if (config.useProcessor) {
+      config.useProcessor();
+    }
+  });
+
+  useEffect(() => {
+    const closeProject = () => {
+      models.Projects.resetState();
+      pages.Workspace.resetWorkspace();
+      pages.Workspace.resetActiveSlide();
+
+      setTimeout(() => {
+        navigate(defaultPath);
+      }, 1);
+    };
+
+    menu.API.onProjectClose(closeProject);
+
+    return () => {
+      menu.API.offProjectClose();
+    };
+  });
 
   return (
     <Routes>
@@ -77,6 +106,7 @@ export const Root = () => {
   return (
     <Router>
       <main>{!isReady ? <Loader /> : <PageRoutes />}</main>
+      <ProjectBrowser />
     </Router>
   );
 };

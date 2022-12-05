@@ -4,6 +4,7 @@ import { list as templateList } from './default-templates';
 
 export const TEMPLATE_PATHS = {
   working: fs.joinPath(fs.APP_PATHS.temp, 'templates'),
+  workingAssets: fs.joinPath(fs.APP_PATHS.temp, 'templates', 'assets'),
   project: fs.getSourcePath('assets', 'project'),
   templates: fs.getSourcePath('assets', 'templates'),
 };
@@ -117,6 +118,27 @@ export const load = (ev: rq.RequestEvent, template: TemplateSchema) => {
             resolve(renderError);
             return;
           }
+
+          const loadDone = () => {
+            resolve({
+              error: false,
+              data: {
+                url: `${rq.templateServerUrl}/index.html?ver=${cacheBreaker}`
+              }
+            });
+          };
+
+          const copyUploads = () => {
+            fs.copy(fs.APP_PATHS.uploads, TEMPLATE_PATHS.workingAssets, { overwrite: false }).then((assetCopyRes) => {
+              if (assetCopyRes.error) {
+                log.error(assetCopyRes);
+                resolve(assetCopyRes);
+                return;
+              }
+
+              loadDone();
+            });
+          }
   
           fs.copy(templatePath, TEMPLATE_PATHS.working, { overwrite: false }).then((tempCopyRes) => {
             if (tempCopyRes.error) {
@@ -124,13 +146,20 @@ export const load = (ev: rq.RequestEvent, template: TemplateSchema) => {
               resolve(tempCopyRes);
               return;
             }
-  
-            resolve({
-              error: false,
-              data: {
-                url: `${rq.templateServerUrl}/index.html?ver=${cacheBreaker}`
-              }
-            });
+
+            const existRes = fs.fileExistsSync(fs.APP_PATHS.uploads);
+
+            if (existRes.error) {
+              log.error(existRes);
+              loadDone();
+              return;
+            }
+
+            if (existRes.data.exists) {
+              copyUploads();
+            } else {
+              loadDone();
+            }
           });
         });
       });

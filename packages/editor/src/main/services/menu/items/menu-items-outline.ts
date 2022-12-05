@@ -1,4 +1,6 @@
 import { MenuItemConstructorOptions } from 'electron';
+import { MenuItemApiOutline } from '../menu.types';
+import { rq } from '../..';
 
 export const create = (isMac: boolean) => {
   const menuId = 'outline-menu';
@@ -11,21 +13,27 @@ export const create = (isMac: boolean) => {
         label: "Add New Slide",
         accelerator:  "CmdorCtrl+Alt+S",
         enabled: false,
-        click: () => {},
+        click: () => {
+          rq.send(API.addSlide.name);
+        },
       },
       {
         id: `${menuId}-add-lesson`,
         label: "Add New Lesson",
         accelerator: "CmdorCtrl+Alt+L",
         enabled: false,
-        click: () => {},
+        click: () => {
+          rq.send(API.addLesson.name);
+        },
       },
       {
         id: `${menuId}-add-module`,
         label: "Add New Module",
         accelerator: "CmdorCtrl+Alt+M",
         enabled: false,
-        click: () => {},
+        click: () => {
+          rq.send(API.addModule.name);
+        },
       },
       { type: "separator" },
       {
@@ -33,14 +41,18 @@ export const create = (isMac: boolean) => {
         label: "Duplicate Slide",
         accelerator: "CmdorCtrl+Alt+D",
         enabled: false,
-        click: () => {},
+        click: () => {
+          rq.send(API.duplicateSlide.name);
+        },
       },
       {
         id: `${menuId}-rename-slide`,
         label: "Rename Slide",
         accelerator: "CmdorCtrl+Alt+R",
         enabled: false,
-        click: () => {},
+        click: () => {
+          rq.send(API.renameSlide.name);
+        },
       },
       { type: "separator" },
       {
@@ -48,12 +60,45 @@ export const create = (isMac: boolean) => {
         label: "Delete Slide",
         accelerator: "CmdorCtrl+D",
         enabled: false,
-        click: () => {},
+        click: () => {
+          rq.send(API.removeSlide.name);
+        },
       },
     ],
   };
 
   return template;
+};
+
+export const API: MenuItemApiOutline = {
+  addSlide: {
+    name: '/outline/slide/add',
+    type: 'send',
+  },
+  duplicateSlide: {
+    name: '/outline/slide/duplicate',
+    type: 'send',
+  },
+  renameSlide: {
+    name: '/outline/slide/rename',
+    type: 'send',
+  },
+  removeSlide: {
+    name: '/outline/slide/remove',
+    type: 'send',
+  },
+  addLesson: {
+    name: '/outline/lesson/add',
+    type: 'send',
+  },
+  addModule: {
+    name: '/outline/module/add',
+    type: 'send',
+  },
+};
+
+export const register = () => {
+  rq.registerEndpointAll(API);
 };
 
 export default {

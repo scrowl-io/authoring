@@ -1,12 +1,13 @@
-import { gzip } from 'node:zlib';
+import { gzip, createGunzip } from 'node:zlib';
 import { Buffer } from 'node:buffer';
+import fs from 'fs-extra';
 import AdmZip from 'adm-zip';
 import { FileDataResult } from './fs.types';
 import { rq } from '../';
 
 export const compress = (data) => {
   return new Promise<rq.ApiResult>((resolve) => {
-    const dataBuffer = Buffer.from(JSON.stringify(data));
+    const dataBuffer = Buffer.from(JSON.stringify(data), 'utf-8');
 
     gzip(dataBuffer, (e, zippedData) => {
       if (e) {
@@ -24,10 +25,41 @@ export const compress = (data) => {
       resolve({
         error: false,
         data: {
-          data: zippedData.toString('utf-8'),
+          data: zippedData,
         },
       });
     })
+  });
+};
+
+export const uncompress = (filename) => {
+  return new Promise<rq.ApiResult>((resolve) => {
+    const dataBuffer: Array<string> = [];
+    var stream = fs.createReadStream(filename);
+    var ungzip = createGunzip();
+
+    stream
+      .pipe(ungzip)
+      .on('error', (e) => {
+        resolve({
+          error: true,
+          message: 'Unable to uncompress: unexpected error',
+          data: {
+            trace: e,
+          },
+        });
+      })
+      .on('data', (data) => {
+        dataBuffer.push(data.toString());
+      })
+      .on('end', () => {
+        resolve({
+          error: false,
+          data: {
+            contents: dataBuffer.join(''),
+          },
+        });
+      });
   });
 };
 
@@ -91,6 +123,7 @@ export const unzip = (
 
 export default {
   compress,
+  uncompress,
   zip,
   unzip,
 };

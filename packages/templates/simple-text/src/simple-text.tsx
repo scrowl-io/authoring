@@ -1,224 +1,155 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import Scrowl from '@scrowl/template-core';
-import * as css from './_index.scss';
+import './_index.scss';
 import { SimpleTextProps } from './simple-text.types';
 
-export const SimpleText = ({ schema, ...props }: SimpleTextProps) => {
-  let classes = `${css.templateSimpleText} `;
+export const SimpleText = ({ id, schema, ...props }: SimpleTextProps) => {
+  let classes = `template-simple-text`;
+  const Markdown = Scrowl.core.Markdown;
+  const Anime = Scrowl.core.anime;
+  const textAnimation = useRef<any>();
   const editMode = props.editMode ? true : false;
   const focusElement = editMode ? props.focusElement : null;
-  const scrollScenes: any = React.useRef([]);
-  const timeline: any = React.useRef();
+  const contentId = `${id}-block-text`;
+  const text = schema.content.text.value;
+  const textFocusCss = focusElement === 'text' && 'has-focus';
+  const textRef = useRef<HTMLDivElement>(null);
+  const textStyles = {
+    transform: 'translateX(100%)',
+    opacity: '0',
+  };
+  const textAnimiationDuration = 120;
+  const animations = schema.content.animateLists.value;
+  const bgUrl = schema.content.bgImage.content.url.value;
+  const bgLabel = schema.content.bgImage.content.alt.value || '';
+  const bgFocusCss = focusElement === 'bgImage.url' && 'has-focus';
+  const bgRef = useRef<HTMLDivElement>(null);
+  const bgStyles = {
+    backgroundImage: `url("${bgUrl}")`,
+  };
+  const alignment = schema.content.options.content.alignment.value;
+  const alignmentCss = alignment;
 
-  let schemaText = schema.content.text.value;
-  let useImageAsBG = schema.content.bgImage.content.bg.value;
-  let alignment = schema.content.options.content.alignment.value;
-  let animateLists = schema.content.animateLists?.value;
-  const slideDuration = animateLists ? 2000 : 0;
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  function getId(id?: String) {
-    if (!id) {
-      return props.id;
-    }
-    return props.id + '-' + id;
+  switch (animations) {
+    case 'none':
+      textStyles.transform = 'translateX(0%)';
+      textStyles.opacity = '1';
+      break;
   }
 
-  const handleScrollUpdate = (e: any) => {
-    if (e.stage === 'body') {
-      timeline.current.seek(timeline.current.duration * e.stageProgress);
+  const handleFocusText = () => {
+    if (editMode) {
+      Scrowl.core.host.sendMessage({
+        type: 'focus',
+        field: 'text',
+      });
     }
   };
 
-  const handleStateChange = (e: any) => {
-    if (e.state === 'visible') {
-      scrollScenes.current.map((scene: any) => scene.enabled(true));
-    } else {
-      scrollScenes.current.map((scene: any) => scene.enabled(false));
+  const handleFocusBg = () => {
+    if (editMode) {
+      Scrowl.core.host.sendMessage({
+        type: 'focus',
+        field: 'bgImage.url',
+      });
     }
   };
 
-  React.useEffect(() => {
-    if (!animateLists) {
-      return;
-    }
+  const handleSlideProgress = (ev) => {
+    const updateTextAnimation = () => {
+      if (animations === 'none') {
+        return;
+      }
 
-    scrollScenes.current.push(
-      new Scrowl.core.scroll.Scene({
-        triggerElement: '#' + getId(),
-        duration: slideDuration,
-        offset: 0,
-        triggerHook: 0,
-      })
-        .setPin('#' + getId('pinned-body'), { pushFollowers: false })
-        .addTo(props.controller)
-        .enabled(false)
-    );
+      if (textAnimation.current && ev.scene.progress >= 0) {
+        const seekValue =
+          textAnimiationDuration * 2 * (ev.scene.progress / 100);
 
-    let selectors: any = [];
-
-    switch (animateLists) {
-      case 'all':
-        selectors.push('#' + getId('pinned-body') + ' li');
-        selectors.push('#' + getId('pinned-body') + ' p');
-        selectors.push('#' + getId('pinned-body') + ' hr');
-        selectors.push('#' + getId('pinned-body') + ' blockquote');
-        break;
-    }
-
-    if (!selectors.length) {
-      return;
-    }
-
-    const listItems: any = (document as any).querySelectorAll(
-      selectors.join(', ')
-    );
-
-    if (!listItems) {
-      return;
-    }
-
-    timeline.current = Scrowl.core.anime.timeline({
-      easing: 'easeInOutQuad',
-      autoplay: false,
-    });
-    const currentTimeline = timeline.current;
-
-    [...listItems].map((item: any) => {
-      item.style.opacity = 0;
-      item.style.transform = 'translateX(200px)';
-      const target = {
-        targets: item,
-        opacity: '1',
-        translateX: '0',
-        duration: 50,
-      };
-
-      currentTimeline.add(target);
-
-      return null as any;
-    });
-
-    const target = {
-      duration: 100,
+        textAnimation.current.seek(seekValue);
+      }
     };
 
-    currentTimeline.add(target);
+    updateTextAnimation();
+  };
 
-    const frozenListItems = selectors.join(', ');
-    return () => {
-      currentTimeline.children.map((child: any) => {
-        child.remove();
-        child.reset();
-        currentTimeline.remove(child);
-      });
-      currentTimeline.reset();
+  useEffect(() => {
+    const createAnimation = () => {
+      if (!textRef.current || !textRef.current.childNodes) {
+        return;
+      }
 
-      const listItems: any = (document as any).querySelectorAll(
-        frozenListItems
-      );
-      [...listItems].map((item: any) => {
-        item.style.opacity = 1;
-        item.style.transform = '';
-        return null;
+      const initialTextStyles = Object.keys(textStyles);
+      const nodeList: Array<HTMLElement> = [];
+
+      textRef.current.childNodes.forEach((child) => {
+        const node = child as HTMLElement;
+
+        if (!node || !node.style) {
+          return;
+        }
+
+        initialTextStyles.forEach((prop) => {
+          node.style[prop] = textStyles[prop];
+        });
+
+        nodeList.push(node);
       });
+
+      switch (animations) {
+        case 'all':
+          textAnimation.current = Anime({
+            targets: nodeList,
+            autoplay: false,
+            easing: 'easeInOutQuad',
+            opacity: '1',
+            translateX: '0',
+            duration: textAnimiationDuration,
+          });
+          break;
+        case 'none':
+          if (textAnimation) {
+            textAnimation.current.remove(nodeList);
+          }
+          break;
+      }
     };
-  }, [animateLists]);
+
+    createAnimation();
+  }, [textRef.current, animations]);
 
   return (
     <Scrowl.core.Template
-      {...props}
+      id={`slide-${contentId}`}
       className={classes}
-      duration={slideDuration}
-      onStateChange={handleStateChange}
-      onScroll={handleScrollUpdate}
-      ready={true}
+      onProgress={handleSlideProgress}
+      {...props}
     >
-      <div className="slide-container">
-        <div
-          id={getId('pinned-body')}
-          className="hero"
-          aria-label={
-            useImageAsBG ? schema.content.bgImage.content.alt.value : ''
-          }
-          style={
-            useImageAsBG && schema.content.bgImage.content.url.value
-              ? {
-                  width: '100vw',
-                  height: '100vh',
-                  backgroundImage:
-                    'url("./assets/' +
-                    schema.content.bgImage.content.url.value +
-                    '")',
-                }
-              : {}
-          }
-        >
-          {useImageAsBG ? <div className="overlay" /> : null}
-
+      <div id={contentId}>
+        {(bgUrl || editMode) && (
           <div
-            className={
-              'text ' +
-              (alignment === 'right'
-                ? 'right'
-                : alignment === 'left'
-                ? 'left'
-                : alignment === 'center'
-                ? 'center'
-                : alignment === 'justify'
-                ? 'justify'
-                : '')
-            }
+            ref={bgRef}
+            className={`img__wrapper ${alignmentCss} can-focus ${bgFocusCss} as-bg`}
+            onMouseDown={handleFocusBg}
           >
-            <div className="wrapper">
-              <p
-                className={
-                  'can-focus ' + (focusElement === 'text' && ' has-focus')
-                }
-                onMouseDown={() => {
-                  if (editMode) {
-                    Scrowl.core.host.sendMessage({
-                      type: 'focus',
-                      field: 'text',
-                    });
-                  }
-                }}
-              >
-                <Scrowl.core.Markdown children={schemaText} />
-              </p>
+            <img
+              className="img__container"
+              aria-label={bgLabel}
+              style={bgStyles}
+            />
+          </div>
+        )}
+        <div className="row row-cols-1">
+          {bgUrl && <div className="overlay" />}
+
+          <div className={`text__wrapper ${alignmentCss}`}>
+            <div
+              ref={textRef}
+              className={`text__container can-focus ${textFocusCss}`}
+              onMouseDown={handleFocusText}
+            >
+              <Markdown>{text}</Markdown>
             </div>
           </div>
-
-          {useImageAsBG ? null : (
-            <div
-              role="img"
-              aria-label={schema.content.bgImage.content.alt.value}
-              className={
-                'img ' +
-                (alignment === 'right' ? ' right' : '') +
-                ' can-focus ' +
-                (focusElement === 'bgImage.url' && ' has-focus')
-              }
-              onMouseDown={() => {
-                if (editMode) {
-                  Scrowl.core.host.sendMessage({
-                    type: 'focus',
-                    field: 'bgImage.url',
-                  });
-                }
-              }}
-              style={
-                schema.content.bgImage.content.url.value
-                  ? {
-                      backgroundImage:
-                        'url("./assets/' +
-                        schema.content.bgImage.content.url.value +
-                        '")',
-                    }
-                  : {}
-              }
-            />
-          )}
         </div>
       </div>
     </Scrowl.core.Template>

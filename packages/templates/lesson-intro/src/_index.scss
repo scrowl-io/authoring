@@ -1,135 +1,115 @@
 .template-lesson-intro {
   text-align: center;
-  padding: 0;
+  position: relative;
+  color: var(--text-dark-a11y-color);
 
   header {
-    height: 34vh;
-    padding: 1rem;
-    padding-top: 10vh;
-
+    position: relative;
+    height: 33vh;
+    padding: 10vh 1vh 6vh;
+    margin-top: 4vh;
+    z-index: 10;
     align-items: center;
     display: flex;
     flex-flow: column;
     justify-content: center;
-    margin-bottom: 8vh;
-
-    h1 {
-      font-size: 30px;
-      margin: 0;
-      // width: 100%;
-    }
-
-    h2 {
-      font-size: 18px;
-      font-weight: 400;
-      padding-top: 3rem;
-      padding-bottom: 0.5rem;
-      // width: 100%;
-
-      span {
-        display: inline-block;
-        // width: 100%;
-      }
-    }
-
-    .time {
-      margin-top: 2rem;
-      display: flex;
-      align-items: center;
-
-      svg {
-        height: 1rem;
-        margin-right: 3px;
-        fill: var(--text-dark-a11y-color);
-      }
-
-      span {
-        color: var(--text-dark-a11y-color);
-        font-size: 14px;
-      }
-    }
-
-    button {
-      user-select: none;
-      cursor: pointer;
-      background: unset;
-      margin-top: 5vh;
-      border: none;
-      // padding: 1rem 2rem;
-      color: var(--link-color);
-      font-weight: 400;
-      font-size: min(5vw, 1.25rem);
-
-      span.hide {
-        opacity: 0;
-      }
-
-      .link {
-        font-size: min(5vw, 1.25rem);
-      }
-    }
-
-    button:hover:enabled span.link {
-      text-decoration: underline;
-    }
-
-    button:disabled {
-      cursor: default;
-      color: var(--text-dark-a11y-color-50);
-      text-decoration: none;
-    }
   }
 
-  .img-container {
-    // border:1px solid red;
-    margin-top: 1rem;
-    height: 50vh;
-    justify-content: center;
-    align-items: center;
-    display: flex;
-    overflow: hidden;
-    padding: 1rem;
-
-    img {
-      max-height: 100%;
-      max-width: 100%;
-    }
-  }
-
-  .img-container.hero {
+  .content {
     width: 100%;
-    margin-top: 0rem;
-    height: 58vh;
-    background-size: cover;
-    background-position: 50% 50%;
   }
 
-  .dark {
-    background: var(--bg-color);
-    color: var(--text-light-color);
+  &-title {
+    font-size: 30px;
+    margin: 0;
+  }
 
-    header {
-      h1 {
-        color: var(--text-light-color);
+  &-subtitle {
+    font-size: 1.25rem;
+    font-weight: 400;
+    padding-top: 1rem;
+    padding-bottom: 0.5rem;
+  }
+
+  &-time {
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+
+    &-value {
+      margin-left: 0.5rem;
+    }
+  }
+
+  &-start-button {
+    user-select: none;
+    cursor: pointer;
+    background: unset;
+    margin-top: 5vh;
+    border: none;
+    color: var(--link-color);
+    font-weight: 400;
+    font-size: min(5vw, 1.25rem);
+
+    &.hide {
+      opacity: 0;
+    }
+
+    .link {
+      font-size: min(5vw, 1.25rem);
+    }
+  }
+
+  .overlay {
+    background-color: rgba(0, 0, 0, 0.1);
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 5;
+    width: 50%;
+    margin: 0rem auto;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .img {
+    &__wrapper {
+      z-index: 0;
+      pointer-events: none;
+      user-select: none;
+
+      &.as-bg {
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 100vw;
+        z-index: 0;
+        position: absolute;
       }
 
-      h2 {
-        color: var(--text-light-a11y-color);
-      }
-
-      .time {
-        color: var(--text-light-a11y-color);
+      &.as-hero {
+        width: 100%;
+        height: 63vh;
       }
     }
-    &.edit-mode {
-      // background-color: red;
-      .can-focus {
-        cursor: pointer;
-      }
 
-      .has-focus {
-        background: #fff8e6;
-      }
+    &__container {
+      height: 100%;
+      width: 100%;
+      background-size: cover;
+      background-position: 50% 50%;
+    }
+  }
+
+  &.edit-mode {
+    .can-focus {
+      cursor: pointer;
+    }
+
+    .has-focus {
+      background-color: #fff8e6;
     }
   }
 }

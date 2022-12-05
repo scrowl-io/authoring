@@ -1,4 +1,4 @@
-import { ProjectsEndpoints, PreviewAssetReq, WindowEndpoints } from './projects.types';
+import { ProjectsEndpoints, PreviewAssetReq, WindowEndpoints, ProjectMeta, PreviewProjectReq } from './projects.types';
 import { rq } from '../../services';
 
 const ENDPOINTS: ProjectsEndpoints = {
@@ -10,6 +10,7 @@ const ENDPOINTS: ProjectsEndpoints = {
   list: '/projects/list',
   open: '/projects/open',
   previewAsset: '/projects/preview-asset',
+  preview: '/projects/preview',
 };
 
 const WINDOW_ENDPOINTS: WindowEndpoints = {
@@ -17,8 +18,8 @@ const WINDOW_ENDPOINTS: WindowEndpoints = {
   onUnsaved: '/window/unsaved/on', // send to main
 };
 
-export const create = (data?: any): Promise<rq.ApiResult> => {
-  return rq.invoke(ENDPOINTS.create, data);
+export const create = (blueprint?: string): Promise<rq.ApiResult> => {
+  return rq.invoke(ENDPOINTS.create, blueprint);
 };
 
 export const upload = (data?): Promise<rq.ApiResult> => {
@@ -41,16 +42,20 @@ export const publish = (data?): Promise<rq.ApiResult> => {
   return rq.invoke(ENDPOINTS.publish, data);
 };
 
-export const list = (data?): Promise<rq.ApiResult> => {
-  return rq.invoke(ENDPOINTS.list, data);
+export const list = (limit?: number): Promise<rq.ApiResult> => {
+  return rq.invoke(ENDPOINTS.list, limit);
 };
 
-export const open = (data?): Promise<rq.ApiResult> => {
+export const open = (data: ProjectMeta): Promise<rq.ApiResult> => {
   return rq.invoke(ENDPOINTS.open, data);
 };
 
 export const previewAsset = (data: PreviewAssetReq) => {
   return rq.invoke(ENDPOINTS.previewAsset, data);
+};
+
+export const preview = (payload: PreviewProjectReq) => {
+  return rq.invoke(ENDPOINTS.preview, payload);
 };
 
 export const onUnsavedCheck = (listener: rq.Listener) => {
@@ -75,6 +80,7 @@ export default {
   list,
   open,
   previewAsset,
+  preview,
   onUnsavedCheck,
   offUnsavedCheck,
   sendUnsavedStatus

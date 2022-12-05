@@ -8,17 +8,18 @@ import {
   resetContentFocus,
 } from '../../../';
 import { rq } from '../../../../../services';
-import { Templates } from '../../../../../models';
+import { Templates, Projects } from '../../../../../models';
 
 export const CanvasFrame = () => {
   const data = useActiveSlide();
-  const slideId: number = data.id;
-  const hasSlide = slideId !== -1;
+  let slideId: number = data.id;
+  let hasSlide = slideId !== -1;
   const slideTemplate = data.template.meta.component;
   const prevslideId = useRef(-1);
   const prevSlideTemplate = useRef('');
   const prevContent = useRef(data.template.content);
   const frameRef = useRef<HTMLIFrameElement>(null);
+  const isLoaded = Projects.useInteractions().isLoaded;
   const contentFocus = useContentFocus();
   const [frameUrl, setFrameUrl] = useState('');
   const [isConnected, setConnection] = useState(false);
@@ -84,7 +85,7 @@ export const CanvasFrame = () => {
   }, [contentFocus]);
 
   useEffect(() => {
-    if (slideId === -1) {
+    if (slideId === -1 || !isLoaded) {
       return;
     }
 
@@ -119,6 +120,16 @@ export const CanvasFrame = () => {
     return;
   }, [slideId, isConnected, data]);
 
+  useEffect(() => {
+    if (!isLoaded) {
+      slideId = -1;
+      prevslideId.current = -1;
+      prevSlideTemplate.current = '';
+      hasSlide = false;
+      setConnection(false);
+    }
+  }, [isLoaded]);
+
   const connect = (ev: React.SyntheticEvent) => {
     sendMessage({ type: 'connection' });
   };
@@ -126,19 +137,49 @@ export const CanvasFrame = () => {
   return (
     <>
       {hasSlide && (
-        <div className={css.canvasBody}>
-          <Slide
-            options={slideOpts}
-            className="aspect-ratio aspect-ratio--16x9"
+        <div
+          style={{
+            display: 'flex',
+            width: 'var(--workspace-canvas-width)',
+            height: 'var(--workspace-canvas-height)',
+            margin: '0 auto',
+            flexDirection: 'column',
+            boxSizing: 'border-box',
+          }}
+        >
+          <div
+            style={{
+              flexGrow: 1,
+              position: 'relative',
+              boxSizing: 'border-box',
+            }}
           >
-            <iframe
-              id="template-iframe"
-              ref={frameRef}
-              onLoad={connect}
-              src={frameUrl}
-              title="Scrowl Editor Canvas"
-            ></iframe>
-          </Slide>
+            <div
+              style={{
+                height: '100%',
+                width: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                boxSizing: 'border-box',
+              }}
+            >
+              <iframe
+                style={{
+                  border: 0,
+                  width: '100%',
+                  height: '100%',
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                }}
+                id="template-iframe"
+                ref={frameRef}
+                onLoad={connect}
+                src={frameUrl}
+                title="Scrowl Editor Canvas"
+              ></iframe>
+            </div>
+          </div>
         </div>
       )}
     </>

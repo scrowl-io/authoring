@@ -22,7 +22,7 @@ export const contextMenu = (ev: rq.RequestEvent, items: Array<ContextMenuItem>, 
     }
 
     const template = items.map((item: ContextMenuItem) => {
-      if (item.type) {
+      if (item.type && item.type === 'separator') {
         return { type: item.type };
       }
 
@@ -40,7 +40,7 @@ export const contextMenu = (ev: rq.RequestEvent, items: Array<ContextMenuItem>, 
         }
       };
 
-      if (item.hasOwnProperty('checked')) {
+      if (item.hasOwnProperty('checked') && (!item.type || item.type !== 'radio')) {
         action.type = 'checkbox';
       }
 

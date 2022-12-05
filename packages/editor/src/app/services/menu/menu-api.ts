@@ -2,10 +2,13 @@ import {
   MenuEndpoints,
   ContextMenuItem,
   ContextMenuPosition,
-  MenuItemEndpointFile
+  MenuItemEndpointFile,
+  MenuItemEndpointPreview,
+  PreviewTypes,
+  MenuItemEndpointOutline,
+  MenuItemEndpointPublish
 } from './menu.types';
 import { rq } from '../../services';
-import list from '../../utils/list';
 
 const ENDPOINTS: MenuEndpoints = {
   contextMenu: '/context-menu',
@@ -19,7 +22,30 @@ const ENDPOINTS_FILE: MenuItemEndpointFile = {
   close: '/file/close',
 };
 
-export const contextMenu = (items: Array<ContextMenuItem>, position?: ContextMenuPosition, ...args) => {
+const ENDPOINTS_PREVIEW: MenuItemEndpointPreview = {
+  open: '/preview/open',
+  update: '/preview/update',
+};
+
+const ENDPOINTS_OUTLINE: MenuItemEndpointOutline = {
+  addSlide: '/outline/slide/add',
+  addLesson: '/outline/lesson/add',
+  addModule: '/outline/module/add',
+  duplicateSlide: '/outline/slide/duplicate',
+  renameSlide: '/outline/slide/rename',
+  removeSlide: '/outline/slide/remove',
+};
+
+const ENDPOINTS_PUBLISH: MenuItemEndpointPublish = {
+  publish: '/publish',
+  publishQuick: '/publish/quick',
+};
+
+export const contextMenu = (
+  items: Array<ContextMenuItem>,
+  position?: ContextMenuPosition | number[],
+  ...args
+) => {
   return new Promise<rq.ApiResult>((resolve) => {
     const menuItemMap = {};
     const menuItems = items.map((item, idx) => {
@@ -40,8 +66,8 @@ export const contextMenu = (items: Array<ContextMenuItem>, position?: ContextMen
         }
 
         resolve(result);
-      }).
-      catch((e) => {
+      })
+      .catch((e) => {
         console.error('Context Menu Failed', e);
         resolve({
           error: true,
@@ -88,6 +114,7 @@ const projectMenuIds = [
   'outline-menu-dup-slide',
   'outline-menu-rename-slide',
   'outline-menu-delete-slide',
+  'preview-menu-open',
   'preview-menu-slide',
   'preview-menu-lesson',
   'preview-menu-module',
@@ -104,12 +131,112 @@ export const enableProjectActions = () => {
   return toggleMenu(projectMenuIds, true);
 };
 
+export const onProjectCreate = (listener: rq.Listener) => {
+  rq.on(ENDPOINTS_FILE.create, listener);
+};
+
+export const offProjectCreate = () => {
+  rq.offAll(ENDPOINTS_FILE.create);
+};
+
 export const onProjectSave = (listener: rq.Listener) => {
   rq.on(ENDPOINTS_FILE.save, listener);
 };
 
 export const offProjectSave = () => {
   rq.offAll(ENDPOINTS_FILE.save);
+};
+
+export const onProjectOpen = (listener: rq.Listener) => {
+  rq.on(ENDPOINTS_FILE.open, listener);
+};
+
+export const offProjectOpen = () => {
+  rq.offAll(ENDPOINTS_FILE.open);
+};
+
+export const onProjectClose = (listener: rq.Listener) => {
+  rq.on(ENDPOINTS_FILE.close, listener);
+};
+
+export const offProjectClose = () => {
+  rq.offAll(ENDPOINTS_FILE.close);
+};
+
+export const onPreviewOpen = (listener: rq.Listener) => {
+  rq.on(ENDPOINTS_PREVIEW.open, listener);
+}
+
+export const offPreviewOpen = () => {
+  rq.offAll(ENDPOINTS_PREVIEW.open);
+};
+
+export const updatePreviewMenu = (type: PreviewTypes) => {
+  return rq.invoke(ENDPOINTS_PREVIEW.update, type);
+};
+
+export const onOutlineAddSlide = (listener: rq.Listener) => {
+  rq.on(ENDPOINTS_OUTLINE.addSlide, listener);
+};
+
+export const offOutlineAddSlide = () => {
+  rq.offAll(ENDPOINTS_OUTLINE.addSlide);
+};
+
+export const onOutlineAddLesson = (listener: rq.Listener) => {
+  rq.on(ENDPOINTS_OUTLINE.addLesson, listener);
+};
+
+export const offOutlineAddLesson = () => {
+  rq.offAll(ENDPOINTS_OUTLINE.addLesson);
+};
+
+export const onOutlineAddModule = (listener: rq.Listener) => {
+  rq.on(ENDPOINTS_OUTLINE.addModule, listener);
+};
+
+export const offOutlineAddModule = () => {
+  rq.offAll(ENDPOINTS_OUTLINE.addModule);
+};
+
+export const onOutlineDuplicateSlide = (listener: rq.Listener) => {
+  rq.on(ENDPOINTS_OUTLINE.duplicateSlide, listener);
+};
+
+export const offOutlineDuplicateSlide = () => {
+  rq.offAll(ENDPOINTS_OUTLINE.duplicateSlide);
+};
+
+export const onOutlineRenameSlide = (listener: rq.Listener) => {
+  rq.on(ENDPOINTS_OUTLINE.renameSlide, listener);
+};
+
+export const offOutlineRenameSlide = () => {
+  rq.offAll(ENDPOINTS_OUTLINE.renameSlide);
+};
+
+export const onOutlineRemoveSlide = (listener: rq.Listener) => {
+  rq.on(ENDPOINTS_OUTLINE.removeSlide, listener);
+};
+
+export const offOutlineRemoveSlide = () => {
+  rq.offAll(ENDPOINTS_OUTLINE.removeSlide);
+};
+
+export const onPublish = (listener: rq.Listener) => {
+  rq.on(ENDPOINTS_PUBLISH.publish, listener);
+};
+
+export const offPublish = () => {
+  rq.offAll(ENDPOINTS_PUBLISH.publish);
+};
+
+export const onPublishQuick = (listener: rq.Listener) => {
+  rq.on(ENDPOINTS_PUBLISH.publishQuick, listener);
+};
+
+export const offPublishQuick = () => {
+  rq.offAll(ENDPOINTS_PUBLISH.publishQuick);
 };
 
 export default {
@@ -119,4 +246,27 @@ export default {
   enableProjectActions,
   onProjectSave,
   offProjectSave,
+  onProjectOpen,
+  offProjectOpen,
+  onProjectClose,
+  offProjectClose,
+  onPreviewOpen,
+  offPreviewOpen,
+  updatePreviewMenu,
+  onOutlineAddSlide,
+  offOutlineAddSlide,
+  onOutlineAddLesson,
+  offOutlineAddLesson,
+  onOutlineAddModule,
+  offOutlineAddModule,
+  onOutlineDuplicateSlide,
+  offOutlineDuplicateSlide,
+  onOutlineRenameSlide,
+  offOutlineRenameSlide,
+  onOutlineRemoveSlide,
+  offOutlineRemoveSlide,
+  onPublish,
+  offPublish,
+  onPublishQuick,
+  offPublishQuick
 };

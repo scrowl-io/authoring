@@ -9,7 +9,6 @@ import {
   resetActiveSlide,
   useNewSlide,
 } from '../../../../';
-import { Elem } from '../../../../../../utils';
 import { menu, sys } from '../../../../../../services';
 import { InlineInput } from '../../../../../../components';
 
@@ -103,9 +102,8 @@ export const OutlineSlideItem = ({
     ev.preventDefault();
 
     const target = ev.target as HTMLElement;
-    const position = Elem.getPosition(target);
 
-    menu.API.contextMenu(slideMenuItems, position).then((result) => {
+    menu.API.contextMenu(slideMenuItems).then((result) => {
       console.log('menu close', result);
       target.blur();
     });
@@ -137,6 +135,52 @@ export const OutlineSlideItem = ({
     if (!isNewSlide && activeSlide.id === -1 && isFirstItem) {
       selectCurrentSlide();
     }
+
+    menu.API.onOutlineDuplicateSlide(() => {
+      if (activeSlide.id !== slide.id) {
+        return;
+      }
+
+      Projects.duplicateSlide(slide);
+    });
+
+    menu.API.onOutlineRenameSlide(() => {
+      if (activeSlide.id !== slide.id) {
+        return;
+      }
+
+      setIsEdit(true);
+    });
+
+    menu.API.onOutlineRemoveSlide(() => {
+      if (activeSlide.id !== slide.id) {
+        return;
+      }
+
+      sys
+        .messageDialog({
+          message: 'Are you sure?',
+          buttons: ['Delete Slide', 'Cancel'],
+          detail: slide.name,
+        })
+        .then((res) => {
+          if (res.error) {
+            console.error(res);
+            return;
+          }
+
+          if (res.data.response === 0) {
+            resetActiveSlide();
+            Projects.removeSlide(slide);
+          }
+        });
+    });
+
+    return () => {
+      menu.API.offOutlineDuplicateSlide();
+      menu.API.offOutlineRenameSlide();
+      menu.API.offOutlineRemoveSlide();
+    };
   }, [isActive, activeSlide.id, isFirstItem, isNewSlide]);
 
   return (

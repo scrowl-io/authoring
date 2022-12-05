@@ -19,27 +19,27 @@ export const Fieldset = ({
 }: InputFieldsetProps) => {
   const fields = Object.keys(content);
 
-  const handleFieldOnChange = (inputField, val) => {
+  const handleFieldOnChange = (inputField, val, ...args) => {
     if (onChange) {
-      onChange(inputField.split('.'), val);
+      onChange(inputField.split('.'), val, ...args);
     }
   };
 
-  const handleFieldOnValidate = (inputField, val) => {
+  const handleFieldOnValidate = (inputField, val, ...args) => {
     if (onValidate) {
-      onValidate(inputField.split('.'), val);
+      onValidate(inputField.split('.'), val, ...args);
     }
   };
 
-  const handleFieldOnFocus = (inputField, val) => {
+  const handleFieldOnFocus = (inputField, val, ...args) => {
     if (onFocus) {
-      onFocus(inputField.split('.'), val);
+      onFocus(inputField.split('.'), val, ...args);
     }
   };
 
-  const handleFieldOnBlur = (inputField, val) => {
+  const handleFieldOnBlur = (inputField, val, ...args) => {
     if (onBlur) {
-      onBlur(inputField.split('.'), val);
+      onBlur(inputField.split('.'), val, ...args);
     }
   };
 

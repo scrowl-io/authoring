@@ -1,14 +1,15 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import * as css from '../../_pane-details.scss';
 import { Projects } from '../../../../../../models';
 import { useActiveSlide } from '../../../../page-workspace-hooks';
 import { OutlineModules } from './';
 import { getContainer } from './utils';
+import { events, menu } from '../../../../../../services';
 
 export const Outline = () => {
   const draggable = useRef<HTMLDivElement>();
   const defaultId = '-1';
-  const activeSlide = useActiveSlide();
+  const activeSlide = useActiveSlide() as Projects.ProjectSlide;
 
   const handleDragStart = (ev: React.DragEvent<HTMLDivElement>) => {
     const appNode = document.getElementById('app');
@@ -264,6 +265,56 @@ export const Outline = () => {
     draggable.current.remove();
     draggable.current = undefined;
   };
+
+  useEffect(() => {
+    const handleSlideFocus = (ev: CustomEvent) => {
+      setTimeout(() => {
+        requestAnimationFrame(() => {
+          const slideId = ev.detail;
+
+          const slideNavItem = document.querySelector(
+            'div[data-slide-id="' + slideId + '"]'
+          );
+
+          if (!slideNavItem) {
+            return;
+          }
+
+          slideNavItem.scrollIntoView();
+        });
+      }, 250);
+    };
+
+    events.slide.onFocus(handleSlideFocus);
+
+    menu.API.onOutlineAddSlide(() => {
+      Projects.addSlide({
+        id: activeSlide.id,
+        lessonId: activeSlide.lessonId,
+        moduleId: activeSlide.moduleId,
+      });
+    });
+
+    menu.API.onOutlineAddLesson(() => {
+      Projects.addLesson({
+        id: activeSlide.lessonId,
+        moduleId: activeSlide.moduleId,
+      });
+    });
+
+    menu.API.onOutlineAddModule(() => {
+      Projects.addModule({
+        id: -1,
+      });
+    });
+
+    return () => {
+      events.slide.offFocus(handleSlideFocus);
+      menu.API.offOutlineAddSlide();
+      menu.API.offOutlineAddLesson();
+      menu.API.offOutlineAddModule();
+    };
+  });
 
   return (
     <div
