@@ -9,7 +9,6 @@ import {
   resetActiveSlide,
   useNewSlide,
 } from '../../../../';
-import { Elem } from '../../../../../../utils';
 import { menu, sys } from '../../../../../../services';
 import { InlineInput } from '../../../../../../components';
 
@@ -136,6 +135,45 @@ export const OutlineSlideItem = ({
     if (!isNewSlide && activeSlide.id === -1 && isFirstItem) {
       selectCurrentSlide();
     }
+
+    menu.API.onOutlineAddSlide(() => {
+      if (activeSlide.id !== slide.id) {
+        return;
+      }
+
+      console.log('app bar: add slide', slide.name);
+    });
+
+    menu.API.onOutlineDuplicateSlide(() => {
+      if (activeSlide.id !== slide.id) {
+        return;
+      }
+
+      console.log('app bar: dup slide', slide.name);
+    });
+
+    menu.API.onOutlineRenameSlide(() => {
+      if (activeSlide.id !== slide.id) {
+        return;
+      }
+
+      console.log('app bar: rename slide', slide.name);
+    });
+
+    menu.API.onOutlineRemoveSlide(() => {
+      if (activeSlide.id !== slide.id) {
+        return;
+      }
+
+      console.log('app bar: remove slide', slide.name);
+    });
+
+    return () => {
+      menu.API.offOutlineAddSlide();
+      menu.API.offOutlineDuplicateSlide();
+      menu.API.offOutlineRenameSlide();
+      menu.API.offOutlineRemoveSlide();
+    };
   }, [isActive, activeSlide.id, isFirstItem, isNewSlide]);
 
   return (

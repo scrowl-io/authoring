@@ -5,6 +5,7 @@ import {
   MenuItemEndpointFile,
   MenuItemEndpointPreview,
   PreviewTypes,
+  MenuItemEndpointOutline,
 } from './menu.types';
 import { rq } from '../../services';
 
@@ -23,6 +24,15 @@ const ENDPOINTS_FILE: MenuItemEndpointFile = {
 const ENDPOINTS_PREVIEW: MenuItemEndpointPreview = {
   open: '/preview/open',
   update: '/preview/update',
+};
+
+const ENDPOINTS_OUTLINE: MenuItemEndpointOutline = {
+  addSlide: '/outline/slide/add',
+  addLesson: '/outline/lesson/add',
+  addModule: '/outline/module/add',
+  duplicateSlide: '/outline/slide/duplicate',
+  renameSlide: '/outline/slide/rename',
+  removeSlide: '/outline/slide/remove',
 };
 
 export const contextMenu = (
@@ -151,6 +161,54 @@ export const updatePreviewMenu = (type: PreviewTypes) => {
   return rq.invoke(ENDPOINTS_PREVIEW.update, type);
 };
 
+export const onOutlineAddSlide = (listener: rq.Listener) => {
+  rq.on(ENDPOINTS_OUTLINE.addSlide, listener);
+};
+
+export const offOutlineAddSlide = () => {
+  rq.offAll(ENDPOINTS_OUTLINE.addSlide);
+};
+
+export const onOutlineAddLesson = (listener: rq.Listener) => {
+  rq.on(ENDPOINTS_OUTLINE.addLesson, listener);
+};
+
+export const offOutlineAddLesson = () => {
+  rq.offAll(ENDPOINTS_OUTLINE.addLesson);
+};
+
+export const onOutlineAddModule = (listener: rq.Listener) => {
+  rq.on(ENDPOINTS_OUTLINE.addModule, listener);
+};
+
+export const offOutlineAddModule = () => {
+  rq.offAll(ENDPOINTS_OUTLINE.addModule);
+};
+
+export const onOutlineDuplicateSlide = (listener: rq.Listener) => {
+  rq.on(ENDPOINTS_OUTLINE.duplicateSlide, listener);
+};
+
+export const offOutlineDuplicateSlide = () => {
+  rq.offAll(ENDPOINTS_OUTLINE.duplicateSlide);
+};
+
+export const onOutlineRenameSlide = (listener: rq.Listener) => {
+  rq.on(ENDPOINTS_OUTLINE.renameSlide, listener);
+};
+
+export const offOutlineRenameSlide = () => {
+  rq.offAll(ENDPOINTS_OUTLINE.renameSlide);
+};
+
+export const onOutlineRemoveSlide = (listener: rq.Listener) => {
+  rq.on(ENDPOINTS_OUTLINE.removeSlide, listener);
+};
+
+export const offOutlineRemoveSlide = () => {
+  rq.offAll(ENDPOINTS_OUTLINE.removeSlide);
+};
+
 export default {
   contextMenu,
   toggleMenu,
@@ -165,4 +223,16 @@ export default {
   onPreviewOpen,
   offPreviewOpen,
   updatePreviewMenu,
+  onOutlineAddSlide,
+  offOutlineAddSlide,
+  onOutlineAddLesson,
+  offOutlineAddLesson,
+  onOutlineAddModule,
+  offOutlineAddModule,
+  onOutlineDuplicateSlide,
+  offOutlineDuplicateSlide,
+  onOutlineRenameSlide,
+  offOutlineRenameSlide,
+  onOutlineRemoveSlide,
+  offOutlineRemoveSlide
 };

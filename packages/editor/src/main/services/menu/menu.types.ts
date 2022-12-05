@@ -81,3 +81,45 @@ export type MenuItemEndpointPreview = {
 }
 
 export type PreviewTypes = 'slide' | 'lesson' | 'module' | 'project';
+
+export interface MenuItemApiOutlineAddSlide extends Omit<rq.RegisterEndpoint, 'name'> {
+  name: '/outline/slide/add';
+}
+
+export interface MenuItemApiOutlineDuplicateSlide extends Omit<rq.RegisterEndpoint, 'name'> {
+  name: '/outline/slide/duplicate';
+}
+
+export interface MenuItemApiOutlineRenameSlide extends Omit<rq.RegisterEndpoint, 'name'> {
+  name: '/outline/slide/rename';
+}
+
+export interface MenuItemApiOutlineRemoveSlide extends Omit<rq.RegisterEndpoint, 'name'> {
+  name: '/outline/slide/remove';
+}
+
+export interface MenuItemApiOutlineAddLesson extends Omit<rq.RegisterEndpoint, 'name'> {
+  name: '/outline/lesson/add';
+}
+
+export interface MenuItemApiOutlineAddModule extends Omit<rq.RegisterEndpoint, 'name'> {
+  name: '/outline/module/add';
+}
+
+export type MenuItemApiOutline = {
+  addSlide: MenuItemApiOutlineAddSlide;
+  duplicateSlide: MenuItemApiOutlineDuplicateSlide;
+  renameSlide: MenuItemApiOutlineRenameSlide;
+  removeSlide: MenuItemApiOutlineRemoveSlide;
+  addLesson: MenuItemApiOutlineAddLesson;
+  addModule: MenuItemApiOutlineAddModule;
+};
+
+export type MenuItemEndpointOutline = {
+  addSlide: MenuItemApiOutlineAddSlide['name'];
+  duplicateSlide: MenuItemApiOutlineDuplicateSlide['name'];
+  renameSlide: MenuItemApiOutlineRenameSlide['name'];
+  removeSlide: MenuItemApiOutlineRemoveSlide['name'];
+  addLesson: MenuItemApiOutlineAddLesson['name'];
+  addModule: MenuItemApiOutlineAddModule['name'];
+};

@@ -4,7 +4,7 @@ import { Projects } from '../../../../../../models';
 import { useActiveSlide } from '../../../../page-workspace-hooks';
 import { OutlineModules } from './';
 import { getContainer } from './utils';
-import { events } from '../../../../../../services';
+import { events, menu } from '../../../../../../services';
 
 export const Outline = () => {
   const draggable = useRef<HTMLDivElement>();
@@ -287,8 +287,23 @@ export const Outline = () => {
 
     events.slide.onFocus(handleSlideFocus);
 
+    menu.API.onOutlineAddSlide(() => {
+      console.log('app bar: add slide', activeSlide.name);
+    });
+
+    menu.API.onOutlineAddLesson(() => {
+      console.log('app bar: add lesson', activeSlide.moduleId);
+    });
+
+    menu.API.onOutlineAddModule(() => {
+      console.log('app bar: add module');
+    });
+
     return () => {
       events.slide.offFocus(handleSlideFocus);
+      menu.API.offOutlineAddSlide();
+      menu.API.offOutlineAddLesson();
+      menu.API.offOutlineAddModule();
     };
   });
 
