@@ -9,7 +9,6 @@ import {
   resetActiveSlide,
   useNewSlide,
 } from '../../../../';
-import { Elem } from '../../../../../../utils';
 import { menu, sys } from '../../../../../../services';
 import { InlineInput } from '../../../../../../components';
 
@@ -136,6 +135,52 @@ export const OutlineSlideItem = ({
     if (!isNewSlide && activeSlide.id === -1 && isFirstItem) {
       selectCurrentSlide();
     }
+
+    menu.API.onOutlineDuplicateSlide(() => {
+      if (activeSlide.id !== slide.id) {
+        return;
+      }
+
+      Projects.duplicateSlide(slide);
+    });
+
+    menu.API.onOutlineRenameSlide(() => {
+      if (activeSlide.id !== slide.id) {
+        return;
+      }
+
+      setIsEdit(true);
+    });
+
+    menu.API.onOutlineRemoveSlide(() => {
+      if (activeSlide.id !== slide.id) {
+        return;
+      }
+
+      sys
+        .messageDialog({
+          message: 'Are you sure?',
+          buttons: ['Delete Slide', 'Cancel'],
+          detail: slide.name,
+        })
+        .then((res) => {
+          if (res.error) {
+            console.error(res);
+            return;
+          }
+
+          if (res.data.response === 0) {
+            resetActiveSlide();
+            Projects.removeSlide(slide);
+          }
+        });
+    });
+
+    return () => {
+      menu.API.offOutlineDuplicateSlide();
+      menu.API.offOutlineRenameSlide();
+      menu.API.offOutlineRemoveSlide();
+    };
   }, [isActive, activeSlide.id, isFirstItem, isNewSlide]);
 
   return (
