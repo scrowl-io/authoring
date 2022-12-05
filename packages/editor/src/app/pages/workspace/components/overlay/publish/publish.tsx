@@ -19,7 +19,7 @@ const PublishFormElement = (
   const initialErrorState = {
     name: '',
   };
-  const [publishErrors, setPublishErrors] = useState(initialErrorState);
+  const [publishErrors, setPublishErrors] = useState({});
 
   const handleClose = () => {
     onClose();
@@ -31,21 +31,6 @@ const PublishFormElement = (
     const errors = {
       name: '',
     };
-
-    if (hasProp(data, 'name')) {
-      let { name } = data;
-
-      if (name.length) {
-        name = name.trim();
-      }
-
-      if (!name.length) {
-        isValid = false;
-        errors.name = 'Cannot be empty';
-      }
-
-      update['name'] = name;
-    }
 
     setPublishErrors(errors);
     return [isValid, update];
