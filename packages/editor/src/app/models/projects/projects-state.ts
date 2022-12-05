@@ -5,6 +5,7 @@ import { updateObj, List } from '../../utils';
 export const initialState = {
   isDirty: false, // true if the user has made any change
   isUncommitted: false, // true if the user has any unsaved change
+  isNew: true,
   syncScormName: true,
   isOpenProjectBrowser: false,
   isLoaded: false,
@@ -95,6 +96,10 @@ export const config: stateManager.StateConfig = {
     },
     setData: (state, action) => {
       updateObj(state.data, action.payload);
+
+      if (action.payload.meta && action.payload.meta.name) {
+        state.isNew = false;
+      }
 
       if (
         action.payload.meta &&
