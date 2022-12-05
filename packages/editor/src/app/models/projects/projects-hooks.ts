@@ -38,6 +38,7 @@ export const useInteractions = () => {
       isDirty: data.projects.isDirty,
       isUncommitted: data.projects.isUncommitted,
       isLoaded: data.projects.isLoaded,
+      isNew: data.projects.isNew,
     };
   });
 };

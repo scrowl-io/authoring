@@ -131,6 +131,14 @@ export const enableProjectActions = () => {
   return toggleMenu(projectMenuIds, true);
 };
 
+export const onProjectCreate = (listener: rq.Listener) => {
+  rq.on(ENDPOINTS_FILE.create, listener);
+};
+
+export const offProjectCreate = () => {
+  rq.offAll(ENDPOINTS_FILE.create);
+};
+
 export const onProjectSave = (listener: rq.Listener) => {
   rq.on(ENDPOINTS_FILE.save, listener);
 };

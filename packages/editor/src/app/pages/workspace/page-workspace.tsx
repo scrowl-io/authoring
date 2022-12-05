@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import * as css from './_page-workspace.scss';
 import {
   openPromptProjectName,
@@ -43,6 +43,8 @@ export const Page = () => {
   const projectData = Projects.useData();
   const assets = Projects.useAssets();
   const activeSlide = useActiveSlide() as Projects.ProjectSlide;
+  const projectInteractions = Projects.useInteractions();
+  const [inProgress, setProgress] = useState(false);
 
   useEffect(() => {
     let isListening = true;
@@ -112,17 +114,90 @@ export const Page = () => {
       });
     };
 
+    const createListener = () => {
+      if (inProgress) {
+        return;
+      }
+
+      const createNewProject = () => {
+        setProgress(true);
+        Projects.resetState();
+        resetWorkspace();
+        resetActiveSlide();
+
+        Projects.create().then((result) => {
+          if (result.error) {
+            setProgress(false);
+            console.error(result);
+            return;
+          }
+        });
+      };
+
+      const promptDiscardProject = () => {
+        sys
+          .messageDialog({
+            message: 'Are you sure you want to discard this unsaved project?',
+            buttons: ['Discard', 'Cancel'],
+            detail: 'Discard Project',
+          })
+          .then((res) => {
+            if (res.error) {
+              console.error(res);
+              return;
+            }
+
+            if (res.data.response === 0) {
+              createNewProject();
+            }
+          });
+      };
+
+      const promptDiscardChanges = () => {
+        sys
+          .messageDialog({
+            message: 'Are you sure you want to discard this unsaved changes?',
+            buttons: ['Discard', 'Cancel'],
+            detail: 'Discard Changes',
+          })
+          .then((res) => {
+            if (res.error) {
+              console.error(res);
+              return;
+            }
+
+            if (res.data.response === 0) {
+              createNewProject();
+            }
+          });
+      };
+
+      if (projectInteractions.isNew) {
+        promptDiscardProject();
+        return;
+      }
+
+      if (projectInteractions.isDirty || projectInteractions.isUncommitted) {
+        promptDiscardChanges();
+        return;
+      }
+
+      createNewProject();
+    };
+
+    menu.API.onProjectCreate(createListener);
     menu.API.onProjectSave(saveListener);
     menu.API.onProjectOpen(openListener);
     menu.API.onPreviewOpen(previewListener);
 
     return () => {
       isListening = false;
+      menu.API.offProjectCreate();
       menu.API.offProjectSave();
       menu.API.offProjectOpen();
       menu.API.offPreviewOpen();
     };
-  }, [projectData, assets, activeSlide]);
+  }, [projectData, assets, activeSlide, projectInteractions, inProgress]);
 
   return (
     <>
