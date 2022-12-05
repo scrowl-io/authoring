@@ -4,6 +4,7 @@ export interface LogoCommons {
   sizing: 'sm' | 'md';
   isAnimated?: boolean;
   animationDelay?: number;
+  asLink?: boolean;
 }
 
 export type LogoMixedElement =

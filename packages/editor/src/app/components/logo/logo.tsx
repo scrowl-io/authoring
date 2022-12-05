@@ -9,6 +9,7 @@ export const Logo = ({
   sizing,
   isAnimated,
   animationDelay,
+  asLink,
   ...props
 }: LogoProps) => {
   const getSize = () => {
@@ -83,7 +84,7 @@ export const Logo = ({
     </svg>
   );
 
-  if (!props.href) {
+  if (!asLink) {
     const divProps = props as React.AllHTMLAttributes<HTMLDivElement>;
 
     return (
