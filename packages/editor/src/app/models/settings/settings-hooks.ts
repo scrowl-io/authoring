@@ -85,6 +85,11 @@ export const setPreviewMode = (type: menu.PreviewTypes) => {
   }
 
   processor.dispatch(state.setPreviewMode(type));
+  API.set('previewMode', type).then((res) => {
+    if (res.error) {
+      console.error(res);
+    }
+  });
 };
 
 export const init = () => {
