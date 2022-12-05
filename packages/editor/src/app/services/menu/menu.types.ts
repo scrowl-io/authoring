@@ -5,5 +5,6 @@ export type {
   MenuItemEndpointFile,
   MenuItemEndpointPreview,
   PreviewTypes,
-  MenuItemEndpointOutline
+  MenuItemEndpointOutline,
+  MenuItemEndpointPublish
 } from '../../../main/services/menu/menu.types';

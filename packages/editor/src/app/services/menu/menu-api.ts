@@ -6,6 +6,7 @@ import {
   MenuItemEndpointPreview,
   PreviewTypes,
   MenuItemEndpointOutline,
+  MenuItemEndpointPublish
 } from './menu.types';
 import { rq } from '../../services';
 
@@ -33,6 +34,11 @@ const ENDPOINTS_OUTLINE: MenuItemEndpointOutline = {
   duplicateSlide: '/outline/slide/duplicate',
   renameSlide: '/outline/slide/rename',
   removeSlide: '/outline/slide/remove',
+};
+
+const ENDPOINTS_PUBLISH: MenuItemEndpointPublish = {
+  publish: '/publish',
+  publishQuick: '/publish/quick',
 };
 
 export const contextMenu = (
@@ -209,6 +215,22 @@ export const offOutlineRemoveSlide = () => {
   rq.offAll(ENDPOINTS_OUTLINE.removeSlide);
 };
 
+export const onPublish = (listener: rq.Listener) => {
+  rq.on(ENDPOINTS_PUBLISH.publish, listener);
+};
+
+export const offPublish = () => {
+  rq.offAll(ENDPOINTS_PUBLISH.publish);
+};
+
+export const onPublishQuick = (listener: rq.Listener) => {
+  rq.on(ENDPOINTS_PUBLISH.publishQuick, listener);
+};
+
+export const offPublishQuick = () => {
+  rq.offAll(ENDPOINTS_PUBLISH.publishQuick);
+};
+
 export default {
   contextMenu,
   toggleMenu,
@@ -234,5 +256,9 @@ export default {
   onOutlineRenameSlide,
   offOutlineRenameSlide,
   onOutlineRemoveSlide,
-  offOutlineRemoveSlide
+  offOutlineRemoveSlide,
+  onPublish,
+  offPublish,
+  onPublishQuick,
+  offPublishQuick
 };

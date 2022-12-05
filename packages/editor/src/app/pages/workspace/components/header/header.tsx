@@ -250,6 +250,21 @@ export const Header = () => {
     }
   }, [projectMeta.name]);
 
+  useEffect(() => {
+    menu.API.onPublish(() => {
+      setIsOpenPublish(true);
+    });
+
+    menu.API.onPublishQuick(() => {
+      handelSubmitPublish();
+    });
+
+    return () => {
+      menu.API.offPublish();
+      menu.API.offPublishQuick();
+    };
+  }, [projectData]);
+
   return (
     <>
       <motion.div
