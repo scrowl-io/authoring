@@ -66,12 +66,18 @@ export interface MenuItemApiPreviewOpen extends Omit<rq.RegisterEndpoint, 'name'
   name: '/preview/open';
 }
 
+export interface MenuItemApiPreviewUpdate extends Omit<rq.RegisterEndpoint, 'name'> {
+  name: '/preview/update';
+}
+
 export type MenuItemApiPreview = {
   open: MenuItemApiPreviewOpen;
+  update: MenuItemApiPreviewUpdate;
 }
 
 export type MenuItemEndpointPreview = {
   open: MenuItemApiPreviewOpen['name'];
+  update: MenuItemApiPreviewUpdate['name'];
 }
 
 export type PreviewTypes = 'slide' | 'lesson' | 'module' | 'project';

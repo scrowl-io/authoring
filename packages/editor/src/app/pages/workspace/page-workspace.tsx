@@ -15,7 +15,7 @@ import {
   PromptProjectName,
   PublishProgress,
 } from './components';
-import { Projects } from '../../models';
+import { Projects, Settings } from '../../models';
 import { menu, sys } from '../../services';
 
 export const Path = '/workspace';
@@ -99,6 +99,7 @@ export const Page = () => {
           break;
       }
 
+      Settings.setPreviewMode(type);
       Projects.preview(payload).then((res) => {
         if (res.error) {
           sys.messageDialog({
