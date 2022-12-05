@@ -123,3 +123,21 @@ export type MenuItemEndpointOutline = {
   addLesson: MenuItemApiOutlineAddLesson['name'];
   addModule: MenuItemApiOutlineAddModule['name'];
 };
+
+export interface MenuItemApiPublishExport extends Omit<rq.RegisterEndpoint, 'name'> {
+  name: '/publish';
+}
+
+export interface MenuItemApiPublishExportQuick extends Omit<rq.RegisterEndpoint, 'name'> {
+  name: '/publish/quick';
+}
+
+export type MenuItemApiPublish = {
+  publish: MenuItemApiPublishExport;
+  publishQuick: MenuItemApiPublishExportQuick;
+};
+
+export type MenuItemEndpointPublish = {
+  publish: MenuItemApiPublishExport['name'];
+  publishQuick: MenuItemApiPublishExportQuick['name'];
+};
