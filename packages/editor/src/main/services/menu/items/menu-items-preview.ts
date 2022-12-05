@@ -1,7 +1,7 @@
 import { MenuItemConstructorOptions, MenuItem, Menu } from 'electron';
-import { MenuItemApiPreview } from '../menu.types';
+import { MenuItemApiPreview, PreviewTypes } from '../menu.types';
 import { rq, log } from '../..';
-import { get as getSettings } from '../../../models/settings';
+import { get as getSettings, set as setSetting } from '../../../models/settings';
 
 export const API: MenuItemApiPreview = {
   open: {
@@ -21,12 +21,12 @@ export const create = (isMac: boolean) => {
         id: `${menuId}-open`,
         label: 'Preview...',
         accelerator: 'CmdorCtrl+Shift+P',
-        click: (ev) => {
+        click: (menuItem) => {
           let selectedItem: MenuItem | undefined = undefined;
 
-          for (var i = 0,  ii = ev.menu.items.length; i < ii; i++) {
-            if (ev.menu.items[i].type === 'radio' && ev.menu.items[i].checked) {
-              selectedItem = ev.menu.items[i];
+          for (var i = 0,  ii = menuItem.menu.items.length; i < ii; i++) {
+            if (menuItem.menu.items[i].type === 'radio' && menuItem.menu.items[i].checked) {
+              selectedItem = menuItem.menu.items[i];
               break;
             }
           }
@@ -45,8 +45,15 @@ export const create = (isMac: boolean) => {
         label: "Current Slide",
         checked: true,
         enabled: false,
-        click: () => {
-          rq.send(API.open.name, 'slide');
+        click: (menuItem, browserWindow, ev) => {
+          const type: PreviewTypes = 'slide';
+
+          rq.send(API.open.name, type);
+          setSetting(ev, 'previewMode', type).then((res) => {
+            if (res.error) {
+              log.error(res);
+            }
+          });
         },
       },
       {
@@ -55,8 +62,15 @@ export const create = (isMac: boolean) => {
         label: "Current Lesson",
         checked: false,
         enabled: false,
-        click: () => {
-          rq.send(API.open.name, 'lesson');
+        click: (menuItem, browserWindow, ev) => {
+          const type: PreviewTypes = 'lesson';
+
+          rq.send(API.open.name, type);
+          setSetting(ev, 'previewMode', type).then((res) => {
+            if (res.error) {
+              log.error(res);
+            }
+          });
         },
       },
       {
@@ -65,8 +79,15 @@ export const create = (isMac: boolean) => {
         label: "Current Module",
         checked: false,
         enabled: false,
-        click: () => {
-          rq.send(API.open.name, 'module');
+        click: (menuItem, browserWindow, ev) => {
+          const type: PreviewTypes = 'module';
+
+          rq.send(API.open.name, type);
+          setSetting(ev, 'previewMode', type).then((res) => {
+            if (res.error) {
+              log.error(res);
+            }
+          });
         },
       },
       {
@@ -75,8 +96,15 @@ export const create = (isMac: boolean) => {
         label: "Entire Project",
         checked: false,
         enabled: false,
-        click: () => {
-          rq.send(API.open.name, 'project');
+        click: (menuItem, browserWindow, ev) => {
+          const type: PreviewTypes = 'project';
+
+          rq.send(API.open.name, type);
+          setSetting(ev, 'previewMode', type).then((res) => {
+            if (res.error) {
+              log.error(res);
+            }
+          });
         },
       },
     ],
