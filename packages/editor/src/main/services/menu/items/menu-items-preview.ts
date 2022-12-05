@@ -3,13 +3,6 @@ import { MenuItemApiPreview, PreviewTypes } from '../menu.types';
 import { rq, log } from '../..';
 import { get as getSettings, set as setSetting } from '../../../models/settings';
 
-export const API: MenuItemApiPreview = {
-  open: {
-    name: '/preview/open',
-    type: 'send',
-  },
-};
-
 const menuId = 'preview-menu';
 
 export const create = (isMac: boolean) => {
@@ -113,6 +106,96 @@ export const create = (isMac: boolean) => {
   return template;
 };
 
+const updateMenuItems = (menu: Menu, previewMode: PreviewTypes): rq.ApiResult => {
+  const menuItem = menu.getMenuItemById(menuId);
+
+  if (!menuItem || !menuItem.submenu) {
+    return {
+      error: true,
+      message: 'Unable to find preview menu',
+    };
+  }
+
+  const items = menuItem.submenu.items;
+  let selectedItem: MenuItem | undefined = undefined;
+  let currentItem: MenuItem | undefined = undefined;
+  
+  for (var i = 0,  ii = items.length; i < ii; i++) {
+    if (items[i].type === 'radio') {
+      if (items[i].checked) {
+        currentItem = items[i];
+      }
+
+      if (items[i].id.replace(`${menuId}-`, '') === previewMode) {
+        selectedItem = items[i];
+      }
+    }
+
+    if (currentItem && selectedItem) {
+      break;
+    }
+  }
+
+  if (!currentItem || !selectedItem) {
+    return {
+      error: true,
+      message: 'Unable to find preview mode items',
+      data: {
+        previewMode,
+      },
+    };
+  }
+
+  if (currentItem.id === selectedItem.id) {
+    return {
+      error: false,
+      data: {
+        previewMode,
+      },
+    };
+  }
+
+  currentItem.checked = false;
+  selectedItem.checked = true;
+
+  return {
+    error: false,
+    data: {
+      previewMode,
+    },
+  };
+};
+
+export const updatePreviewMenu = (ev: rq.RequestEvent, type: PreviewTypes) => {
+  return new Promise<rq.ApiResult>((resolve) => {
+    const menu = Menu.getApplicationMenu();
+
+    if (!menu) {
+      resolve({
+        error: true,
+        message: `Unable to update preview menu - application menu not initialized`,
+      });
+      return;
+    }
+
+    const updateRes = updateMenuItems(menu, type);
+
+    resolve(updateRes);
+  });
+};
+
+export const API: MenuItemApiPreview = {
+  open: {
+    name: '/preview/open',
+    type: 'send',
+  },
+  update: {
+    name: '/preview/update',
+    type: 'invoke',
+    fn: updatePreviewMenu,
+  },
+};
+
 export const register = () => {
   rq.registerEndpointAll(API);
 };
@@ -135,68 +218,9 @@ export const asyncInit = (menu: Menu) => {
       }
 
       const previewMode = settingsRes.data.setting;
-      const menuItem = menu.getMenuItemById(menuId);
+      const updateRes = updateMenuItems(menu, previewMode);
 
-      if (!menuItem || !menuItem.submenu) {
-        resolve({
-          error: true,
-          message: 'Unable to find preview menu',
-        });
-        return;
-      }
-
-      const items = menuItem.submenu.items;
-      let selectedItem: MenuItem | undefined = undefined;
-      let currentItem: MenuItem | undefined = undefined;
-      
-      for (var i = 0,  ii = items.length; i < ii; i++) {
-        if (items[i].type === 'radio') {
-          if (items[i].checked) {
-            currentItem = items[i];
-          }
-
-          if (items[i].id.replace(`${menuId}-`, '') === previewMode) {
-            selectedItem = items[i];
-          }
-        }
-
-        if (currentItem && selectedItem) {
-          break;
-        }
-      }
-
-      if (!currentItem || !selectedItem) {
-        const itemsNotFound = {
-          error: true,
-          message: 'Unable to find preview mode items',
-          data: {
-            previewMode,
-          },
-        };
-        log.error(itemsNotFound);
-        resolve(itemsNotFound);
-        return;
-      }
-
-      if (currentItem.id === selectedItem.id) {
-        resolve({
-          error: false,
-          data: {
-            previewMode,
-          },
-        });
-        return;
-      }
-
-      currentItem.checked = false;
-      selectedItem.checked = true;
-
-      resolve({
-        error: false,
-        data: {
-          previewMode,
-        },
-      });
+      resolve(updateRes);
     });
   });
 };

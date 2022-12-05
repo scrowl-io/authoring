@@ -77,6 +77,16 @@ export const Header = () => {
 
   const handleProjectPreview = (payload: Projects.PreviewProjectReq) => {
     Settings.setPreviewMode(payload.type);
+
+    menu.API.updatePreviewMenu(payload.type).then((res) => {
+      if (res.error) {
+        sys.messageDialog({
+          message: res.message,
+        });
+        return;
+      }
+    });
+
     Projects.preview(payload).then((res) => {
       if (res.error) {
         sys.messageDialog({

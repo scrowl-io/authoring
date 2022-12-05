@@ -3,7 +3,8 @@ import {
   ContextMenuItem,
   ContextMenuPosition,
   MenuItemEndpointFile,
-  MenuItemEndpointPreview
+  MenuItemEndpointPreview,
+  PreviewTypes,
 } from './menu.types';
 import { rq } from '../../services';
 
@@ -21,6 +22,7 @@ const ENDPOINTS_FILE: MenuItemEndpointFile = {
 
 const ENDPOINTS_PREVIEW: MenuItemEndpointPreview = {
   open: '/preview/open',
+  update: '/preview/update',
 };
 
 export const contextMenu = (
@@ -145,6 +147,10 @@ export const offPreviewOpen = () => {
   rq.offAll(ENDPOINTS_PREVIEW.open);
 };
 
+export const updatePreviewMenu = (type: PreviewTypes) => {
+  return rq.invoke(ENDPOINTS_PREVIEW.update, type);
+};
+
 export default {
   contextMenu,
   toggleMenu,
@@ -158,4 +164,5 @@ export default {
   offProjectClose,
   onPreviewOpen,
   offPreviewOpen,
+  updatePreviewMenu,
 };
