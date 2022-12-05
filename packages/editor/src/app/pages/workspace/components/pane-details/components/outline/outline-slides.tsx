@@ -136,14 +136,6 @@ export const OutlineSlideItem = ({
       selectCurrentSlide();
     }
 
-    menu.API.onOutlineAddSlide(() => {
-      if (activeSlide.id !== slide.id) {
-        return;
-      }
-
-      console.log('app bar: add slide', slide.name);
-    });
-
     menu.API.onOutlineDuplicateSlide(() => {
       if (activeSlide.id !== slide.id) {
         return;
@@ -169,7 +161,6 @@ export const OutlineSlideItem = ({
     });
 
     return () => {
-      menu.API.offOutlineAddSlide();
       menu.API.offOutlineDuplicateSlide();
       menu.API.offOutlineRenameSlide();
       menu.API.offOutlineRemoveSlide();
