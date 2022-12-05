@@ -12,6 +12,7 @@ export const Path = '/start';
 export const Page = () => {
   const navigate = useNavigate();
   const listInProgress = useRef(false);
+  const [inProgress, setProgress] = useState(false);
   const [projects, setProjects] = useState<Array<Projects.ProjectFile>>([]);
 
   useEffect(() => {
@@ -38,6 +39,28 @@ export const Page = () => {
       });
     };
 
+    const createListener = (result) => {
+      if (inProgress) {
+        return;
+      }
+
+      setProgress(true);
+
+      Projects.create().then((result) => {
+        if (result.error) {
+          setProgress(false);
+          console.error(result);
+          return;
+        }
+
+        menu.API.enableProjectActions().then(() => {
+          setProgress(false);
+          navigate('/workspace');
+        });
+      });
+    };
+
+    menu.API.onProjectCreate(createListener);
     menu.API.onProjectOpen(openListener);
 
     if (!listInProgress.current) {
@@ -46,9 +69,10 @@ export const Page = () => {
     }
 
     return () => {
+      menu.API.offProjectCreate();
       menu.API.offProjectOpen();
     };
-  });
+  }, [inProgress]);
 
   return (
     <div className={css.start}>
