@@ -2,7 +2,7 @@ import settingsHandler from 'electron-settings';
 import { SettingsApi } from './settings.types';
 import { rq } from '../../services';
 
-export const get = (ev: rq.RequestEvent, key, defaultValue) => {
+export const get = (ev: rq.RequestEvent, key?: string, defaultValue?: any) => {
   return new Promise<rq.ApiResult>((resolve) => {
     if (!key) {
       settingsHandler
