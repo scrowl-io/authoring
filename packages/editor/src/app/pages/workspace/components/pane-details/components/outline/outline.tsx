@@ -9,7 +9,7 @@ import { events, menu } from '../../../../../../services';
 export const Outline = () => {
   const draggable = useRef<HTMLDivElement>();
   const defaultId = '-1';
-  const activeSlide = useActiveSlide();
+  const activeSlide = useActiveSlide() as Projects.ProjectSlide;
 
   const handleDragStart = (ev: React.DragEvent<HTMLDivElement>) => {
     const appNode = document.getElementById('app');
@@ -288,15 +288,24 @@ export const Outline = () => {
     events.slide.onFocus(handleSlideFocus);
 
     menu.API.onOutlineAddSlide(() => {
-      console.log('app bar: add slide', activeSlide.name);
+      Projects.addSlide({
+        id: activeSlide.id,
+        lessonId: activeSlide.lessonId,
+        moduleId: activeSlide.moduleId,
+      });
     });
 
     menu.API.onOutlineAddLesson(() => {
-      console.log('app bar: add lesson', activeSlide.moduleId);
+      Projects.addLesson({
+        id: activeSlide.lessonId,
+        moduleId: activeSlide.moduleId,
+      });
     });
 
     menu.API.onOutlineAddModule(() => {
-      console.log('app bar: add module');
+      Projects.addModule({
+        id: -1,
+      });
     });
 
     return () => {
