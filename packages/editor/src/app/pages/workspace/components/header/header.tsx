@@ -276,7 +276,7 @@ export const Header = () => {
         <Navbar fixed="top" expand="xs" className={css.workspaceHeader}>
           <div className={css.projectMeta}>
             <Logo
-              href={startPath}
+              asLink={true}
               sizing="sm"
               isAnimated={isAnimated}
               animationDelay={animationDelay}
