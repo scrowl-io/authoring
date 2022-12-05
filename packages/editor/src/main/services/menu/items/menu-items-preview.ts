@@ -39,7 +39,7 @@ export const create = (isMac: boolean) => {
       { type: "separator" },
       {
         id: `${menuId}-slide`,
-        type: "radio",
+        type: 'radio',
         label: "Current Slide",
         checked: true,
         enabled: false,
@@ -49,7 +49,7 @@ export const create = (isMac: boolean) => {
       },
       {
         id: `${menuId}-lesson`,
-        type: "radio",
+        type: 'radio',
         label: "Current Lesson",
         checked: false,
         enabled: false,
@@ -59,7 +59,7 @@ export const create = (isMac: boolean) => {
       },
       {
         id: `${menuId}-module`,
-        type: "radio",
+        type: 'radio',
         label: "Current Module",
         checked: false,
         enabled: false,
@@ -69,7 +69,7 @@ export const create = (isMac: boolean) => {
       },
       {
         id: `${menuId}-project`,
-        type: "radio",
+        type: 'radio',
         label: "Entire Project",
         checked: false,
         enabled: false,
