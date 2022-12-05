@@ -141,7 +141,7 @@ export const OutlineSlideItem = ({
         return;
       }
 
-      console.log('app bar: dup slide', slide.name);
+      Projects.duplicateSlide(slide);
     });
 
     menu.API.onOutlineRenameSlide(() => {
@@ -149,7 +149,7 @@ export const OutlineSlideItem = ({
         return;
       }
 
-      console.log('app bar: rename slide', slide.name);
+      setIsEdit(true);
     });
 
     menu.API.onOutlineRemoveSlide(() => {
@@ -157,7 +157,23 @@ export const OutlineSlideItem = ({
         return;
       }
 
-      console.log('app bar: remove slide', slide.name);
+      sys
+        .messageDialog({
+          message: 'Are you sure?',
+          buttons: ['Delete Slide', 'Cancel'],
+          detail: slide.name,
+        })
+        .then((res) => {
+          if (res.error) {
+            console.error(res);
+            return;
+          }
+
+          if (res.data.response === 0) {
+            resetActiveSlide();
+            Projects.removeSlide(slide);
+          }
+        });
     });
 
     return () => {
