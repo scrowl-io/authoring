@@ -242,10 +242,10 @@ export const Header = () => {
   };
 
   useEffect(() => {
-    if (projectMeta.name && projectMeta.name !== projectName) {
-      const nameLn = projectMeta.name.length;
+    if (projectMeta.name !== projectName) {
+      const nameLn = projectMeta.name ? projectMeta.name.length : 0;
 
-      setProjectName(projectMeta.name);
+      setProjectName(projectMeta.name || '');
       setProjectNameSize(nameLn - 3 < 13 ? 13 : nameLn - 3);
     }
   }, [projectMeta.name]);

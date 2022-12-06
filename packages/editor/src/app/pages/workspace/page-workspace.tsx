@@ -138,9 +138,11 @@ export const Page = () => {
       const promptDiscardProject = () => {
         sys
           .messageDialog({
-            message: 'Are you sure you want to discard this unsaved project?',
-            buttons: ['Discard', 'Cancel'],
-            detail: 'Discard Project',
+            type: 'question',
+            title: 'Confirm',
+            message: 'Create new Project Without Saving?',
+            detail: 'Your changes are not saved.',
+            buttons: ['Save Project', 'Discard and Create New', 'Cancel'],
           })
           .then((res) => {
             if (res.error) {
@@ -148,38 +150,42 @@ export const Page = () => {
               return;
             }
 
-            if (res.data.response === 0) {
-              createNewProject();
+            switch (res.data.response) {
+              case 0:
+                Projects.save({
+                  data: projectData,
+                  assets,
+                }).then((saveRes) => {
+                  if (saveRes.data && saveRes.data.action) {
+                    switch (saveRes.data.action) {
+                      case 'prompt-project-name':
+                        openPromptProjectName();
+                        break;
+                    }
+                    return;
+                  } else if (saveRes.error) {
+                    sys.messageDialog({
+                      message: res.message,
+                    });
+                    return;
+                  }
+
+                  createNewProject();
+                });
+                break;
+              case 1:
+                createNewProject();
+                break;
             }
           });
       };
 
-      const promptDiscardChanges = () => {
-        sys
-          .messageDialog({
-            message: 'Are you sure you want to discard this unsaved changes?',
-            buttons: ['Discard', 'Cancel'],
-            detail: 'Discard Changes',
-          })
-          .then((res) => {
-            if (res.error) {
-              console.error(res);
-              return;
-            }
-
-            if (res.data.response === 0) {
-              createNewProject();
-            }
-          });
-      };
-
-      if (projectInteractions.isNew) {
+      if (
+        projectInteractions.isNew ||
+        projectInteractions.isDirty ||
+        projectInteractions.isUncommitted
+      ) {
         promptDiscardProject();
-        return;
-      }
-
-      if (projectInteractions.isDirty || projectInteractions.isUncommitted) {
-        promptDiscardChanges();
         return;
       }
 
