@@ -11,6 +11,8 @@ export const initialState = {
   isOpenPublishProgress: false,
   contentFocus: null,
   newSlide: false,
+  newLesson: false,
+  newModule: false,
 };
 
 export const config: stateManager.StateConfig = {
@@ -35,8 +37,10 @@ export const config: stateManager.StateConfig = {
     closeTemplateBrowser: (state) => {
       state.isOpenTemplateBrowser = false;
     },
-    resetNewSlide: (state) => {
+    resetNewContent: (state) => {
       state.newSlide = false;
+      state.newLesson = false;
+      state.newModule = false;
     },
     openPromptProjectName: (state) => {
       state.isOpenPromptProjectName = true;
@@ -52,8 +56,21 @@ export const config: stateManager.StateConfig = {
     },
   },
   extraReducers: {
-    [Projects.state.addOutlineItem.type]: (state) => {
-      state.newSlide = true;
+    [Projects.state.addOutlineItem.type]: (state, action) => {
+      switch (action.payload.type) {
+        case 'slide':
+          state.newSlide = true;
+          break;
+        case 'lesson':
+          state.newSlide = true;
+          state.newLesson = true;
+          break;
+        case 'module':
+          state.newSlide = true;
+          state.newLesson = true;
+          state.newModule = true;
+          break;
+      }
     },
   },
 };
@@ -67,7 +84,7 @@ export const {
   resetContentFocus,
   openTemplateBrowser,
   closeTemplateBrowser,
-  resetNewSlide,
+  resetNewContent,
   openPromptProjectName,
   closePromptProjectName,
   openPublishProgress,
