@@ -57,6 +57,15 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
   );
   const pages = Pages.create(config, templateList);
 
+  const lessonTotal = pages.length;
+
+  const runtime = window['Scrowl'].runtime;
+  const progress = runtime?.getProgress();
+
+  const targetPage = pages.find((_page, idx) => {
+    return idx / lessonTotal === progress;
+  });
+
   return (
     <Router>
       <div id="scrowl-player" {...props}>
@@ -67,7 +76,12 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
                 <Route key={idx} path={page.url} element={<page.Element />} />
               );
             })}
-            <Route path="*" element={<Navigate to={pages[0].url} />} />
+            <Route
+              path="*"
+              element={
+                <Navigate to={targetPage ? targetPage.url : pages[0].url} />
+              }
+            />
           </Routes>
         </main>
       </div>

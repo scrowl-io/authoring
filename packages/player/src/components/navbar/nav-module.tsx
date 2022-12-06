@@ -6,7 +6,7 @@ import * as css from './_navbar.scss';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-export const NavModule = ({ pageId, config, mIdx }) => {
+export const NavModule = ({ pageId, config, mIdx, completedLessons }) => {
   const currentSlide = pageId;
 
   let moduleSlides: Array<string> = [];
@@ -48,7 +48,7 @@ export const NavModule = ({ pageId, config, mIdx }) => {
 
             return (
               <li key={lIdx}>
-                <Link to={url}>
+                <Link to={completedLessons.includes(lesson) ? url : ''}>
                   <span className={css.lessonButton}>
                     <Icon
                       icon="arrow_drop_down_circle"

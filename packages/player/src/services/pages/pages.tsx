@@ -49,8 +49,6 @@ const Page = ({ slides, controller, templates, ...props }: PageProps) => {
 };
 
 const updateCourseProgress = (project, id) => {
-  console.log('inside pages:');
-
   let lessonsArray: { index: number; targetId: string }[] = [];
   let counter = 1;
   project.outlineConfig.forEach((module, mIdx) => {
@@ -77,7 +75,6 @@ const updateCourseProgress = (project, id) => {
     percentageCompleted = currentSlideIndex / totalLessons;
   }
 
-  console.log(percentageCompleted);
   const runtime = window['Scrowl'].runtime;
   runtime?.updateProgress(percentageCompleted);
 };

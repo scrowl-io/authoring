@@ -446,12 +446,13 @@ export const service: RUNTIME_SERVICE = {
     // SCORM 2004
     service.courseProgress = 1;
     service.setValue('cmi.progress_measure', service.courseProgress);
-    service.setValue('cmi.score.raw', 90.0);
+    service.setValue('cmi.score.raw', 80.0);
     service.setValue('cmi.success_status', 'passed');
 
     // SCORM 1.2 (status is handled separately, but scores will conflict, so only update 1)
-    service.updateStatus('success');
-    // service.setValue('cmi.core.score.raw', 87.0);
+    // service.updateStatus('success');
+    // service.setValue('cmi.core.score.raw', 57.0);
+    // service.updateStatus('failed');
 
     service.save();
 
