@@ -7,8 +7,8 @@ import {
   useTemplateBrowser,
   openTemplateBrowser,
   closeTemplateBrowser,
-  useNewSlide,
-  resetNewSlide,
+  useNewContent,
+  resetNewContent,
   useActiveSlide,
   setActiveSlide,
   resetActiveSlide,
@@ -25,22 +25,22 @@ export const TemplateBrowser = () => {
   const activeSlideRef = useRef(activeSlide);
   const isOpen = useTemplateBrowser();
   const [selectedTemplate, setSelectedTemplate] = useState(activeTemplate);
-  const isNewSlide = useNewSlide();
+  const newContent = useNewContent();
   const latestSlide = Projects.useLatestSlide();
 
   const handelClose = () => {
-    if (isNewSlide) {
+    if (newContent.newSlide) {
       setActiveSlide(activeSlideRef.current);
       setSelectedTemplate(activeSlideRef.current.template);
       Projects.removeSlide(latestSlide);
-      resetNewSlide();
+      resetNewContent();
     }
 
     closeTemplateBrowser();
   };
 
   const handleSubmit = () => {
-    if (!isNewSlide) {
+    if (!newContent.newSlide) {
       setActiveSlide({
         template: selectedTemplate,
       });
@@ -53,7 +53,7 @@ export const TemplateBrowser = () => {
         ...latestSlide,
         template: selectedTemplate,
       });
-      resetNewSlide();
+      resetNewContent();
       Projects.setSlide({
         ...latestSlide,
         template: selectedTemplate,
@@ -89,12 +89,22 @@ export const TemplateBrowser = () => {
   }, [activeTemplate]);
 
   useEffect(() => {
-    if (isNewSlide) {
-      openTemplateBrowser();
-      resetActiveSlide();
-      setSelectedTemplate(templateList[0]);
+    if (newContent.newSlide) {
+      if (!newContent.newLesson && !newContent.newModule) {
+        openTemplateBrowser();
+        setSelectedTemplate(templateList[0]);
+        resetActiveSlide();
+      } else {
+        const newSlide = {
+          ...latestSlide,
+          template: templateList[0],
+        };
+        setActiveSlide(newSlide);
+        resetNewContent();
+        Projects.setSlide(newSlide);
+      }
     }
-  }, [isNewSlide]);
+  }, [newContent.newSlide]);
 
   return (
     <Modal
@@ -163,7 +173,7 @@ export const TemplateBrowser = () => {
         </div>
       </div>
       <footer className="d-flex justify-content-end">
-        {!isNewSlide && (
+        {!newContent.newSlide && (
           <Button variant="link" onClick={handelClose}>
             Cancel
           </Button>

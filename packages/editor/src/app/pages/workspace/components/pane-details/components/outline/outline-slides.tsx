@@ -7,7 +7,7 @@ import {
   useActiveSlide,
   setActiveSlide,
   resetActiveSlide,
-  useNewSlide,
+  useNewContent,
 } from '../../../../';
 import { menu, sys } from '../../../../../../services';
 import { InlineInput } from '../../../../../../components';
@@ -35,7 +35,7 @@ export const OutlineSlideItem = ({
     'data-module-id': slide.moduleId,
   };
   const [isEdit, setIsEdit] = useState(false);
-  const isNewSlide = useNewSlide();
+  const isNewSlide = useNewContent().newSlide;
   const slideMenuItems: Array<menu.ContextMenuItem> = [
     {
       label: 'Duplicate Slide',

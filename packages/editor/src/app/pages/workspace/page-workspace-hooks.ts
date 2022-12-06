@@ -179,19 +179,23 @@ export const closeTemplateBrowser = () => {
   processor.dispatch(fn());
 };
 
-export const useNewSlide = () => {
+export const useNewContent = () => {
   return useSelector((data: stateManager.RootState) => {
-    return data.workspace.newSlide;
+    return {
+      newSlide: data.workspace.newSlide,
+      newLesson: data.workspace.newLesson,
+      newModule: data.workspace.newModule,
+    };
   });
 };
 
-export const resetNewSlide = () => {
+export const resetNewContent = () => {
   if (!processor.dispatch) {
     console.warn('workspace processor not ready');
     return;
   }
 
-  const fn = state.workspace.resetNewSlide as ActionCreatorWithoutPayload;
+  const fn = state.workspace.resetNewContent as ActionCreatorWithoutPayload;
   processor.dispatch(fn());
 };
 
@@ -265,8 +269,8 @@ export default {
   useTemplateBrowser,
   openTemplateBrowser,
   closeTemplateBrowser,
-  useNewSlide,
-  resetNewSlide,
+  useNewContent,
+  resetNewContent,
   usePromptProjectName,
   openPromptProjectName,
   closePromptProjectName,
