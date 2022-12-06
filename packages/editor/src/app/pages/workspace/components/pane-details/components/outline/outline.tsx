@@ -268,21 +268,38 @@ export const Outline = () => {
 
   useEffect(() => {
     const handleSlideFocus = (ev: CustomEvent) => {
-      setTimeout(() => {
-        requestAnimationFrame(() => {
-          const slideId = ev.detail;
+      const slideId = ev.detail;
+      const slideNavItem = document.querySelector(
+        'div[data-slide-id="' + slideId + '"]'
+      );
 
-          const slideNavItem = document.querySelector(
-            'div[data-slide-id="' + slideId + '"]'
-          );
+      if (!slideNavItem) {
+        return;
+      }
 
-          if (!slideNavItem) {
-            return;
-          }
+      const slideContainer = slideNavItem.parentElement?.parentElement;
 
+      if (!slideContainer) {
+        return;
+      }
+
+      const lessonContainer =
+        slideContainer.parentElement?.parentElement?.parentElement;
+
+      if (!lessonContainer) {
+        return;
+      }
+
+      const isCollapsed =
+        slideContainer.className.indexOf('show') === -1 ||
+        lessonContainer.className.indexOf('show') === -1;
+
+      setTimeout(
+        () => {
           slideNavItem.scrollIntoView();
-        });
-      }, 250);
+        },
+        isCollapsed ? 325 : 1
+      );
     };
 
     events.slide.onFocus(handleSlideFocus);

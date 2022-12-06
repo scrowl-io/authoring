@@ -125,11 +125,9 @@ export const OutlineSlideItem = ({
 
   useEffect(() => {
     const selectCurrentSlide = () => {
-      setTimeout(() => {
-        setActiveSlide({
-          slide,
-        });
-      }, 250);
+      setActiveSlide({
+        slide,
+      });
     };
 
     if (!isNewSlide && activeSlide.id === -1 && isFirstItem) {
