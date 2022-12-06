@@ -14,7 +14,7 @@ import {
 import { Templates } from '../';
 import { set as setSetting } from '../settings';
 import { blueprints } from './blueprints';
-import { rq, fs, log } from '../../services';
+import { rq, fs, log, mu } from '../../services';
 import * as utils from '../../utils';
 import { scorm } from './project-publisher';
 import { preview as createPreview } from './project-preview';
@@ -613,11 +613,29 @@ export const save = (ev: rq.RequestEvent, { data, assets }: SaveReq) => {
       info.assets = assets || [];
 
       const updateSettings = () => {
-        setSetting(ev, 'lastUsedAt', data.meta.updatedAt).then((settingRes) => {
-          if (settingRes.error) {
-            log.error(settingRes);
-          }
+        return new Promise<rq.ApiResult>((resolveSettings) => {
+          setSetting(ev, 'lastUsedAt', data.meta.updatedAt).then((settingRes) => {
+            if (settingRes.error) {
+              log.error(settingRes);
+            }
+  
+            resolveSettings({
+              error: false,
+              data: {
+                updated: true,
+              },
+            });
+          });
+        });
+      }
 
+      const handleRecentProjectsUpdate = () => {
+        mu.rebuildMenu().then((updateRes) => {
+          if (updateRes.error) {
+            resolve(updateRes);
+            return;
+          }
+  
           resolve({
             error: false,
             data: {
@@ -643,7 +661,7 @@ export const save = (ev: rq.RequestEvent, { data, assets }: SaveReq) => {
           }
 
           if (infoRes.data.exists || !assets || !assets.length) {
-            updateSettings();
+            updateSettings().then(handleRecentProjectsUpdate);
             return;
           }
 
@@ -653,7 +671,7 @@ export const save = (ev: rq.RequestEvent, { data, assets }: SaveReq) => {
               return;
             }
 
-            updateSettings();
+            updateSettings().then(handleRecentProjectsUpdate);
           })
         });
       });

@@ -1,6 +1,6 @@
 import { MenuItemConstructorOptions } from 'electron';
 
-export const create = (isMac: boolean) => {
+export const create = (isMac: boolean, isRebuild?: boolean) => {
   const menuId = 'edit-menu';
   const template: MenuItemConstructorOptions = {
     id: menuId,
@@ -10,13 +10,13 @@ export const create = (isMac: boolean) => {
         id: `${menuId}-undo`,
         role: 'undo',
         accelerator: 'CmdorCtrl+Z',
-        enabled: false,
+        enabled: isRebuild ? true : false,
       },
       {
         id: `${menuId}-redo`,
         role: 'redo',
         accelerator: 'CmdorCtrl+Shift+Z',
-        enabled: false,
+        enabled: isRebuild ? true : false,
       },
       {
         type: 'separator',
@@ -25,30 +25,30 @@ export const create = (isMac: boolean) => {
         id: `${menuId}-cut`,
         role: 'cut',
         accelerator: 'CmdorCtrl+X',
-        enabled: false,
+        enabled: isRebuild ? true : false,
       },
       {
         id: `${menuId}-copy`,
         role: 'copy',
         accelerator: 'CmdorCtrl+C',
-        enabled: false,
+        enabled: isRebuild ? true : false,
       },
       {
         id: `${menuId}-paste`,
         role: 'paste',
         accelerator: 'CmdorCtrl+V',
-        enabled: false,
+        enabled: isRebuild ? true : false,
       },
       {
         id: `${menuId}-delete`,
         role: 'delete',
-        enabled: false,
+        enabled: isRebuild ? true : false,
       },
       {
         id: `${menuId}-select-all`,
         role: 'selectAll',
         accelerator: 'CmdorCtrl+A',
-        enabled: false,
+        enabled: isRebuild ? true : false,
       },
     ],
   };

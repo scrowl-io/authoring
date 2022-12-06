@@ -2,7 +2,7 @@ import { MenuItemConstructorOptions } from 'electron';
 import { log } from '../../';
 const { BrowserWindow } = require('electron');
 
-export const create = (isMac: boolean) => {
+export const create = (isMac: boolean, isRebuild?: boolean) => {
   const menuId = 'help-menu';
   const template: MenuItemConstructorOptions = {
     id: menuId,

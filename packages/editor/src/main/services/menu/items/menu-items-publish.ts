@@ -2,7 +2,7 @@ import { MenuItemConstructorOptions } from 'electron';
 import { MenuItemApiPublish } from '../menu.types';
 import { rq } from '../..';
 
-export const create = (isMac: boolean) => {
+export const create = (isMac: boolean, isRebuild?: boolean) => {
   const menuId = 'publish-menu';
   const template: MenuItemConstructorOptions = {
     id: menuId,
@@ -11,7 +11,7 @@ export const create = (isMac: boolean) => {
       {
         id: `${menuId}-advanced`,
         label: "Publish Project",
-        enabled: false,
+        enabled: isRebuild ? true : false,
         click: () => {
           rq.send(API.publish.name);
         },
@@ -21,7 +21,7 @@ export const create = (isMac: boolean) => {
         id: `${menuId}-quick`,
         label: "Quick Publish",
         accelerator: "CmdorCtrl+Alt+P",
-        enabled: false,
+        enabled: isRebuild ? true : false,
         click: () => {
           rq.send(API.publishQuick.name);
         },

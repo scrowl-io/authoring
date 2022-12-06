@@ -5,7 +5,7 @@ import { get as getSettings, set as setSetting } from '../../../models/settings'
 
 const menuId = 'preview-menu';
 
-export const create = (isMac: boolean) => {
+export const create = (isMac: boolean, isRebuild?: boolean) => {
   const template: MenuItemConstructorOptions = {
     id: menuId,
     label: "Preview",
@@ -37,7 +37,7 @@ export const create = (isMac: boolean) => {
         type: 'radio',
         label: "Current Slide",
         checked: true,
-        enabled: false,
+        enabled: isRebuild ? true : false,
         click: (menuItem, browserWindow, ev) => {
           const type: PreviewTypes = 'slide';
 
@@ -54,7 +54,7 @@ export const create = (isMac: boolean) => {
         type: 'radio',
         label: "Current Lesson",
         checked: false,
-        enabled: false,
+        enabled: isRebuild ? true : false,
         click: (menuItem, browserWindow, ev) => {
           const type: PreviewTypes = 'lesson';
 
@@ -71,7 +71,7 @@ export const create = (isMac: boolean) => {
         type: 'radio',
         label: "Current Module",
         checked: false,
-        enabled: false,
+        enabled: isRebuild ? true : false,
         click: (menuItem, browserWindow, ev) => {
           const type: PreviewTypes = 'module';
 
@@ -88,7 +88,7 @@ export const create = (isMac: boolean) => {
         type: 'radio',
         label: "Entire Project",
         checked: false,
-        enabled: false,
+        enabled: isRebuild ? true : false,
         click: (menuItem, browserWindow, ev) => {
           const type: PreviewTypes = 'project';
 
