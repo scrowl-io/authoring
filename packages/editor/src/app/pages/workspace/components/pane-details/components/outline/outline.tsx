@@ -1,10 +1,13 @@
 import React, { useEffect, useRef } from 'react';
 import * as css from '../../_pane-details.scss';
 import { Projects } from '../../../../../../models';
-import { useActiveSlide } from '../../../../page-workspace-hooks';
+import {
+  useActiveSlide,
+  resetActiveSlide,
+} from '../../../../page-workspace-hooks';
 import { OutlineModules } from './';
 import { getContainer } from './utils';
-import { events, menu } from '../../../../../../services';
+import { events, menu, sys } from '../../../../../../services';
 
 export const Outline = () => {
   const draggable = useRef<HTMLDivElement>();
@@ -325,11 +328,37 @@ export const Outline = () => {
       });
     });
 
+    menu.API.onOutlineDuplicateSlide(() => {
+      Projects.duplicateSlide(activeSlide);
+    });
+
+    menu.API.onOutlineRemoveSlide(() => {
+      sys
+        .messageDialog({
+          message: 'Are you sure?',
+          buttons: ['Delete Slide', 'Cancel'],
+          detail: activeSlide.name,
+        })
+        .then((res) => {
+          if (res.error) {
+            console.error(res);
+            return;
+          }
+
+          if (res.data.response === 0) {
+            resetActiveSlide();
+            Projects.removeSlide(activeSlide);
+          }
+        });
+    });
+
     return () => {
       events.slide.offFocus(handleSlideFocus);
       menu.API.offOutlineAddSlide();
       menu.API.offOutlineAddLesson();
       menu.API.offOutlineAddModule();
+      menu.API.offOutlineDuplicateSlide();
+      menu.API.offOutlineRemoveSlide();
     };
   });
 

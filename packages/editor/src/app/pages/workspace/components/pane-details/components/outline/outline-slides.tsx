@@ -125,59 +125,27 @@ export const OutlineSlideItem = ({
 
   useEffect(() => {
     const selectCurrentSlide = () => {
-      setActiveSlide({
-        slide,
-      });
+      setTimeout(() => {
+        setActiveSlide({
+          slide,
+        });
+      }, 250);
     };
 
     if (!isNewSlide && activeSlide.id === -1 && isFirstItem) {
       selectCurrentSlide();
     }
 
-    menu.API.onOutlineDuplicateSlide(() => {
-      if (activeSlide.id !== slide.id) {
-        return;
-      }
-
-      Projects.duplicateSlide(slide);
-    });
-
-    menu.API.onOutlineRenameSlide(() => {
-      if (activeSlide.id !== slide.id) {
-        return;
-      }
-
+    const renameListener = () => {
       setIsEdit(true);
-    });
+    };
 
-    menu.API.onOutlineRemoveSlide(() => {
-      if (activeSlide.id !== slide.id) {
-        return;
-      }
-
-      sys
-        .messageDialog({
-          message: 'Are you sure?',
-          buttons: ['Delete Slide', 'Cancel'],
-          detail: slide.name,
-        })
-        .then((res) => {
-          if (res.error) {
-            console.error(res);
-            return;
-          }
-
-          if (res.data.response === 0) {
-            resetActiveSlide();
-            Projects.removeSlide(slide);
-          }
-        });
-    });
+    if (activeSlide.id === slide.id) {
+      menu.API.onOutlineRenameSlide(renameListener);
+    }
 
     return () => {
-      menu.API.offOutlineDuplicateSlide();
       menu.API.offOutlineRenameSlide();
-      menu.API.offOutlineRemoveSlide();
     };
   }, [isActive, activeSlide.id, isFirstItem, isNewSlide]);
 
