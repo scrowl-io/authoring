@@ -6,6 +6,7 @@ import { FormattedProjectFile } from './project-browser.types';
 import { Modal, filter } from '../';
 import { Projects } from '../../models';
 import { Workspace } from '../../pages';
+import { sys } from '../../services';
 import { ProjectSearch } from './';
 import { List } from '../../utils';
 
@@ -26,6 +27,9 @@ const ProjectBrowserElement = ({ isOpen, ...props }, ref) => {
   const [sortField, setSortField] = useState('project.name');
   const [sortOrder, setSortOrder] = useState('asc');
   const [sortIcon, setSortIcon] = useState('arrow_drop_down');
+  const saveStatus = Projects.useInteractions();
+  const projectData = Projects.useData();
+  const assets = Projects.useAssets();
 
   const sortList = () => {
     let sortedList: Array<FormattedProjectFile> = projects.slice();
@@ -93,12 +97,69 @@ const ProjectBrowserElement = ({ isOpen, ...props }, ref) => {
       return;
     }
 
-    const project = selectedProject.project.versions[0];
-    Workspace.openProject(project);
+    const open = () => {
+      const project = selectedProject.project.versions[0];
+      Workspace.openProject(project);
 
-    if (location.pathname !== Workspace.Path) {
-      navigate(Workspace.Path);
+      if (location.pathname !== Workspace.Path) {
+        navigate(Workspace.Path);
+      }
+    };
+
+    const promptDiscardProject = () => {
+      sys
+        .messageDialog({
+          type: 'question',
+          title: 'Confirm',
+          message: 'Open Project Without Saving?',
+          detail: 'Your changes are not saved.',
+          buttons: ['Save and Close', 'Discard and Open', 'Cancel'],
+        })
+        .then((res) => {
+          if (res.error) {
+            console.error(res);
+            return;
+          }
+
+          switch (res.data.response) {
+            case 0:
+              Projects.save({
+                data: projectData,
+                assets,
+              }).then((saveRes) => {
+                if (saveRes.data && saveRes.data.action) {
+                  switch (saveRes.data.action) {
+                    case 'prompt-project-name':
+                      Workspace.openPromptProjectName();
+                      break;
+                  }
+                  return;
+                } else if (saveRes.error) {
+                  sys.messageDialog({
+                    message: res.message,
+                  });
+                  return;
+                }
+
+                open();
+              });
+              break;
+            case 1:
+              open();
+              break;
+          }
+        });
+    };
+
+    if (
+      location.pathname === Workspace.Path &&
+      (saveStatus.isDirty || saveStatus.isUncommitted)
+    ) {
+      promptDiscardProject();
+      return;
     }
+
+    open();
   };
 
   const handleSelectProject = (project: Projects.ProjectFile, idx: number) => {
