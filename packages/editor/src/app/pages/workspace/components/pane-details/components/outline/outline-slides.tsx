@@ -209,7 +209,7 @@ export const OutlineSlideItem = ({
           </span>
           <InlineInput.Text
             isEdit={isEdit}
-            text={slide.name}
+            text={isActive ? activeSlide.name : slide.name}
             onChange={handleNameChange}
             onBlur={handleNameClose}
             containerProps={inputContainerProps}
