@@ -68,7 +68,12 @@ const PublishFormElement = (
               className="glossary-form-overlay-backdrop"
               onClick={handleClose}
             />
-            <Drawer isAnimated={isAnimated} isOpen={isOpen} slideFrom="right">
+            <Drawer
+              isAnimated={isAnimated}
+              isOpen={isOpen}
+              onClose={onClose}
+              slideFrom="right"
+            >
               <div className="owlui-offcanvas-header">
                 <h4 className="owlui-offcanvas-title mb-0">Publish Course</h4>
                 <button

@@ -177,6 +177,7 @@ const ResourceFormElement = (
             <Drawer
               isAnimated={isAnimated}
               isOpen={isOpen}
+              onClose={onClose}
               style={{ zIndex: isOpenAssetBrowser ? 1040 : 1045 }}
             >
               <div className="owlui-offcanvas-header">

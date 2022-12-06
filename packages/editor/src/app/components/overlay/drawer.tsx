@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { DrawerProps, DrawerOpts, DrawerStyles } from './overlay.types';
 
@@ -10,6 +10,7 @@ export const Drawer = ({
   className,
   style,
   onClick,
+  onClose,
 }: DrawerProps) => {
   let classes = 'offcanvas show support-high-contrast';
   const direction = slideFrom === 'right' ? 'right' : 'left';
@@ -68,6 +69,26 @@ export const Drawer = ({
       }
       break;
   }
+
+  useEffect(() => {
+    const handleControls = (ev: KeyboardEvent) => {
+      switch (ev.code) {
+        case 'Escape':
+          onClose();
+          break;
+      }
+    };
+
+    if (isOpen) {
+      window.addEventListener('keydown', handleControls);
+    } else {
+      window.removeEventListener('keydown', handleControls);
+    }
+
+    return () => {
+      window.removeEventListener('keydown', handleControls);
+    };
+  }, [isOpen]);
 
   return (
     <motion.div

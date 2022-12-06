@@ -214,6 +214,7 @@ export const AssetDrawerElement = (
             <Drawer
               isAnimated={isAnimated}
               isOpen={isOpen}
+              onClose={onClose}
               slideFrom="right"
               style={styles}
             >

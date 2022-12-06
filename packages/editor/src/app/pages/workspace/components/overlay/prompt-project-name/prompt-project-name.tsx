@@ -22,6 +22,10 @@ const PromptProjectNameElement = ({ isOpen, ...props }, ref) => {
   };
 
   const handleInput = (ev: React.KeyboardEvent<HTMLInputElement>) => {
+    ev.bubbles = false;
+    ev.stopPropagation();
+    ev.preventDefault();
+
     switch (ev.key) {
       case 'Enter':
         ev.currentTarget.blur();
