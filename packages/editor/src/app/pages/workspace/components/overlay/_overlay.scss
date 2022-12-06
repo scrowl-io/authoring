@@ -83,7 +83,11 @@
         }
 
         td {
-          padding: 0.25rem;
+          padding: 0.25rem 0.5rem;
+        }
+
+        td:not(.asset__title) {
+          text-transform: capitalize;
         }
       }
 
@@ -107,7 +111,7 @@
           text-decoration: underline;
         }
 
-        .file-size-label {
+        .asset__file-size-label {
           margin-top: 0.5rem;
           display: inline-block;
         }
