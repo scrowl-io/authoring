@@ -22,16 +22,15 @@ const PromptProjectNameElement = ({ isOpen, ...props }, ref) => {
   };
 
   const handleInput = (ev: React.KeyboardEvent<HTMLInputElement>) => {
-    ev.bubbles = false;
-    ev.stopPropagation();
-    ev.preventDefault();
-
     switch (ev.key) {
       case 'Enter':
         ev.currentTarget.blur();
         handleSubmit();
         break;
       case 'Escape':
+        ev.bubbles = false;
+        ev.stopPropagation();
+        ev.preventDefault();
         Projects.setMeta({ name: '' });
         ev.currentTarget.blur();
         break;
