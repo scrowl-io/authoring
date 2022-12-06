@@ -93,7 +93,7 @@ const PageRoutes = () => {
           });
       };
 
-      if (saveStatus.isDirty || saveStatus.isUncommitted) {
+      if (saveStatus.isUncommitted) {
         promptDiscardProject();
         return;
       }

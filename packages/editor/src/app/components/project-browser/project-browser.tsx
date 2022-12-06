@@ -151,10 +151,7 @@ const ProjectBrowserElement = ({ isOpen, ...props }, ref) => {
         });
     };
 
-    if (
-      location.pathname === Workspace.Path &&
-      (saveStatus.isDirty || saveStatus.isUncommitted)
-    ) {
+    if (location.pathname === Workspace.Path && saveStatus.isUncommitted) {
       promptDiscardProject();
       return;
     }
