@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import * as css from './_page-workspace.scss';
 import {
   openPromptProjectName,
@@ -45,13 +45,14 @@ export const Page = () => {
   const activeSlide = useActiveSlide() as Projects.ProjectSlide;
   const projectInteractions = Projects.useInteractions();
   const [inProgress, setProgress] = useState(false);
+  const isListening = useRef(false);
 
   useEffect(() => {
-    let isListening = true;
+    isListening.current = true;
 
     const saveListener = () => {
       Projects.save({ data: projectData, assets }).then((res) => {
-        if (!isListening) {
+        if (!isListening.current) {
           return;
         }
 
@@ -191,7 +192,7 @@ export const Page = () => {
     menu.API.onPreviewOpen(previewListener);
 
     return () => {
-      isListening = false;
+      isListening.current = false;
       menu.API.offProjectCreate();
       menu.API.offProjectSave();
       menu.API.offProjectOpen();
