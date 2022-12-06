@@ -89,23 +89,23 @@ export const AssetEntry = ({
 
   return (
     <tr className="asset-list-entry">
-      <td className="truncate">
+      <td className="truncate asset__title">
         <div className="wrapper name" onClick={handleSelected}>
           <AssetIcon type={asset.type} ext={asset.ext} />
           <InlineInput.Text
             isEdit={isEdit}
-            text={asset.title}
+            text={asset.sourceFilename}
             onChange={handleTitleChange}
             onBlur={handleTitleClose}
           />
         </div>
       </td>
-      <td style={colType}>
-        <div className="wrapper">{asset.sourceExt}</div>
+      <td className="asset__type" style={colType}>
+        <div className="wrapper">{asset.type}</div>
       </td>
-      <td className="file-size">
+      <td className="asset__file-size">
         <div className="wrapper">
-          <span className="file-size-label">
+          <span className="asset__file-size-label">
             <span>{fileSize[0]}</span>
             <span className="size-unit">{fileSize[1]}</span>
           </span>

@@ -3,6 +3,166 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 1.0.60 (2022-12-06)
+
+**Note:** Version bump only for package @scrowl/template-two-column
+
+
+
+
+
+## 1.0.59 (2022-12-06)
+
+**Note:** Version bump only for package @scrowl/template-two-column
+
+
+
+
+
+## 1.0.58 (2022-12-06)
+
+**Note:** Version bump only for package @scrowl/template-two-column
+
+
+
+
+
+## 1.0.57 (2022-12-06)
+
+**Note:** Version bump only for package @scrowl/template-two-column
+
+
+
+
+
+## 1.0.56 (2022-12-06)
+
+**Note:** Version bump only for package @scrowl/template-two-column
+
+
+
+
+
+## 1.0.55 (2022-12-06)
+
+**Note:** Version bump only for package @scrowl/template-two-column
+
+
+
+
+
+## 1.0.54 (2022-12-06)
+
+**Note:** Version bump only for package @scrowl/template-two-column
+
+
+
+
+
+## 1.0.53 (2022-12-06)
+
+**Note:** Version bump only for package @scrowl/template-two-column
+
+
+
+
+
+## 1.0.52 (2022-12-06)
+
+**Note:** Version bump only for package @scrowl/template-two-column
+
+
+
+
+
+## 1.0.51 (2022-12-05)
+
+**Note:** Version bump only for package @scrowl/template-two-column
+
+
+
+
+
+## 1.0.50 (2022-12-05)
+
+**Note:** Version bump only for package @scrowl/template-two-column
+
+
+
+
+
+## 1.0.49 (2022-12-05)
+
+**Note:** Version bump only for package @scrowl/template-two-column
+
+
+
+
+
+## 1.0.48 (2022-12-05)
+
+**Note:** Version bump only for package @scrowl/template-two-column
+
+
+
+
+
+## 1.0.47 (2022-12-05)
+
+**Note:** Version bump only for package @scrowl/template-two-column
+
+
+
+
+
+## 1.0.46 (2022-12-05)
+
+**Note:** Version bump only for package @scrowl/template-two-column
+
+
+
+
+
+## 1.0.45 (2022-12-05)
+
+**Note:** Version bump only for package @scrowl/template-two-column
+
+
+
+
+
+## 1.0.44 (2022-12-05)
+
+**Note:** Version bump only for package @scrowl/template-two-column
+
+
+
+
+
+## 1.0.43 (2022-12-05)
+
+**Note:** Version bump only for package @scrowl/template-two-column
+
+
+
+
+
+## 1.0.42 (2022-12-02)
+
+**Note:** Version bump only for package @scrowl/template-two-column
+
+
+
+
+
+## 1.0.41 (2022-12-02)
+
+**Note:** Version bump only for package @scrowl/template-two-column
+
+
+
+
+
 ## 1.0.40 (2022-12-02)
 
 **Note:** Version bump only for package @scrowl/template-two-column

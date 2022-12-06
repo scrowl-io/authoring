@@ -6,6 +6,7 @@ export interface DrawerCommons {
   isAnimated: boolean;
   isOpen: boolean;
   slideFrom?: 'left' | 'right';
+  onClose: () => void;
 };
 
 export type DrawerProps = DrawerCommons & React.HTMLAttributes<HTMLDivElement>;

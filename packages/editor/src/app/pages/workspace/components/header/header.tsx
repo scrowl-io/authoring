@@ -12,28 +12,22 @@ import { PublishOverlay, Confirmation } from '../overlay';
 import {
   openPublishProgress,
   closePublishProgress,
+  useActiveSlide,
 } from '../../page-workspace-hooks';
-
-export enum PREVIEW_MODE {
-  default = 'default',
-  slide = 'slide',
-  lesson = 'lesson',
-  module = 'module',
-  project = 'project',
-}
 
 export const Header = () => {
   const projectData = Projects.useData();
   const assets = Projects.useAssets();
+  const activeSlide = useActiveSlide() as Projects.ProjectSlide;
   const projectMeta = projectData.meta;
   const projectNameLn = projectMeta.name ? projectMeta.name.length : 0;
   const [projectName, setProjectName] = useState(projectMeta.name || '');
   const [projectNameSize, setProjectNameSize] = useState(
     projectNameLn - 3 < 13 ? 13 : projectNameLn - 3
   );
-  const [previewMode, setPreviewMode] = useState(PREVIEW_MODE.project);
   const [isOpenPublish, setIsOpenPublish] = useState(false);
   const [isOpenConfirmation, setIsOpenConfirmation] = useState(false);
+  const previewMode = Settings.usePreviewMode();
   const animationSettings = Settings.useAnimation();
   const isAnimated = !animationSettings.reducedAnimations;
   const animationDelay = animationSettings.animationDelay;
@@ -81,45 +75,113 @@ export const Header = () => {
     Projects.setMeta({ name: projectName });
   };
 
+  const handleProjectPreview = (payload: Projects.PreviewProjectReq) => {
+    Settings.setPreviewMode(payload.type);
+
+    menu.API.updatePreviewMenu(payload.type).then((res) => {
+      if (res.error) {
+        sys.messageDialog({
+          message: res.message,
+        });
+        return;
+      }
+    });
+
+    Projects.preview(payload).then((res) => {
+      if (res.error) {
+        sys.messageDialog({
+          message: res.message,
+        });
+        return;
+      }
+
+      console.log('preview result', res);
+    });
+  };
+
+  const handlePreviewDefault = () => {
+    const payload: Projects.PreviewProjectReq = {
+      type: previewMode,
+      project: projectData,
+      assets,
+    };
+
+    switch (payload.type) {
+      case 'slide':
+        payload.id = activeSlide.id;
+        break;
+      case 'lesson':
+        payload.id = activeSlide.lessonId;
+        break;
+      case 'module':
+        payload.id = activeSlide.moduleId;
+        break;
+    }
+
+    handleProjectPreview(payload);
+  };
+
   const preivewMenuItems: Array<menu.ContextMenuItem> = [
     {
       label: 'Current Slide',
-      checked: previewMode === PREVIEW_MODE.slide,
+      type: 'radio',
+      checked: previewMode === 'slide',
       click: () => {
-        setPreviewMode(PREVIEW_MODE.slide);
-        console.log('preview slide');
+        const payload: Projects.PreviewProjectReq = {
+          type: 'slide',
+          project: projectData,
+          assets,
+          id: activeSlide.id,
+        };
+
+        handleProjectPreview(payload);
       },
     },
     {
       label: 'Current Lesson',
-      checked: previewMode === PREVIEW_MODE.lesson,
+      type: 'radio',
+      checked: previewMode === 'lesson',
       click: () => {
-        setPreviewMode(PREVIEW_MODE.lesson);
-        console.log('preview lesson');
+        const payload: Projects.PreviewProjectReq = {
+          type: 'lesson',
+          project: projectData,
+          assets,
+          id: activeSlide.lessonId,
+        };
+
+        handleProjectPreview(payload);
       },
     },
     {
       label: 'Current Module',
-      checked: previewMode === PREVIEW_MODE.module,
+      type: 'radio',
+      checked: previewMode === 'module',
       click: () => {
-        setPreviewMode(PREVIEW_MODE.module);
-        console.log('preview module');
+        const payload: Projects.PreviewProjectReq = {
+          type: 'module',
+          project: projectData,
+          assets,
+          id: activeSlide.moduleId,
+        };
+
+        handleProjectPreview(payload);
       },
     },
-    { type: 'separator' },
     {
       label: 'Entire Project',
-      checked: previewMode === PREVIEW_MODE.project,
+      type: 'radio',
+      checked: previewMode === 'project',
       click: () => {
-        setPreviewMode(PREVIEW_MODE.project);
-        console.log('preview project');
+        const payload: Projects.PreviewProjectReq = {
+          type: 'project',
+          project: projectData,
+          assets,
+        };
+
+        handleProjectPreview(payload);
       },
     },
   ];
-
-  const handlePreviewProject = (ev: React.MouseEvent) => {
-    console.log('previewing', previewMode);
-  };
 
   const handleOpenPreviewMenu = (ev: React.MouseEvent, offsetX?: number) => {
     const position = Elem.getPosition(
@@ -180,13 +242,28 @@ export const Header = () => {
   };
 
   useEffect(() => {
-    if (projectMeta.name && projectMeta.name !== projectName) {
-      const nameLn = projectMeta.name.length;
+    if (projectMeta.name !== projectName) {
+      const nameLn = projectMeta.name ? projectMeta.name.length : 0;
 
-      setProjectName(projectMeta.name);
+      setProjectName(projectMeta.name || '');
       setProjectNameSize(nameLn - 3 < 13 ? 13 : nameLn - 3);
     }
   }, [projectMeta.name]);
+
+  useEffect(() => {
+    menu.API.onPublish(() => {
+      setIsOpenPublish(true);
+    });
+
+    menu.API.onPublishQuick(() => {
+      handelSubmitPublish();
+    });
+
+    return () => {
+      menu.API.offPublish();
+      menu.API.offPublishQuick();
+    };
+  }, [projectData]);
 
   return (
     <>
@@ -199,7 +276,7 @@ export const Header = () => {
         <Navbar fixed="top" expand="xs" className={css.workspaceHeader}>
           <div className={css.projectMeta}>
             <Logo
-              href={startPath}
+              asLink={true}
               sizing="sm"
               isAnimated={isAnimated}
               animationDelay={animationDelay}
@@ -230,7 +307,7 @@ export const Header = () => {
                   className={`ms-3 ${css.projectActionsBtn}`}
                   variant="ghost"
                   size="sm"
-                  onClick={handlePreviewProject}
+                  onClick={handlePreviewDefault}
                   onContextMenu={(ev: React.MouseEvent) => {
                     handleOpenPreviewMenu(ev, 102);
                   }}

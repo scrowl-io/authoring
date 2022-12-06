@@ -14,6 +14,7 @@ export const initialState = {
   aspect: ASPECT_RATIO.Fit,
   reducedAnimations: false,
   animationDelay: 0,
+  previewMode: 'slide',
 };
 
 export const config: stateManager.StateConfig = {
@@ -22,7 +23,7 @@ export const config: stateManager.StateConfig = {
   reducers: {
     setState: (state, action) => {
       utils.updateObj(state, action.payload);
-      console.log('settings data', action.payload);
+      
       if (action.payload.lastUsedAt) {
         state.hasWelcomed = true;
       }
@@ -46,6 +47,9 @@ export const config: stateManager.StateConfig = {
         state.animationDelay = action.payload.animationDelay;
       }
     },
+    setPreviewMode: (state, action) => {
+      state.previewMode = action.payload;
+    },
   }
 };
 
@@ -57,6 +61,7 @@ export const {
   setAspect,
   setAnimation,
   setLastUsedAt,
+  setPreviewMode,
 } = slice.actions;
 
 export const reducer = slice.reducer;

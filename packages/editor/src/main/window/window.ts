@@ -7,7 +7,7 @@ import {
 import installExtension, {
   REACT_DEVELOPER_TOOLS,
 } from 'electron-devtools-installer';
-import { Models } from '../models';
+import { Models, Projects } from '../models';
 import { Services, fs, rq, log } from '../services';
 import { API } from './';
 
@@ -94,24 +94,35 @@ export const init = () => {
             }
           }
 
-          const promptUnsavedChanges = (promptEv) => {
+          const promptUnsavedChanges = (promptEv, project) => {
             fs.dialog.message(promptEv, {
               type: 'question',
               title: 'Confirm',
-              message: 'You have unsaved changes.\nAre you sure you want to quit?',
-              buttons: ['Yes', 'No']
+              message: 'Close Project Without Saving?',
+              detail: 'Your changes are not saved.',
+              buttons: ['Save Project', 'Discard Changes', 'Cancel']
             }).then((closeRes) => {
               if (closeRes.error) {
                 log.error(closeRes);
                 closeWindow();
               } else {
                 const res = closeRes.data.response;
-  
+
                 switch (res) {
                   case 0:
-                    closeWindow();
+                    closeEv.preventDefault();
+                    Projects.save(promptEv, project).then((saveRes) => {
+                      if (saveRes.error) {
+                        log.error(saveRes);
+                      }
+
+                      closeWindow();
+                    });
                     break;
                   case 1:
+                    closeWindow();
+                    break;
+                  case 2:
                     closeEv.preventDefault();
                     break;
                 }
@@ -119,11 +130,12 @@ export const init = () => {
             });
           }
           
-          API.onUnsaved((unsavedEv, { isDirty, isUncommitted }) => {
+          API.onUnsaved((unsavedEv, { status, project }) => {
             API.offUnsaved();
+            const { isDirty, isUncommitted } = status;
 
             if (isDirty || isUncommitted) {
-              promptUnsavedChanges(unsavedEv);
+              promptUnsavedChanges(unsavedEv, project);
             } else {
               closeWindow();
             }

@@ -4,7 +4,7 @@ import { Collapse } from 'react-bootstrap';
 import { OutlineLessonsProps, OutlineLessonItemProps } from './outline.types';
 import * as css from '../../_pane-details.scss';
 import { OutlineSlides } from './outline-slides';
-import { resetActiveSlide } from '../../../../';
+import { resetActiveSlide, useActiveSlide } from '../../../../';
 import { Projects } from '../../../../../../models';
 import { menu, sys, events } from '../../../../../../services';
 import { InlineInput } from '../../../../../../components';
@@ -17,6 +17,7 @@ export const OutlineLessonItem = ({
   ...props
 }: OutlineLessonItemProps) => {
   let classes = `${css.outlineHeader} outline-item__lesson`;
+  const activeSlide = useActiveSlide() as Projects.ProjectSlide;
   const [isOpen, setOpen] = useState(true);
   const menuId = `module-${lesson.moduleId}-lesson-menu-${lesson.id}`;
   const [isEdit, setIsEdit] = useState(false);
@@ -119,6 +120,10 @@ export const OutlineLessonItem = ({
 
   useEffect(() => {
     const handleSlideFocus = (ev: CustomEvent) => {
+      if (activeSlide.lessonId !== lesson.id) {
+        return;
+      }
+
       setOpen(true);
     };
 
@@ -127,7 +132,7 @@ export const OutlineLessonItem = ({
     return () => {
       events.slide.offFocus(handleSlideFocus);
     };
-  });
+  }, [activeSlide.id]);
 
   return (
     <div

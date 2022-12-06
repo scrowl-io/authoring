@@ -19,7 +19,7 @@ const PublishFormElement = (
   const initialErrorState = {
     name: '',
   };
-  const [publishErrors, setPublishErrors] = useState(initialErrorState);
+  const [publishErrors, setPublishErrors] = useState({});
 
   const handleClose = () => {
     onClose();
@@ -31,21 +31,6 @@ const PublishFormElement = (
     const errors = {
       name: '',
     };
-
-    if (hasProp(data, 'name')) {
-      let { name } = data;
-
-      if (name.length) {
-        name = name.trim();
-      }
-
-      if (!name.length) {
-        isValid = false;
-        errors.name = 'Cannot be empty';
-      }
-
-      update['name'] = name;
-    }
 
     setPublishErrors(errors);
     return [isValid, update];
@@ -83,7 +68,12 @@ const PublishFormElement = (
               className="glossary-form-overlay-backdrop"
               onClick={handleClose}
             />
-            <Drawer isAnimated={isAnimated} isOpen={isOpen} slideFrom="right">
+            <Drawer
+              isAnimated={isAnimated}
+              isOpen={isOpen}
+              onClose={onClose}
+              slideFrom="right"
+            >
               <div className="owlui-offcanvas-header">
                 <h4 className="owlui-offcanvas-title mb-0">Publish Course</h4>
                 <button

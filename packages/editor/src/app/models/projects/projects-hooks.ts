@@ -1,6 +1,15 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { ActionCreatorWithoutPayload } from '@reduxjs/toolkit';
-import { AssetType, UploadReq, SaveReq, ProjectData, ProjectAsset, PreviewAssetReq, ProjectMeta } from './projects.types';
+import {
+  AssetType,
+  UploadReq,
+  SaveReq,
+  ProjectData,
+  ProjectAsset,
+  PreviewAssetReq,
+  ProjectMeta,
+  PreviewProjectReq
+} from './projects.types';
 import { stateManager, rq } from '../../services';
 import { API, state } from './';
 import { List } from '../../utils';
@@ -29,6 +38,7 @@ export const useInteractions = () => {
       isDirty: data.projects.isDirty,
       isUncommitted: data.projects.isUncommitted,
       isLoaded: data.projects.isLoaded,
+      isNew: data.projects.isNew,
     };
   });
 };
@@ -499,6 +509,10 @@ export const previewAsset = (data: PreviewAssetReq) => {
   return API.previewAsset(data);
 };
 
+export const preview = (payload: PreviewProjectReq) => {
+  return API.preview(payload);
+};
+
 export const useProjectBrowser = () => {
   return useSelector((data: stateManager.RootState) => {
     return data.projects.isOpenProjectBrowser;
@@ -570,6 +584,7 @@ export default {
   list,
   open,
   previewAsset,
+  preview,
   useProjectBrowser,
   openProjectBrowser,
   closeProjectBrowser

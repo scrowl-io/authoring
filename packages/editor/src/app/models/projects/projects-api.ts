@@ -1,4 +1,11 @@
-import { ProjectsEndpoints, PreviewAssetReq, WindowEndpoints, ProjectMeta } from './projects.types';
+import {
+  ProjectsEndpoints,
+  PreviewAssetReq,
+  WindowEndpoints,
+  ProjectMeta,
+  PreviewProjectReq,
+  UnsavedReq
+} from './projects.types';
 import { rq } from '../../services';
 
 const ENDPOINTS: ProjectsEndpoints = {
@@ -10,6 +17,7 @@ const ENDPOINTS: ProjectsEndpoints = {
   list: '/projects/list',
   open: '/projects/open',
   previewAsset: '/projects/preview-asset',
+  preview: '/projects/preview',
 };
 
 const WINDOW_ENDPOINTS: WindowEndpoints = {
@@ -53,6 +61,10 @@ export const previewAsset = (data: PreviewAssetReq) => {
   return rq.invoke(ENDPOINTS.previewAsset, data);
 };
 
+export const preview = (payload: PreviewProjectReq) => {
+  return rq.invoke(ENDPOINTS.preview, payload);
+};
+
 export const onUnsavedCheck = (listener: rq.Listener) => {
   rq.on(WINDOW_ENDPOINTS.unsaved, listener);
 };
@@ -61,8 +73,8 @@ export const offUnsavedCheck = () => {
   rq.offAll(WINDOW_ENDPOINTS.unsaved);
 };
 
-export const sendUnsavedStatus = (data) => {
-  rq.send(WINDOW_ENDPOINTS.onUnsaved, data);
+export const sendUnsavedStatus = (payload: UnsavedReq) => {
+  rq.send(WINDOW_ENDPOINTS.onUnsaved, payload);
 };
 
 export default {
@@ -75,6 +87,7 @@ export default {
   list,
   open,
   previewAsset,
+  preview,
   onUnsavedCheck,
   offUnsavedCheck,
   sendUnsavedStatus

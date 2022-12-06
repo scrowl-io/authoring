@@ -142,7 +142,7 @@ const GlossaryFormElement = (
               className="glossary-form-overlay-backdrop"
               onClick={handleClose}
             />
-            <Drawer isAnimated={isAnimated} isOpen={isOpen}>
+            <Drawer isAnimated={isAnimated} isOpen={isOpen} onClose={onClose}>
               <div className="owlui-offcanvas-header">
                 <h4 className="owlui-offcanvas-title mb-0">
                   {title} Glossary Term

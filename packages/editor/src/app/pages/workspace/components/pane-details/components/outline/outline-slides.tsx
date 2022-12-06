@@ -7,9 +7,8 @@ import {
   useActiveSlide,
   setActiveSlide,
   resetActiveSlide,
-  useNewSlide,
+  useNewContent,
 } from '../../../../';
-import { Elem } from '../../../../../../utils';
 import { menu, sys } from '../../../../../../services';
 import { InlineInput } from '../../../../../../components';
 
@@ -36,7 +35,7 @@ export const OutlineSlideItem = ({
     'data-module-id': slide.moduleId,
   };
   const [isEdit, setIsEdit] = useState(false);
-  const isNewSlide = useNewSlide();
+  const isNewSlide = useNewContent().newSlide;
   const slideMenuItems: Array<menu.ContextMenuItem> = [
     {
       label: 'Duplicate Slide',
@@ -136,6 +135,18 @@ export const OutlineSlideItem = ({
     if (!isNewSlide && activeSlide.id === -1 && isFirstItem) {
       selectCurrentSlide();
     }
+
+    const renameListener = () => {
+      setIsEdit(true);
+    };
+
+    if (activeSlide.id === slide.id) {
+      menu.API.onOutlineRenameSlide(renameListener);
+    }
+
+    return () => {
+      menu.API.offOutlineRenameSlide();
+    };
   }, [isActive, activeSlide.id, isFirstItem, isNewSlide]);
 
   return (
@@ -164,7 +175,7 @@ export const OutlineSlideItem = ({
           </span>
           <InlineInput.Text
             isEdit={isEdit}
-            text={slide.name}
+            text={isActive ? activeSlide.name : slide.name}
             onChange={handleNameChange}
             onBlur={handleNameClose}
             containerProps={inputContainerProps}

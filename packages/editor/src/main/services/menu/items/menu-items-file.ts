@@ -1,7 +1,7 @@
 import { MenuItemConstructorOptions, MenuItem, Menu } from 'electron';
 import { MenuItemApiFile } from '../menu.types';
 import { rq, log, fs } from '../..';
-import { ProjectFile } from '../../../models/projects';
+import { ProjectFile } from '../../../models/projects/projects.types';
 
 export const API: MenuItemApiFile = {
   create: {
@@ -24,7 +24,7 @@ export const API: MenuItemApiFile = {
 
 const menuId = 'file-menu';
 
-export const create = (isMac: boolean) => {
+export const create = (isMac: boolean, isRebuild?: boolean) => {
   const template = {
     id: menuId,
     label: 'File',
@@ -57,7 +57,7 @@ export const create = (isMac: boolean) => {
         id: `${menuId}-save`,
         label: "Save",
         accelerator: "CmdorCtrl+S",
-        enabled: false,
+        enabled: isRebuild ? true : false,
         click: () => {
           rq.send(API.save.name);
         },
@@ -67,7 +67,7 @@ export const create = (isMac: boolean) => {
         id: `${menuId}-close`,
         label: "Close Project",
         accelerator: "CmdorCtrl+W",
-        enabled: false,
+        enabled: isRebuild ? true : false,
         click: () => {
           rq.send(API.close.name);
         },
@@ -128,7 +128,7 @@ const getProjects = () => {
   })
 }
 
-export const asyncInit = (menu: Menu) => {
+const updateRecentProjectsMenu = (menu: Menu) => {
   return new Promise<rq.ApiResult>((resolve) => {
     getProjects().then((res) => {
       if (res.error) {
@@ -160,6 +160,8 @@ export const asyncInit = (menu: Menu) => {
         return;
       }
 
+      const itemCnt = menuItem.submenu.items.length - 1;
+
       const appendProject = (project: ProjectFile, idx: number) => {
         const recentProjectItem = new MenuItem({
           id: `${itemId}-${(idx + 1)}`,
@@ -169,7 +171,15 @@ export const asyncInit = (menu: Menu) => {
           },
         });
 
-        menuItem.submenu?.append(recentProjectItem);
+        if (!menuItem.submenu) {
+          return;
+        }
+
+        if (itemCnt < idx) {
+          menuItem.submenu.append(recentProjectItem);
+        } else {
+          menuItem.submenu.insert(idx, recentProjectItem);
+        }
       }
 
       if (res.data.projects.length) {
@@ -194,7 +204,59 @@ export const asyncInit = (menu: Menu) => {
   });
 };
 
+export const asyncInit = (menu: Menu) => {
+  return new Promise<rq.ApiResult>((resolve) => {
+    const initPromisesNames = [
+      'Recent Project List'
+    ];
+    const initPromises = [
+      updateRecentProjectsMenu(menu),
+    ];
+
+    Promise.allSettled(initPromises).then((initResults) => {
+      let hasError = false;
+      let initError: rq.ApiResultError = {
+        error: true,
+        message: '',
+        data: {
+          init: true,
+        },
+      };
+
+      initResults.forEach((initRes, idx) => {
+        if (initRes.status === 'rejected') {
+          const errorMsg = `Failed to initialize ${initPromisesNames[idx]}`;
+          log.error(errorMsg);
+          initError.message = errorMsg;
+          hasError = true;
+          return;
+        }
+
+        if (initRes.value.error) {
+          log.error(initRes.value);
+          initError = initRes.value;
+          hasError = true;
+          return;
+        }
+      });
+
+      if (hasError) {
+        resolve(initError);
+        return;
+      }
+
+      resolve({
+        error: false,
+        data: {
+          init: true,
+        },
+      });
+    });
+  });
+};
+
 export default {
   register,
   create,
+  asyncInit,
 };

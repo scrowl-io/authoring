@@ -28,6 +28,9 @@ const PromptProjectNameElement = ({ isOpen, ...props }, ref) => {
         handleSubmit();
         break;
       case 'Escape':
+        ev.bubbles = false;
+        ev.stopPropagation();
+        ev.preventDefault();
         Projects.setMeta({ name: '' });
         ev.currentTarget.blur();
         break;

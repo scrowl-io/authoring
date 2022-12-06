@@ -60,7 +60,7 @@ export const AssetDrawerElement = (
   const [filteredAssets, setFilterAssets] = useState<
     Array<Projects.ProjectAsset>
   >([]);
-  const [sortField, setSortField] = useState('title');
+  const [sortField, setSortField] = useState('sourceFilename');
   const [sortOrder, setSortOrder] = useState('asc');
   const [sortIcon, setSortIcon] = useState('arrow_drop_down');
 
@@ -76,7 +76,7 @@ export const AssetDrawerElement = (
     let filteredList: Array<Projects.ProjectAsset> = [];
 
     const filterAssetList = (asset: Projects.ProjectAsset) => {
-      return asset.title.indexOf(filterInput) !== -1;
+      return asset.sourceFilename.indexOf(filterInput) !== -1;
     };
 
     if (!filterInput || !filterInput.length) {
@@ -214,6 +214,7 @@ export const AssetDrawerElement = (
             <Drawer
               isAnimated={isAnimated}
               isOpen={isOpen}
+              onClose={onClose}
               slideFrom="right"
               style={styles}
             >
@@ -235,9 +236,9 @@ export const AssetDrawerElement = (
                       <table className="table">
                         <thead>
                           <tr onClick={handleSortOrder}>
-                            <th scope="col" data-sort-field="title">
+                            <th scope="col" data-sort-field="sourceFilename">
                               Name
-                              {sortField === 'title' && (
+                              {sortField === 'sourceFilename' && (
                                 <Icon
                                   className="sort-indicator"
                                   icon={sortIcon}
@@ -246,11 +247,11 @@ export const AssetDrawerElement = (
                             </th>
                             <th
                               scope="col"
-                              data-sort-field="sourceExt"
+                              data-sort-field="type"
                               style={stylesColType}
                             >
                               Type
-                              {sortField === 'sourceExt' && (
+                              {sortField === 'type' && (
                                 <Icon
                                   className="sort-indicator"
                                   icon={sortIcon}

@@ -1,3 +1,5 @@
+import { ProjectData, ProjectAsset } from '../../../main/models/projects/projects.types';
+
 export type {
   ProjectsEndpoints,
   ProjectData,
@@ -12,9 +14,23 @@ export type {
   UploadReq,
   SaveReq,
   PreviewAssetReq,
-  ProjectFile
+  ProjectFile,
+  PreviewProjectReq
 } from '../../../main/models/projects/projects.types';
 
 export type { AssetType } from '../../../main/services/file-system/fs.types';
 
 export type { WindowEndpoints } from '../../../main/window/window.types';
+
+export type UnsavedReq = {
+  status: {
+    isDirty: boolean,
+    isUncommitted: boolean,
+    isLoaded: boolean,
+    isNew: boolean,
+  };
+  project: {
+    data: ProjectData;
+    assets: Array<ProjectAsset>;
+  };
+};

@@ -8,14 +8,16 @@ import {
   UploadReq,
   SaveReq,
   PreviewAssetReq,
-  ProjectAsset
+  ProjectAsset,
+  PreviewProjectReq
 } from './projects.types';
 import { Templates } from '../';
 import { set as setSetting } from '../settings';
 import { blueprints } from './blueprints';
-import { rq, fs, log } from '../../services';
+import { rq, fs, log, mu } from '../../services';
 import * as utils from '../../utils';
 import { scorm } from './project-publisher';
+import { preview as createPreview } from './project-preview';
 
 const PROJECT_PATHS = {
   blueprints: fs.getSourcePath('assets', 'blueprints'),
@@ -611,11 +613,29 @@ export const save = (ev: rq.RequestEvent, { data, assets }: SaveReq) => {
       info.assets = assets || [];
 
       const updateSettings = () => {
-        setSetting(ev, 'lastUsedAt', data.meta.updatedAt).then((settingRes) => {
-          if (settingRes.error) {
-            log.error(settingRes);
-          }
+        return new Promise<rq.ApiResult>((resolveSettings) => {
+          setSetting(ev, 'lastUsedAt', data.meta.updatedAt).then((settingRes) => {
+            if (settingRes.error) {
+              log.error(settingRes);
+            }
+  
+            resolveSettings({
+              error: false,
+              data: {
+                updated: true,
+              },
+            });
+          });
+        });
+      }
 
+      const handleRecentProjectsUpdate = () => {
+        mu.rebuildMenu().then((updateRes) => {
+          if (updateRes.error) {
+            resolve(updateRes);
+            return;
+          }
+  
           resolve({
             error: false,
             data: {
@@ -641,7 +661,7 @@ export const save = (ev: rq.RequestEvent, { data, assets }: SaveReq) => {
           }
 
           if (infoRes.data.exists || !assets || !assets.length) {
-            updateSettings();
+            updateSettings().then(handleRecentProjectsUpdate);
             return;
           }
 
@@ -651,7 +671,7 @@ export const save = (ev: rq.RequestEvent, { data, assets }: SaveReq) => {
               return;
             }
 
-            updateSettings();
+            updateSettings().then(handleRecentProjectsUpdate);
           })
         });
       });
@@ -840,6 +860,116 @@ export const previewAsset = (ev: rq.RequestEvent, req: PreviewAssetReq) => {
   });
 };
 
+export const previewProject = (ev: rq.RequestEvent, req: PreviewProjectReq) => {
+  return new Promise<rq.ApiResult>((resolve) => {
+    const event = ev as IpcMainInvokeEvent;
+    const win = BrowserWindow.fromWebContents(event.sender);
+
+    if (!win) {
+      const errorMsg = 'Unable to preview: window not found';
+      log.error(errorMsg);
+      resolve({
+        error: true,
+        message: errorMsg,
+        data: {
+          req,
+        },
+      });
+      return;
+    }
+
+    const projectMeta = req.project.meta as ProjectMeta;
+    const infoRes = getProjectInfo(projectMeta);
+
+    if (infoRes.error) {
+      resolve(infoRes);
+      return;
+    }
+
+    let assetSrc = '';
+    let meta: ProjectFile = {
+      createdAt: '',
+      openedAt: '',
+      updatedAt: '',
+      versions: [],
+      assets: [],
+    };
+
+    if (infoRes.data.isNew || infoRes.data.uncommitted) {
+      assetSrc = fs.APP_PATHS.uploads;
+      meta.assets = req.assets;
+    } else {
+      assetSrc = fs.joinPath(infoRes.data.folder, 'assets');
+      meta = {
+        ...infoRes.data.info,
+        assets: req.assets,
+      };
+    }
+    
+    createPreview(req.project, meta, assetSrc, req.type, req.id).then((res) => {
+      if (res.error) {
+        resolve(res);
+        return;
+      }
+
+      const url = res.data.url;
+      const [winWidth, winHeight] = win.getSize();
+      const padding = 100;
+      const previewWin = new BrowserWindow({
+        center: true,
+        width: Math.min(winWidth - padding, 1200),
+        height: winHeight - padding,
+        minWidth: 1024,
+        minHeight: 600,
+        parent: win,
+        closable: true,
+        webPreferences: {
+          nodeIntegration: false,
+          contextIsolation: true,
+          spellcheck: false,
+          sandbox: true,
+          disableDialogs: true,
+        },
+      });
+
+      previewWin.on("enter-html-full-screen", async () => {
+        // We cannot require the screen module until the app is ready.
+        const { screen } = require("electron");
+        const primaryDisplay = screen.getPrimaryDisplay();
+        const { width, height } = primaryDisplay.workAreaSize;
+        const winBounds = win.getContentBounds();
+        const previewWinBounds = previewWin.getContentBounds();
+
+        // Speeds up the process
+        win.setOpacity(0);
+        win.setContentBounds({ x: 0, y: 0, width, height }, false);
+        win.setSimpleFullScreen(true);
+
+        previewWin.once("leave-html-full-screen", async () => {
+          win.setSimpleFullScreen(false);
+
+          win.setContentBounds(winBounds, false);
+
+          // Seems to take a little while to get it focused
+          for (let i = 0; i < 10; i++) {
+            await new Promise((resolve) => setTimeout(resolve, 10));
+            win.focus();
+            previewWin.setContentBounds(previewWinBounds, false);
+            win.setOpacity(1);
+          }
+        });
+      });
+
+      previewWin.webContents.session.clearCache();
+      previewWin.loadURL(url);
+
+      previewWin.once('closed', () => {
+        resolve(res);
+      })
+    });
+  });
+};
+
 export const API: ProjectsApi = {
   create: {
     name: '/projects/create',
@@ -879,7 +1009,12 @@ export const API: ProjectsApi = {
     name: '/projects/preview-asset',
     type: 'invoke',
     fn: previewAsset,
-  }
+  },
+  preview: {
+    name: '/projects/preview',
+    type: 'invoke',
+    fn: previewProject,
+  },
 };
 
 export const init = () => {
