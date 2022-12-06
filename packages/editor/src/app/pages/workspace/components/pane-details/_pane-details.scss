@@ -162,7 +162,7 @@
     }
 
     & .action-menu {
-      margin-top: 0.33em;
+      margin-top: 3px;
     }
 
     &:hover {
@@ -296,15 +296,10 @@
     padding-right: calc(var(--owl-sidebar-spacing) / 2);
     flex-wrap: nowrap;
     color: var(--owl-sidebar-color);
-    padding-bottom: 0.25em;
 
     &:hover .action-menu,
     &:focus .action-menu {
       opacity: 1;
-    }
-
-    & .action-menu {
-      margin-top: 0.33em;
     }
 
     &:not(.active):hover {
@@ -319,8 +314,9 @@
 
   &__item {
     display: flex;
+    align-items: center;
     flex-grow: 1;
-    padding: 6px 8px 4px 21px;
+    padding: 6px 8px 6px 21px;
     margin: 0;
     line-height: 1.6;
     color: inherit;
