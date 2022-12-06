@@ -33,11 +33,25 @@ export const Modal = ({
   }
 
   useEffect(() => {
+    const handleControls = (ev: KeyboardEvent) => {
+      switch (ev.code) {
+        case 'Escape':
+          onClose();
+          break;
+      }
+    };
+
     if (isOpen) {
+      window.addEventListener('keydown', handleControls);
       menu.API.disableProjectActions();
     } else {
+      window.removeEventListener('keydown', handleControls);
       menu.API.enableProjectActions();
     }
+
+    return () => {
+      window.removeEventListener('keydown', handleControls);
+    };
   }, [isOpen]);
 
   return (
