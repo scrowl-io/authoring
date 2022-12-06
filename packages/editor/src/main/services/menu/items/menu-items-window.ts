@@ -1,6 +1,6 @@
 import { MenuItemConstructorOptions } from 'electron';
 
-export const create = (isMac: boolean) => {
+export const create = (isMac: boolean, isRebuild?: boolean) => {
   const menuId = 'window-menu';
   const template: MenuItemConstructorOptions = {
     id: menuId,

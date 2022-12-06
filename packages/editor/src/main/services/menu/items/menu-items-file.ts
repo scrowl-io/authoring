@@ -24,7 +24,7 @@ export const API: MenuItemApiFile = {
 
 const menuId = 'file-menu';
 
-export const create = (isMac: boolean) => {
+export const create = (isMac: boolean, isRebuild?: boolean) => {
   const template = {
     id: menuId,
     label: 'File',
@@ -57,7 +57,7 @@ export const create = (isMac: boolean) => {
         id: `${menuId}-save`,
         label: "Save",
         accelerator: "CmdorCtrl+S",
-        enabled: false,
+        enabled: isRebuild ? true : false,
         click: () => {
           rq.send(API.save.name);
         },
@@ -67,7 +67,7 @@ export const create = (isMac: boolean) => {
         id: `${menuId}-close`,
         label: "Close Project",
         accelerator: "CmdorCtrl+W",
-        enabled: false,
+        enabled: isRebuild ? true : false,
         click: () => {
           rq.send(API.close.name);
         },
