@@ -8,7 +8,7 @@ import {
   Navigate,
 } from 'react-router-dom';
 import { Pages, Models } from './root.types';
-import { rq } from '../services';
+import { rq, sys } from '../services';
 import * as pages from '../pages';
 import * as models from '../models';
 import { menu } from '../services';
@@ -24,6 +24,7 @@ const PageRoutes = () => {
   const saveStatus = models.Projects.useInteractions();
   const projectData = models.Projects.useData();
   const assets = models.Projects.useAssets();
+  const projectInteractions = models.Projects.useInteractions();
   let defaultPath = hasWelcomed ? pages.Start.Path : pages.Welcome.Path;
   const pageModules = pages as Pages;
   const pageNames = Object.keys(pageModules);
@@ -37,24 +38,72 @@ const PageRoutes = () => {
   });
 
   useEffect(() => {
-    const closeProject = () => {
-      models.Projects.resetState();
-      pages.Workspace.resetWorkspace();
-      pages.Workspace.resetActiveSlide();
+    const closeListener = () => {
+      const closeProject = () => {
+        models.Projects.resetState();
+        pages.Workspace.resetWorkspace();
+        pages.Workspace.resetActiveSlide();
 
-      setTimeout(() => {
-        navigate(defaultPath);
-      }, 1);
+        setTimeout(() => {
+          navigate(defaultPath);
+        }, 1);
+      };
+
+      const promptDiscardProject = () => {
+        sys
+          .messageDialog({
+            type: 'question',
+            title: 'Confirm',
+            message: 'Close Project Without Saving?',
+            detail: 'Your changes are not saved.',
+            buttons: ['Save and Close', 'Discard and Close', 'Cancel'],
+          })
+          .then((res) => {
+            if (res.error) {
+              console.error(res);
+              return;
+            }
+
+            switch (res.data.response) {
+              case 0:
+                models.Projects.save({
+                  data: projectData,
+                  assets,
+                }).then((saveRes) => {
+                  if (saveRes.data && saveRes.data.action) {
+                    switch (saveRes.data.action) {
+                      case 'prompt-project-name':
+                        pages.Workspace.openPromptProjectName();
+                        break;
+                    }
+                    return;
+                  } else if (saveRes.error) {
+                    sys.messageDialog({
+                      message: res.message,
+                    });
+                    return;
+                  }
+
+                  closeProject();
+                });
+                break;
+              case 1:
+                closeProject();
+                break;
+            }
+          });
+      };
+
+      if (projectInteractions.isDirty || projectInteractions.isUncommitted) {
+        promptDiscardProject();
+        return;
+      }
+
+      closeProject();
     };
 
-    menu.API.onProjectClose(closeProject);
+    menu.API.onProjectClose(closeListener);
 
-    return () => {
-      menu.API.offProjectClose();
-    };
-  });
-
-  useEffect(() => {
     models.Projects.API.onUnsavedCheck(() => {
       models.Projects.API.sendUnsavedStatus({
         status: saveStatus,
@@ -66,6 +115,7 @@ const PageRoutes = () => {
     });
 
     return () => {
+      menu.API.offProjectClose();
       models.Projects.API.offUnsavedCheck();
     };
   }, [saveStatus, projectData, assets]);
