@@ -24,7 +24,6 @@ const PageRoutes = () => {
   const saveStatus = models.Projects.useInteractions();
   const projectData = models.Projects.useData();
   const assets = models.Projects.useAssets();
-  const projectInteractions = models.Projects.useInteractions();
   let defaultPath = hasWelcomed ? pages.Start.Path : pages.Welcome.Path;
   const pageModules = pages as Pages;
   const pageNames = Object.keys(pageModules);
@@ -94,7 +93,7 @@ const PageRoutes = () => {
           });
       };
 
-      if (projectInteractions.isDirty || projectInteractions.isUncommitted) {
+      if (saveStatus.isDirty || saveStatus.isUncommitted) {
         promptDiscardProject();
         return;
       }
