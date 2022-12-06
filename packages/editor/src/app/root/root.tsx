@@ -21,6 +21,9 @@ const Loader = () => {
 const PageRoutes = () => {
   const navigate = useNavigate();
   const hasWelcomed = models.Settings.useHasWelcomed();
+  const saveStatus = models.Projects.useInteractions();
+  const projectData = models.Projects.useData();
+  const assets = models.Projects.useAssets();
   let defaultPath = hasWelcomed ? pages.Start.Path : pages.Welcome.Path;
   const pageModules = pages as Pages;
   const pageNames = Object.keys(pageModules);
@@ -51,6 +54,22 @@ const PageRoutes = () => {
     };
   });
 
+  useEffect(() => {
+    models.Projects.API.onUnsavedCheck(() => {
+      models.Projects.API.sendUnsavedStatus({
+        status: saveStatus,
+        project: {
+          data: projectData,
+          assets,
+        },
+      });
+    });
+
+    return () => {
+      models.Projects.API.offUnsavedCheck();
+    };
+  }, [saveStatus, projectData, assets]);
+
   return (
     <Routes>
       {pageNames.map((page: string, idx: number) => {
@@ -68,7 +87,6 @@ export const Root = () => {
   const modelNames = Object.keys(modelModules);
   const inits: Array<Promise<rq.ApiResult>> = [];
   const [isReady, setIsReady] = useState(false);
-  const saveStatus = models.Projects.useInteractions();
 
   models.Settings.useProcessor();
   models.Projects.useProcessor();
@@ -92,17 +110,6 @@ export const Root = () => {
       setIsReady(true);
     });
   }, [modelModules, modelNames, inits]);
-
-  useEffect(() => {
-    models.Projects.API.onUnsavedCheck(() => {
-      models.Projects.API.sendUnsavedStatus(saveStatus);
-    });
-
-    return () => {
-      models.Projects.API.offUnsavedCheck();
-    };
-  }, [saveStatus]);
-
   return (
     <Router>
       <main>{!isReady ? <Loader /> : <PageRoutes />}</main>

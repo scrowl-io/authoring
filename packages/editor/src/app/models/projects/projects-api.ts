@@ -1,4 +1,11 @@
-import { ProjectsEndpoints, PreviewAssetReq, WindowEndpoints, ProjectMeta, PreviewProjectReq } from './projects.types';
+import {
+  ProjectsEndpoints,
+  PreviewAssetReq,
+  WindowEndpoints,
+  ProjectMeta,
+  PreviewProjectReq,
+  UnsavedReq
+} from './projects.types';
 import { rq } from '../../services';
 
 const ENDPOINTS: ProjectsEndpoints = {
@@ -66,8 +73,8 @@ export const offUnsavedCheck = () => {
   rq.offAll(WINDOW_ENDPOINTS.unsaved);
 };
 
-export const sendUnsavedStatus = (data) => {
-  rq.send(WINDOW_ENDPOINTS.onUnsaved, data);
+export const sendUnsavedStatus = (payload: UnsavedReq) => {
+  rq.send(WINDOW_ENDPOINTS.onUnsaved, payload);
 };
 
 export default {
