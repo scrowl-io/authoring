@@ -6,7 +6,6 @@ export const initialState = {
   isDirty: false, // true if the user has made any change
   isUncommitted: false, // true if the user has any unsaved change
   isNew: true,
-  syncScormName: true,
   isOpenProjectBrowser: false,
   isLoaded: false,
   assets: [],
@@ -101,47 +100,18 @@ export const config: stateManager.StateConfig = {
         state.isNew = false;
       }
 
-      if (
-        action.payload.meta &&
-        action.payload.meta.name &&
-        action.payload.scorm &&
-        action.payload.scorm.name
-      ) {
-        state.syncScormName =
-          action.payload.meta.name === action.payload.scorm.name;
-      }
-
-      const isEmptyMeta = state.data.meta.name.length <= 0;
-      const isSame = state.data.meta.name === state.data.scorm.name;
-
-      if (!isSame && !isEmptyMeta && state.syncScormName) {
-        state.data.scorm.name = state.data.meta.name.slice();
-      }
-
+      state.data.scorm.name = state.data.meta.name.slice();
       state.isLoaded = true;
     },
     setMeta: (state, action) => {
       updateObj(state.data.meta, action.payload);
-
-      const isEmptyMeta = state.data.meta.name.length <= 0;
-      const isSame = state.data.meta.name === state.data.scorm.name;
-
-      if (!isSame && !isEmptyMeta && state.syncScormName) {
-        state.data.scorm.name = state.data.meta.name.slice();
-      }
-
+      state.data.scorm.name = state.data.meta.name.slice();
       state.isDirty = true;
       state.isUncommitted = true;
     },
     setScorm: (state, action) => {
       updateObj(state.data.scorm, action.payload);
-
-      const isSame = state.data.meta.name === state.data.scorm.name;
-
-      if (!isSame) {
-        state.syncScormName = false;
-      }
-
+      state.data.meta.name = state.data.scorm.name.slice();
       state.isDirty = true;
       state.isUncommitted = true;
     },
