@@ -1,0 +1,83 @@
+{
+  "name": "@scrowl/ui",
+  "version": "0.0.1",
+  "description": "",
+  "license": "MIT",
+  "keywords": [],
+  "author": {
+    "name": "OSG"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/scrowl-io/authoring.git",
+    "directory": "packages/ui"
+  },
+  "bugs": {
+    "url": "https://github.com/scrowl-io/scrowl/issues"
+  },
+  "homepage": "https://github.com/scrowl-io/authoring/packages/ui#readme",
+  "scripts": {
+    "clean": "rimraf ./.parcel-cache",
+    "prebuild": "yarn run clean && rimraf dist && rimraf lib",
+    "build": "parcel build --no-cache --cache-dir ./.parcel-cache",
+    "postbuild": "webpack --config webpack.config.js --stats-error-details"
+  },
+  "source": "./src/index.ts",
+  "main": "./lib/scrowl.ui.js",
+  "module": "./lib/scrowl.ui.module.js",
+  "types": "./lib/scrowl.ui.d.ts",
+  "exports": {
+    ".": {
+      "require": "./lib/scrowl.ui.js",
+      "import": "./lib/scrowl.ui.module.js",
+      "default": "./lib/scrowl.ui.js"
+    },
+    "./src": "./src/index.ts",
+    "./web": "./dist/scrowl.ui.js"
+  },
+  "eslintConfig": {
+    "extends": "@scrowl/config"
+  },
+  "prettier": "@scrowl/config/prettier",
+  "stylelint": {
+    "extends": "@scrowl/config/stylelint"
+  },
+  "files": [
+    "LICENSE",
+    "README.md",
+    "dist/",
+    "lib/",
+    "package.json"
+  ],
+  "devDependencies": {
+    "@parcel/core": "2.7.0",
+    "@parcel/packager-ts": "2.7.0",
+    "@parcel/reporter-dev-server": "2.7.0",
+    "@parcel/runtime-react-refresh": "2.7.0",
+    "@parcel/transformer-sass": "2.7.0",
+    "@parcel/transformer-typescript-types": "2.7.0",
+    "@parcel/validator-typescript": "2.7.0",
+    "@scrowl/config": "^0.0.61",
+    "@scrowl/template-block-text": "^1.0.60",
+    "@scrowl/template-lesson-intro": "^1.0.60",
+    "@scrowl/template-simple-text": "^1.0.60",
+    "@scrowl/template-two-column": "^1.0.60",
+    "@types/react": "^18.0.21",
+    "@types/react-dom": "^18.0.6",
+    "eslint": "^8.25.0",
+    "parcel": "2.7.0",
+    "postcss": "^8.4.17",
+    "postcss-import": "^14.1.0",
+    "postcss-modules": "^4.3.1",
+    "prettier": "^2.7.1",
+    "process": "^0.11.10",
+    "rimraf": "^3.0.2",
+    "stylelint": "^14.13.0",
+    "typescript": "4.7.4"
+  },
+  "dependencies": {
+    "bootstrap": "^5.2.2",
+    "react": "^18.2.0",
+    "react-bootstrap": "^2.5.0"
+  }
+}
