@@ -95,7 +95,7 @@ export type RUNTIME_SERVICE = {
     };
   };
   courseProgress: number;
-  lessonLocation: string;
+  lessonLocation: string | number;
   isAvailable: () => RUNTIME_SERVICE_API_RESULT;
   getError: (printError?: boolean) => RUNTIME_SERVICE_RESULT;
   getProgress: () => number | RUNTIME_SERVICE_API_RESULT_ERROR;
@@ -107,6 +107,7 @@ export type RUNTIME_SERVICE = {
   getValue: (elem: CMIELement) => RUNTIME_SERVICE_RESULT;
   updateStatus: (status: SCORM_STATUS_LESSON) => RUNTIME_SERVICE_RESULT;
   updateProgress: (percentageCompleted: number) => void;
+  updateLocation: (lessonLocation: string | number) => void;
   finish: () => void;
   exit: () => RUNTIME_SERVICE_RESULT;
 };

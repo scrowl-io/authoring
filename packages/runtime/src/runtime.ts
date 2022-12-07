@@ -135,6 +135,9 @@ export const service: RUNTIME_SERVICE = {
     let retryCnt = 0;
     const retryLimit = 7;
 
+    console.log('SOURCE');
+    console.log(source);
+
     if (source.API) {
       return {
         error: false,
@@ -174,6 +177,7 @@ export const service: RUNTIME_SERVICE = {
     const resFind = service._findAPI(window);
 
     if (resFind.error) {
+      console.log('inside error response');
       return resFind;
     }
 
@@ -181,7 +185,7 @@ export const service: RUNTIME_SERVICE = {
     service._time.start = new Date();
     service.init = true;
 
-    const resInit = service.API.LMSInitialize();
+    const resInit = service.API.LMSInitialize('');
 
     if (resInit === service.STATUSES.update.false) {
       return {
@@ -195,19 +199,12 @@ export const service: RUNTIME_SERVICE = {
     const version = service.getValue('cmi._version');
     console.log(version);
 
+    // SCORM 1.2 endpoints
     console.log('lesson Status (1.2):');
     const lessonStatus = service.getValue('cmi.core.lesson_status');
     console.log(lessonStatus);
 
-    console.log('completion Status (2004):');
-    const completionStatus = service.getValue('cmi.completion_status');
-    console.log(completionStatus);
-
-    console.log('success Status (2004):');
-    const successStatus = service.getValue('cmi.success_status');
-    console.log(successStatus);
-
-    console.log('lesson location:');
+    console.log('lesson location (1.2):');
     const lessonLocation = service.getValue('cmi.core.lesson_location');
     console.log(lessonLocation);
 
@@ -219,21 +216,35 @@ export const service: RUNTIME_SERVICE = {
     const totalTime = service.getValue('cmi.core.totalTime');
     console.log(totalTime);
 
+    console.log('score mastery (1.2):');
+    const score_mastery = service.getValue('cmi.student_data.mastery_score');
+    console.log(score_mastery);
+
+    console.log('score raw (1.2):');
+    const score_raw = service.getValue('cmi.core.score_raw');
+    console.log(score_raw);
+
+    // SCORM 2004 v2 endpoints
+
+    console.log('completion Status (2004):');
+    const completionStatus = service.getValue('cmi.completion_status');
+    console.log(completionStatus);
+
+    console.log('success Status (2004):');
+    const successStatus = service.getValue('cmi.success_status');
+    console.log(successStatus);
+
+    console.log('lesson location (2004):');
+    const lessonLocation2004 = service.getValue('cmi.location');
+    console.log(lessonLocation2004);
+
     console.log('session time (2004):');
     const sessionTime2004 = service.getValue('cmi.session_time');
     console.log(sessionTime2004);
 
-    // console.log('score raw (1.2):');
-    // const score_raw = service.getValue('cmi.core.score_raw');
-    // console.log(score_raw);
-
-    // console.log('score to pass (2004):');
-    // const score_pass_1 = service.getValue('cmi.scaled_passing_score');
-    // console.log(score_pass_1);
-
-    // console.log('score mastery (1.2):');
-    // const score_mastery = service.getValue('cmi.student_data.mastery_score');
-    // console.log(score_mastery);
+    console.log('score to pass (2004):');
+    const score_pass_1 = service.getValue('cmi.scaled_passing_score');
+    console.log(score_pass_1);
 
     console.log('course progress (2004):');
     const progress_measure = service.getValue('cmi.progress_measure');
@@ -254,7 +265,7 @@ export const service: RUNTIME_SERVICE = {
       return res;
     }
 
-    const resSave = res.API.LMSCommit();
+    const resSave = res.API.LMSCommit('');
 
     if (resSave === service.STATUSES.update.false) {
       return {
@@ -294,7 +305,6 @@ export const service: RUNTIME_SERVICE = {
     service.finished = true;
     service.save();
     console.log('terminating');
-    res.API.Commit();
     return {
       error: false,
     };
@@ -391,6 +401,8 @@ export const service: RUNTIME_SERVICE = {
   exit: () => {
     const res = service.isAvailable();
 
+    console.log('EXITING');
+
     if (res.error) {
       return res;
     }
@@ -406,14 +418,35 @@ export const service: RUNTIME_SERVICE = {
 
     const totalTime =
       service._time.end.getTime() - service._time.start.getTime();
+
     const endRes = service.setValue(
       'cmi.core.session_time',
+      service._time.convert(totalTime)
+    );
+
+    const endRes2004 = service.setValue(
+      'cmi.session_time',
       service._time.convert(totalTime)
     );
 
     if (endRes.error) {
       return endRes;
     }
+
+    if (endRes2004.error) {
+      return endRes2004;
+    }
+
+    const lessonLocation = service.lessonLocation;
+
+    const locationRes = service.setValue(
+      'cmi.core.lesson_location',
+      lessonLocation
+    );
+    const locationRes2004 = service.setValue('cmi.location', lessonLocation);
+
+    console.log(locationRes);
+    console.log(locationRes2004);
 
     const exitRes = service.setValue(
       'cmi.core.exit',
@@ -425,6 +458,10 @@ export const service: RUNTIME_SERVICE = {
     }
 
     return service.stop();
+  },
+  updateLocation: (lessonLocation) => {
+    service.lessonLocation = lessonLocation;
+    service.save();
   },
   updateProgress: (percentageCompleted) => {
     console.log('new percentage');
@@ -448,6 +485,7 @@ export const service: RUNTIME_SERVICE = {
     service.setValue('cmi.progress_measure', service.courseProgress);
     service.setValue('cmi.score.raw', 80.0);
     service.setValue('cmi.success_status', 'passed');
+    service.setValue('cmi.completion_status', 'completed');
 
     // SCORM 1.2 (status is handled separately, but scores will conflict, so only update 1)
     // service.updateStatus('success');

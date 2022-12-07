@@ -102,6 +102,8 @@ const $defce2f29876acb7$export$6ed414b8d8bead88 = {
     _findAPI: (source)=>{
         let retryCnt = 0;
         const retryLimit = 7;
+        console.log("SOURCE");
+        console.log(source);
         if (source.API) return {
             error: false,
             API: source.API
@@ -125,11 +127,14 @@ const $defce2f29876acb7$export$6ed414b8d8bead88 = {
     },
     start: ()=>{
         const resFind = $defce2f29876acb7$export$6ed414b8d8bead88._findAPI(window);
-        if (resFind.error) return resFind;
+        if (resFind.error) {
+            console.log("inside error response");
+            return resFind;
+        }
         $defce2f29876acb7$export$6ed414b8d8bead88.API = resFind.API;
         $defce2f29876acb7$export$6ed414b8d8bead88._time.start = new Date();
         $defce2f29876acb7$export$6ed414b8d8bead88.init = true;
-        const resInit = $defce2f29876acb7$export$6ed414b8d8bead88.API.LMSInitialize();
+        const resInit = $defce2f29876acb7$export$6ed414b8d8bead88.API.LMSInitialize("");
         if (resInit === $defce2f29876acb7$export$6ed414b8d8bead88.STATUSES.update.false) return {
             error: true,
             message: "SCORM service failed to initialize",
@@ -138,16 +143,11 @@ const $defce2f29876acb7$export$6ed414b8d8bead88 = {
         console.log("cmi version:");
         const version = $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi._version");
         console.log(version);
+        // SCORM 1.2 endpoints
         console.log("lesson Status (1.2):");
         const lessonStatus = $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.core.lesson_status");
         console.log(lessonStatus);
-        console.log("completion Status (2004):");
-        const completionStatus = $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.completion_status");
-        console.log(completionStatus);
-        console.log("success Status (2004):");
-        const successStatus = $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.success_status");
-        console.log(successStatus);
-        console.log("lesson location:");
+        console.log("lesson location (1.2):");
         const lessonLocation = $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.core.lesson_location");
         console.log(lessonLocation);
         console.log("session time (1.2):");
@@ -156,18 +156,28 @@ const $defce2f29876acb7$export$6ed414b8d8bead88 = {
         console.log("total time (1.2):");
         const totalTime = $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.core.totalTime");
         console.log(totalTime);
+        console.log("score mastery (1.2):");
+        const score_mastery = $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.student_data.mastery_score");
+        console.log(score_mastery);
+        console.log("score raw (1.2):");
+        const score_raw = $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.core.score_raw");
+        console.log(score_raw);
+        // SCORM 2004 v2 endpoints
+        console.log("completion Status (2004):");
+        const completionStatus = $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.completion_status");
+        console.log(completionStatus);
+        console.log("success Status (2004):");
+        const successStatus = $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.success_status");
+        console.log(successStatus);
+        console.log("lesson location (2004):");
+        const lessonLocation2004 = $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.location");
+        console.log(lessonLocation2004);
         console.log("session time (2004):");
         const sessionTime2004 = $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.session_time");
         console.log(sessionTime2004);
-        // console.log('score raw (1.2):');
-        // const score_raw = service.getValue('cmi.core.score_raw');
-        // console.log(score_raw);
-        // console.log('score to pass (2004):');
-        // const score_pass_1 = service.getValue('cmi.scaled_passing_score');
-        // console.log(score_pass_1);
-        // console.log('score mastery (1.2):');
-        // const score_mastery = service.getValue('cmi.student_data.mastery_score');
-        // console.log(score_mastery);
+        console.log("score to pass (2004):");
+        const score_pass_1 = $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.scaled_passing_score");
+        console.log(score_pass_1);
         console.log("course progress (2004):");
         const progress_measure = $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.progress_measure");
         console.log(progress_measure);
@@ -181,7 +191,7 @@ const $defce2f29876acb7$export$6ed414b8d8bead88 = {
     save: ()=>{
         const res = $defce2f29876acb7$export$6ed414b8d8bead88.isAvailable();
         if (res.error) return res;
-        const resSave = res.API.LMSCommit();
+        const resSave = res.API.LMSCommit("");
         if (resSave === $defce2f29876acb7$export$6ed414b8d8bead88.STATUSES.update.false) return {
             error: true,
             message: "SCORM service failed to save",
@@ -205,7 +215,6 @@ const $defce2f29876acb7$export$6ed414b8d8bead88 = {
         $defce2f29876acb7$export$6ed414b8d8bead88.finished = true;
         $defce2f29876acb7$export$6ed414b8d8bead88.save();
         console.log("terminating");
-        res.API.Commit();
         return {
             error: false
         };
@@ -267,6 +276,7 @@ const $defce2f29876acb7$export$6ed414b8d8bead88 = {
     },
     exit: ()=>{
         const res = $defce2f29876acb7$export$6ed414b8d8bead88.isAvailable();
+        console.log("EXITING");
         if (res.error) return res;
         $defce2f29876acb7$export$6ed414b8d8bead88._time.end = new Date();
         if (!$defce2f29876acb7$export$6ed414b8d8bead88._time.start) return {
@@ -275,10 +285,21 @@ const $defce2f29876acb7$export$6ed414b8d8bead88 = {
         };
         const totalTime = $defce2f29876acb7$export$6ed414b8d8bead88._time.end.getTime() - $defce2f29876acb7$export$6ed414b8d8bead88._time.start.getTime();
         const endRes = $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.core.session_time", $defce2f29876acb7$export$6ed414b8d8bead88._time.convert(totalTime));
+        const endRes2004 = $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.session_time", $defce2f29876acb7$export$6ed414b8d8bead88._time.convert(totalTime));
         if (endRes.error) return endRes;
+        if (endRes2004.error) return endRes2004;
+        const lessonLocation = $defce2f29876acb7$export$6ed414b8d8bead88.lessonLocation;
+        const locationRes = $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.core.lesson_location", lessonLocation);
+        const locationRes2004 = $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.location", lessonLocation);
+        console.log(locationRes);
+        console.log(locationRes2004);
         const exitRes = $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.core.exit", $defce2f29876acb7$export$6ed414b8d8bead88.STATUSES.exit.save);
         if (exitRes.error) return exitRes;
         return $defce2f29876acb7$export$6ed414b8d8bead88.stop();
+    },
+    updateLocation: (lessonLocation)=>{
+        $defce2f29876acb7$export$6ed414b8d8bead88.lessonLocation = lessonLocation;
+        $defce2f29876acb7$export$6ed414b8d8bead88.save();
     },
     updateProgress: (percentageCompleted)=>{
         console.log("new percentage");
@@ -301,6 +322,7 @@ const $defce2f29876acb7$export$6ed414b8d8bead88 = {
         $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.progress_measure", $defce2f29876acb7$export$6ed414b8d8bead88.courseProgress);
         $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.score.raw", 80.0);
         $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.success_status", "passed");
+        $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.completion_status", "completed");
         // SCORM 1.2 (status is handled separately, but scores will conflict, so only update 1)
         // service.updateStatus('success');
         // service.setValue('cmi.core.score.raw', 57.0);
