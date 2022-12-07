@@ -1,4 +1,9 @@
-import { ui, ButtonDefaultProps, IconDefaultCommons, IconDefaultProps } from '../src';
+import {
+  ui,
+  ButtonDefaultProps,
+  IconDefaultProps,
+  TabsDefaultProps,
+} from '../src';
 
 declare global {
   interface Window {
@@ -7,6 +12,7 @@ declare global {
         utils: typeof ui.utils;
         Button: (ButtonDefaultProps) => JSX.Element;
         Icon: (IconDefaultProps) => JSX.Element;
+        Tabs: (TabsDefaultProps) => JSX.Element;
       };
     };
   };
