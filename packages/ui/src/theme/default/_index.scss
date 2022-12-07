@@ -1,0 +1,113 @@
+@use '../global/variables' as *;
+@use '../global/tokens' as *;
+
+:root,
+.theme--default {
+  --bs-body-bg: var(--bs-gray-100);
+  --bs-body-color: var(--bs-gray-900);
+  --bs-body-color-rgb: #{toRGB($owl-ref-palette-gray-100)};
+  --bs-body-bg-rgb: #{toRGB($owl-ref-palette-gray-900)};
+  --bs-border-color: var(--bs-gray-500);
+  --bs-link-color: var(--bs-link-blue-500);
+  --bs-link-hover-color: var(--bs-link-blue-600);
+
+  // Global
+  --owl-box-shadow: 0.25rem 0.25rem 0 0 rgba(0, 0, 0, 0.125);
+  --owl-box-shadow-active: 0.5rem 0.5rem 0 0 rgba(0, 0, 0, 0.0625);
+
+  --owl-close-icon: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='black'><path d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/></svg>");
+
+  --owl-input-color: var(--bs-body-color);
+  --owl-input-bg: var(--bs-body-bg);
+  --owl-input-placeholder-color: var(--bs-gray-600);
+  --owl-input-border-color: var(--bs-gray-400);
+
+  --owl-table-info-color: var(--bs-gray-900);
+  --owl-table-info-bg: var(--bs-cyan-100);
+  --owl-table-info-border-color: var(--bs-border-color);
+
+  --owl-accordion-btn-color: var(--bs-gray-900);
+  --owl-accordion-btn-bg: var(--bs-white);
+  --owl-accordion-btn-active-color: var(--bs-black);
+  --owl-accordion-btn-active-bg: var(--bs-gray-200);
+
+  --owl-border-color: var(--bs-gray-500);
+
+  --owl-dropdown-color: var(--bs-gray-800);
+  --owl-dropdown-bg: var(--bs-white);
+  --owl-dropdown-link-color: var(--bs-gray-800);
+  --owl-dropdown-link-hover-color: var(--bs-black);
+  --owl-dropdown-link-hover-bg: var(--bs-gray-200);
+  --owl-dropdown-link-disabled-color: var(--bs-gray-500);
+
+  --owl-typeface-label-color: var(--bs-gray-600);
+
+  --owl-tooltip-color: var(--bs-white);
+  --owl-tooltip-bg: var(--bs-gray-800);
+
+  --owl-nav-tab-color: var(--bs-gray-600);
+  --owl-nav-tab-active-color: var(--bs-gray-700);
+  --owl-transparent-hover-bg: rgba(0, 0, 0, 0.15);
+
+  // Titlebar
+  --owl-titlebar-color: var(--bs-body-color);
+  --owl-titlebar-bg: var(--bs-gray-100);
+
+  // Navbar
+  --owl-navbar-bg: var(--bs-white);
+  --owl-navbar-color: var(--bs-gray-900);
+  --owl-navbar-hover-color: var(--bs-gray-600);
+  --owl-navbar-disabled-color: rgba(#000, .3);
+  --owl-navbar-active-color: var(--bs-gray-600);
+  --owl-navbar-box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.125);
+
+  // Footer
+  --owl-footer-bg: var(--bs-gray-900);
+  --owl-footer-color: var(--bs-white);
+  --owl-footer-label-color: var(--bs-gray-500);
+  --owl-footer-hover-bg: var(--bs-gray-700);
+  --owl-footer-hover-color: var(--bs-white);
+
+  // Sidebar
+  --owl-sidebar-bg: var(--bs-white);
+  --owl-sidebar-color: var(--bs-gray-700);
+  --owl-sidebar-hover-bg: var(--bs-gray-200);
+  --owl-sidebar-hover-color: var(--bs-black);
+  --owl-sidebar-header-bg: var(--bs-gray-200);
+  --owl-sidebar-header-color: var(--bs-black);
+
+  // Chatbox
+  --owl-chatbox-bg: var(--bs-gray-100);
+  --owl-chatbox-bg-hover: var(--bs-gray-200);
+
+  // Workspace
+  --owl-workspace-bg: var(--bs-gray-200);
+  --owl-workspace-bg-accent: rgba(0, 0, 0, 0.05);
+  --owl-workspace-color: var(--bs-body-color);
+
+  // Start
+  --owl-start-bg: var(--bs-gray-100);
+  --owl-start-bg-accent: rgba(0, 0, 0, 0.05);
+  --owl-start-color: var(--bs-body-color);
+
+  // Template Browser
+  --owl-template-browser-bg: var(--bs-gray-200);
+  --owl-template-browser-bg-accent: var(--bs-gray-100);
+  --owl-template-browser-item-bg: var(--bs-body-bg);
+  --owl-template-browser-active-bg: var(--bs-body-bg);
+  --owl-template-browser-active-border-color: var(--bs-primary);
+  --owl-template-browser-active-color: inherit;
+
+  // Color Palette
+  --owl-color-default: var(--bs-gray-600);
+  --owl-color-module: var(--bs-purple);
+  --owl-color-lesson: var(--bs-orange);
+  --owl-color-slide: var(--bs-yellow);
+  --owl-color-template: var(--bs-gray-500);
+  --owl-color-quiz: var(--bs-gray-500);
+
+  --owl-selection-bg: var(--bs-yellow-100);
+  --owl-selection-color: var(--bs-yellow-800);
+  --owl-active-bg: var(--bs-primary);
+  --owl-active-color: var(--bs-white);
+}

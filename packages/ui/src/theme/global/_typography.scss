@@ -1,0 +1,56 @@
+@mixin typeface-lg {
+  font-size: var(--owl-typeface-size-lg);
+}
+
+@mixin typeface-md {
+  font-size: var(--owl-typeface-size-base);
+}
+
+@mixin typeface-sm {
+  font-size: var(--owl-typeface-size-sm);
+}
+
+@mixin typeface-xs {
+  font-size: var(--owl-typeface-size-xs);
+}
+
+@mixin typeface-2xs {
+  font-size: var(--owl-typeface-size-2xs);
+}
+
+@mixin typeface-h1 {
+  font-size: var(--owl-typeface-heading-1-size);
+  font-weight: var(--owl-typeface-heading-1-weight);
+}
+
+@mixin typeface-h2 {
+  font-size: var(--owl-typeface-heading-2-size);
+  font-weight: var(--owl-typeface-heading-2-weight);
+}
+
+@mixin typeface-h3 {
+  font-size: var(--owl-typeface-heading-3-size);
+  font-weight: var(--owl-typeface-heading-weight);
+}
+
+@mixin typeface-h4 {
+  font-size: var(--owl-typeface-heading-4-size);
+  font-weight: var(--owl-typeface-heading-weight);
+}
+
+@mixin typeface-h5 {
+  font-size: var(--owl-typeface-heading-5-size);
+  font-weight: var(--owl-typeface-heading-weight);
+}
+
+@mixin typeface-h6 {
+  font-size: var(--owl-typeface-heading-6-size);
+  font-weight: var(--owl-typeface-heading-weight);
+}
+
+@mixin typeface-label {
+  font-weight: var(--owl-typeface-label-weight);
+  letter-spacing: var(--owl-typeface-label-letterspacing);
+  text-transform: var(--owl-typeface-label-texttransform);
+  color: var(--owl-typeface-label-color);
+}

@@ -33,7 +33,11 @@
       "default": "./lib/scrowl.ui.js"
     },
     "./src": "./src/index.ts",
-    "./web": "./dist/scrowl.ui.js"
+    "./web": "./dist/scrowl.ui.js",
+    "./css": "./dist/scrowl.ui.css",
+    "./scss": "./src/theme/_index.scss",
+    "./scss-utils": "./src/theme/_utils.scss",
+    "./scss-bootstrap": "./src/theme/global/_bootstrap.scss"
   },
   "eslintConfig": {
     "extends": "@scrowl/config"

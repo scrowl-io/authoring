@@ -1,4 +1,5 @@
-import * as utils from './utils';
+import './theme/_index.scss';
+import * as utils from './utils'; 
 import * as btn from './button';
 
 export * from './utils/utils.types';
