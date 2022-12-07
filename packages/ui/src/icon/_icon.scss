@@ -1,0 +1,84 @@
+.icons,
+.icons-outlined,
+.icons-rounded,
+.icons-sharp {
+  color: currentColor;
+  font-size: 1.2em;
+  vertical-align: text-bottom;
+  pointer-events: none;
+  user-select: none;
+}
+
+.icons {
+  &--appearance {
+    &-primary {
+      color: var(--bs-primary);
+    }
+
+    &-module {
+      color: var(--owl-color-module);
+    }
+
+    &-lesson {
+      color: var(--owl-color-lesson);
+    }
+
+    &-slide {
+      color: var(--owl-color-slide);
+    }
+
+    &-template {
+      color: var(--owl-color-template);
+    }
+
+    &-default {
+      color: var(--owl-color-default);
+    }
+
+    &-quiz {
+      color: var(--owl-color-quiz);
+    }
+
+    &-alt {
+      color: var(--bs-body-bg);
+    }
+  }
+
+  &--px-scale {
+    &-h1 {
+      font-size: var(--owl-typeface-heading-1-size);
+    }
+
+    &-h2 {
+      font-size: var(--owl-typeface-heading-2-size);
+    }
+
+    &-h3 {
+      font-size: var(--owl-typeface-heading-3-size);
+    }
+
+    &-h4 {
+      font-size: var(--owl-typeface-heading-4-size);
+    }
+
+    &-h5 {
+      font-size: var(--owl-typeface-heading-5-size);
+    }
+
+    &-h6 {
+      font-size: var(--owl-typeface-heading-6-size);
+    }
+
+    &-lg {
+      font-size: var(--owl-typeface-size-lg);
+    }
+
+    &-md {
+      font-size: var(--owl-typeface-size-base);
+    }
+
+    &-sm {
+      font-size: var(--owl-typeface-size-sm);
+    }
+  }
+}

@@ -7,7 +7,7 @@ export const Button = ({ children, ...props }: ButtonDefaultProps) => {
   const themePrefixes: ThemePrefixesProps = {};
   const baseClass = 'btn';
 
-  themePrefixes[baseClass] = `scrowlui-${baseClass}`;
+  themePrefixes[baseClass] = `owlui-${baseClass}`;
 
   return (
     <ThemeProvider prefixes={themePrefixes}>
