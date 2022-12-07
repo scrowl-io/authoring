@@ -8,6 +8,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 export const NavModule = ({ pageId, config, mIdx, completedLessons }) => {
   const currentSlide = pageId;
+  const runtime = window['Scrowl'].runtime;
 
   let moduleSlides: Array<string> = [];
 
@@ -48,7 +49,15 @@ export const NavModule = ({ pageId, config, mIdx, completedLessons }) => {
 
             return (
               <li key={lIdx}>
-                <Link to={completedLessons.includes(lesson) ? url : ''}>
+                <Link
+                  to={
+                    !runtime
+                      ? url
+                      : completedLessons.includes(lesson)
+                      ? url
+                      : ''
+                  }
+                >
                   <span className={css.lessonButton}>
                     <Icon
                       icon="arrow_drop_down_circle"
