@@ -42,9 +42,7 @@ export const ExportOptions = ({ data, onChange }) => {
             onChange={handleUpdateOutpuFormat}
           >
             <option value="1.2">SCORM 1.2</option>
-            <option value="2004.3" disabled>
-              SCORM 2004 3rd Edition
-            </option>
+            <option value="2004 3rd Edition">SCORM 2004 3rd Edition</option>
             <option value="2004.4" disabled>
               SCORM 2004 4th Edition
             </option>

@@ -37,7 +37,7 @@ export const project = (): ProjectData => {
       organization: '',
       reportStatus: 'Passed/Incomplete',
       identifier: '',
-      outputFormat: '1.2',
+      outputFormat: '2004 3rd Edition',
       optimizeMedia: 'recommended',
     },
     modules: [],
