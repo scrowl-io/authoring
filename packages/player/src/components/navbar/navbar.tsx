@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { Navbar, Offcanvas, Container, Tabs, Tab } from 'react-bootstrap';
+import * as utils from '../../utils';
 import * as css from './_navbar.scss';
 import { NavModule } from './nav-module';
 import { NavResource } from './nav-resource';
 import { NavGlossaryItem } from './nav-glossary-item';
 
 export const NavBar = ({ pageId, project }) => {
+  utils.css.removeMapPrefix(css);
   const Scrowl = window.Scrowl;
   const [tabKey, setTabKey] = useState('outline');
 

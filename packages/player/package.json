@@ -60,6 +60,7 @@
     "@parcel/transformer-typescript-types": "2.7.0",
     "@parcel/validator-typescript": "2.7.0",
     "@scrowl/config": "^0.0.61",
+    "@scrowl/postcss-prefixer": "^0.0.1",
     "@scrowl/template-block-text": "^1.0.60",
     "@scrowl/template-lesson-intro": "^1.0.60",
     "@scrowl/template-simple-text": "^1.0.60",

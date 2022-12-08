@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { Collapse } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import * as utils from '../../utils';
 import * as css from './_navbar.scss';
 
 export const NavModule = ({ pageId, config, mIdx }) => {
+  utils.css.removeMapPrefix(css);
   const Scrowl = window.Scrowl;
   const currentSlide = pageId;
 

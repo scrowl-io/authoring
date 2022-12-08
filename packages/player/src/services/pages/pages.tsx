@@ -8,9 +8,12 @@ import {
   PlayerTemplateList,
   TemplateComponent,
 } from '../../root/root.types';
+import * as utils from '../../utils';
 import * as css from '../../root/_root.scss';
 import { Error } from '../../components';
 import { NavBar } from '../../components/navbar';
+
+utils.css.removeMapPrefix(css);
 
 const Page = ({ slides, controller, templates, ...props }: PageProps) => {
   const player = document.querySelector('.player-main');
