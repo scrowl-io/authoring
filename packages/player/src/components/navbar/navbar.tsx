@@ -14,9 +14,9 @@ import { NavResource } from './nav-resource';
 import { NavGlossaryItem } from './nav-glossary-item';
 
 const css = utils.css.removeMapPrefix(_css);
-const Scrowl = window['Scrowl'];
 
 export const NavBar = ({ pageId, project }) => {
+  const Scrowl = window['Scrowl'];
   const [tabKey, setTabKey] = useState('outline');
   const themePrefixes: CssMapProps = {};
 

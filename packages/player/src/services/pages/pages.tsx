@@ -13,7 +13,6 @@ import { Error } from '../../components';
 import { NavBar } from '../../components/navbar';
 
 const css = utils.css.removeMapPrefix(_css);
-const Scrowl = window['Scrowl'];
 
 const Page = ({ slides, controller, templates, ...props }: PageProps) => {
   const player = document.querySelector('.player-main');
@@ -54,6 +53,7 @@ const Page = ({ slides, controller, templates, ...props }: PageProps) => {
 };
 
 const updateCourseProgress = (project, id) => {
+  const Scrowl = window['Scrowl'];
   console.log('inside pages:');
 
   let lessonsArray: { index: number; targetId: string }[] = [];
@@ -88,13 +88,16 @@ const updateCourseProgress = (project, id) => {
 };
 
 const finishCourse = () => {
+  const Scrowl = window['Scrowl'];
   const runtime = Scrowl.runtime;
+
   runtime?.finish();
 };
 
 export const create = (project, templateList: PlayerTemplateList) => {
-  const data: Array<PageDefinition> = [];
+  const Scrowl = window['Scrowl'];
   const controller = new Scrowl.core.scroll.Controller();
+  const data: Array<PageDefinition> = [];
 
   project.outlineConfig.forEach((module, mIdx) => {
     module.lessons.forEach((page, lIdx) => {
@@ -155,7 +158,9 @@ export const create = (project, templateList: PlayerTemplateList) => {
                         {nextLessonText}
                       </Link>
                     ) : (
-                      <button onClick={finishCourse}>Finish Course</button>
+                      <Scrowl.ui.Button onClick={finishCourse}>
+                        Finish Course
+                      </Scrowl.ui.Button>
                     )}
                   </div>
                 </Scrowl.core.Template>

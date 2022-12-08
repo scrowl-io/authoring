@@ -5,9 +5,9 @@ import utils from '../../utils';
 import * as _css from './_navbar.scss';
 
 const css = utils.css.removeMapPrefix(_css);
-const Scrowl = window['Scrowl'];
 
 export const NavModule = ({ pageId, config, mIdx }) => {
+  const Scrowl = window['Scrowl'];
   const currentSlide = pageId;
 
   let moduleSlides: Array<string> = [];
