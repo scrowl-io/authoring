@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Button, Icon } from '@owlui/lib';
+import { ui } from '@scrowl/ui';
 import * as css from '../_canvas.scss';
 import { useActiveSlide, setActiveSlide } from '../../../';
 import { Settings, Projects } from '../../../../../models';
@@ -124,7 +124,7 @@ export const CanvasHeader = () => {
       transition={animationOpts.transition}
     >
       <h1 className="visually-hidden">{name}</h1>
-      <Icon
+      <ui.Icon
         icon="rectangle"
         display="outlined"
         opsz={20}
@@ -145,20 +145,20 @@ export const CanvasHeader = () => {
           onBlur={handleNameUpdate}
         />
       </div>
-      <Button
+      <ui.Button
         className={css.actionMenu}
         variant="ghost"
         onClick={handelOpenSlideMenu}
         onContextMenu={handelOpenSlideMenu}
       >
-        <Icon
+        <ui.Icon
           display="rounded"
           icon="more_vert"
           opsz={20}
           filled
           pxScale="H4"
         />
-      </Button>
+      </ui.Button>
     </motion.div>
   );
 };

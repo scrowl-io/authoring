@@ -1,4 +1,4 @@
-import '@owlui/lib/dist/owl.lib.css';
+import '@scrowl/ui/src/theme/_index.scss';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { Root } from './root';

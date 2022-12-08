@@ -1,5 +1,8 @@
 import React from 'react';
-import * as css from './_navbar.scss';
+import utils from '../../utils';
+import * as _css from './_navbar.scss';
+
+const css = utils.css.removeMapPrefix(_css);
 
 export const NavGlossaryItem = ({ glossaryItem }) => {
   return (

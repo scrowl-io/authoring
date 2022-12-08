@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Icon } from '@owlui/lib';
+import { ui } from '@scrowl/ui';
 import * as css from '../_canvas.scss';
 import { useActiveSlide, setActiveSlide } from '../../../';
 import { Settings, Projects } from '../../../../../models';
@@ -63,7 +63,7 @@ export const CanvasNotes = () => {
             Slide Notes
           </label>
           {hasSlide && (
-            <Icon icon="arrow_drop_down" display="sharp" opsz={20} />
+            <ui.Icon icon="arrow_drop_down" display="sharp" opsz={20} />
           )}
         </a>
         <motion.div

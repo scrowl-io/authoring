@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Button, Icon } from '@owlui/lib';
+import { ui } from '@scrowl/ui';
 import * as css from '../_pane-details.scss';
 import { Projects } from '../../../../../models';
 import { menu, sys } from '../../../../../services';
@@ -132,7 +132,7 @@ export const Glossary = () => {
                     >
                       <div className="d-flex justify-content-between">
                         <dt className={css.tabGlossaryTermWord}>{item.word}</dt>
-                        <Button
+                        <ui.Button
                           className={css.actionMenu}
                           variant="ghost"
                           onClick={(ev) => {
@@ -142,13 +142,13 @@ export const Glossary = () => {
                             handleGlossaryMenu(ev, item);
                           }}
                         >
-                          <Icon
+                          <ui.Icon
                             display="rounded"
                             icon="more_vert"
                             opsz={20}
                             filled
                           />
-                        </Button>
+                        </ui.Button>
                       </div>
                       <dd className={css.tabGlossaryTermDefinition}>
                         {item.definition}
@@ -161,7 +161,7 @@ export const Glossary = () => {
           })}
         </dl>
         <div className="owl-sticky-add-item">
-          <button
+          <ui.Button
             className="owl-sticky-add-item__button"
             onContextMenu={() => {
               handleOpenGlossaryForm(newTerm);
@@ -171,14 +171,14 @@ export const Glossary = () => {
             }}
           >
             <span className="txt-placeholder">Add a new glossary term...</span>
-            <Icon
+            <ui.Icon
               display="rounded"
               icon="add_circle"
               opsz={20}
               filled
               pxScale="Lg"
             />
-          </button>
+          </ui.Button>
         </div>
       </div>
       <GlossaryOverlay

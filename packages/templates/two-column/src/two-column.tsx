@@ -1,9 +1,9 @@
 import React from 'react';
-import Scrowl from '@scrowl/template-core';
 import './_index.scss';
 import { TwoColumnProps } from './two-column.types';
 
 const Column = ({ field, className, heading, body, isEdit, focusElement }) => {
+  const Scrowl = window['Scrowl'];
   const Markdown = Scrowl.core.Markdown;
   let headingClasses = `can-focus`;
   let bodyClasses = `can-focus`;
@@ -47,6 +47,7 @@ const Column = ({ field, className, heading, body, isEdit, focusElement }) => {
 };
 
 export const TwoColumn = ({ id, schema, ...props }: TwoColumnProps) => {
+  const Scrowl = window['Scrowl'];
   let classes = `template-two-columns`;
   let columnClasses = 'column-wrapper';
   const editMode = props.editMode ? true : false;

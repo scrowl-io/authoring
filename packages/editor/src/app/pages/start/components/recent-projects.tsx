@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Nav } from 'react-bootstrap';
 import * as css from '../_page-start.scss';
 import { RecentProjectsProps } from '../page-start.types';
-import { Icon, Button } from '@owlui/lib';
+import { ui } from '@scrowl/ui';
 import { Projects } from '../../../models';
 import { Workspace } from '../../';
 
@@ -30,24 +30,24 @@ export const RecentProjects = ({ projects, ...props }: RecentProjectsProps) => {
 
           return (
             <Nav.Item key={idx}>
-              <Button
+              <ui.Button
                 variant="link"
                 onClick={() => {
                   handleOpenProject(version);
                 }}
               >
-                <Icon display="outlined" icon="pages" />
+                <ui.Icon display="outlined" icon="pages" />
                 <span>{version.name}</span>
                 <span className={css.projectVersion}>{vCnt}</span>
-              </Button>
+              </ui.Button>
             </Nav.Item>
           );
         })}
         {projectCnt === 5 && (
           <Nav.Item>
-            <Button variant="link" onClick={handleOpenProjectBrowser}>
+            <ui.Button variant="link" onClick={handleOpenProjectBrowser}>
               <span>View more projects...</span>
-            </Button>
+            </ui.Button>
           </Nav.Item>
         )}
       </Nav>

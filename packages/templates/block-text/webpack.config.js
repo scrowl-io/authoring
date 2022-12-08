@@ -9,7 +9,8 @@ module.exports = merge(common, {
   },
   module: {
     noParse: [
-      require.resolve('@scrowl/template-core')
+      require.resolve('@scrowl/template-core'),
+      require.resolve('@scrowl/ui'),
     ],
   },
   externals: {
@@ -17,7 +18,12 @@ module.exports = merge(common, {
       root: 'Scrowl',
       commonjs: '@scrowl/template-core',
       commonjs2: '@scrowl/template-core',
-    }
+    },
+    '@scrowl/ui': {
+      root: 'Scrowl',
+      commonjs: '@scrowl/ui',
+      commonjs2: '@scrowl/ui',
+    },
   },
   output: {
     libraryTarget: "umd",

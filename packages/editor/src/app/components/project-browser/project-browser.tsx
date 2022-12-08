@@ -1,6 +1,6 @@
 import React, { useEffect, useState, forwardRef, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Button, Icon } from '@owlui/lib';
+import { ui, IconType } from '@scrowl/ui';
 import './_project-browser.scss';
 import { FormattedProjectFile } from './project-browser.types';
 import { Modal, filter } from '../';
@@ -26,7 +26,7 @@ const ProjectBrowserElement = ({ isOpen, ...props }, ref) => {
   const [filterInput, setFilterInput] = useState('');
   const [sortField, setSortField] = useState('project.name');
   const [sortOrder, setSortOrder] = useState('asc');
-  const [sortIcon, setSortIcon] = useState('arrow_drop_down');
+  const [sortIcon, setSortIcon] = useState<IconType>('arrow_drop_down');
   const saveStatus = Projects.useInteractions();
   const projectData = Projects.useData();
   const assets = Projects.useAssets();
@@ -227,7 +227,7 @@ const ProjectBrowserElement = ({ isOpen, ...props }, ref) => {
                   >
                     Name
                     {sortField === 'project.name' && (
-                      <Icon className="sort-indicator" icon={sortIcon} />
+                      <ui.Icon className="sort-indicator" icon={sortIcon} />
                     )}
                   </th>
                   <th
@@ -237,7 +237,7 @@ const ProjectBrowserElement = ({ isOpen, ...props }, ref) => {
                   >
                     Created
                     {sortField === 'createdAt' && (
-                      <Icon className="sort-indicator" icon={sortIcon} />
+                      <ui.Icon className="sort-indicator" icon={sortIcon} />
                     )}
                   </th>
                   <th
@@ -247,7 +247,7 @@ const ProjectBrowserElement = ({ isOpen, ...props }, ref) => {
                   >
                     Last Modified
                     {sortField === 'updatedAt' && (
-                      <Icon className="sort-indicator" icon={sortIcon} />
+                      <ui.Icon className="sort-indicator" icon={sortIcon} />
                     )}
                   </th>
                 </tr>
@@ -297,12 +297,12 @@ const ProjectBrowserElement = ({ isOpen, ...props }, ref) => {
         </div>
 
         <footer className="d-flex justify-content-end">
-          <Button variant="link" onClick={handleClose}>
+          <ui.Button variant="link" onClick={handleClose}>
             Cancel
-          </Button>
-          <Button variant="primary" onClick={handleSubmit}>
+          </ui.Button>
+          <ui.Button variant="primary" onClick={handleSubmit}>
             Open
-          </Button>
+          </ui.Button>
         </footer>
       </Modal>
     </div>

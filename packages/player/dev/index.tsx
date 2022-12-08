@@ -1,6 +1,6 @@
-import '@owlui/lib/dist/owl.lib.css';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
+import { ui } from '@scrowl/ui';
 import { core } from '@scrowl/template-core';
 import { BlockText } from '@scrowl/template-block-text';
 import { LessonIntro } from '@scrowl/template-lesson-intro';
@@ -12,6 +12,7 @@ import { create } from './project';
 
 window['Scrowl'] = {
   core: core,
+  ui: ui,
 };
 
 const container = document.getElementById('app') as HTMLElement;

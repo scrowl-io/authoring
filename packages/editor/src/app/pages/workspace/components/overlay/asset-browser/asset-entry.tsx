@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Icon } from '@owlui/lib';
+import { ui } from '@scrowl/ui';
 import { AssetEntryProps } from './asset.types';
 import { menu, sys } from '../../../../../services';
 import { AssetIcon, InlineInput } from '../../../../../components';
@@ -110,7 +110,7 @@ export const AssetEntry = ({
             <span className="size-unit">{fileSize[1]}</span>
           </span>
 
-          <Button
+          <ui.Button
             className="action-menu"
             variant="ghost"
             onClick={(ev) => {
@@ -120,14 +120,14 @@ export const AssetEntry = ({
               handleAssetMenu(ev);
             }}
           >
-            <Icon
+            <ui.Icon
               display="rounded"
               icon="more_vert"
               opsz={20}
               filled
               pxScale="Sm"
             />
-          </Button>
+          </ui.Button>
         </div>
       </td>
     </tr>

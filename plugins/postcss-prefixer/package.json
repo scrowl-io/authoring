@@ -1,0 +1,25 @@
+{
+  "name": "@scrowl/postcss-prefixer",
+  "version": "0.0.1",
+  "description": "",
+  "author": "",
+  "license": "MIT",
+  "source": "src/index.js",
+  "main": "src/index.js",
+  "files": [
+    "src"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EEBOS/SCROWL.git",
+    "directory": "packages/plugins/postcss-prefixer"
+  },
+  "isLibrary": true,
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "postcss": "^8.4.17",
+    "postcss-selector-parser": "^6.0.11"
+  }
+}

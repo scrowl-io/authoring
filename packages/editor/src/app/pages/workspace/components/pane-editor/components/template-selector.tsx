@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Icon } from '@owlui/lib';
+import { ui } from '@scrowl/ui';
 import * as css from '../_pane-editor.scss';
 import {
   useActiveTemplate,
@@ -17,20 +17,20 @@ export const TemplateSelector = () => {
   return (
     <div className={css.slideEditorHeader}>
       <span className={css.slideEditorHeaderIcon}>
-        <Icon icon="dashboard" display="sharp" filled={true} opsz={20} />
+        <ui.Icon icon="dashboard" display="sharp" filled={true} opsz={20} />
       </span>
       <div>
         <div className={css.slideEditorHeaderTitle}>
           {hasTemplate ? templateMeta.label : 'No Selection'}
         </div>
-        <Button
+        <ui.Button
           className={css.slideEditorHeaderAction}
           variant="link"
           disabled={!hasTemplate}
           onClick={handleOpen}
         >
           Change Template
-        </Button>
+        </ui.Button>
       </div>
     </div>
   );

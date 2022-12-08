@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, Icon } from '@owlui/lib';
+import { ui, IconType } from '@scrowl/ui';
 import * as css from './_template-browser.scss';
 import { Modal } from '../../../../../components';
 import { Projects, Templates } from '../../../../../models';
@@ -120,9 +120,10 @@ export const TemplateBrowser = () => {
               activeTemplate.meta.component === template.meta.component;
             const isSelected =
               selectedTemplate.meta.component === template.meta.component;
+            const icon = template.meta.icon as IconType;
 
             return (
-              <button
+              <ui.Button
                 type="button"
                 id={`template-${template.meta.component}`}
                 key={idx}
@@ -133,10 +134,10 @@ export const TemplateBrowser = () => {
                   setSelectedTemplate(template);
                 }}
               >
-                {template.meta.icon && (
+                {icon && (
                   <span className={css.templateBrowserItemBg}>
-                    <Icon
-                      icon={template.meta.icon}
+                    <ui.Icon
+                      icon={icon}
                       display="sharp"
                       filled={true}
                       grad={200}
@@ -145,7 +146,7 @@ export const TemplateBrowser = () => {
                   </span>
                 )}
                 <span className={css.templateBrowserItemType}>
-                  <Icon
+                  <ui.Icon
                     icon="dashboard"
                     display="sharp"
                     filled={true}
@@ -159,7 +160,7 @@ export const TemplateBrowser = () => {
                 </label>
                 {isActive && (
                   <span className={css.templateBrowserItemActive}>
-                    <Icon
+                    <ui.Icon
                       icon="check_circle"
                       display="outlined"
                       grad={200}
@@ -167,20 +168,20 @@ export const TemplateBrowser = () => {
                     />
                   </span>
                 )}
-              </button>
+              </ui.Button>
             );
           })}
         </div>
       </div>
       <footer className="d-flex justify-content-end">
         {!newContent.newSlide && (
-          <Button variant="link" onClick={handelClose}>
+          <ui.Button variant="link" onClick={handelClose}>
             Cancel
-          </Button>
+          </ui.Button>
         )}
-        <Button variant="success" onClick={handleSubmit}>
+        <ui.Button variant="success" onClick={handleSubmit}>
           Select Template
-        </Button>
+        </ui.Button>
       </footer>
     </Modal>
   );

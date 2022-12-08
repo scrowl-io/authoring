@@ -1,0 +1,526 @@
+@use 'sass:string';
+@use 'typography' as *;
+@use 'tokens' as *;
+
+// Custom Bootstrap Theme Variables and Overrides
+
+$white: $owl-ref-palette-white;
+$gray-100: $owl-ref-palette-gray-100;
+$gray-200: $owl-ref-palette-gray-200;
+$gray-300: $owl-ref-palette-gray-300;
+$gray-400: $owl-ref-palette-gray-400;
+$gray-500: $owl-ref-palette-gray-500;
+$gray-600: $owl-ref-palette-gray-600;
+$gray-700: $owl-ref-palette-gray-700;
+$gray-800: $owl-ref-palette-gray-800;
+$gray-900: $owl-ref-palette-gray-900;
+$black: $owl-ref-palette-black;
+
+$blue: $owl-ref-palette-blue;
+$purple: $owl-ref-palette-purple;
+$pink: $owl-ref-palette-pink;
+$red: $owl-ref-palette-red;
+$orange: $owl-ref-palette-orange;
+$yellow: $owl-ref-palette-yellow;
+$green: $owl-ref-palette-green;
+$teal: $owl-ref-palette-teal;
+$cyan: $owl-ref-palette-cyan;
+
+$primary: $owl-sys-palette-primary;
+$secondary: $owl-sys-palette-secondary;
+$success: $owl-sys-palette-success;
+$info: $owl-sys-palette-info;
+$warning: $owl-sys-palette-warning;
+$danger: $owl-sys-palette-danger;
+$light: $owl-sys-palette-light;
+$dark: $owl-sys-palette-dark;
+
+$color-contrast-dark: $gray-900;
+
+$enable-shadows: true;
+$enable-caret: false;
+
+$body-bg: $gray-100;
+
+$link-color: $owl-sys-palette-link-color;
+$link-decoration: none;
+$link-hover-decoration: underline;
+
+$grid-gutter-width: $owl-sys-space-grid-gutter;
+
+$border-radius: $owl-ref-style-border-radius;
+$border-radius-sm: $owl-ref-style-border-radius;
+$border-radius-lg: $owl-ref-style-border-radius;
+$border-radius-xl: $owl-ref-style-border-radius;
+$border-radius-2xl: $owl-ref-style-border-radius;
+
+$transition-base: all 0.2s $owl-ref-style-cubic-bezier;
+$transition-collapse: height 0.35s $owl-ref-style-cubic-bezier;
+$transition-collapse-width: width 0.35s $owl-ref-style-cubic-bezier;
+
+$font-family-sans-serif: $owl-ref-typeface-font-family-sans-serif;
+$font-size-base: $owl-ref-typeface-size-base;
+$font-size-sm: $owl-ref-typeface-size-sm;
+$font-size-lg: $owl-ref-typeface-size-lg;
+$font-weight-light: 400;
+$line-height-base: $owl-ref-typeface-lineheight-base;
+$line-height-sm: $owl-ref-typeface-lineheight-sm;
+$line-height-lg: $owl-ref-typeface-lineheight-lg;
+
+$h1-font-size: $owl-sys-typeface-heading-1-size;
+$h2-font-size: $owl-sys-typeface-heading-2-size;
+$h3-font-size: $owl-sys-typeface-heading-3-size;
+$h4-font-size: $owl-sys-typeface-heading-4-size;
+$h5-font-size: $owl-sys-typeface-heading-5-size;
+$h6-font-size: $owl-sys-typeface-heading-6-size;
+
+$headings-margin-bottom: 0.5em;
+$headings-font-weight: $owl-sys-typeface-heading-weight;
+$headings-line-height: $owl-sys-typeface-heading-lineheight;
+
+$display-font-sizes: (
+  1: $owl-sys-typeface-display-1-size,
+  2: $owl-sys-typeface-display-2-size,
+  3: $owl-sys-typeface-heading-1-size,
+  4: $owl-sys-typeface-heading-2-size,
+  5: $owl-sys-typeface-heading-3-size,
+  6: $owl-sys-typeface-heading-4-size,
+);
+
+$display-font-weight: $owl-sys-typeface-display-weight;
+$display-line-height: $owl-sys-typeface-display-lineheight;
+
+$lead-font-size: 1.25em;
+$lead-font-weight: 400;
+
+$input-btn-line-height: 1.4;
+$input-btn-border-width: 1px;
+
+$input-btn-padding-y: 0.375em;
+$input-btn-padding-x: 0.75em;
+$input-btn-font-size: 0.938rem;
+
+$input-btn-padding-y-sm: 0.375em;
+$input-btn-padding-x-sm: 0.75em;
+$input-btn-font-size-sm: 0.825rem;
+
+$input-btn-padding-y-lg: 0.375em;
+$input-btn-padding-x-lg: 0.75em;
+$input-btn-font-size-lg: 1rem;
+
+$btn-padding-x: 1.125em;
+$btn-padding-x-sm: 1em;
+$btn-padding-x-lg: 1.25em;
+
+$btn-border-width: 1px;
+$btn-line-height: 1.5;
+$btn-font-weight: 600;
+$btn-box-shadow: 0 0 0 0;
+
+$btn-border-radius: 0.25em;
+$btn-border-radius-sm: 0.25em;
+$btn-border-radius-lg: 0.25em;
+
+$btn-hover-bg-shade-amount: 20%;
+$btn-hover-bg-tint-amount: 20%;
+$btn-hover-border-tint-amount: 20%;
+$btn-active-border-shade-amount: 20%;
+$btn-active-border-tint-amount: 20%;
+$btn-transition: box-shadow 0.15s $owl-ref-style-cubic-bezier;
+
+$form-text-color: inherit;
+$input-disabled-color: var(--owl-input-placeholder-color);
+$input-disabled-bg: var(--owl-input-border-color);
+$input-transition: $btn-transition;
+$input-bg: var(--owl-input-bg);
+$input-color: var(--owl-input-color);
+$input-box-shadow: 0 0 0 0;
+$input-border-color: var(--owl-input-border-color);
+$input-focus-border-color: var(--owl-active-bg);
+$input-placeholder-color: var(--owl-input-placeholder-color);
+$input-border-radius: 0.25rem;
+$input-border-radius-sm: 0.25rem;
+$input-border-radius-lg: 0.25rem;
+
+$input-group-addon-padding-x: 0.5em;
+$input-group-addon-color: $gray-900;
+
+$form-file-button-color: $input-group-addon-color;
+
+$form-switch-color: var(--owl-input-border-color);
+$form-switch-checked-color: #fff;
+$form-switch-checked-bg-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><path d='M32,2C15.431,2,2,15.432,2,32c0,16.568,13.432,30,30,30c16.568,0,30-13.432,30-30C62,15.432,48.568,2,32,2z M25.025,50  l-0.02-0.02L24.988,50L11,35.6l7.029-7.164l6.977,7.184l21-21.619L53,21.199L25.025,50z' fill='#{$form-switch-checked-color}'/></svg>");
+
+$form-check-input-border: 2px solid var(--owl-input-border-color);
+$form-check-input-border-radius: 0;
+$form-check-input-width: 1.25em;
+$form-check-min-height: 1.25em;
+$form-switch-width: 2.25em;
+$form-switch-transition: background-position 0.15s $owl-ref-style-cubic-bezier;
+
+$nav-tabs-border-color: var(--bs-border-color);
+
+$navbar-padding-x: 0.5rem;
+$navbar-padding-y: 0.125rem;
+
+$navbar-light-color: $owl-ref-palette-gray-900;
+$navbar-light-disabled-color: var(--owl-navbar-disabled-color);
+$navbar-light-hover-color: var(--owl-navbar-hover-color);
+$navbar-light-active-color: var(--owl-navbar-active-color);
+
+$dropdown-font-size: $owl-ref-typeface-size-xs;
+$dropdown-color: var(--owl-dropdown-color);
+$dropdown-bg: var(--owl-dropdown-bg);
+$dropdown-border-color: var(--owl-border-color);
+$dropdown-divider-bg: var(--owl-border-color);
+$dropdown-box-shadow: var(--owl-box-shadow);
+
+$dropdown-link-color: var(--owl-dropdown-link-color);
+$dropdown-link-hover-color: var(--owl-dropdown-link-hover-color);
+$dropdown-link-hover-bg: var(--owl-dropdown-link-hover-bg);
+
+$dropdown-link-disabled-color: var(--owl-dropdown-link-disabled-color);
+$dropdown-header-color: var(--owl-typeface-label-color);
+
+$modal-content-bg: var(--owl-dropdown-bg);
+$modal-backdrop-bg: var(--owl-dropdown-color);
+$modal-inner-padding: 1rem;
+$modal-header-padding-y: 0.5rem;
+$modal-header-padding-x: $modal-inner-padding;
+
+$btn-close-color: currentColor;
+
+$accordion-padding-y: 0.75rem;
+$accordion-padding-x: 1rem;
+$accordion-bg: transparent;
+$accordion-border-color: var(--owl-border-color);
+$accordion-body-padding-y: 1rem;
+$accordion-button-color: var(--owl-accordion-btn-color);
+$accordion-button-bg: var(--owl-accordion-btn-bg);
+$accordion-button-active-bg: var(--owl-accordion-btn-active-bg);
+$accordion-button-active-color: var(--owl-accordion-btn-active-color);
+$accordion-icon-width: 1.25em;
+
+$offcanvas-padding-y: 0.5rem;
+$offcanvas-padding-x: $modal-inner-padding;
+$offcanvas-transition-duration: 0.1s;
+$offcanvas-box-shadow: var(--owl-box-shadow);
+
+$table-group-separator-color: var(--owl-border-color);
+
+$pagination-transition: none;
+
+$modal-transition: transform 0.4s $owl-ref-style-cubic-bezier;
+
+$alert-padding-y: 0.5rem;
+$alert-bg-scale: -80%;
+$alert-border-scale: 20%;
+$alert-color-scale: 40%;
+
+$box-shadow: var(--owl-box-shadow);
+
+$code-color: $purple;
+
+$kbd-padding-y: 0.125em;
+$kbd-padding-x: 0.25em;
+
+$pre-color: currentColor;
+
+$btn-close-white-filter: brightness(200%);
+$carousel-dark-control-icon-filter: brightness(200%);
+
+@import 'bootstrap/scss/bootstrap';
+
+// Bootstrap Style Changes
+h1,
+.h1,
+h2,
+.h2,
+.display-1,
+.display-2,
+.display-3,
+.display-5,
+.display-6 {
+  line-height: $owl-sys-typeface-display-lineheight;
+  letter-spacing: $owl-sys-typeface-display-letterspacing;
+}
+
+h1,
+.h1 {
+  font-weight: $owl-sys-typeface-display-weight;
+}
+
+h2,
+.h2 {
+  font-weight: 800;
+}
+
+.lead {
+  line-height: 1.4;
+
+  strong {
+    font-weight: 700;
+  }
+}
+
+.btn-group > .dropdown-toggle-split {
+  padding: 0 0.25em;
+  line-height: 1;
+
+  span[class^='material-symbols'],
+  span[class^='icons'] {
+    font-size: 1.75em;
+  }
+}
+
+.form-control {
+  color: var(--owl-input-color);
+  background-color: var(--owl-input-bg);
+}
+
+.form-label {
+  @include typeface-label;
+  font-size: $owl-ref-typeface-size-xs;
+}
+
+.nav-tabs {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  user-select: none;
+
+  .nav-link {
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+    padding-left: 0;
+    padding-right: 0;
+    font-weight: 500;
+    line-height: 1.1;
+    letter-spacing: $owl-sys-typeface-btn-letterspacing;
+    color: var(--owl-nav-tab-color);
+    border-radius: 0;
+    border: 0;
+    transition-property: background;
+
+    &.active {
+      color: var(--owl-nav-tab-active-color);
+      font-weight: 600;
+      border-bottom: 3px currentColor solid;
+      background: transparent;
+    }
+
+    &:hover,
+    &:focus {
+      color: var(--owl-nav-tab-active-color);
+    }
+
+    .badge {
+      vertical-align: bottom;
+      line-height: 0.8;
+    }
+  }
+}
+
+.btn,
+a,
+button {
+  user-select: none;
+}
+
+.btn {
+  letter-spacing: $owl-sys-typeface-btn-letterspacing;
+
+  span[class^='material-symbols']:first-child,
+  span[class^='icons']:first-child {
+    margin-right: 0.25em;
+    font-size: 1.5em;
+    line-height: 0.66;
+    vertical-align: inherit;
+  }
+}
+
+.btn-link {
+  margin-left: $btn-padding-x;
+  margin-right: $btn-padding-x;
+  padding-left: 0;
+  padding-right: 0;
+
+  &.btn-sm {
+    margin-left: $btn-padding-x-sm;
+    margin-right: $btn-padding-x-sm;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  &.btn-lg {
+    margin-left: $btn-padding-x-lg;
+    margin-right: $btn-padding-x-lg;
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+.dropdown-item {
+  line-height: $line-height-base;
+
+  &.selected {
+    position: relative;
+
+    &:before {
+      position: absolute;
+      top: 0.875em;
+      left: calc(var(--bs-dropdown-item-padding-x) / 2.5);
+      display: block;
+      height: 0.5em;
+      width: 0.5em;
+      border-radius: 50em;
+      background: var(--bs-success);
+      content: '';
+    }
+  }
+}
+
+// fixes browser X on search field
+input[type='search'] {
+  &::-webkit-search-cancel-button {
+    position: relative;
+    height: 1.5em;
+    width: 1.5em;
+    right: -0.75em;
+    background: transparent var(--owl-close-icon) center/1em auto no-repeat;
+    -webkit-appearance: none;
+    cursor: pointer;
+  }
+}
+
+//fixes autofill styling on fields
+input,
+textarea,
+select {
+  &:-webkit-autofill,
+  &:-webkit-autofill:hover,
+  &:-webkit-autofill:focus {
+    -webkit-text-fill-color: var(--owl-input-color);
+    -webkit-box-shadow: 0 0 0px 1000px var(--owl-input-bg) inset;
+    box-shadow: 0 0 0px 1000px var(--owl-input-bg) inset;
+    transition: background-color 5000s ease-in-out 0s;
+  }
+}
+
+.table {
+  --bs-table-color: var(--bs-body-color);
+  --bs-table-bg: var(--bs-background);
+  --bs-table-border-color: var(--owl-input-border-color);
+}
+
+.table-info {
+  --bs-table-color: var(--owl-table-info-color);
+  --bs-table-bg: var(--owl-table-info-bg);
+  --bs-table-border-color: var(--owl-table-info-border-color);
+}
+
+.offcanvas-header {
+  border-bottom: var(--owl-border-color) solid var(--bs-border-width);
+}
+
+.btn-close {
+  color: var(--owl-dropdown-color);
+  background: transparent var(--owl-close-icon) center/1em auto no-repeat;
+}
+
+.form-check-input,
+.form-check-label {
+  cursor: pointer;
+}
+
+.tooltip {
+  --bs-tooltip-color: var(--owl-tooltip-color);
+  --bs-tooltip-bg: var(--owl-tooltip-bg);
+  --bs-tooltip-font-size: $owl-ref-typeface-size-xs;
+  line-height: 1.1;
+}
+
+// Generate CSS variables for our whole palette
+$primarys: (
+  'primary-100': tint-color($owl-ref-palette-primary, 80%),
+  'primary-200': tint-color($owl-ref-palette-primary, 60%),
+  'primary-300': tint-color($owl-ref-palette-primary, 40%),
+  'primary-400': tint-color($owl-ref-palette-primary, 20%),
+  'primary-500': $owl-ref-palette-primary,
+  'primary-600': shade-color($owl-ref-palette-primary, 20%),
+  'primary-700': shade-color($owl-ref-palette-primary, 40%),
+  'primary-800': shade-color($owl-ref-palette-primary, 60%),
+  'primary-900': shade-color($owl-ref-palette-primary, 80%),
+);
+
+$secondarys: (
+  'secondary-100': tint-color($owl-ref-palette-secondary, 80%),
+  'secondary-200': tint-color($owl-ref-palette-secondary, 60%),
+  'secondary-300': tint-color($owl-ref-palette-secondary, 40%),
+  'secondary-400': tint-color($owl-ref-palette-secondary, 20%),
+  'secondary-500': $owl-ref-palette-secondary,
+  'secondary-600': shade-color($owl-ref-palette-secondary, 20%),
+  'secondary-700': shade-color($owl-ref-palette-secondary, 40%),
+  'secondary-800': shade-color($owl-ref-palette-secondary, 60%),
+  'secondary-900': shade-color($owl-ref-palette-secondary, 80%),
+);
+
+$link-blues: (
+  'link-blue-100': tint-color($owl-ref-palette-link-blue, 80%),
+  'link-blue-200': tint-color($owl-ref-palette-link-blue, 60%),
+  'link-blue-300': tint-color($owl-ref-palette-link-blue, 40%),
+  'link-blue-400': tint-color($owl-ref-palette-link-blue, 20%),
+  'link-blue-500': $owl-ref-palette-link-blue,
+  'link-blue-600': shade-color($owl-ref-palette-link-blue, 20%),
+  'link-blue-700': shade-color($owl-ref-palette-link-blue, 40%),
+  'link-blue-800': shade-color($owl-ref-palette-link-blue, 60%),
+  'link-blue-900': shade-color($owl-ref-palette-link-blue, 80%),
+);
+
+$all-colors: map-merge-multiple(
+  $primarys,
+  $secondarys,
+  $link-blues,
+  $blues,
+  $purples,
+  $pinks,
+  $reds,
+  $oranges,
+  $yellows,
+  $greens,
+  $teals,
+  $cyans
+);
+
+:root {
+  @each $key, $value in $all-colors {
+    --bs-#{$key}: #{$value};
+  }
+
+  --owl-space-spacer: #{$owl-ref-space-spacer};
+
+  --owl-typeface-size-2xs: #{$owl-ref-typeface-size-2xs};
+  --owl-typeface-size-xs: #{$owl-ref-typeface-size-xs};
+  --owl-typeface-size-sm: #{$owl-ref-typeface-size-sm};
+  --owl-typeface-size-base: #{$owl-ref-typeface-size-base};
+  --owl-typeface-size-lg: #{$owl-ref-typeface-size-lg};
+
+  --owl-typeface-display-1-size: #{$owl-sys-typeface-display-1-size};
+  --owl-typeface-display-2-size: #{$owl-sys-typeface-display-2-size};
+
+  --owl-typeface-heading-1-size: #{$owl-sys-typeface-heading-1-size};
+  --owl-typeface-heading-2-size: #{$owl-sys-typeface-heading-2-size};
+  --owl-typeface-heading-3-size: #{$owl-sys-typeface-heading-3-size};
+  --owl-typeface-heading-4-size: #{$owl-sys-typeface-heading-4-size};
+  --owl-typeface-heading-5-size: #{$owl-sys-typeface-heading-5-size};
+  --owl-typeface-heading-6-size: #{$owl-sys-typeface-heading-6-size};
+
+  --owl-typeface-heading-1-weight: #{$owl-sys-typeface-heading-1-weight};
+  --owl-typeface-heading-2-weight: #{$owl-sys-typeface-heading-2-weight};
+  --owl-typeface-heading-weight: #{$owl-sys-typeface-heading-weight};
+
+  --owl-typeface-label-weight: 700;
+  --owl-typeface-label-letterspacing: 0.025em;
+  --owl-typeface-label-texttransform: uppercase;
+
+  --owl-border-width: var(--bs-border-width);
+}

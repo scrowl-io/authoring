@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Icon } from '@owlui/lib';
+import { ui } from '@scrowl/ui';
 import { Collapse } from 'react-bootstrap';
 import { OutlineLessonsProps, OutlineLessonItemProps } from './outline.types';
 import * as css from '../../_pane-details.scss';
@@ -142,7 +142,7 @@ export const OutlineLessonItem = ({
       data-lesson-id={lesson.id}
     >
       <div className={classes}>
-        <Button
+        <ui.Button
           aria-expanded={isOpen}
           aria-controls={menuId}
           className={css.outlineItem}
@@ -152,7 +152,7 @@ export const OutlineLessonItem = ({
         >
           <div className={css.lessonIcons}>
             <span className={css.outlineItemIconHandle}>
-              <Icon
+              <ui.Icon
                 icon="arrow_drop_down"
                 display="outlined"
                 filled
@@ -160,7 +160,7 @@ export const OutlineLessonItem = ({
               />
             </span>
             <span className={css.outlineItemIconDetail}>
-              <Icon
+              <ui.Icon
                 icon="interests"
                 display="sharp"
                 filled={!isOpen}
@@ -176,15 +176,15 @@ export const OutlineLessonItem = ({
               containerProps={inputContainerProps}
             />
           </div>
-        </Button>
-        <Button
+        </ui.Button>
+        <ui.Button
           className={css.actionMenu}
           variant="ghost"
           onClick={handleOpenLessonMenu}
           onContextMenu={handleOpenLessonMenu}
         >
-          <Icon display="rounded" icon="more_vert" opsz={20} filled />
-        </Button>
+          <ui.Icon display="rounded" icon="more_vert" opsz={20} filled />
+        </ui.Button>
       </div>
       <Collapse in={isOpen}>
         <div>
@@ -233,16 +233,16 @@ export const OutlineLessons = ({
           />
         );
       })}
-      <Button
+      <ui.Button
         variant="link"
         className={addClasses}
         onClick={handleAddLesson}
         data-module-id={moduleId}
         data-lesson-id={-1}
       >
-        <Icon icon="add" display="outlined" />
+        <ui.Icon icon="add" display="outlined" />
         <span>Add New Lesson</span>
-      </Button>
+      </ui.Button>
     </div>
   );
 };

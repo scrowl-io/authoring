@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tabs } from '@owlui/lib';
+import { ui } from '@scrowl/ui';
 import { Outline, Glossary, Resources } from './components';
 import { Pane } from '../../../../components';
 import { Settings } from '../../../../models';
@@ -48,7 +48,7 @@ export const PaneDetails = () => {
 
   return (
     <Pane initial={animationOpts.initial} animate={animationOpts.animate}>
-      <Tabs items={tabs} pxScale="Sm" transition={false} />
+      <ui.Tabs items={tabs} pxScale="Sm" transition={false} />
     </Pane>
   );
 };

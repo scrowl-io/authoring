@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import Scrowl from '@scrowl/template-core';
 import './_index.scss';
 import { BlockTextProps } from './block-text.types';
 
 export const BlockText = ({ id, schema, ...props }: BlockTextProps) => {
+  const Scrowl = window['Scrowl'];
   let classes = 'template-block-text';
   const Markdown = Scrowl.core.Markdown;
   const editMode = props.editMode ? true : false;
@@ -91,7 +91,7 @@ export const BlockText = ({ id, schema, ...props }: BlockTextProps) => {
       {...props}
     >
       <div id={contentId}>
-        <div className={`row row-cols-2 ${alignmentCss}`}>
+        <div className={`owlui-row owlui-row-cols-2 ${alignmentCss}`}>
           {bg && <div className="overlay" />}
 
           <div className={`text__wrapper`}>
