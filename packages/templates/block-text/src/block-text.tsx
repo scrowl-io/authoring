@@ -3,7 +3,7 @@ import './_index.scss';
 import { BlockTextProps } from './block-text.types';
 
 export const BlockText = ({ id, schema, ...props }: BlockTextProps) => {
-  const Scrowl = window.Scrowl;
+  const Scrowl = window['Scrowl'];
   let classes = 'template-block-text';
   const Markdown = Scrowl.core.Markdown;
   const editMode = props.editMode ? true : false;

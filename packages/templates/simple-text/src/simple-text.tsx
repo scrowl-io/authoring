@@ -3,7 +3,7 @@ import './_index.scss';
 import { SimpleTextProps } from './simple-text.types';
 
 export const SimpleText = ({ id, schema, ...props }: SimpleTextProps) => {
-  const Scrowl = window.Scrowl;
+  const Scrowl = window['Scrowl'];
   let classes = `template-simple-text`;
   const Markdown = Scrowl.core.Markdown;
   const Anime = Scrowl.core.anime;
