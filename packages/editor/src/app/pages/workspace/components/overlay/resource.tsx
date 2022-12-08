@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, forwardRef } from 'react';
-import { Button } from '@owlui/lib';
+import { ui } from '@scrowl/ui';
 import { AnimatePresence } from 'framer-motion';
 import './_overlay.scss';
 import { ResourceItem } from '../pane-details';
@@ -211,12 +211,12 @@ const ResourceFormElement = (
                         value={resource.filename}
                       />
                       <div className="owlui-input-group-append">
-                        <Button
+                        <ui.Button
                           variant="outline-primary"
                           onClick={handleAssetBrowse}
                         >
                           Browse
-                        </Button>
+                        </ui.Button>
                       </div>
                     </div>
                     {formErrors.filename && (

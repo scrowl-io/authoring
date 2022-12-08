@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, forwardRef } from 'react';
 import { AnimatePresence } from 'framer-motion';
-import { Icon } from '@owlui/lib';
+import { ui, IconType } from '@scrowl/ui';
 import { Backdrop, Drawer } from '../../../../../components';
 import { Projects, Settings } from '../../../../../models';
 import { menu, sys } from '../../../../../services';
@@ -62,7 +62,7 @@ export const AssetDrawerElement = (
   >([]);
   const [sortField, setSortField] = useState('sourceFilename');
   const [sortOrder, setSortOrder] = useState('asc');
-  const [sortIcon, setSortIcon] = useState('arrow_drop_down');
+  const [sortIcon, setSortIcon] = useState<IconType>('arrow_drop_down');
 
   const sortAssetList = () => {
     let sortedList: Array<Projects.ProjectAsset> = assets.slice();
@@ -239,7 +239,7 @@ export const AssetDrawerElement = (
                             <th scope="col" data-sort-field="sourceFilename">
                               Name
                               {sortField === 'sourceFilename' && (
-                                <Icon
+                                <ui.Icon
                                   className="sort-indicator"
                                   icon={sortIcon}
                                 />
@@ -252,7 +252,7 @@ export const AssetDrawerElement = (
                             >
                               Type
                               {sortField === 'type' && (
-                                <Icon
+                                <ui.Icon
                                   className="sort-indicator"
                                   icon={sortIcon}
                                 />
@@ -265,7 +265,7 @@ export const AssetDrawerElement = (
                             >
                               Size
                               {sortField === 'size' && (
-                                <Icon
+                                <ui.Icon
                                   className="sort-indicator"
                                   icon={sortIcon}
                                 />

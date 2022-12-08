@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Icon } from '@owlui/lib';
+import { ui } from '@scrowl/ui';
 import { InputAssetProps } from '../../../pane-editor.types';
 import { useContentFocus } from '../../../../../page-workspace-hooks';
 import { AssetBrowser, AssetProps } from '../../../../../components';
@@ -22,6 +22,11 @@ export const Asset = ({
   assetTypes,
   ...props
 }: InputAssetProps) => {
+  if (!field) {
+    console.error('field is required');
+    return <></>;
+  }
+
   const contentFocus = useContentFocus();
   const isFocused = contentFocus === field;
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -146,7 +151,7 @@ export const Asset = ({
               disabled={disabled}
               onClick={handleRemoveAsset}
             >
-              <Icon icon="close" pxScale="Sm" />
+              <ui.Icon icon="close" pxScale="Sm" />
             </button>
           ) : null}
 

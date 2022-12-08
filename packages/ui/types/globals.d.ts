@@ -1,19 +1,9 @@
-import {
-  ui,
-  ButtonDefaultProps,
-  IconDefaultProps,
-  TabsDefaultProps,
-} from '../src';
+import { UI_PROPS } from '../src/ui.types';
 
 declare global {
   interface Window {
     Scrowl: {
-      ui: {
-        utils: typeof ui.utils;
-        Button: (ButtonDefaultProps) => JSX.Element;
-        Icon: (IconDefaultProps) => JSX.Element;
-        Tabs: (TabsDefaultProps) => JSX.Element;
-      };
+      ui: UI_PROPS;
     };
   };
 };

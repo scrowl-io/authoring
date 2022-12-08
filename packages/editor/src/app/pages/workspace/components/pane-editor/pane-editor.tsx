@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tabs } from '@owlui/lib';
+import { ui } from '@scrowl/ui';
 import * as css from './_pane-editor.scss';
 import { useActiveTemplate } from '../../';
 import { Pane } from '../../../../components';
@@ -50,7 +50,7 @@ export const PaneEditor = () => {
     >
       <TemplateSelector />
       <div className={css.paneEditorTabs}>
-        <Tabs items={tabs} pxScale="Sm" transition={false} />
+        <ui.Tabs items={tabs} pxScale="Sm" transition={false} />
       </div>
     </Pane>
   );

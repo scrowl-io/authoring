@@ -1,4 +1,4 @@
-
+@use 'sass:string';
 @use 'typography' as *;
 @use 'tokens' as *;
 
@@ -84,7 +84,7 @@ $display-font-sizes: (
   3: $owl-sys-typeface-heading-1-size,
   4: $owl-sys-typeface-heading-2-size,
   5: $owl-sys-typeface-heading-3-size,
-  6: $owl-sys-typeface-heading-4-size
+  6: $owl-sys-typeface-heading-4-size,
 );
 
 $display-font-weight: $owl-sys-typeface-display-weight;
@@ -163,7 +163,7 @@ $nav-tabs-border-color: var(--bs-border-color);
 $navbar-padding-x: 0.5rem;
 $navbar-padding-y: 0.125rem;
 
-$navbar-light-color: var(--owl-navbar-color);
+$navbar-light-color: $owl-ref-palette-gray-900;
 $navbar-light-disabled-color: var(--owl-navbar-disabled-color);
 $navbar-light-hover-color: var(--owl-navbar-hover-color);
 $navbar-light-active-color: var(--owl-navbar-active-color);
@@ -212,10 +212,10 @@ $pagination-transition: none;
 
 $modal-transition: transform 0.4s $owl-ref-style-cubic-bezier;
 
-$alert-padding-y:               0.5rem;
-$alert-bg-scale:                -80%;
-$alert-border-scale:            20%;
-$alert-color-scale:             40%;
+$alert-padding-y: 0.5rem;
+$alert-bg-scale: -80%;
+$alert-border-scale: 20%;
+$alert-color-scale: 40%;
 
 $box-shadow: var(--owl-box-shadow);
 
@@ -225,6 +225,9 @@ $kbd-padding-y: 0.125em;
 $kbd-padding-x: 0.25em;
 
 $pre-color: currentColor;
+
+$btn-close-white-filter: brightness(200%);
+$carousel-dark-control-icon-filter: brightness(200%);
 
 @import 'bootstrap/scss/bootstrap';
 
@@ -446,7 +449,7 @@ $primarys: (
   'primary-600': shade-color($owl-ref-palette-primary, 20%),
   'primary-700': shade-color($owl-ref-palette-primary, 40%),
   'primary-800': shade-color($owl-ref-palette-primary, 60%),
-  'primary-900': shade-color($owl-ref-palette-primary, 80%)
+  'primary-900': shade-color($owl-ref-palette-primary, 80%),
 );
 
 $secondarys: (
@@ -458,7 +461,7 @@ $secondarys: (
   'secondary-600': shade-color($owl-ref-palette-secondary, 20%),
   'secondary-700': shade-color($owl-ref-palette-secondary, 40%),
   'secondary-800': shade-color($owl-ref-palette-secondary, 60%),
-  'secondary-900': shade-color($owl-ref-palette-secondary, 80%)
+  'secondary-900': shade-color($owl-ref-palette-secondary, 80%),
 );
 
 $link-blues: (

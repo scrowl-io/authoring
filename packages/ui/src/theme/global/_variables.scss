@@ -1,8 +1,5 @@
 @use 'sass:color';
 
-// @forward '@owlui/design/dist/styledictionary/scss';
-// @use '@owlui/design/dist/styledictionary/scss' as *;
-
 @function toRGB($color) {
   @return color.red($color) + ', ' + color.green($color) + ', ' +
     color.blue($color);

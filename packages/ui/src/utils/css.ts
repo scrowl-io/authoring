@@ -1,11 +1,12 @@
 import {
   LookupConfigCss,
 } from './utils.types';
+import * as globalMod from '../theme/_index.scss';
 import { str, obj } from './';
 
 export const getClasses = (config: LookupConfigCss) => {
   const baseKey = str.toCapital(config.base);
-  const globalKey = `scrowlui${baseKey}`;
+  const globalKey = `owlui${baseKey}`;
 
   const lookupCSS = (className: string) => {
     const lookup = `${baseKey}${className}`;
@@ -19,13 +20,13 @@ export const getClasses = (config: LookupConfigCss) => {
       return config.module[globalLookup];
     }
 
-    // if (obj.hasProp(globalMod, lookup)) {
-    //   return globalMod[lookup];
-    // }
+    if (obj.hasProp(globalMod, lookup)) {
+      return globalMod[lookup];
+    }
 
-    // if (obj.hasProp(globalMod, globalLookup)) {
-    //   return globalMod[globalLookup];
-    // }
+    if (obj.hasProp(globalMod, globalLookup)) {
+      return globalMod[globalLookup];
+    }
 
     return '';
   };

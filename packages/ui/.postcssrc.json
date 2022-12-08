@@ -5,6 +5,7 @@
       "generateScopedName": "[local]",
       "localsConvention": "camelCase"
     },
+    "postcss-url": true,
     "@scrowl/postcss-prefixer": {
       "prefix": "owlui-",
       "ignore": [

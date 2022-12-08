@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Icon } from '@owlui/lib';
+import { ui } from '@scrowl/ui';
 import * as css from '../_canvas.scss';
 import { useActiveSlide } from '../../..';
 import { Settings, Projects } from '../../../../../models';
@@ -39,7 +39,7 @@ export const CanvasBreadcrumb = () => {
           <>
             <li className="breadcrumb-item">
               <button className="breadcrumb-item__content" disabled>
-                <Icon
+                <ui.Icon
                   icon="folder"
                   display="sharp"
                   filled={true}
@@ -52,7 +52,7 @@ export const CanvasBreadcrumb = () => {
             </li>
             <li className="breadcrumb-item">
               <button className="breadcrumb-item__content" disabled>
-                <Icon
+                <ui.Icon
                   icon="interests"
                   display="sharp"
                   filled={true}
@@ -69,7 +69,7 @@ export const CanvasBreadcrumb = () => {
                 onClick={handleSlideFocus}
                 onContextMenu={handleSlideFocus}
               >
-                <Icon
+                <ui.Icon
                   icon="rectangle"
                   display="outlined"
                   opsz={20}
@@ -90,7 +90,7 @@ export const CanvasBreadcrumb = () => {
                   pointerEvents: 'none',
                 }}
               >
-                <Icon
+                <ui.Icon
                   icon="rectangle"
                   display="outlined"
                   opsz={20}

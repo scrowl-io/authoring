@@ -21,7 +21,7 @@ const config = {
     dest: './src/main/assets/project/react-bootstrap.min.js',
     includePaths: ['../../'],
   },
-  'node_modules/@owlui/lib/dist': {
+  'node_modules/@scrowl/ui/dist': {
     dest: './src/main/assets/project',
     includePaths: ['../../'],
     options: {
@@ -29,7 +29,7 @@ const config = {
       filter: (source) => {
         return (
           source.indexOf('.d.ts') === -1 &&
-          source.indexOf('owl.lib.module.js') === -1
+          source.indexOf('scrowl.ui.module.js') === -1
         );
       },
     },

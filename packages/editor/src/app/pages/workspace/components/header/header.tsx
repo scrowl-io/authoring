@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ButtonGroup, Dropdown, Navbar, Nav } from 'react-bootstrap';
 import { motion } from 'framer-motion';
-import { Button, Icon } from '@owlui/lib';
+import { ui } from '@scrowl/ui';
 import * as css from './_workspace-header.scss';
 import { Elem } from '../../../../utils';
 import { Projects, Settings } from '../../../../models';
@@ -303,7 +303,7 @@ export const Header = () => {
           <Nav className={`${css.projectActions} align-items-center`}>
             <Nav.Item>
               <Dropdown as={ButtonGroup}>
-                <Button
+                <ui.Button
                   className={`ms-3 ${css.projectActionsBtn}`}
                   variant="ghost"
                   size="sm"
@@ -312,36 +312,41 @@ export const Header = () => {
                     handleOpenPreviewMenu(ev, 102);
                   }}
                 >
-                  <Icon icon="interests" filled display="sharp" opsz={20} />
+                  <ui.Icon icon="interests" filled display="sharp" opsz={20} />
                   Preview
-                </Button>
+                </ui.Button>
 
-                <Button
+                <ui.Button
                   className="dropdown-toggle dropdown-toggle-split"
                   variant="ghost"
                   size="sm"
                   onClick={handleOpenPreviewMenu}
                   onContextMenu={handleOpenPreviewMenu}
                 >
-                  <Icon
+                  <ui.Icon
                     icon="arrow_drop_down"
                     filled
                     display="sharp"
                     opsz={20}
                   />
-                </Button>
+                </ui.Button>
               </Dropdown>
             </Nav.Item>
             <Nav.Item>
-              <Button
+              <ui.Button
                 className={`ms-3 ${css.projectActionsBtn}`}
                 variant="primary"
                 size="sm"
                 onClick={handleOpenPublish}
               >
-                <Icon icon="rocket_launch" filled display="sharp" opsz={20} />
+                <ui.Icon
+                  icon="rocket_launch"
+                  filled
+                  display="sharp"
+                  opsz={20}
+                />
                 Publish
-              </Button>
+              </ui.Button>
             </Nav.Item>
           </Nav>
         </Navbar>

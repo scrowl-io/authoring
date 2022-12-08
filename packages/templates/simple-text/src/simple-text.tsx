@@ -1,9 +1,9 @@
 import React, { useEffect, useRef } from 'react';
-import Scrowl from '@scrowl/template-core';
 import './_index.scss';
 import { SimpleTextProps } from './simple-text.types';
 
 export const SimpleText = ({ id, schema, ...props }: SimpleTextProps) => {
+  const Scrowl = window.Scrowl;
   let classes = `template-simple-text`;
   const Markdown = Scrowl.core.Markdown;
   const Anime = Scrowl.core.anime;
@@ -138,7 +138,7 @@ export const SimpleText = ({ id, schema, ...props }: SimpleTextProps) => {
             />
           </div>
         )}
-        <div className="row row-cols-1">
+        <div className="owlui-row owlui-row-cols-1">
           {bgUrl && <div className="overlay" />}
 
           <div className={`text__wrapper ${alignmentCss}`}>

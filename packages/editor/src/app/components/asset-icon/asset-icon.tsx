@@ -1,9 +1,9 @@
 import React from 'react';
-import { Icon } from '@owlui/lib';
+import { ui, IconType } from '@scrowl/ui';
 import { AssetIconProps } from './';
 
 export const AssetIcon = ({ type, ext, ...props }: AssetIconProps) => {
-  let icon = '';
+  let icon = '' as IconType;
 
   switch (type) {
     case 'audio':
@@ -33,5 +33,5 @@ export const AssetIcon = ({ type, ext, ...props }: AssetIconProps) => {
       break;
   }
 
-  return <Icon icon={icon} {...props} />;
+  return <ui.Icon icon={icon} {...props} />;
 };

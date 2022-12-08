@@ -3,7 +3,7 @@
 <head>
   <meta name='viewport' content='width=device-width, initial-scale=1'>
   <title>Scrowl Canvas</title>
-  <link rel="stylesheet" href="./owl.lib.css">
+  <link rel="stylesheet" href="./scrowl.ui.css">
   <link rel="stylesheet" href="./scrowl.player.css">
   <link rel="stylesheet" href="./scrowl.template-core.css">
   {{#each data.templates as | temp |}}
@@ -15,9 +15,10 @@
 </head>
 <body>
   <div id="app"></div>
+  <script type="text/javascript" src="./scrowl.ui.js"></script>
+  <script type="text/javascript" src="./scrowl.template-core.js"></script>
   <script type="text/javascript" src="./scrowl.runtime.js"></script>
   <script type="text/javascript" src="./scrowl.player.js"></script>
-  <script type="text/javascript" src="./scrowl.template-core.js"></script>
   {{#each data.templates as | temp |}}
   <script type="text/javascript" src="{{temp.js}}"></script>
   {{/each}}

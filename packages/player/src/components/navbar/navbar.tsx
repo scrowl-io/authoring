@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { Navbar, Offcanvas, Container, Tabs, Tab } from 'react-bootstrap';
-import { Icon } from '@owlui/lib';
 import * as css from './_navbar.scss';
 import { NavModule } from './nav-module';
 import { NavResource } from './nav-resource';
 import { NavGlossaryItem } from './nav-glossary-item';
 
 export const NavBar = ({ pageId, project }) => {
+  const Scrowl = window.Scrowl;
   const [tabKey, setTabKey] = useState('outline');
 
   return (
@@ -34,7 +34,7 @@ export const NavBar = ({ pageId, project }) => {
                     <h3>{project.name}</h3>
                     <h4 className={css.outlineSubtitle}>Subtitle Here</h4>
                     <span className={css.outlineDuration}>
-                      <Icon icon="access_time" display="outlined" />
+                      <Scrowl.ui.Icon icon="schedule" display="outlined" />
                       <h5>60 min</h5>
                     </span>
                   </div>

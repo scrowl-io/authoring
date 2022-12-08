@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Icon } from '@owlui/lib';
+import { ui } from '@scrowl/ui';
 import { Collapse } from 'react-bootstrap';
 import { OutlineModulesProps, OutlineModuleItemProps } from './outline.types';
 import * as css from '../../_pane-details.scss';
@@ -133,7 +133,7 @@ export const OutlineModuleItem = ({
   return (
     <div className={css.outlineModule} {...props} data-module-id={module.id}>
       <div className={classes}>
-        <Button
+        <ui.Button
           aria-expanded={isOpen}
           aria-controls={menuId}
           className={css.outlineItem}
@@ -143,7 +143,7 @@ export const OutlineModuleItem = ({
         >
           <div className={css.moduleIcons}>
             <span className={css.outlineItemIconHandle}>
-              <Icon
+              <ui.Icon
                 icon="arrow_drop_down"
                 display="outlined"
                 filled
@@ -151,7 +151,7 @@ export const OutlineModuleItem = ({
               />
             </span>
             <span className={css.outlineItemIconDetail}>
-              <Icon
+              <ui.Icon
                 icon="folder"
                 display="sharp"
                 filled={!isOpen}
@@ -167,15 +167,15 @@ export const OutlineModuleItem = ({
               containerProps={inputContainerProps}
             />
           </div>
-        </Button>
-        <Button
+        </ui.Button>
+        <ui.Button
           className={css.actionMenu}
           variant="ghost"
           onClick={handleOpenModuleMenu}
           onContextMenu={handleOpenModuleMenu}
         >
-          <Icon display="rounded" icon="more_vert" opsz={20} filled />
-        </Button>
+          <ui.Icon display="rounded" icon="more_vert" opsz={20} filled />
+        </ui.Button>
       </div>
       <Collapse in={isOpen}>
         <div>
@@ -209,15 +209,15 @@ export const OutlineModules = ({
       {modules.map((module, idx) => {
         return <OutlineModuleItem key={idx} module={module} idx={idx} />;
       })}
-      <Button
+      <ui.Button
         variant="link"
         className={addClasses}
         onClick={handleAddModule}
         data-module-id={-1}
       >
-        <Icon icon="add" display="outlined" />
+        <ui.Icon icon="add" display="outlined" />
         <span>Add New Module</span>
-      </Button>
+      </ui.Button>
     </div>
   );
 };

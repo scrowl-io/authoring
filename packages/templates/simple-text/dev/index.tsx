@@ -1,12 +1,17 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import '@owlui/lib/src/theme/_index.scss';
+import { core } from '@scrowl/template-core';
+import { ui } from '@scrowl/ui';
 import './_index.scss';
-import Scrowl from '@scrowl/template-core';
 import { SimpleText, SimpleTextSchema, SimpleTextSchemaProps } from '../src';
 
 const container = document.getElementById('scrowl-player') as HTMLElement;
 const root = createRoot(container);
+const Scrowl = {
+  core,
+  ui,
+};
+window['Scrowl'] = Scrowl;
 
 const App = () => {
   const controller = new Scrowl.core.scroll.Controller();

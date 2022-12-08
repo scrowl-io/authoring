@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Icon } from '@owlui/lib';
+import { ui } from '@scrowl/ui';
 import { OutlineSlidesProps, OutlineSlideItemProps } from './outline.types';
 import * as css from '../../_pane-details.scss';
 import { Projects } from '../../../../../../models';
@@ -158,14 +158,14 @@ export const OutlineSlideItem = ({
       data-slide-id={slide.id}
     >
       <div className={classes}>
-        <Button
+        <ui.Button
           className={css.outlineItem}
           variant="link"
           onClick={handleSetActiveSlide}
           onContextMenu={handleOpenSlideMenu}
         >
           <span className={css.outlineItemIconDetail}>
-            <Icon
+            <ui.Icon
               icon="rectangle"
               display="outlined"
               opsz={20}
@@ -180,15 +180,15 @@ export const OutlineSlideItem = ({
             onBlur={handleNameClose}
             containerProps={inputContainerProps}
           />
-        </Button>
-        <Button
+        </ui.Button>
+        <ui.Button
           className={css.actionMenu}
           variant="ghost"
           onClick={handleOpenSlideMenu}
           onContextMenu={handleOpenSlideMenu}
         >
-          <Icon display="rounded" icon="more_vert" opsz={20} filled />
-        </Button>
+          <ui.Icon display="rounded" icon="more_vert" opsz={20} filled />
+        </ui.Button>
       </div>
     </div>
   );
@@ -231,7 +231,7 @@ export const OutlineSlides = ({
           />
         );
       })}
-      <Button
+      <ui.Button
         variant="link"
         className={addClasses}
         onClick={handleAddSlide}
@@ -239,9 +239,9 @@ export const OutlineSlides = ({
         data-lesson-id={lessonId}
         data-slide-id={-1}
       >
-        <Icon icon="add" display="outlined" />
+        <ui.Icon icon="add" display="outlined" />
         <span>Add New Slide</span>
-      </Button>
+      </ui.Button>
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Icon } from '@owlui/lib';
+import { ui } from '@scrowl/ui';
 import * as css from '../_pane-details.scss';
 import {
   ResourceItem,
@@ -154,7 +154,7 @@ export const Resources = () => {
                     />
                     <span>{editableResource.title}</span>
                   </dt>
-                  <Button
+                  <ui.Button
                     className={css.actionMenu}
                     variant="ghost"
                     onClick={(ev) => {
@@ -164,8 +164,13 @@ export const Resources = () => {
                       handleResourceMenu(ev, editableResource);
                     }}
                   >
-                    <Icon display="rounded" icon="more_vert" opsz={20} filled />
-                  </Button>
+                    <ui.Icon
+                      display="rounded"
+                      icon="more_vert"
+                      opsz={20}
+                      filled
+                    />
+                  </ui.Button>
                 </div>
                 <dd className="tab_resources__item--description">
                   {editableResource.description}
@@ -175,7 +180,7 @@ export const Resources = () => {
           })}
         </dl>
         <div className="owl-sticky-add-item">
-          <button
+          <ui.Button
             className="owl-sticky-add-item__button"
             onContextMenu={() => {
               handleOpenResourceBrowser(newResource);
@@ -185,14 +190,14 @@ export const Resources = () => {
             }}
           >
             <span className="txt-placeholder">Add a new resource...</span>
-            <Icon
+            <ui.Icon
               display="rounded"
               icon="attach_file"
               opsz={20}
               filled
               pxScale="Lg"
             />
-          </button>
+          </ui.Button>
         </div>
       </div>
       <ResourceOverlay

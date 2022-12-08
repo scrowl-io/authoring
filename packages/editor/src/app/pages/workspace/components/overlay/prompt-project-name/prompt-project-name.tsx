@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, forwardRef } from 'react';
-import { Button } from '@owlui/lib';
+import { ui } from '@scrowl/ui';
 import * as css from './_prompt-project-name.scss';
 import { Modal } from '../../../../../components';
 import { Projects } from '../../../../../models';
@@ -92,12 +92,12 @@ const PromptProjectNameElement = ({ isOpen, ...props }, ref) => {
         </div>
 
         <footer className="d-flex justify-content-end">
-          <Button variant="link" onClick={handleClose}>
+          <ui.Button variant="link" onClick={handleClose}>
             Cancel
-          </Button>
-          <Button variant="success" onClick={handleSubmit}>
+          </ui.Button>
+          <ui.Button variant="success" onClick={handleSubmit}>
             Save
-          </Button>
+          </ui.Button>
         </footer>
       </Modal>
     </div>

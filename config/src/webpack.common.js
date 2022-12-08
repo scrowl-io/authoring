@@ -67,10 +67,6 @@ module.exports = {
         test: /\.tsx?$/,
         use: 'ts-loader',
       },
-      {
-        test: /\.(png|woff|woff2|eot|ttf|svg|jpeg)$/,
-        use: [fileLoader],
-      },
     ],
   },
   resolve: {

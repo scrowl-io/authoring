@@ -1,5 +1,5 @@
 import React from 'react';
-import { Icon } from '@owlui/lib';
+import { ui, IconType } from '@scrowl/ui';
 import { InputSelectProps } from '../../../pane-editor.types';
 import { GroupElement } from './';
 
@@ -99,7 +99,7 @@ export const Select = ({
 
   let groupClasses = 'input-group input-group-sm';
   let controlClasses = 'control-select mb-2 template-content-input';
-  let icon = '';
+  let icon = '' as IconType;
 
   if (disabled) {
     controlClasses += ' disabled';
@@ -125,7 +125,7 @@ export const Select = ({
           <></>
         ) : (
           <span className="input-group-text pre">
-            <Icon icon={icon} display="sharp" grad={200} opsz={20} />
+            <ui.Icon icon={icon} display="sharp" grad={200} opsz={20} />
           </span>
         )}
         {GroupElement('pre', pre)}

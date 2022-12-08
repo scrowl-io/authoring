@@ -4,7 +4,7 @@
 @forward './font-brand';
 @forward './font-icons';
 
-@use './global/bootstrap';
+@forward './global/bootstrap';
 
 @forward './default' as defaultTheme-*;
 @forward './dark' as darkTheme-*;

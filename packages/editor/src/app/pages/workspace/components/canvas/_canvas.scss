@@ -1,5 +1,5 @@
-@use '@owlui/lib/src/theme/utils' as *;
-@use '@owlui/lib/src/theme/global/bootstrap' as *;
+@use '@scrowl/ui/src/theme/utils' as *;
+@use '@scrowl/ui/src/theme/global/_bootstrap.scss' as *;
 
 .canvas {
   --workspace-canvas-height: calc(

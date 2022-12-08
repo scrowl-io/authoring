@@ -1,3 +1,15 @@
+import { AnimeParams, AnimeInstance } from 'animejs';
+import ScrollMagic from 'scrollmagic';
+import { TemplateProps, HostProps } from './';
+
+export type CORE_PROPS = {
+  Template: (props: TemplateProps) => JSX.Element;
+  Markdown: (props: any) => JSX.Element;
+  host: HostProps,
+  anime: (AnimeParams) => AnimeInstance;
+  scroll: typeof ScrollMagic;
+}
+
 export type LAYOUT_INPUT_TYPE =
   | 'Fieldset'
   | 'Asset'

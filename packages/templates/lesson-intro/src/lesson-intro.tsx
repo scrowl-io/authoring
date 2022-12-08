@@ -1,10 +1,9 @@
 import React, { useRef } from 'react';
-import { Icon } from '@owlui/lib';
-import Scrowl from '@scrowl/template-core';
 import './_index.scss';
 import { LessonIntroProps } from './lesson-intro.types';
 
 export const LessonIntro = ({ id, schema, ...props }: LessonIntroProps) => {
+  const Scrowl = window.Scrowl;
   let classes = 'template-lesson-intro';
   const editMode = props.editMode ? true : false;
   const focusElement = editMode ? props.focusElement : null;
@@ -114,7 +113,7 @@ export const LessonIntro = ({ id, schema, ...props }: LessonIntroProps) => {
           </h2>
           {time && time.length > 0 && (
             <span className={timeClasses} onMouseDown={handleFocusTime}>
-              <Icon icon="schedule" display="outlined" />
+              <Scrowl.ui.Icon icon="schedule" display="outlined" />
               <span className="template-lesson-intro-time-value">{time}</span>
             </span>
           )}

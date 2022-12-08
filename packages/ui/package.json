@@ -34,10 +34,10 @@
     },
     "./src": "./src/index.ts",
     "./web": "./dist/scrowl.ui.js",
-    "./css": "./dist/scrowl.ui.css",
-    "./scss": "./src/theme/_index.scss",
-    "./scss-utils": "./src/theme/_utils.scss",
-    "./scss-bootstrap": "./src/theme/global/_bootstrap.scss"
+    "./ui.css": "./dist/scrowl.ui.css",
+    "./theme.scss": "./src/theme/_index.scss",
+    "./utils.scss": "./src/theme/_utils.scss",
+    "./bootstrap.scss": "./src/theme/global/_bootstrap.scss"
   },
   "eslintConfig": {
     "extends": "@scrowl/config"
@@ -51,6 +51,7 @@
     "README.md",
     "dist/",
     "lib/",
+    "src/",
     "package.json"
   ],
   "devDependencies": {
@@ -70,6 +71,7 @@
     "postcss": "^8.4.17",
     "postcss-import": "^14.1.0",
     "postcss-modules": "^4.3.1",
+    "postcss-url": "^10.1.3",
     "prettier": "^2.7.1",
     "process": "^0.11.10",
     "rimraf": "^3.0.2",

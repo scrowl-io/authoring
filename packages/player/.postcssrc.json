@@ -4,6 +4,7 @@
     "postcss-modules": {
       "generateScopedName": "[local]",
       "localsConvention": "camelCase"
-    }
+    },
+    "postcss-url": true
   }
 }

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Nav } from 'react-bootstrap';
-import { Icon, Button } from '@owlui/lib';
+import { ui } from '@scrowl/ui';
 import * as css from '../_page-start.scss';
 import { StartNewProps } from '../page-start.types';
 import { Projects } from '../../../models';
@@ -51,15 +51,15 @@ export const GettingStarted = ({ hasProjects, ...props }: StartNewProps) => {
       <h2>Getting Started</h2>
       <Nav className="flex-column">
         <Nav.Item>
-          <Button
+          <ui.Button
             variant="link"
             onClick={() => {
               handleNewProject('beginner');
             }}
           >
-            <Icon display="sharp" icon="assistant_direction" />
+            <ui.Icon display="sharp" icon="assistant_direction" />
             Beginner Tutorial Project
-          </Button>
+          </ui.Button>
         </Nav.Item>
       </Nav>
     </div>
