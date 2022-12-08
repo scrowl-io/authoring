@@ -1,2 +1,8 @@
+import _css from './css';
+
 export * from './utils.types';
-export * as css from './css';
+export const css = _css;
+
+export default {
+  css,
+};

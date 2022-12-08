@@ -1,18 +1,39 @@
 import React, { useState } from 'react';
-import { Navbar, Offcanvas, Container, Tabs, Tab } from 'react-bootstrap';
-import * as utils from '../../utils';
-import * as css from './_navbar.scss';
+import {
+  ThemeProvider,
+  Navbar,
+  Offcanvas,
+  Container,
+  Tabs,
+  Tab,
+} from 'react-bootstrap';
+import utils, { CssMapProps } from '../../utils';
+import * as _css from './_navbar.scss';
 import { NavModule } from './nav-module';
 import { NavResource } from './nav-resource';
 import { NavGlossaryItem } from './nav-glossary-item';
 
+const css = utils.css.removeMapPrefix(_css);
+const Scrowl = window['Scrowl'];
+
 export const NavBar = ({ pageId, project }) => {
-  utils.css.removeMapPrefix(css);
-  const Scrowl = window.Scrowl;
   const [tabKey, setTabKey] = useState('outline');
+  const themePrefixes: CssMapProps = {};
+
+  themePrefixes['nav'] = `owlui-nav`;
+  themePrefixes['nav-tabs'] = `owlui-nav-tabs`;
+  themePrefixes['nav-item'] = `owlui-nav-item`;
+  themePrefixes['nav-link'] = `owlui-nav-link`;
+  themePrefixes['navbar'] = `owlui-navbar`;
+  themePrefixes['navbar-toggler'] = `owlui-navbar-toggler`;
+  themePrefixes['tab-pane'] = `owlui-tab-pane`;
+  themePrefixes['tab-content'] = `owlui-tab-content`;
+  themePrefixes['offcanvas'] = `owlui-offcanvas`;
+  themePrefixes['offcanvas-body'] = `owlui-offcanvas-body`;
+  themePrefixes['container'] = `owlui-container`;
 
   return (
-    <>
+    <ThemeProvider prefixes={themePrefixes}>
       <Navbar key="1" expand={false} className="mb-3">
         <Container fluid>
           <Navbar.Toggle
@@ -43,7 +64,7 @@ export const NavBar = ({ pageId, project }) => {
                   {project &&
                     project.outlineConfig.map((config, mIdx) => {
                       return (
-                        <div className={css.moduleLessons}>
+                        <div className={css.moduleLessons} key={mIdx}>
                           <NavModule
                             pageId={pageId}
                             config={config}
@@ -61,9 +82,9 @@ export const NavBar = ({ pageId, project }) => {
                   <div className={css.titleContainer}>
                     <h3>Additional Resources</h3>
                     {project.resources &&
-                      project.resources.map((resource) => {
+                      project.resources.map((resource, idx) => {
                         return (
-                          <div>
+                          <div key={idx}>
                             <NavResource resource={resource} />
                             <hr />
                           </div>
@@ -77,9 +98,9 @@ export const NavBar = ({ pageId, project }) => {
                   <div className={css.titleContainer}>
                     <h3>Glossary</h3>
                     {project.glossary &&
-                      project.glossary.map((item) => {
+                      project.glossary.map((item, idx) => {
                         return (
-                          <div className={css.navGlossary}>
+                          <div className={css.navGlossary} key={idx}>
                             <NavGlossaryItem glossaryItem={item} />
                             <hr />
                           </div>
@@ -92,7 +113,7 @@ export const NavBar = ({ pageId, project }) => {
           </Navbar.Offcanvas>
         </Container>
       </Navbar>
-    </>
+    </ThemeProvider>
   );
 };
 

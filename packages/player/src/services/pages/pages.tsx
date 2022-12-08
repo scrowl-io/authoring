@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import Scrowl from '@scrowl/template-core';
 import { PageDefinition, PageProps } from './pages.types';
 import {
   // @ts-ignore
@@ -8,12 +7,13 @@ import {
   PlayerTemplateList,
   TemplateComponent,
 } from '../../root/root.types';
-import * as utils from '../../utils';
-import * as css from '../../root/_root.scss';
+import utils from '../../utils';
+import * as _css from '../../root/_root.scss';
 import { Error } from '../../components';
 import { NavBar } from '../../components/navbar';
 
-utils.css.removeMapPrefix(css);
+const css = utils.css.removeMapPrefix(_css);
+const Scrowl = window['Scrowl'];
 
 const Page = ({ slides, controller, templates, ...props }: PageProps) => {
   const player = document.querySelector('.player-main');
@@ -83,18 +83,18 @@ const updateCourseProgress = (project, id) => {
   }
 
   console.log(percentageCompleted);
-  const runtime = window['Scrowl'].runtime;
+  const runtime = Scrowl.runtime;
   runtime?.updateProgress(percentageCompleted);
 };
 
 const finishCourse = () => {
-  const runtime = window['Scrowl'].runtime;
+  const runtime = Scrowl.runtime;
   runtime?.finish();
 };
 
 export const create = (project, templateList: PlayerTemplateList) => {
   const data: Array<PageDefinition> = [];
-  const controller = new window['Scrowl'].core.scroll.Controller();
+  const controller = new Scrowl.core.scroll.Controller();
 
   project.outlineConfig.forEach((module, mIdx) => {
     module.lessons.forEach((page, lIdx) => {

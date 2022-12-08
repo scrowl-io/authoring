@@ -1,6 +1,7 @@
 import { CssMapProps } from './utils.types';
 
 export const removeMapPrefix = (cssMap: CssMapProps) => {
+  const formattedMap: CssMapProps = {};
   const keys = Object.keys(cssMap);
   let key = '';
   
@@ -9,10 +10,10 @@ export const removeMapPrefix = (cssMap: CssMapProps) => {
       return letter.toLocaleLowerCase();
     });
 
-    cssMap[key] = cssMap[keys[i]];
+    formattedMap[key] = cssMap[keys[i]];
   }
 
-  return cssMap;
+  return formattedMap;
 };
 
 export default {

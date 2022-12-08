@@ -1,10 +1,11 @@
 import React from 'react';
 import { PaneProps } from './pane.types';
-import * as utils from '../../utils';
-import * as css from './_pane.scss';
+import utils from '../../utils';
+import * as _css from './_pane.scss';
+
+const css = utils.css.removeMapPrefix(_css);
 
 export const Pane = ({ children, className, side }: PaneProps) => {
-  utils.css.removeMapPrefix(css);
   let paneStyles = `${css.pane}`;
 
   if (className) {

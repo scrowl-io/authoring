@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { Collapse } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import * as utils from '../../utils';
-import * as css from './_navbar.scss';
+import utils from '../../utils';
+import * as _css from './_navbar.scss';
+
+const css = utils.css.removeMapPrefix(_css);
+const Scrowl = window['Scrowl'];
 
 export const NavModule = ({ pageId, config, mIdx }) => {
-  utils.css.removeMapPrefix(css);
-  const Scrowl = window.Scrowl;
   const currentSlide = pageId;
 
   let moduleSlides: Array<string> = [];
