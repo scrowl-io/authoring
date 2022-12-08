@@ -70,6 +70,24 @@ const $defce2f29876acb7$export$6ed414b8d8bead88 = {
     },
     courseProgress: 0,
     lessonLocation: "",
+    nFindAPITries: 0,
+    API: null,
+    maxTries: 500,
+    //@ts-ignore
+    scanForAPI: (win)=>{
+        while(win.API_1484_11 == null && win.parent != null && win.parent != win){
+            $defce2f29876acb7$export$6ed414b8d8bead88.nFindAPITries++;
+            if ($defce2f29876acb7$export$6ed414b8d8bead88.nFindAPITries > $defce2f29876acb7$export$6ed414b8d8bead88.maxTries) return null;
+            win = win.parent;
+        }
+        return win.API_1484_11;
+    },
+    getAPI: (win)=>{
+        if (win.parent != null && win.parent != win) //@ts-ignore
+        $defce2f29876acb7$export$6ed414b8d8bead88.API = $defce2f29876acb7$export$6ed414b8d8bead88.scanForAPI(win.parent);
+        if ($defce2f29876acb7$export$6ed414b8d8bead88.API == null && win.opener != null) // @ts-ignore
+        $defce2f29876acb7$export$6ed414b8d8bead88.API = $defce2f29876acb7$export$6ed414b8d8bead88.scanForAPI(win.opener);
+    },
     isAvailable: ()=>{
         const isReady = $defce2f29876acb7$export$6ed414b8d8bead88.init && !$defce2f29876acb7$export$6ed414b8d8bead88.finished;
         if (!isReady || !$defce2f29876acb7$export$6ed414b8d8bead88.API) return {
@@ -85,9 +103,9 @@ const $defce2f29876acb7$export$6ed414b8d8bead88 = {
         printError = printError === undefined || printError === null ? true : printError;
         const res = $defce2f29876acb7$export$6ed414b8d8bead88.isAvailable();
         if (res.error) return res;
-        const errorId = res.API.LMSGetLastError();
-        const errorMsg = res.API.LMSGetErrorString(errorId);
-        const errorStack = res.API.LMSGetDiagnostic(errorId);
+        const errorId = res.API.GetLastError();
+        const errorMsg = res.API.GetErrorString(errorId);
+        const errorStack = res.API.GetDiagnostic(errorId);
         const apiError = {
             id: errorId,
             message: errorMsg,
@@ -99,69 +117,12 @@ const $defce2f29876acb7$export$6ed414b8d8bead88 = {
             data: apiError
         };
     },
-    _findAPI: (source)=>{
-        let retryCnt = 0;
-        const retryLimit = 7;
-        console.log("SOURCE");
-        console.log(source);
-        if (source.API) return {
-            error: false,
-            API: source.API
-        };
-        if (source.parent === source) return {
-            error: true,
-            message: "Error: unable to find API - top level reached"
-        };
-        while(source.API == null && source.parent != null && retryCnt < retryLimit){
-            retryCnt++;
-            source = source.parent;
-        }
-        if (retryCnt >= retryLimit) return {
-            error: true,
-            message: "Error: unable to find API - nested to deep"
-        };
-        return {
-            error: false,
-            API: source.API
-        };
-    },
     start: ()=>{
-        const resFind = $defce2f29876acb7$export$6ed414b8d8bead88._findAPI(window);
-        if (resFind.error) {
-            console.log("inside error response");
-            return resFind;
-        }
-        $defce2f29876acb7$export$6ed414b8d8bead88.API = resFind.API;
+        $defce2f29876acb7$export$6ed414b8d8bead88.getAPI(window);
         $defce2f29876acb7$export$6ed414b8d8bead88._time.start = new Date();
         $defce2f29876acb7$export$6ed414b8d8bead88.init = true;
-        const resInit = $defce2f29876acb7$export$6ed414b8d8bead88.API.LMSInitialize("");
-        if (resInit === $defce2f29876acb7$export$6ed414b8d8bead88.STATUSES.update.false) return {
-            error: true,
-            message: "SCORM service failed to initialize",
-            data: $defce2f29876acb7$export$6ed414b8d8bead88.getError()
-        };
+        $defce2f29876acb7$export$6ed414b8d8bead88?.API?.Initialize("");
         console.log("cmi version:");
-        const version = $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi._version");
-        console.log(version);
-        // SCORM 1.2 endpoints
-        console.log("lesson Status (1.2):");
-        const lessonStatus = $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.core.lesson_status");
-        console.log(lessonStatus);
-        console.log("lesson location (1.2):");
-        const lessonLocation = $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.core.lesson_location");
-        console.log(lessonLocation);
-        console.log("session time (1.2):");
-        const sessionTime = $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.core.session_time");
-        console.log(sessionTime);
-        console.log("total time (1.2):");
-        const totalTime = $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.core.totalTime");
-        console.log(totalTime);
-        console.log("score mastery (1.2):");
-        const score_mastery = $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.student_data.mastery_score");
-        console.log(score_mastery);
-        console.log("score raw (1.2):");
-        const score_raw = $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.core.score_raw");
-        console.log(score_raw);
         // SCORM 2004 v2 endpoints
         console.log("completion Status (2004):");
         const completionStatus = $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.completion_status");
@@ -191,7 +152,7 @@ const $defce2f29876acb7$export$6ed414b8d8bead88 = {
     save: ()=>{
         const res = $defce2f29876acb7$export$6ed414b8d8bead88.isAvailable();
         if (res.error) return res;
-        const resSave = res.API.LMSCommit("");
+        const resSave = res.API.Commit("");
         if (resSave === $defce2f29876acb7$export$6ed414b8d8bead88.STATUSES.update.false) return {
             error: true,
             message: "SCORM service failed to save",
@@ -206,7 +167,7 @@ const $defce2f29876acb7$export$6ed414b8d8bead88 = {
         if (res.error) return res;
         const saveRes = $defce2f29876acb7$export$6ed414b8d8bead88.save();
         if (saveRes.error) return saveRes;
-        const resFinish = res.API.LMSFinish();
+        const resFinish = res.API.Terminate();
         if (resFinish === $defce2f29876acb7$export$6ed414b8d8bead88.STATUSES.update.false) return {
             error: true,
             message: "SCORM service failed to save",
@@ -222,7 +183,8 @@ const $defce2f29876acb7$export$6ed414b8d8bead88 = {
     setValue: (elem, val)=>{
         const res = $defce2f29876acb7$export$6ed414b8d8bead88.isAvailable();
         if (res.error) return res;
-        const setRes = res.API.LMSSetValue(elem, val);
+        // @ts-ignore
+        const setRes = res.API.SetValue(elem, val);
         if (setRes === $defce2f29876acb7$export$6ed414b8d8bead88.STATUSES.update.false) return {
             error: true,
             message: `SCORM service failed to set ${elem} to ${val}`,
@@ -235,7 +197,7 @@ const $defce2f29876acb7$export$6ed414b8d8bead88 = {
     getValue: (elem)=>{
         const res = $defce2f29876acb7$export$6ed414b8d8bead88.isAvailable();
         if (res.error) return res;
-        const getRes = res.API.LMSGetValue(elem);
+        const getRes = res.API.GetValue(elem);
         console.log("GET RES");
         console.log(getRes);
         if (getRes === $defce2f29876acb7$export$6ed414b8d8bead88.STATUSES.update.false) return {
@@ -250,7 +212,7 @@ const $defce2f29876acb7$export$6ed414b8d8bead88 = {
     getProgress: ()=>{
         const res = $defce2f29876acb7$export$6ed414b8d8bead88.isAvailable();
         if (res.error) return res;
-        const getRes = res.API.LMSGetValue("cmi.progress_measure");
+        const getRes = res.API.GetValue("cmi.progress_measure");
         const numberRes = parseFloat(getRes);
         if (numberRes > 0) return numberRes;
         else return 0;
@@ -268,7 +230,7 @@ const $defce2f29876acb7$export$6ed414b8d8bead88 = {
             };
         }
         const lessonStatus = $defce2f29876acb7$export$6ed414b8d8bead88.STATUSES.lesson[status];
-        const setRes = $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.core.lesson_status", lessonStatus);
+        const setRes = $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.completion_status", lessonStatus);
         if (setRes.error) return setRes;
         return {
             error: false
@@ -284,12 +246,10 @@ const $defce2f29876acb7$export$6ed414b8d8bead88 = {
             message: "Service was never started"
         };
         const totalTime = $defce2f29876acb7$export$6ed414b8d8bead88._time.end.getTime() - $defce2f29876acb7$export$6ed414b8d8bead88._time.start.getTime();
-        const endRes = $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.core.session_time", $defce2f29876acb7$export$6ed414b8d8bead88._time.convert(totalTime));
         const endRes2004 = $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.session_time", $defce2f29876acb7$export$6ed414b8d8bead88._time.convert(totalTime));
-        if (endRes.error) return endRes;
         if (endRes2004.error) return endRes2004;
         const lessonLocation = $defce2f29876acb7$export$6ed414b8d8bead88.lessonLocation;
-        const locationRes = $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.core.lesson_location", lessonLocation);
+        const locationRes = $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.lesson_location", lessonLocation);
         const locationRes2004 = $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.location", lessonLocation);
         console.log(locationRes);
         console.log(locationRes2004);
@@ -320,13 +280,9 @@ const $defce2f29876acb7$export$6ed414b8d8bead88 = {
         // SCORM 2004
         $defce2f29876acb7$export$6ed414b8d8bead88.courseProgress = 1;
         $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.progress_measure", $defce2f29876acb7$export$6ed414b8d8bead88.courseProgress);
-        $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.score.raw", 80.0);
+        $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.score.raw", 70.0);
         $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.success_status", "passed");
         $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.completion_status", "completed");
-        // SCORM 1.2 (status is handled separately, but scores will conflict, so only update 1)
-        // service.updateStatus('success');
-        // service.setValue('cmi.core.score.raw', 57.0);
-        // service.updateStatus('failed');
         $defce2f29876acb7$export$6ed414b8d8bead88.save();
         console.log("SERVICE:");
         console.log($defce2f29876acb7$export$6ed414b8d8bead88);

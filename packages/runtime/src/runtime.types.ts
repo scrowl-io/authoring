@@ -67,7 +67,7 @@ export type RUNTIME_SERVICE_RESULT = {
 };
 
 export type RUNTIME_SERVICE = {
-  API?: SCORM_API;
+  API?: SCORM_API | null;
   init: boolean;
   finished: boolean;
   _time: {
@@ -96,6 +96,10 @@ export type RUNTIME_SERVICE = {
   };
   courseProgress: number;
   lessonLocation: string | number;
+  nFindAPITries: number;
+  maxTries: 500;
+  // scanForAPI: (source: Window) => ;
+  getAPI: (source: Window) => void;
   isAvailable: () => RUNTIME_SERVICE_API_RESULT;
   getError: (printError?: boolean) => RUNTIME_SERVICE_RESULT;
   getProgress: () => number | RUNTIME_SERVICE_API_RESULT_ERROR;
