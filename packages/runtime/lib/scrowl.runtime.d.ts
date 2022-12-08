@@ -18,7 +18,7 @@ export type SCORM_API = {
     LMSGetValue: (element: CMIELement) => string;
     LMSInitialize: (msg?: string) => SCORM_STATUS_UPDATE;
     LMSSetValue: (element: CMIELement, value: string | number) => string;
-    SetValue: (element: CMIELement, value: string) => string;
+    SetValue: (element: CMIELement, value: string | number) => string;
     Terminate: (msg?: string) => SCORM_STATUS_UPDATE;
     apolloClient: {
         [key: string]: any;
@@ -58,7 +58,7 @@ export type RUNTIME_SERVICE_RESULT = {
     data?: string | GENERIC_DATA;
 };
 export type RUNTIME_SERVICE = {
-    API?: SCORM_API;
+    API?: SCORM_API | null;
     init: boolean;
     finished: boolean;
     _time: {
@@ -85,8 +85,9 @@ export type RUNTIME_SERVICE = {
             logout: 'logout';
         };
     };
-    courseProgress: number;
-    lessonLocation: string;
+    nFindAPITries: number;
+    maxTries: number;
+    getAPI: (window: Window) => void;
     isAvailable: () => RUNTIME_SERVICE_API_RESULT;
     getError: (printError?: boolean) => RUNTIME_SERVICE_RESULT;
     getProgress: () => number | RUNTIME_SERVICE_API_RESULT_ERROR;
