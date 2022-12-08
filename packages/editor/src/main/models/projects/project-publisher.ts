@@ -280,7 +280,12 @@ export const createScormEntry = ({ scorm, meta, ...project}: ProjectData, source
   });
 };
 
-export const createScormPackage = (src: string, dest: string, project: ProjectData, meta: ProjectFile) => {
+export const createScormPackage = (
+  src: string,
+  dest: string,
+  project: ProjectData,
+  meta: ProjectFile
+) => {
   return new Promise<rq.ApiResult>((resolve) => {
     const config = project.scorm;
     const today = dt.getDateStampLocal();
@@ -289,7 +294,7 @@ export const createScormPackage = (src: string, dest: string, project: ProjectDa
     const packagerOpts = {
       source: src,
       title: project.meta.name,
-      version: config.version,
+      version: config.outputFormat,
       language: config.language,
       startingPage: 'content/index.html',
       organization: config.organization,
@@ -302,10 +307,15 @@ export const createScormPackage = (src: string, dest: string, project: ProjectDa
         name: config.name,
         description: config.description,
         author: config.authors,
-        rights: "©Copyright " + new Date().getFullYear(),
-      }
-    }
-    const packageFilename = fs.joinPath(destFolder, `${str.toScormCase(packagerOpts.package.name)}_v${packagerOpts.package.version}_${today}.zip`);
+        rights: '©Copyright ' + new Date().getFullYear(),
+      },
+    };
+    const packageFilename = fs.joinPath(
+      destFolder,
+      `${str.toScormCase(packagerOpts.package.name)}_v${
+        packagerOpts.package.version
+      }_${today}.zip`
+    );
 
     packager(packagerOpts, (message: string) => {
       fs.fileRename(packageFilename, dest).then((res) => {
@@ -326,42 +336,53 @@ export const createScormPackage = (src: string, dest: string, project: ProjectDa
   });
 };
 
-export const scorm = (project: ProjectData, meta: ProjectFile, pubDest: string, tempDest: string) => {
+export const scorm = (
+  project: ProjectData,
+  meta: ProjectFile,
+  pubDest: string,
+  tempDest: string
+) => {
   return new Promise<rq.ApiResult>((resolve) => {
-    const projectSource =  fs.getDirname(project.meta.filename || '');
+    const projectSource = fs.getDirname(project.meta.filename || '');
     const projectDest = fs.joinPath(tempDest, 'content');
 
-    createScormSource(project, meta, projectSource, projectDest).then((sourceRes) => {
-      if (sourceRes.error) {
-        resolve(sourceRes);
-        return;
-      }
-
-      const templates = sourceRes.data.templates;
-
-      createScormEntry(project, projectSource, projectDest, templates).then((entryRes) => {
-        if (entryRes.error) {
-          resolve(entryRes);
+    createScormSource(project, meta, projectSource, projectDest).then(
+      (sourceRes) => {
+        if (sourceRes.error) {
+          resolve(sourceRes);
           return;
         }
 
-        createScormPackage(tempDest, pubDest, project, meta).then((packRes) => {
-          if (packRes.error) {
-            resolve(packRes);
-            return;
-          }
+        const templates = sourceRes.data.templates;
 
-          log.info(`Published project: ${pubDest}`);
-          resolve({
-            error: false,
-            data: {
-              project,
-              dest: pubDest,
-            },
-          });
-        });
-      });
-    });
+        createScormEntry(project, projectSource, projectDest, templates).then(
+          (entryRes) => {
+            if (entryRes.error) {
+              resolve(entryRes);
+              return;
+            }
+
+            createScormPackage(tempDest, pubDest, project, meta).then(
+              (packRes) => {
+                if (packRes.error) {
+                  resolve(packRes);
+                  return;
+                }
+
+                log.info(`Published project: ${pubDest}`);
+                resolve({
+                  error: false,
+                  data: {
+                    project,
+                    dest: pubDest,
+                  },
+                });
+              }
+            );
+          }
+        );
+      }
+    );
   });
 };
 
