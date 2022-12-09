@@ -1,3 +1,5 @@
+import { GenericEvent } from './utils.types';
+
 export enum ELEM_ALIGNMENT {
   LeftTop = "left-top",
   LeftCenter = "left-center",
@@ -71,7 +73,13 @@ export const getPosition = (
   return [Math.round(x), Math.round(y)];
 };
 
+export const stopEvent = (ev: GenericEvent) => {
+  ev.stopPropagation();
+  ev.preventDefault();
+};
+
 export default {
   ELEM_ALIGNMENT,
   getPosition,
+  stopEvent,
 };

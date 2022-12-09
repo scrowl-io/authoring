@@ -4,7 +4,7 @@ import './_overlay.scss';
 import { Backdrop, Drawer } from '../../../../components';
 import { Settings } from '../../../../models';
 import { menu } from '../../../../services';
-import { hasProp } from '../../../../utils';
+import { hasProp, Elem } from '../../../../utils';
 
 const GlossaryFormElement = (
   { className, isOpen, onClose, onSubmit, term, ...props },
@@ -14,12 +14,19 @@ const GlossaryFormElement = (
   const isAnimated = !animationSettings.reducedAnimations;
   const isNewTerm = term === undefined || term.id === -1;
   const title = isNewTerm ? 'Add' : 'Edit';
-  const [isDirty, setIsDirty] = useState(false);
+  const inputRefWord = useRef<HTMLInputElement>(null);
+  let timerFocusWord = useRef<ReturnType<typeof setTimeout>>();
+  const initialFormState = {
+    word: false,
+    definition: false,
+  };
+  const [isDirty, setIsDirty] = useState(initialFormState);
   const initialFormTerm = {
     word: '',
     definition: '',
   };
   const [formTerm, setFormTerm] = useState(isNewTerm ? initialFormTerm : term);
+  const [formRollback, setFormRollback] = useState(formTerm);
   const initialErrorState = {
     word: '',
     definition: '',
@@ -30,7 +37,7 @@ const GlossaryFormElement = (
     onClose();
   };
 
-  const validateForm = (data) => {
+  const validateForm = (data, forceCheck = false) => {
     let isValid = true;
     const update = {};
     const errors = {
@@ -38,7 +45,7 @@ const GlossaryFormElement = (
       definition: '',
     };
 
-    if (hasProp(data, 'word')) {
+    if ((isDirty.word || forceCheck) && hasProp(data, 'word')) {
       let { word } = data;
 
       if (word.length) {
@@ -51,10 +58,9 @@ const GlossaryFormElement = (
       }
 
       update['word'] = word;
-      setIsDirty(true);
     }
 
-    if (hasProp(data, 'definition')) {
+    if ((isDirty.definition || forceCheck) && hasProp(data, 'definition')) {
       let { definition } = data;
 
       if (definition.length) {
@@ -67,17 +73,23 @@ const GlossaryFormElement = (
       }
 
       update['definition'] = definition;
-      setIsDirty(true);
     }
 
     setFormErrors(errors);
     return [isValid, update];
   };
 
-  const handleSubmit = (ev: React.MouseEvent<Element, MouseEvent>) => {
-    ev.preventDefault();
-
+  const handleFormUpdate = (ev) => {
     const [isValid, validationUpdate] = validateForm(formTerm);
+
+    setFormRollback(validationUpdate);
+  };
+
+  const handleSubmit = (ev: React.FormEvent) => {
+    console.log('submitting', ev);
+    Elem.stopEvent(ev);
+
+    const [isValid, validationUpdate] = validateForm(formTerm, true);
     const update = {
       ...formTerm,
       ...validationUpdate,
@@ -102,8 +114,27 @@ const GlossaryFormElement = (
       word,
     };
 
+    setIsDirty({
+      ...isDirty,
+      word: true,
+    });
     setFormTerm(update);
     validateForm(update);
+  };
+
+  const handleWordInput = (ev: React.KeyboardEvent<HTMLInputElement>) => {
+    switch (ev.key) {
+      case 'Escape':
+        const update = {
+          ...formTerm,
+          word: formRollback.word,
+        };
+
+        Elem.stopEvent(ev);
+        setFormTerm(update);
+        ev.currentTarget.blur();
+        break;
+    }
   };
 
   const handleDefinitionChange = (ev: React.FormEvent<HTMLTextAreaElement>) => {
@@ -113,8 +144,34 @@ const GlossaryFormElement = (
       definition,
     };
 
+    setIsDirty({
+      ...isDirty,
+      definition: true,
+    });
     setFormTerm(update);
     validateForm(update);
+  };
+
+  const handleDefinitionInput = (
+    ev: React.KeyboardEvent<HTMLTextAreaElement>
+  ) => {
+    switch (ev.key) {
+      case 'Enter':
+        if (ev.ctrlKey || ev.metaKey) {
+          handleSubmit(ev);
+        }
+        break;
+      case 'Escape':
+        const update = {
+          ...formTerm,
+          definition: formRollback.definition,
+        };
+
+        Elem.stopEvent(ev);
+        setFormTerm(update);
+        ev.currentTarget.blur();
+        break;
+    }
   };
 
   useEffect(() => {
@@ -123,14 +180,35 @@ const GlossaryFormElement = (
       (formTerm.word !== term.word || formTerm.definition !== term.definition)
     ) {
       setFormTerm(term);
+      setFormRollback(term);
+      setIsDirty(initialFormState);
     }
+
+    const setFocusOnWord = () => {
+      if (timerFocusWord.current) {
+        clearTimeout(timerFocusWord.current);
+      }
+
+      timerFocusWord.current = setTimeout(() => {
+        if (inputRefWord.current) {
+          inputRefWord.current.focus();
+        }
+      }, 250);
+    };
 
     if (isOpen) {
       menu.API.disableProjectActions();
+      setFocusOnWord();
     } else {
       menu.API.enableProjectActions();
       setFormErrors(initialErrorState);
     }
+
+    return () => {
+      if (timerFocusWord.current) {
+        clearTimeout(timerFocusWord.current);
+      }
+    };
   }, [term, isOpen]);
 
   return (
@@ -155,15 +233,15 @@ const GlossaryFormElement = (
               </div>
 
               <div className="owlui-offcanvas-body content-form">
-                <form className="owlui-offcanvas-form">
+                <form className="owlui-offcanvas-form" onSubmit={handleSubmit}>
                   <div className="mb-2">
                     <label htmlFor="term-word" className="form-label">
                       Term
                     </label>
                     <input
+                      ref={inputRefWord}
                       id="term-word"
                       name="word"
-                      autoFocus
                       type="text"
                       className={`owlui-form-control${
                         isDirty && formErrors.word ? ' is-invalid' : ''
@@ -171,6 +249,8 @@ const GlossaryFormElement = (
                       placeholder="Enter Term"
                       value={formTerm.word}
                       onChange={handleWordChange}
+                      onKeyDown={handleWordInput}
+                      onBlur={handleFormUpdate}
                     />
                     {formErrors.word && (
                       <div className="invalid-feedback">{formErrors.word}</div>
@@ -191,6 +271,8 @@ const GlossaryFormElement = (
                       style={{ resize: 'none' }}
                       value={formTerm.definition}
                       onChange={handleDefinitionChange}
+                      onKeyDown={handleDefinitionInput}
+                      onBlur={handleFormUpdate}
                     />
                     {formErrors.definition && (
                       <div className="invalid-feedback">
@@ -207,11 +289,7 @@ const GlossaryFormElement = (
                     >
                       Cancel
                     </button>
-                    <button
-                      type="submit"
-                      className="btn btn-success"
-                      onClick={handleSubmit}
-                    >
+                    <button type="submit" className="btn btn-success">
                       Save
                     </button>
                   </footer>
