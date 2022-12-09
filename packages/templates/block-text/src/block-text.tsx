@@ -90,11 +90,11 @@ export const BlockText = ({ id, schema, ...props }: BlockTextProps) => {
       onEnd={handleSlideEnd}
       {...props}
     >
-      <div id={contentId}>
+      <div id={contentId} className="owlui-container">
         <div className={`owlui-row owlui-row-cols-2 ${alignmentCss}`}>
-          {bg && <div className="overlay" />}
+          {bg && <div className="owlui-col overlay" />}
 
-          <div className={`text__wrapper`}>
+          <div className={`owlui-col text__wrapper`}>
             <div className="text__container">
               <div className="progress-indictor">
                 <div className="progress-bar" style={progressBarStyles}></div>

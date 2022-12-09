@@ -124,7 +124,7 @@ export const SimpleText = ({ id, schema, ...props }: SimpleTextProps) => {
       onProgress={handleSlideProgress}
       {...props}
     >
-      <div id={contentId}>
+      <div id={contentId} className="owlui-container">
         {(bgUrl || editMode) && (
           <div
             ref={bgRef}
@@ -139,15 +139,17 @@ export const SimpleText = ({ id, schema, ...props }: SimpleTextProps) => {
           </div>
         )}
         <div className="owlui-row owlui-row-cols-1">
-          {bgUrl && <div className="overlay" />}
+          <div className="owlui-col">
+            {bgUrl && <div className="overlay" />}
 
-          <div className={`text__wrapper ${alignmentCss}`}>
-            <div
-              ref={textRef}
-              className={`text__container can-focus ${textFocusCss}`}
-              onMouseDown={handleFocusText}
-            >
-              <Markdown>{text}</Markdown>
+            <div className={`text__wrapper ${alignmentCss}`}>
+              <div
+                ref={textRef}
+                className={`text__container can-focus ${textFocusCss}`}
+                onMouseDown={handleFocusText}
+              >
+                <Markdown>{text}</Markdown>
+              </div>
             </div>
           </div>
         </div>
