@@ -63,13 +63,10 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
   const runtime = window['Scrowl'].runtime;
   const location = runtime?.getLocation();
 
-  console.log('LOCATION');
-  console.log(location);
-
-  const lessonIdx = location.id as number;
-
-  console.log(Object.keys(location));
-  console.log(lessonIdx);
+  let lessonIdx;
+  if (location) {
+    lessonIdx = location.id + 1;
+  }
 
   return (
     <Router>
@@ -94,7 +91,7 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
       </div>
     </Router>
   );
-};;
+};
 
 export default {
   Root,

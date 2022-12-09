@@ -155,7 +155,10 @@ export const service: RUNTIME_SERVICE = {
   },
   // { m: 1, l: 1, s?: 3 }
   updateLocation: (location, progressPercentage) => {
-    service.setValue('cmi.location', JSON.stringify(location));
+    service.setValue(
+      'cmi.location',
+      JSON.stringify({ v1: 1, ...location.lesson })
+    );
 
     // Update progress
     progressPercentage = progressPercentage || 0;

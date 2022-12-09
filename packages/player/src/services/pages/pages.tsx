@@ -70,23 +70,28 @@ const updateCourseProgress = (project, id) => {
     });
   });
 
-  const currentSlide = lessonsArray.find((lesson) => {
+  const currentLesson = lessonsArray.find((lesson) => {
     return lesson.targetId === id;
   });
 
-  const currentSlideIndex = currentSlide?.index;
+  const currentLessonIndex = currentLesson?.index;
   const totalLessons = lessonsArray.length;
 
   let percentageCompleted;
 
-  if (currentSlideIndex) {
-    percentageCompleted = currentSlideIndex / totalLessons;
+  if (currentLessonIndex) {
+    percentageCompleted = currentLessonIndex / totalLessons;
   }
-
+  const runtimeLesson = {
+    m: currentLesson?.lesson.lesson.moduleId,
+    l: currentLesson?.lesson.lesson.id,
+    s: currentLesson?.lesson.slides,
+  };
+  console.log(runtimeLesson);
   console.log('lesson');
-  console.log(currentSlide?.lesson.lesson);
+  console.log(currentLesson?.lesson);
   const runtime = Scrowl.runtime;
-  runtime?.updateLocation(currentSlide?.lesson.lesson, percentageCompleted);
+  runtime?.updateLocation(currentLesson?.lesson, percentageCompleted);
 };
 
 const finishCourse = () => {

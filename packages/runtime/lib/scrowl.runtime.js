@@ -121,7 +121,10 @@ const $b3d1e3300d945f09$export$6ed414b8d8bead88 = {
     },
     // { m: 1, l: 1, s?: 3 }
     updateLocation: (location, progressPercentage)=>{
-        $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.location", JSON.stringify(location));
+        $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.location", JSON.stringify({
+            v1: 1,
+            ...location.lesson
+        }));
         // Update progress
         progressPercentage = progressPercentage || 0;
         $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.progress_measure", progressPercentage);
