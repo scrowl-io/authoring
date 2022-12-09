@@ -83,9 +83,10 @@ const updateCourseProgress = (project, id) => {
     percentageCompleted = currentSlideIndex / totalLessons;
   }
 
-  console.log(percentageCompleted);
+  console.log('lesson');
+  console.log(currentSlide?.lesson.lesson);
   const runtime = Scrowl.runtime;
-  runtime?.updateLocation(currentSlide?.lesson, percentageCompleted);
+  runtime?.updateLocation(currentSlide?.lesson.lesson, percentageCompleted);
 };
 
 const finishCourse = () => {

@@ -57,6 +57,20 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
   );
   const pages = Pages.create(config, templateList);
 
+  // @ts-ignore
+  const lessonTotal = pages.length;
+
+  const runtime = window['Scrowl'].runtime;
+  const location = runtime?.getLocation();
+
+  console.log('LOCATION');
+  console.log(location);
+
+  const lessonIdx = location.id as number;
+
+  console.log(Object.keys(location));
+  console.log(lessonIdx);
+
   return (
     <Router>
       <div id="scrowl-player" {...props}>
@@ -67,13 +81,20 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
                 <Route key={idx} path={page.url} element={<page.Element />} />
               );
             })}
-            <Route path="*" element={<Navigate to={pages[0].url} />} />
+            <Route
+              path="*"
+              element={
+                <Navigate
+                  to={lessonIdx ? pages[lessonIdx].url : pages[0].url}
+                />
+              }
+            />
           </Routes>
         </main>
       </div>
     </Router>
   );
-};
+};;
 
 export default {
   Root,

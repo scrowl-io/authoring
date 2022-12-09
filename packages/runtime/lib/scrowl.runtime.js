@@ -121,10 +121,7 @@ const $b3d1e3300d945f09$export$6ed414b8d8bead88 = {
     },
     // { m: 1, l: 1, s?: 3 }
     updateLocation: (location, progressPercentage)=>{
-        $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.location", JSON.stringify({
-            v: 1,
-            ...location
-        }));
+        $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.location", JSON.stringify(location));
         // Update progress
         progressPercentage = progressPercentage || 0;
         $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.progress_measure", progressPercentage);
@@ -145,12 +142,9 @@ const $b3d1e3300d945f09$export$6ed414b8d8bead88 = {
         $b3d1e3300d945f09$export$6ed414b8d8bead88.init = true;
         $b3d1e3300d945f09$export$6ed414b8d8bead88.initialize();
         const completionStatus = $b3d1e3300d945f09$export$6ed414b8d8bead88.getValue("cmi.completion_status");
-        const sessionTime = $b3d1e3300d945f09$export$6ed414b8d8bead88.getValue("cmi.session_time");
-        const totalTime = $b3d1e3300d945f09$export$6ed414b8d8bead88.getValue("cmi.total_time");
-        console.log(sessionTime);
-        console.log(totalTime);
         if (completionStatus === "unknown") {
             $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.completion_status", "incomplete");
+            $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.success_status", "unknown");
             $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.suspend_data", "{}");
         } else {
             $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.score.scaled", $b3d1e3300d945f09$export$6ed414b8d8bead88.getValue("cmi.score.scaled"));
@@ -159,6 +153,8 @@ const $b3d1e3300d945f09$export$6ed414b8d8bead88 = {
             $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.progress_measure", $b3d1e3300d945f09$export$6ed414b8d8bead88.getValue("cmi.progress_measure"));
             $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.completion_status", $b3d1e3300d945f09$export$6ed414b8d8bead88.getValue("cmi.completion_status"));
         }
+        // until we have things hooked up to exit buttons/nav, set exit to 'suspend' as part of start() so that status persists whether the user finishes or exits
+        $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.exit", "suspend");
         $b3d1e3300d945f09$export$6ed414b8d8bead88.commit();
         return {
             error: false
@@ -172,7 +168,6 @@ const $b3d1e3300d945f09$export$6ed414b8d8bead88 = {
         $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.success_status", "passed");
         $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.progress_measure", 1);
         $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.completion_status", "completed");
-        $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.exit", "suspend");
         console.log("SERVICE");
         console.log($b3d1e3300d945f09$export$6ed414b8d8bead88);
         $b3d1e3300d945f09$export$6ed414b8d8bead88.commit();

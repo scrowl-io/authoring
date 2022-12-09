@@ -155,7 +155,7 @@ export const service: RUNTIME_SERVICE = {
   },
   // { m: 1, l: 1, s?: 3 }
   updateLocation: (location, progressPercentage) => {
-    service.setValue('cmi.location', JSON.stringify({ v: 1, ...location }));
+    service.setValue('cmi.location', JSON.stringify(location));
 
     // Update progress
     progressPercentage = progressPercentage || 0;
@@ -207,6 +207,7 @@ export const service: RUNTIME_SERVICE = {
         'cmi.completion_status',
         service.getValue('cmi.completion_status')
       );
+
     }
 
     // until we have things hooked up to exit buttons/nav, set exit to 'suspend' as part of start() so that status persists whether the user finishes or exits

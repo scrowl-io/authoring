@@ -87,7 +87,7 @@ export type RUNTIME_SERVICE = {
 
   isAvailable: () => RUNTIME_SERVICE_API_RESULT;
   getError: (printError?: boolean) => RUNTIME_SERVICE_RESULT;
-  getProgress: () => number | RUNTIME_SERVICE_API_RESULT_ERROR;
+  getLocation: () => any;
   _findAPI: (source: Window) => RUNTIME_SERVICE_API_RESULT;
   save: () => RUNTIME_SERVICE_RESULT;
   stop: () => RUNTIME_SERVICE_RESULT;
