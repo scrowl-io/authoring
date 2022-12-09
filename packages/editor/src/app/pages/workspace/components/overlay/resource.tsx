@@ -7,7 +7,7 @@ import { AssetBrowser } from './asset-browser';
 import { Backdrop, Drawer } from '../../../../components';
 import { Settings } from '../../../../models';
 import { menu } from '../../../../services';
-import { hasProp } from '../../../../utils';
+import { hasProp, Elem } from '../../../../utils';
 
 export interface ResourceFormProps
   extends Omit<React.AllHTMLAttributes<HTMLDivElement>, 'onSubmit'> {
@@ -32,8 +32,16 @@ const ResourceFormElement = (
   const isAnimated = !animationSettings.reducedAnimations;
   const modalTitle = resourceItem.isNew ? 'Add New' : 'Edit';
   const [isOpenAssetBrowser, setIsOpenAssetBrowser] = useState(false);
-  const [isDirty, setIsDirty] = useState(false);
+  const inputRefTitle = useRef<HTMLInputElement>(null);
+  let timerFocusTitle = useRef<ReturnType<typeof setTimeout>>();
+  const initialFormState = {
+    filename: false,
+    title: false,
+    description: false,
+  };
+  const [isDirty, setIsDirty] = useState(initialFormState);
   const [resource, setResource] = useState<ResourceItem>(resourceItem);
+  const [formRollback, setFormRollback] = useState(resource);
   const initialErrorState = {
     filename: '',
     title: '',
@@ -44,7 +52,7 @@ const ResourceFormElement = (
     onClose();
   };
 
-  const validateForm = (data) => {
+  const validateForm = (data, forceCheck = false) => {
     let isValid = true;
     const update = {};
     const errors = {
@@ -52,7 +60,7 @@ const ResourceFormElement = (
       filename: '',
     };
 
-    if (hasProp(data, 'title')) {
+    if ((isDirty.title || forceCheck) && hasProp(data, 'title')) {
       let { title } = data;
 
       if (title.length) {
@@ -65,10 +73,9 @@ const ResourceFormElement = (
       }
 
       update['title'] = title;
-      setIsDirty(true);
     }
 
-    if (hasProp(data, 'filename')) {
+    if ((isDirty.filename || forceCheck) && hasProp(data, 'filename')) {
       let { filename } = data;
 
       if (!filename.length) {
@@ -77,17 +84,25 @@ const ResourceFormElement = (
       }
 
       update['filename'] = filename;
-      setIsDirty(true);
     }
 
     setFormErrors(errors);
     return [isValid, update];
   };
 
-  const handleSubmit = (ev: React.MouseEvent<Element, MouseEvent>) => {
-    ev.preventDefault();
-
+  const handleFormUpdate = (ev) => {
     const [isValid, validationUpdate] = validateForm(resource);
+
+    setFormRollback({
+      ...resource,
+      ...validationUpdate,
+    });
+  };
+
+  const handleSubmit = (ev: React.FormEvent) => {
+    Elem.stopEvent(ev);
+
+    const [isValid, validationUpdate] = validateForm(resource, true);
     const update = {
       ...resource,
       ...validationUpdate,
@@ -127,6 +142,10 @@ const ResourceFormElement = (
       };
     }
 
+    setIsDirty({
+      ...isDirty,
+      filename: true,
+    });
     setResource(update);
     validateForm(update);
   };
@@ -140,29 +159,111 @@ const ResourceFormElement = (
       title,
     };
 
+    setIsDirty({
+      ...isDirty,
+      title: true,
+    });
     setResource(update);
     validateForm(update);
+  };
+
+  const handleInputResourceTitle = (
+    ev: React.KeyboardEvent<HTMLInputElement>
+  ) => {
+    switch (ev.key) {
+      case 'Escape':
+        const update = {
+          ...resource,
+          title: formRollback.title,
+        };
+
+        Elem.stopEvent(ev);
+        setResource(update);
+        ev.currentTarget.blur();
+        break;
+    }
   };
 
   const handleChangeResourceDescription = (
     ev: React.ChangeEvent<HTMLTextAreaElement>
   ) => {
+    setIsDirty({
+      ...isDirty,
+      description: true,
+    });
     setResource({
       ...resource,
       description: ev.currentTarget.value,
     });
   };
 
+  const handleInputResourceDescription = (
+    ev: React.KeyboardEvent<HTMLTextAreaElement>
+  ) => {
+    switch (ev.key) {
+      case 'Enter':
+        if (ev.ctrlKey || ev.metaKey) {
+          handleSubmit(ev);
+        }
+        break;
+      case 'Escape':
+        const update = {
+          ...resource,
+          description: formRollback.description,
+        };
+
+        Elem.stopEvent(ev);
+        setResource(update);
+        ev.currentTarget.blur();
+        break;
+    }
+  };
+
   useEffect(() => {
+    if (
+      resourceItem &&
+      (resourceItem.filename !== resource.filename ||
+        resourceItem.title !== resource.title ||
+        resourceItem.description !== resource.description)
+    ) {
+      setResource(resourceItem);
+      setFormRollback(
+        resourceItem.isNew
+          ? {
+              ...resourceItem,
+              filename: '',
+              title: '',
+              description: '',
+            }
+          : resourceItem
+      );
+      setIsDirty(initialFormState);
+    }
+
+    const setFocusOnTitle = () => {
+      if (timerFocusTitle.current) {
+        clearTimeout(timerFocusTitle.current);
+      }
+
+      timerFocusTitle.current = setTimeout(() => {
+        if (inputRefTitle.current) {
+          inputRefTitle.current.focus();
+        }
+      }, 250);
+    };
+
     if (isOpen) {
       menu.API.disableProjectActions();
+      setFocusOnTitle();
     } else {
       menu.API.enableProjectActions();
     }
-  }, [isOpen]);
 
-  useEffect(() => {
-    setResource(resourceItem);
+    return () => {
+      if (timerFocusTitle.current) {
+        clearTimeout(timerFocusTitle.current);
+      }
+    };
   }, [resourceItem, isOpen]);
 
   return (
@@ -192,7 +293,10 @@ const ResourceFormElement = (
               </div>
 
               <div className="owlui-offcanvas-body content-form">
-                <form className="owlui-offcanvas-form owlui-offcanvas-form--resource">
+                <form
+                  className="owlui-offcanvas-form owlui-offcanvas-form--resource"
+                  onSubmit={handleSubmit}
+                >
                   <div className="mb-2">
                     <div
                       className={`owlui-input-group${
@@ -203,6 +307,7 @@ const ResourceFormElement = (
                         type="text"
                         name="filename"
                         readOnly={true}
+                        disabled={true}
                         className={`owlui-form-control owlui-read-only${
                           formErrors.filename ? ' is-invalid' : ''
                         }`}
@@ -231,6 +336,7 @@ const ResourceFormElement = (
                       Title
                     </label>
                     <input
+                      ref={inputRefTitle}
                       id="resource-title"
                       type="text"
                       name="title"
@@ -241,6 +347,8 @@ const ResourceFormElement = (
                       aria-label="Title"
                       value={resource.title}
                       onChange={handleChangeResourceTitle}
+                      onKeyDown={handleInputResourceTitle}
+                      onBlur={handleFormUpdate}
                     />
                     {formErrors.title && (
                       <div className="invalid-feedback">{formErrors.title}</div>
@@ -262,6 +370,8 @@ const ResourceFormElement = (
                       style={{ resize: 'none' }}
                       value={resource.description}
                       onChange={handleChangeResourceDescription}
+                      onKeyDown={handleInputResourceDescription}
+                      onBlur={handleFormUpdate}
                     />
                   </div>
 
@@ -273,11 +383,7 @@ const ResourceFormElement = (
                     >
                       Cancel
                     </button>
-                    <button
-                      type="submit"
-                      className="btn btn-success"
-                      onClick={handleSubmit}
-                    >
+                    <button type="submit" className="btn btn-success">
                       Save
                     </button>
                   </footer>

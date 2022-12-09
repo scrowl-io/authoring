@@ -134,7 +134,7 @@ export const create = (project, templateList: PlayerTemplateList) => {
           return (
             <>
               <NavBar pageId={id} project={project} />
-              <div className="lesson">
+              <div className="owlui-lesson">
                 <Page
                   id={id}
                   slides={page.slides}
@@ -142,7 +142,7 @@ export const create = (project, templateList: PlayerTemplateList) => {
                   templates={templateList}
                 />
                 <Scrowl.core.Template
-                  className="last"
+                  className="owlui-last"
                   id={`slide-end-${id}`}
                   controller={controller}
                   notScene={true}
