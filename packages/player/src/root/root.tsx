@@ -19,7 +19,7 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
       const startRes = runtime.start();
 
       if (startRes.error) {
-        console.error(`unable to start runtime: ${startRes.message}`);
+        console.error('unable to start runtime');
       }
     }
   }

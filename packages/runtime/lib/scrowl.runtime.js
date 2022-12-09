@@ -29,14 +29,16 @@ $parcel$defineInteropFlag($b3d1e3300d945f09$exports);
 
 $parcel$export($b3d1e3300d945f09$exports, "service", () => $b3d1e3300d945f09$export$6ed414b8d8bead88);
 $parcel$export($b3d1e3300d945f09$exports, "default", () => $b3d1e3300d945f09$export$2e2bcd8739ae039);
-const $b3d1e3300d945f09$var$hasProp = (obj, prop)=>{
-    return Object.prototype.hasOwnProperty.call(obj, prop);
-};
 const $b3d1e3300d945f09$export$6ed414b8d8bead88 = {
     init: false,
     finished: false,
     _time: {
-        start: undefined,
+        startTime: undefined,
+        getSessionTime: ()=>{
+            let sessionTime;
+            if ($b3d1e3300d945f09$export$6ed414b8d8bead88._time.startTime) sessionTime = new Date().getTime() - $b3d1e3300d945f09$export$6ed414b8d8bead88._time.startTime.getTime();
+            return $b3d1e3300d945f09$export$6ed414b8d8bead88._time.convert(sessionTime);
+        },
         end: undefined,
         convert: (total)=>{
             function ZeroPad(val, pad) {
@@ -65,25 +67,6 @@ const $b3d1e3300d945f09$export$6ed414b8d8bead88 = {
             return timespan;
         }
     },
-    STATUSES: {
-        update: {
-            true: "true",
-            false: "false"
-        },
-        lesson: {
-            success: "passed",
-            failed: "failed",
-            done: "completed",
-            active: "incomplete",
-            viewed: "browsed",
-            unseen: "not attempted"
-        },
-        exit: {
-            timeout: "time-out",
-            save: "suspend",
-            logout: "logout"
-        }
-    },
     nFindAPITries: 0,
     // @ts-ignore
     API: null,
@@ -103,24 +86,13 @@ const $b3d1e3300d945f09$export$6ed414b8d8bead88 = {
         if ($b3d1e3300d945f09$export$6ed414b8d8bead88.API == null && win.opener != null) // @ts-ignore
         $b3d1e3300d945f09$export$6ed414b8d8bead88.API = $b3d1e3300d945f09$export$6ed414b8d8bead88.scanForAPI(win.opener);
     },
-    isAvailable: ()=>{
-        const isReady = $b3d1e3300d945f09$export$6ed414b8d8bead88.init && !$b3d1e3300d945f09$export$6ed414b8d8bead88.finished;
-        if (!isReady || !$b3d1e3300d945f09$export$6ed414b8d8bead88.API) return {
-            error: true,
-            message: "Service is unavailable"
-        };
-        return {
-            error: false,
-            API: $b3d1e3300d945f09$export$6ed414b8d8bead88.API
-        };
-    },
     getError: (printError)=>{
         printError = printError === undefined || printError === null ? true : printError;
         const res = $b3d1e3300d945f09$export$6ed414b8d8bead88.isAvailable();
         if (res.error) return res;
-        const errorId = res.API.GetLastError();
-        const errorMsg = res.API.GetErrorString(errorId);
-        const errorStack = res.API.GetDiagnostic(errorId);
+        const errorId = res.API.LMSGetLastError();
+        const errorMsg = res.API.LMSGetErrorString(errorId);
+        const errorStack = res.API.LMSGetDiagnostic(errorId);
         const apiError = {
             id: errorId,
             message: errorMsg,
@@ -132,144 +104,100 @@ const $b3d1e3300d945f09$export$6ed414b8d8bead88 = {
             data: apiError
         };
     },
+    commit: ()=>{
+        if (!$b3d1e3300d945f09$export$6ed414b8d8bead88.API) throw "MISSING_SCORM_API";
+        $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.session_time", $b3d1e3300d945f09$export$6ed414b8d8bead88._time.getSessionTime());
+        console.log("API.Commit()");
+        if ($b3d1e3300d945f09$export$6ed414b8d8bead88.API.Commit("") === "false") throw "ERROR_COMMIT_SCORM_API";
+    },
+    exit: ()=>{
+        $b3d1e3300d945f09$export$6ed414b8d8bead88.commit();
+    },
+    initialize: ()=>{
+        if (!$b3d1e3300d945f09$export$6ed414b8d8bead88.API) throw "MISSING_SCORM_API";
+        console.log("API.Initialize()");
+        if ($b3d1e3300d945f09$export$6ed414b8d8bead88.API.Initialize("") === "false") throw "ERROR_INIT_SCORM_API";
+    },
+    // { m: 1, l: 1, s?: 3 }
+    updateLocation: (location, progressPercentage)=>{
+        $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.location", JSON.stringify({
+            v: 1,
+            ...location
+        }));
+        // Update progress
+        progressPercentage = progressPercentage || 0;
+        $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.progress_measure", progressPercentage);
+        $b3d1e3300d945f09$export$6ed414b8d8bead88.commit();
+    },
+    getLocation: ()=>{
+        // {m:1, l:1, s?:3} || {} || null
+        try {
+            return JSON.parse($b3d1e3300d945f09$export$6ed414b8d8bead88.getValue("cmi.location"));
+        } catch (e) {
+            return {};
+        }
+    },
     start: ()=>{
+        $b3d1e3300d945f09$export$6ed414b8d8bead88._time.startTime = new Date();
         $b3d1e3300d945f09$export$6ed414b8d8bead88.getAPI(window);
-        $b3d1e3300d945f09$export$6ed414b8d8bead88._time.start = new Date();
+        if (!$b3d1e3300d945f09$export$6ed414b8d8bead88.API) throw "MISSING_SCORM_API";
         $b3d1e3300d945f09$export$6ed414b8d8bead88.init = true;
-        $b3d1e3300d945f09$export$6ed414b8d8bead88?.API?.Initialize("");
+        $b3d1e3300d945f09$export$6ed414b8d8bead88.initialize();
+        const completionStatus = $b3d1e3300d945f09$export$6ed414b8d8bead88.getValue("cmi.completion_status");
+        const sessionTime = $b3d1e3300d945f09$export$6ed414b8d8bead88.getValue("cmi.session_time");
+        const totalTime = $b3d1e3300d945f09$export$6ed414b8d8bead88.getValue("cmi.total_time");
+        console.log(sessionTime);
+        console.log(totalTime);
+        if (completionStatus === "unknown") {
+            $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.completion_status", "incomplete");
+            $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.suspend_data", "{}");
+        } else {
+            $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.score.scaled", $b3d1e3300d945f09$export$6ed414b8d8bead88.getValue("cmi.score.scaled"));
+            $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.score.raw", $b3d1e3300d945f09$export$6ed414b8d8bead88.getValue("cmi.score.raw"));
+            $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.success_status", $b3d1e3300d945f09$export$6ed414b8d8bead88.getValue("cmi.success_status"));
+            $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.progress_measure", $b3d1e3300d945f09$export$6ed414b8d8bead88.getValue("cmi.progress_measure"));
+            $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.completion_status", $b3d1e3300d945f09$export$6ed414b8d8bead88.getValue("cmi.completion_status"));
+        }
+        $b3d1e3300d945f09$export$6ed414b8d8bead88.commit();
         return {
             error: false
         };
     },
-    save: ()=>{
-        const res = $b3d1e3300d945f09$export$6ed414b8d8bead88.isAvailable();
-        if (res.error) return res;
-        const resSave = res.API.Commit("");
-        if (resSave === $b3d1e3300d945f09$export$6ed414b8d8bead88.STATUSES.update.false) return {
-            error: true,
-            message: "SCORM service failed to save",
-            data: $b3d1e3300d945f09$export$6ed414b8d8bead88.getError()
-        };
-        return {
-            error: false
-        };
-    },
-    stop: ()=>{
-        const res = $b3d1e3300d945f09$export$6ed414b8d8bead88.isAvailable();
-        if (res.error) return res;
-        const saveRes = $b3d1e3300d945f09$export$6ed414b8d8bead88.save();
-        if (saveRes.error) return saveRes;
-        const resFinish = res.API.Terminate("");
-        if (resFinish === $b3d1e3300d945f09$export$6ed414b8d8bead88.STATUSES.update.false) return {
-            error: true,
-            message: "SCORM service failed to save",
-            data: $b3d1e3300d945f09$export$6ed414b8d8bead88.getError()
-        };
-        $b3d1e3300d945f09$export$6ed414b8d8bead88.finished = true;
-        $b3d1e3300d945f09$export$6ed414b8d8bead88.save();
-        console.log("terminating");
-        res.API.Commit();
-        return {
-            error: false
-        };
+    finish: ()=>{
+        $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.score.min", 0);
+        $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.score.max", 100);
+        $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.score.scaled", 1);
+        $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.score.raw", 100);
+        $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.success_status", "passed");
+        $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.progress_measure", 1);
+        $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.completion_status", "completed");
+        console.log("SERVICE");
+        console.log($b3d1e3300d945f09$export$6ed414b8d8bead88);
+        $b3d1e3300d945f09$export$6ed414b8d8bead88.commit();
     },
     setValue: (elem, val)=>{
-        const res = $b3d1e3300d945f09$export$6ed414b8d8bead88.isAvailable();
-        if (res.error) return res;
-        const setRes = res.API.SetValue(elem, val);
-        if (setRes === $b3d1e3300d945f09$export$6ed414b8d8bead88.STATUSES.update.false) return {
-            error: true,
-            message: `SCORM service failed to set ${elem} to ${val}`,
-            data: $b3d1e3300d945f09$export$6ed414b8d8bead88.getError(true)
-        };
+        if (!$b3d1e3300d945f09$export$6ed414b8d8bead88.API) throw "MISSING_SCORM_API";
+        console.log("API.SetValue", elem, val);
+        $b3d1e3300d945f09$export$6ed414b8d8bead88.API.SetValue(elem, val);
+        // if (service.API.SetValue(elem, val) === 'false') {
+        //   throw {
+        //     message: `SCORM service failed to set ${elem} to ${val}`,
+        //     data: service.getError(true),
+        //   };
+        // }
         return {
             error: false
         };
     },
     getValue: (elem)=>{
-        const res = $b3d1e3300d945f09$export$6ed414b8d8bead88.isAvailable();
-        if (res.error) return res;
-        const getRes = res.API.GetValue(elem);
-        console.log("GET RES");
-        console.log(getRes);
-        if (getRes === $b3d1e3300d945f09$export$6ed414b8d8bead88.STATUSES.update.false) return {
-            error: true,
+        if (!$b3d1e3300d945f09$export$6ed414b8d8bead88.API) throw "MISSING_SCORM_API";
+        const getRes = $b3d1e3300d945f09$export$6ed414b8d8bead88.API.GetValue(elem);
+        if (getRes === "false") throw {
             message: `SCORM service failed to get ${elem}`,
             data: $b3d1e3300d945f09$export$6ed414b8d8bead88.getError(true)
         };
-        return {
-            error: false
-        };
-    },
-    getProgress: ()=>{
-        const res = $b3d1e3300d945f09$export$6ed414b8d8bead88.isAvailable();
-        if (res.error) return res;
-        const getRes = res.API.GetValue("cmi.progress_measure");
-        const numberRes = parseFloat(getRes);
-        if (numberRes > 0) return numberRes;
-        else return 0;
-    },
-    updateStatus: (status)=>{
-        const res = $b3d1e3300d945f09$export$6ed414b8d8bead88.isAvailable();
-        if (res.error) return res;
-        if (!$b3d1e3300d945f09$var$hasProp($b3d1e3300d945f09$export$6ed414b8d8bead88.STATUSES.lesson, status)) {
-            const validStatuses = Object.keys($b3d1e3300d945f09$export$6ed414b8d8bead88.STATUSES.lesson).join(", ");
-            const msg = `Invalid lesson status: ${status}. Must be one of: ${validStatuses}`;
-            console.error(msg);
-            return {
-                error: true,
-                message: msg
-            };
-        }
-        const lessonStatus = $b3d1e3300d945f09$export$6ed414b8d8bead88.STATUSES.lesson[status];
-        const setRes = $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.completion_status", lessonStatus);
-        if (setRes.error) return setRes;
-        return {
-            error: false
-        };
-    },
-    exit: ()=>{
-        const res = $b3d1e3300d945f09$export$6ed414b8d8bead88.isAvailable();
-        if (res.error) return res;
-        $b3d1e3300d945f09$export$6ed414b8d8bead88._time.end = new Date();
-        if (!$b3d1e3300d945f09$export$6ed414b8d8bead88._time.start) return {
-            error: true,
-            message: "Service was never started"
-        };
-        const totalTime = $b3d1e3300d945f09$export$6ed414b8d8bead88._time.end.getTime() - $b3d1e3300d945f09$export$6ed414b8d8bead88._time.start.getTime();
-        const endRes = $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.session_time", $b3d1e3300d945f09$export$6ed414b8d8bead88._time.convert(totalTime));
-        if (endRes.error) return endRes;
-        const exitRes = $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.core.exit", $b3d1e3300d945f09$export$6ed414b8d8bead88.STATUSES.exit.save);
-        if (exitRes.error) return exitRes;
-        return $b3d1e3300d945f09$export$6ed414b8d8bead88.stop();
-    },
-    updateProgress: (percentageCompleted)=>{
-        console.log("new percentage");
-        console.log(percentageCompleted);
-        console.log("old percentage");
-        console.log($b3d1e3300d945f09$export$6ed414b8d8bead88.getProgress());
-        const oldRes = $b3d1e3300d945f09$export$6ed414b8d8bead88.getProgress();
-        if (percentageCompleted > oldRes) {
-            console.log("higher?");
-            // service.courseProgress = percentageCompleted;
-            $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.progress_measure", percentageCompleted);
-        }
-        console.log(percentageCompleted);
-        $b3d1e3300d945f09$export$6ed414b8d8bead88.save();
-    },
-    finish: ()=>{
-        console.log("DONE");
-        // SCORM 2004
-        // service.setValue('cmi.progress_measure', service.getProgress);
-        $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.score.raw", 90.0);
-        $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.success_status", "passed");
-        // SCORM 1.2 (status is handled separately, but scores will conflict, so only update 1)
-        $b3d1e3300d945f09$export$6ed414b8d8bead88.updateStatus("success");
-        // service.setValue('cmi.core.score.raw', 87.0);
-        $b3d1e3300d945f09$export$6ed414b8d8bead88.save();
-        console.log("SERVICE:");
-        console.log($b3d1e3300d945f09$export$6ed414b8d8bead88);
-        $b3d1e3300d945f09$export$6ed414b8d8bead88.exit();
+        console.log("API.GetValue", elem, getRes);
+        return getRes;
     }
 };
 var $b3d1e3300d945f09$export$2e2bcd8739ae039 = {
