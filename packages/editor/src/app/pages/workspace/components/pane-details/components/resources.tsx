@@ -23,6 +23,7 @@ export const Resources = () => {
     sourceExt: '',
     sourceFilename: '',
     size: 0,
+    description: '',
   };
   const [selectedResource, setSelectedResource] =
     useState<ResourceItem>(newResource);
