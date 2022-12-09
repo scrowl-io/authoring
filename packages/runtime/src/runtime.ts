@@ -134,6 +134,8 @@ export const service: RUNTIME_SERVICE = {
 
     service.setValue('cmi.session_time', service._time.getSessionTime());
 
+    service.API.Commit('');
+
     console.log('API.Commit()');
     if (service.API.Commit('') === 'false') {
       throw 'ERROR_COMMIT_SCORM_API';
@@ -182,12 +184,10 @@ export const service: RUNTIME_SERVICE = {
     service.initialize();
 
     const completionStatus = service.getValue('cmi.completion_status');
-    const sessionTime = service.getValue('cmi.session_time');
-    const totalTime = service.getValue('cmi.total_time');
-    console.log(sessionTime);
-    console.log(totalTime);
+
     if (completionStatus === 'unknown') {
       service.setValue('cmi.completion_status', 'incomplete');
+      service.setValue('cmi.success_status', 'unknown');
       service.setValue('cmi.suspend_data', '{}');
     } else {
       service.setValue(
@@ -209,6 +209,9 @@ export const service: RUNTIME_SERVICE = {
       );
     }
 
+    // until we have things hooked up to exit buttons/nav, set exit to 'suspend' as part of start() so that status persists whether the user finishes or exits
+    service.setValue('cmi.exit', 'suspend');
+
     service.commit();
 
     return {
@@ -223,9 +226,11 @@ export const service: RUNTIME_SERVICE = {
     service.setValue('cmi.success_status', 'passed');
     service.setValue('cmi.progress_measure', 1);
     service.setValue('cmi.completion_status', 'completed');
+
     console.log('SERVICE');
     console.log(service);
     service.commit();
+    service.API?.Terminate('');
   },
   setValue: (elem, val) => {
     if (!service.API) {

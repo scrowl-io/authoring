@@ -74,9 +74,9 @@ const $defce2f29876acb7$export$6ed414b8d8bead88 = {
         printError = printError === undefined || printError === null ? true : printError;
         const res = $defce2f29876acb7$export$6ed414b8d8bead88.isAvailable();
         if (res.error) return res;
-        const errorId = res.API.LMSGetLastError();
-        const errorMsg = res.API.LMSGetErrorString(errorId);
-        const errorStack = res.API.LMSGetDiagnostic(errorId);
+        const errorId = res.API.GetLastError();
+        const errorMsg = res.API.GetErrorString(errorId);
+        const errorStack = res.API.GetDiagnostic(errorId);
         const apiError = {
             id: errorId,
             message: errorMsg,
@@ -91,6 +91,7 @@ const $defce2f29876acb7$export$6ed414b8d8bead88 = {
     commit: ()=>{
         if (!$defce2f29876acb7$export$6ed414b8d8bead88.API) throw "MISSING_SCORM_API";
         $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.session_time", $defce2f29876acb7$export$6ed414b8d8bead88._time.getSessionTime());
+        $defce2f29876acb7$export$6ed414b8d8bead88.API.Commit("");
         console.log("API.Commit()");
         if ($defce2f29876acb7$export$6ed414b8d8bead88.API.Commit("") === "false") throw "ERROR_COMMIT_SCORM_API";
     },
@@ -155,9 +156,11 @@ const $defce2f29876acb7$export$6ed414b8d8bead88 = {
         $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.success_status", "passed");
         $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.progress_measure", 1);
         $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.completion_status", "completed");
+        $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.exit", "suspend");
         console.log("SERVICE");
         console.log($defce2f29876acb7$export$6ed414b8d8bead88);
         $defce2f29876acb7$export$6ed414b8d8bead88.commit();
+        $defce2f29876acb7$export$6ed414b8d8bead88.API?.Terminate("");
     },
     setValue: (elem, val)=>{
         if (!$defce2f29876acb7$export$6ed414b8d8bead88.API) throw "MISSING_SCORM_API";

@@ -90,9 +90,9 @@ const $b3d1e3300d945f09$export$6ed414b8d8bead88 = {
         printError = printError === undefined || printError === null ? true : printError;
         const res = $b3d1e3300d945f09$export$6ed414b8d8bead88.isAvailable();
         if (res.error) return res;
-        const errorId = res.API.LMSGetLastError();
-        const errorMsg = res.API.LMSGetErrorString(errorId);
-        const errorStack = res.API.LMSGetDiagnostic(errorId);
+        const errorId = res.API.GetLastError();
+        const errorMsg = res.API.GetErrorString(errorId);
+        const errorStack = res.API.GetDiagnostic(errorId);
         const apiError = {
             id: errorId,
             message: errorMsg,
@@ -107,6 +107,7 @@ const $b3d1e3300d945f09$export$6ed414b8d8bead88 = {
     commit: ()=>{
         if (!$b3d1e3300d945f09$export$6ed414b8d8bead88.API) throw "MISSING_SCORM_API";
         $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.session_time", $b3d1e3300d945f09$export$6ed414b8d8bead88._time.getSessionTime());
+        $b3d1e3300d945f09$export$6ed414b8d8bead88.API.Commit("");
         console.log("API.Commit()");
         if ($b3d1e3300d945f09$export$6ed414b8d8bead88.API.Commit("") === "false") throw "ERROR_COMMIT_SCORM_API";
     },
@@ -171,9 +172,11 @@ const $b3d1e3300d945f09$export$6ed414b8d8bead88 = {
         $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.success_status", "passed");
         $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.progress_measure", 1);
         $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.completion_status", "completed");
+        $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.exit", "suspend");
         console.log("SERVICE");
         console.log($b3d1e3300d945f09$export$6ed414b8d8bead88);
         $b3d1e3300d945f09$export$6ed414b8d8bead88.commit();
+        $b3d1e3300d945f09$export$6ed414b8d8bead88.API?.Terminate("");
     },
     setValue: (elem, val)=>{
         if (!$b3d1e3300d945f09$export$6ed414b8d8bead88.API) throw "MISSING_SCORM_API";
