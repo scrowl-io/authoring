@@ -88,10 +88,8 @@ export const AssetDrawerElement = (
     setFilterAssets(filteredList);
   };
 
-  const handleFilterInput = (ev: React.FormEvent<HTMLInputElement>) => {
-    const val = ev.currentTarget.value;
-
-    setFilterInput(val);
+  const handleFilterInput = (filterValue: string) => {
+    setFilterInput(filterValue);
   };
 
   const handleSortOrder = (ev: React.MouseEvent) => {
@@ -228,10 +226,7 @@ export const AssetDrawerElement = (
               <div className="offcanvas-body">
                 <div className="owl-offcanvas-form">
                   <div className="asset-browser-body">
-                    <AssetSearch
-                      value={filterInput}
-                      onChange={handleFilterInput}
-                    />
+                    <AssetSearch isOpen={isOpen} onSubmit={handleFilterInput} />
                     <div className="mt-2 asset-list">
                       <table className="table">
                         <thead>

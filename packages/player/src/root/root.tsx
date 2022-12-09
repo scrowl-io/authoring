@@ -71,7 +71,7 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
   return (
     <Router>
       <div id="scrowl-player" {...props}>
-        <main className="lesson-wrapper">
+        <main className="owlui-lesson-wrapper">
           <Routes>
             {pages.map((page, idx) => {
               return (

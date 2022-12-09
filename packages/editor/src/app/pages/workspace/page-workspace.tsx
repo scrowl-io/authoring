@@ -180,11 +180,7 @@ export const Page = () => {
           });
       };
 
-      if (
-        projectInteractions.isNew ||
-        projectInteractions.isDirty ||
-        projectInteractions.isUncommitted
-      ) {
+      if (projectInteractions.isUncommitted) {
         promptDiscardProject();
         return;
       }

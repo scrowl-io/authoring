@@ -101,13 +101,13 @@ export const Glossary = () => {
   };
 
   const handleSubmitGlossaryForm = (term) => {
-    setIsOpenGlossaryForm(false);
-
     if (term.id === -1) {
       Projects.addGlossaryItem(term);
     } else {
       Projects.setGlossaryItem(term);
     }
+
+    setIsOpenGlossaryForm(false);
   };
 
   return (
