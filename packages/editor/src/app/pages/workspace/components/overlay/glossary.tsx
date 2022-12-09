@@ -21,11 +21,13 @@ const GlossaryFormElement = (
     definition: false,
   };
   const [isDirty, setIsDirty] = useState(initialFormState);
-  const initialFormTerm = {
+  const initialFormValues = {
     word: '',
     definition: '',
   };
-  const [formTerm, setFormTerm] = useState(isNewTerm ? initialFormTerm : term);
+  const [formTerm, setFormTerm] = useState(
+    isNewTerm ? initialFormValues : term
+  );
   const [formRollback, setFormRollback] = useState(formTerm);
   const initialErrorState = {
     word: '',
@@ -86,7 +88,6 @@ const GlossaryFormElement = (
   };
 
   const handleSubmit = (ev: React.FormEvent) => {
-    console.log('submitting', ev);
     Elem.stopEvent(ev);
 
     const [isValid, validationUpdate] = validateForm(formTerm, true);
