@@ -1,8 +1,13 @@
 import React from 'react';
 import { Accordion } from '../../../../../components';
+import { Elem } from '../../../../../utils';
 
-export const Reporting = ({ data, onChange }) => {
+export const Reporting = ({ data, onChange, onRollback }) => {
   const { id, reportStatus, lmsIdentifier } = data;
+
+  const handleFormUpdate = () => {
+    onChange();
+  };
 
   const handleUpdateReportStatus = (ev: React.FormEvent<HTMLSelectElement>) => {
     const val = ev.currentTarget.value;
@@ -13,13 +18,25 @@ export const Reporting = ({ data, onChange }) => {
     onChange(update);
   };
 
-  const handleUpdateLmsIdentifie = (ev: React.FormEvent<HTMLInputElement>) => {
+  const handleUpdateLmsIdentifier = (ev: React.FormEvent<HTMLInputElement>) => {
     const val = ev.currentTarget.value;
     const update = {
       lmsIdentifier: id === val ? '' : val,
     };
 
     onChange(update);
+  };
+
+  const handleInputLmsIdentifier = (
+    ev: React.KeyboardEvent<HTMLInputElement>
+  ) => {
+    switch (ev.key) {
+      case 'Escape':
+        Elem.stopEvent(ev);
+        onRollback('name');
+        ev.currentTarget.blur();
+        break;
+    }
   };
 
   return (
@@ -38,6 +55,7 @@ export const Reporting = ({ data, onChange }) => {
             className="form-select form-select-sm"
             value={reportStatus}
             onChange={handleUpdateReportStatus}
+            onBlur={handleFormUpdate}
           >
             <option value="Passed/Incomplete">Passed/Incomplete</option>
           </select>
@@ -57,7 +75,9 @@ export const Reporting = ({ data, onChange }) => {
             type="text"
             className="form-control form-control-sm"
             value={lmsIdentifier}
-            onChange={handleUpdateLmsIdentifie}
+            onChange={handleUpdateLmsIdentifier}
+            onKeyDown={handleInputLmsIdentifier}
+            onBlur={handleFormUpdate}
           />
         </div>
       </div>

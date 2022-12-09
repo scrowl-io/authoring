@@ -3,7 +3,7 @@ import { AnimatePresence } from 'framer-motion';
 import '../_overlay.scss';
 import { Backdrop, Drawer } from '../../../../../components';
 import { Projects, Settings } from '../../../../../models';
-import { hasProp } from '../../../../../utils';
+import { Elem } from '../../../../../utils';
 import { CourseSettings } from './course-settings';
 import { Reporting } from './reporting';
 import { ExportOptions } from './export-options';
@@ -16,6 +16,8 @@ const PublishFormElement = (
   const animationSettings = Settings.useAnimation();
   const isAnimated = !animationSettings.reducedAnimations;
   const publishData = Projects.useScorm();
+  const [formData, setFormData] = useState(publishData);
+  const [rollbackData, setRollbackData] = useState(publishData);
   const initialErrorState = {
     name: '',
   };
@@ -38,26 +40,40 @@ const PublishFormElement = (
 
   const handleChange = (data) => {
     validateForm(data);
-    Projects.setScorm(data);
+
+    if (!data) {
+      setRollbackData(formData);
+    } else {
+      setFormData({
+        ...formData,
+        ...data,
+      });
+    }
+  };
+
+  const handleRollback = (prop: string) => {
+    const update = {};
+
+    update[prop] = rollbackData[prop];
+    setFormData({
+      ...formData,
+      ...update,
+    });
   };
 
   const handleSubmit = (ev: React.SyntheticEvent) => {
-    ev.preventDefault();
-
-    const [isValid, update] = validateForm(publishData);
-
-    Projects.setScorm(update);
-
-    if (!isValid) {
-      return;
-    }
-
+    Elem.stopEvent(ev);
+    Projects.setScorm(formData);
     onSubmit();
   };
 
   useEffect(() => {
-    setPublishErrors(initialErrorState);
-  }, [isOpen]);
+    if (isOpen) {
+      setPublishErrors(initialErrorState);
+      setFormData(publishData);
+      setRollbackData(publishData);
+    }
+  }, [isOpen, publishData]);
 
   return (
     <div ref={ref}>
@@ -91,12 +107,19 @@ const PublishFormElement = (
                 >
                   <div className="accordion">
                     <CourseSettings
-                      data={publishData}
+                      data={formData}
                       onChange={handleChange}
+                      onRollback={handleRollback}
+                      onSubmit={handleSubmit}
                       errors={publishErrors}
+                      isOpen={isOpen}
                     />
-                    <Reporting data={publishData} onChange={handleChange} />
-                    <ExportOptions data={publishData} onChange={handleChange} />
+                    <Reporting
+                      data={formData}
+                      onChange={handleChange}
+                      onRollback={handleRollback}
+                    />
+                    <ExportOptions data={formData} onChange={handleChange} />
                     <Overview />
                   </div>
                   <footer className="d-flex justify-content-end my-3">

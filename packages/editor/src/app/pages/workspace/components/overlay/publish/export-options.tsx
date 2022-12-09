@@ -4,6 +4,10 @@ import { Accordion } from '../../../../../components';
 export const ExportOptions = ({ data, onChange }) => {
   const { outputFormat, optimizeMedia } = data;
 
+  const handleFormUpdate = () => {
+    onChange();
+  };
+
   const handleUpdateOutpuFormat = (ev: React.FormEvent<HTMLSelectElement>) => {
     const val = ev.currentTarget.value;
     const update = {
@@ -40,6 +44,7 @@ export const ExportOptions = ({ data, onChange }) => {
             className="form-select form-select-sm"
             value={outputFormat}
             onChange={handleUpdateOutpuFormat}
+            onBlur={handleFormUpdate}
           >
             <option value="1.2">SCORM 1.2</option>
             <option value="2004.3" disabled>
@@ -68,6 +73,7 @@ export const ExportOptions = ({ data, onChange }) => {
             className="form-select form-select-sm"
             value={optimizeMedia}
             onChange={handleUpdateOptomizeMedia}
+            onBlur={handleFormUpdate}
           >
             <option value="low" disabled>
               Low
