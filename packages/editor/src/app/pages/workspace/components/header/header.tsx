@@ -6,7 +6,6 @@ import * as css from './_workspace-header.scss';
 import { Elem } from '../../../../utils';
 import { Projects, Settings } from '../../../../models';
 import { menu, sys } from '../../../../services';
-import { Path as startPath } from '../../../start';
 import { Logo } from '../../../../components';
 import { PublishOverlay, Confirmation } from '../overlay';
 import {
@@ -21,7 +20,7 @@ export const Header = () => {
   const activeSlide = useActiveSlide() as Projects.ProjectSlide;
   const projectMeta = projectData.meta;
   const projectNameLn = projectMeta.name ? projectMeta.name.length : 0;
-  const [projectName, setProjectName] = useState(projectMeta.name || '');
+  const [rollbackName, setRollbackName] = useState(projectMeta.name || '');
   const [projectNameSize, setProjectNameSize] = useState(
     projectNameLn - 3 < 13 ? 13 : projectNameLn - 3
   );
@@ -51,28 +50,37 @@ export const Header = () => {
       : { marginTop: { delay: animationDelay, type: 'spring', bounce: 0.52 } },
   };
 
-  const handleSetProjectName = (ev: React.FormEvent<HTMLInputElement>) => {
-    const name = ev.currentTarget.value;
-    const nameLn = name.length;
+  const handleUpdateForm = (ev: React.FocusEvent<HTMLInputElement>) => {
+    const newValue = ev.currentTarget.value;
 
-    setProjectName(name);
-    setProjectNameSize(nameLn - 3 < 13 ? 13 : nameLn - 3);
+    setRollbackName(newValue);
   };
 
-  const handleProjectInput = (ev: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleUpdateProjectName = (ev: React.FormEvent<HTMLInputElement>) => {
+    const newValue = ev.currentTarget.value;
+    const valLn = newValue.length;
+
+    setProjectNameSize(valLn - 3 < 13 ? 13 : valLn - 3);
+    Projects.setMeta({ name: newValue });
+  };
+
+  const handleInputProjectName = (
+    ev: React.KeyboardEvent<HTMLInputElement>
+  ) => {
+    const newValue = ev.currentTarget.value;
+
     switch (ev.key) {
       case 'Enter':
         ev.currentTarget.blur();
+        Projects.setMeta({ name: newValue });
         break;
       case 'Escape':
-        setProjectName(projectMeta.name || '');
+        Elem.stopEvent(ev);
+        ev.currentTarget.value = rollbackName;
+        Projects.setMeta({ name: rollbackName });
         ev.currentTarget.blur();
         break;
     }
-  };
-
-  const handleProjectUpdate = () => {
-    Projects.setMeta({ name: projectName });
   };
 
   const handleProjectPreview = (payload: Projects.PreviewProjectReq) => {
@@ -242,15 +250,6 @@ export const Header = () => {
   };
 
   useEffect(() => {
-    if (projectMeta.name !== projectName) {
-      const nameLn = projectMeta.name ? projectMeta.name.length : 0;
-
-      setProjectName(projectMeta.name || '');
-      setProjectNameSize(nameLn - 3 < 13 ? 13 : nameLn - 3);
-    }
-  }, [projectMeta.name]);
-
-  useEffect(() => {
     menu.API.onPublish(() => {
       setIsOpenPublish(true);
     });
@@ -290,10 +289,10 @@ export const Header = () => {
             >
               <input
                 className="form-control"
-                value={projectName}
-                onChange={handleSetProjectName}
-                onBlur={handleProjectUpdate}
-                onKeyDown={handleProjectInput}
+                value={projectMeta.name}
+                onChange={handleUpdateProjectName}
+                onKeyDown={handleInputProjectName}
+                onBlur={handleUpdateForm}
                 placeholder="Untitled Project"
                 size={projectNameSize}
               />
