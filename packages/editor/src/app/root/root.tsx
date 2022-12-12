@@ -12,6 +12,7 @@ import { rq, sys } from '../services';
 import * as pages from '../pages';
 import * as models from '../models';
 import { menu, events } from '../services';
+import { Elem } from '../utils';
 import { ProjectBrowser } from '../components';
 
 const Loader = () => {
@@ -37,7 +38,9 @@ const PageRoutes = () => {
   });
 
   useEffect(() => {
-    const closeListener = () => {
+    const closeListener = (ev: React.FormEvent) => {
+      Elem.stopEvent(ev);
+
       const closeProject = () => {
         models.Projects.resetState();
         pages.Workspace.resetWorkspace();

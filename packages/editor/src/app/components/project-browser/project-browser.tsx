@@ -6,9 +6,9 @@ import { FormattedProjectFile } from './project-browser.types';
 import { Modal, filter } from '../';
 import { Projects } from '../../models';
 import { Workspace } from '../../pages';
-import { sys } from '../../services';
+import { sys, events } from '../../services';
 import { ProjectSearch } from './';
-import { List } from '../../utils';
+import { List, Elem } from '../../utils';
 
 const ProjectBrowserElement = ({ isOpen, ...props }, ref) => {
   const navigate = useNavigate();
@@ -30,6 +30,7 @@ const ProjectBrowserElement = ({ isOpen, ...props }, ref) => {
   const saveStatus = Projects.useInteractions();
   const projectData = Projects.useData();
   const assets = Projects.useAssets();
+  const formRef = useRef<HTMLFormElement>(null);
 
   const sortList = () => {
     let sortedList: Array<FormattedProjectFile> = projects.slice();
@@ -92,73 +93,6 @@ const ProjectBrowserElement = ({ isOpen, ...props }, ref) => {
     Projects.closeProjectBrowser();
   };
 
-  const handleSubmit = () => {
-    if (!selectedProject) {
-      return;
-    }
-
-    const open = () => {
-      const project = selectedProject.project.versions[0];
-      Workspace.openProject(project);
-
-      if (location.pathname !== Workspace.Path) {
-        navigate(Workspace.Path);
-      }
-    };
-
-    const promptDiscardProject = () => {
-      sys
-        .messageDialog({
-          type: 'question',
-          title: 'Confirm',
-          message: 'Open Project Without Saving?',
-          detail: 'Your changes are not saved.',
-          buttons: ['Save and Close', 'Discard and Open', 'Cancel'],
-        })
-        .then((res) => {
-          if (res.error) {
-            console.error(res);
-            return;
-          }
-
-          switch (res.data.response) {
-            case 0:
-              Projects.save({
-                data: projectData,
-                assets,
-              }).then((saveRes) => {
-                if (saveRes.data && saveRes.data.action) {
-                  switch (saveRes.data.action) {
-                    case 'prompt-project-name':
-                      Workspace.openPromptProjectName();
-                      break;
-                  }
-                  return;
-                } else if (saveRes.error) {
-                  sys.messageDialog({
-                    message: res.message,
-                  });
-                  return;
-                }
-
-                open();
-              });
-              break;
-            case 1:
-              open();
-              break;
-          }
-        });
-    };
-
-    if (location.pathname === Workspace.Path && saveStatus.isUncommitted) {
-      promptDiscardProject();
-      return;
-    }
-
-    open();
-  };
-
   const handleSelectProject = (project: Projects.ProjectFile, idx: number) => {
     setSelectedProject({
       idx,
@@ -199,7 +133,100 @@ const ProjectBrowserElement = ({ isOpen, ...props }, ref) => {
     if (!isOpen) {
       setSelectedProject(null);
     }
-  }, [isOpen]);
+
+    const open = () => {
+      if (!selectedProject) {
+        return;
+      }
+
+      const project = selectedProject.project.versions[0];
+      Workspace.openProject(project);
+
+      if (location.pathname !== Workspace.Path) {
+        navigate(Workspace.Path);
+      }
+    };
+
+    const handleSubmit = (ev: SubmitEvent) => {
+      Elem.stopEvent(ev);
+
+      if (!selectedProject) {
+        return;
+      }
+
+      const promptDiscardProject = () => {
+        sys
+          .messageDialog({
+            type: 'question',
+            title: 'Confirm',
+            message: 'Open Project Without Saving?',
+            detail: 'Your changes are not saved.',
+            buttons: ['Save and Close', 'Discard and Open', 'Cancel'],
+          })
+          .then((res) => {
+            if (res.error) {
+              console.error(res);
+              return;
+            }
+
+            switch (res.data.response) {
+              case 0:
+                Projects.save({
+                  data: projectData,
+                  assets,
+                }).then((saveRes) => {
+                  if (saveRes.data && saveRes.data.action) {
+                    switch (saveRes.data.action) {
+                      case 'prompt-project-name':
+                        Workspace.openPromptProjectName({
+                          action: events.project.EVENTS.open,
+                        });
+                        break;
+                    }
+                    return;
+                  } else if (saveRes.error) {
+                    sys.messageDialog({
+                      message: res.message,
+                    });
+                    return;
+                  }
+
+                  open();
+                });
+                break;
+              case 1:
+                open();
+                break;
+            }
+          });
+      };
+
+      if (location.pathname === Workspace.Path && saveStatus.isUncommitted) {
+        promptDiscardProject();
+        return;
+      }
+
+      open();
+    };
+
+    if (formRef.current) {
+      formRef.current.addEventListener('submit', handleSubmit);
+      events.project.onOpen(open);
+    }
+
+    return () => {
+      if (formRef.current) {
+        formRef.current.removeEventListener('submit', handleSubmit);
+        events.project.offOpen(open);
+      }
+    };
+  }, [
+    isOpen,
+    formRef.current,
+    saveStatus.isUncommitted,
+    location.pathname,
+    selectedProject,
+  ]);
 
   useEffect(() => {
     searchList();
@@ -214,96 +241,100 @@ const ProjectBrowserElement = ({ isOpen, ...props }, ref) => {
         onClose={handleClose}
         modalSize="lg"
       >
-        <div className="project-browser-container">
-          <ProjectSearch value={filterInput} onChange={handleFilterInput} />
-          <div className="project-browser-content">
-            <table className="table">
-              <thead>
-                <tr onClick={handleSortOrder}>
-                  <th
-                    scope="col"
-                    data-sort-field="project.name"
-                    className="cell-name"
-                  >
-                    Name
-                    {sortField === 'project.name' && (
-                      <ui.Icon className="sort-indicator" icon={sortIcon} />
-                    )}
-                  </th>
-                  <th
-                    scope="col"
-                    data-sort-field="createdAt"
-                    className="cell-created-at"
-                  >
-                    Created
-                    {sortField === 'createdAt' && (
-                      <ui.Icon className="sort-indicator" icon={sortIcon} />
-                    )}
-                  </th>
-                  <th
-                    scope="col"
-                    data-sort-field="updatedAt"
-                    className="cell-updated-at"
-                  >
-                    Last Modified
-                    {sortField === 'updatedAt' && (
-                      <ui.Icon className="sort-indicator" icon={sortIcon} />
-                    )}
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredProjects.length ? (
-                  filteredProjects.map(
-                    (project: FormattedProjectFile, idx: number) => {
-                      let classes = 'project-row';
+        <form ref={formRef}>
+          <div className="project-browser-container">
+            <ProjectSearch value={filterInput} onChange={handleFilterInput} />
+            <div className="project-browser-content">
+              <table className="table">
+                <thead>
+                  <tr onClick={handleSortOrder}>
+                    <th
+                      scope="col"
+                      data-sort-field="project.name"
+                      className="cell-name"
+                    >
+                      Name
+                      {sortField === 'project.name' && (
+                        <ui.Icon className="sort-indicator" icon={sortIcon} />
+                      )}
+                    </th>
+                    <th
+                      scope="col"
+                      data-sort-field="createdAt"
+                      className="cell-created-at"
+                    >
+                      Created
+                      {sortField === 'createdAt' && (
+                        <ui.Icon className="sort-indicator" icon={sortIcon} />
+                      )}
+                    </th>
+                    <th
+                      scope="col"
+                      data-sort-field="updatedAt"
+                      className="cell-updated-at"
+                    >
+                      Last Modified
+                      {sortField === 'updatedAt' && (
+                        <ui.Icon className="sort-indicator" icon={sortIcon} />
+                      )}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredProjects.length ? (
+                    filteredProjects.map(
+                      (project: FormattedProjectFile, idx: number) => {
+                        let classes = 'project-row';
 
-                      if (idx === selectedProject?.idx) {
-                        classes += ' active';
+                        if (idx === selectedProject?.idx) {
+                          classes += ' active';
+                        }
+
+                        return (
+                          <tr
+                            key={idx}
+                            className={classes}
+                            onClick={() => {
+                              handleSelectProject(project, idx);
+                            }}
+                          >
+                            <td className="cell-name">
+                              {project.project.name}
+                            </td>
+                            <td className="cell-created-at">
+                              <filter.Date>{project.createdAt}</filter.Date>
+                            </td>
+                            <td className="cell-updated-at">
+                              <filter.Date>{project.updatedAt}</filter.Date>
+                            </td>
+                          </tr>
+                        );
                       }
-
-                      return (
-                        <tr
-                          key={idx}
-                          className={classes}
-                          onClick={() => {
-                            handleSelectProject(project, idx);
-                          }}
-                        >
-                          <td className="cell-name">{project.project.name}</td>
-                          <td className="cell-created-at">
-                            <filter.Date>{project.createdAt}</filter.Date>
-                          </td>
-                          <td className="cell-updated-at">
-                            <filter.Date>{project.updatedAt}</filter.Date>
-                          </td>
-                        </tr>
-                      );
-                    }
-                  )
-                ) : (
-                  <></>
-                )}
-              </tbody>
-            </table>
-            {filteredProjects.length ? (
-              <></>
-            ) : (
-              <div style={{ textAlign: 'center' }} className="mt-3">
-                No Projects
-              </div>
-            )}
+                    )
+                  ) : (
+                    <></>
+                  )}
+                </tbody>
+              </table>
+              {filteredProjects.length ? (
+                <></>
+              ) : (
+                <div style={{ textAlign: 'center' }} className="mt-3">
+                  No Projects
+                </div>
+              )}
+            </div>
           </div>
-        </div>
 
-        <footer className="d-flex justify-content-end">
-          <ui.Button variant="link" onClick={handleClose}>
-            Cancel
-          </ui.Button>
-          <ui.Button variant="primary" onClick={handleSubmit}>
-            Open
-          </ui.Button>
-        </footer>
+          <footer className="d-flex justify-content-end">
+            <ui.Button variant="link" onClick={handleClose}>
+              Cancel
+            </ui.Button>
+            <ui.Button variant="primary" type="submit">
+              Open
+            </ui.Button>
+          </footer>
+        </form>
       </Modal>
     </div>
   );

@@ -86,7 +86,7 @@ export const Modal = ({
                   )}
                   <div className="owlui-offcanvas-body">
                     <Error>
-                      <form className="owlui-offcanvas-form">{children}</form>
+                      <div className="owlui-offcanvas-form">{children}</div>
                     </Error>
                   </div>
                 </div>

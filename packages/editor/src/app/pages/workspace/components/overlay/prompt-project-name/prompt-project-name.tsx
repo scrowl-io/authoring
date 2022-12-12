@@ -4,6 +4,7 @@ import * as css from './_prompt-project-name.scss';
 import { Modal } from '../../../../../components';
 import { Projects } from '../../../../../models';
 import { sys, events } from '../../../../../services';
+import { Elem } from '../../../../../utils';
 import {
   usePromptProjectName,
   closePromptProjectName,
@@ -52,7 +53,9 @@ const PromptProjectNameElement = ({ isOpen, ...props }, ref) => {
   }, [isOpen, inputRef]);
 
   useEffect(() => {
-    const handleSubmit = () => {
+    const handleSubmit = (ev: SubmitEvent) => {
+      Elem.stopEvent(ev);
+
       Projects.save({ data: projectData, assets }).then((res) => {
         if (res.error) {
           if (!res.data.action) {
@@ -60,20 +63,22 @@ const PromptProjectNameElement = ({ isOpen, ...props }, ref) => {
               message: res.message,
             });
           }
-
-          if (postEvent) {
-            switch (postEvent.action) {
-              case events.project.EVENTS.close:
-                events.project.close();
-                break;
-            }
-          }
           return;
         }
 
         // notification - project saved correctly
-        console.log('prompt saved project', res);
         closePromptProjectName();
+
+        if (postEvent) {
+          switch (postEvent.action) {
+            case events.project.EVENTS.close:
+              events.project.close();
+              break;
+            case events.project.EVENTS.open:
+              events.project.open();
+              break;
+          }
+        }
       });
     };
 
