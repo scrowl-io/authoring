@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { ButtonGroup, Dropdown, Navbar, Nav } from 'react-bootstrap';
 import { motion } from 'framer-motion';
 import { ui } from '@scrowl/ui';
@@ -19,11 +19,9 @@ export const Header = () => {
   const assets = Projects.useAssets();
   const activeSlide = useActiveSlide() as Projects.ProjectSlide;
   const projectMeta = projectData.meta;
-  const projectNameLn = projectMeta.name ? projectMeta.name.length : 0;
+  const projectNameRef = useRef<HTMLSpanElement>(null);
+  const projectNameInputRef = useRef<HTMLInputElement>(null);
   const [rollbackName, setRollbackName] = useState(projectMeta.name || '');
-  const [projectNameSize, setProjectNameSize] = useState(
-    projectNameLn - 3 < 13 ? 13 : projectNameLn - 3
-  );
   const [isOpenPublish, setIsOpenPublish] = useState(false);
   const [isOpenConfirmation, setIsOpenConfirmation] = useState(false);
   const previewMode = Settings.usePreviewMode();
@@ -58,9 +56,7 @@ export const Header = () => {
 
   const handleUpdateProjectName = (ev: React.FormEvent<HTMLInputElement>) => {
     const newValue = ev.currentTarget.value;
-    const valLn = newValue.length;
 
-    setProjectNameSize(valLn - 3 < 13 ? 13 : valLn - 3);
     Projects.setMeta({ name: newValue });
   };
 
@@ -250,6 +246,18 @@ export const Header = () => {
   };
 
   useEffect(() => {
+    if (projectNameRef.current && projectNameInputRef.current) {
+      let newWidth = projectNameRef.current.offsetWidth + 6;
+
+      if (!projectMeta.name || !projectMeta.name.length || newWidth < 200) {
+        newWidth = 200;
+      }
+
+      projectNameInputRef.current.style.width = `${newWidth}px`;
+    }
+  }, [projectNameRef.current, projectNameInputRef.current, projectMeta.name]);
+
+  useEffect(() => {
     menu.API.onPublish(() => {
       setIsOpenPublish(true);
     });
@@ -287,14 +295,17 @@ export const Header = () => {
               animate={motionOptsProjectName.animate}
               transition={motionOptsProjectName.transition}
             >
+              <span ref={projectNameRef}>
+                {projectMeta.name && projectMeta.name.replace(/ /g, '\u00A0')}
+              </span>
               <input
+                ref={projectNameInputRef}
                 className="form-control"
                 value={projectMeta.name}
                 onChange={handleUpdateProjectName}
                 onKeyDown={handleInputProjectName}
                 onBlur={handleUpdateForm}
                 placeholder="Untitled Project"
-                size={projectNameSize}
               />
             </motion.div>
           </div>
