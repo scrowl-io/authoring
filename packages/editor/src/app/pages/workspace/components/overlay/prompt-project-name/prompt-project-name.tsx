@@ -3,17 +3,20 @@ import { ui } from '@scrowl/ui';
 import * as css from './_prompt-project-name.scss';
 import { Modal } from '../../../../../components';
 import { Projects } from '../../../../../models';
-import { sys } from '../../../../../services';
+import { sys, events } from '../../../../../services';
 import {
   usePromptProjectName,
   closePromptProjectName,
+  usePromptProjectNamePostEvent,
 } from '../../../page-workspace-hooks';
 
 const PromptProjectNameElement = ({ isOpen, ...props }, ref) => {
   const title = 'Saving Project';
   const projectData = Projects.useData();
   const assets = Projects.useAssets();
+  const postEvent = usePromptProjectNamePostEvent();
   const inputRef = useRef<HTMLInputElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
 
   const handleSetProjectName = (ev: React.FormEvent<HTMLInputElement>) => {
     const name = ev.currentTarget.value;
@@ -25,7 +28,6 @@ const PromptProjectNameElement = ({ isOpen, ...props }, ref) => {
     switch (ev.key) {
       case 'Enter':
         ev.currentTarget.blur();
-        handleSubmit();
         break;
       case 'Escape':
         ev.bubbles = false;
@@ -41,25 +43,6 @@ const PromptProjectNameElement = ({ isOpen, ...props }, ref) => {
     closePromptProjectName();
   };
 
-  const handleSubmit = () => {
-    Projects.save({ data: projectData, assets }).then((res) => {
-      if (res.error) {
-        console.error(res);
-
-        if (!res.data.action) {
-          sys.messageDialog({
-            message: res.message,
-          });
-        }
-        return;
-      }
-
-      // notification - project saved correctly
-      console.log('prompt saved project', res);
-      closePromptProjectName();
-    });
-  };
-
   useEffect(() => {
     setTimeout(() => {
       if (isOpen && inputRef.current) {
@@ -67,6 +50,43 @@ const PromptProjectNameElement = ({ isOpen, ...props }, ref) => {
       }
     }, 1); // ensure that focus is respected
   }, [isOpen, inputRef]);
+
+  useEffect(() => {
+    const handleSubmit = () => {
+      Projects.save({ data: projectData, assets }).then((res) => {
+        if (res.error) {
+          if (!res.data.action) {
+            sys.messageDialog({
+              message: res.message,
+            });
+          }
+
+          if (postEvent) {
+            switch (postEvent.action) {
+              case events.project.EVENTS.close:
+                events.project.close();
+                break;
+            }
+          }
+          return;
+        }
+
+        // notification - project saved correctly
+        console.log('prompt saved project', res);
+        closePromptProjectName();
+      });
+    };
+
+    if (formRef.current) {
+      formRef.current.addEventListener('submit', handleSubmit);
+    }
+
+    return () => {
+      if (formRef.current) {
+        formRef.current.removeEventListener('submit', handleSubmit);
+      }
+    };
+  }, [postEvent, projectData, formRef.current]);
 
   return (
     <div ref={ref}>
@@ -76,29 +96,31 @@ const PromptProjectNameElement = ({ isOpen, ...props }, ref) => {
         isOpen={isOpen}
         onClose={handleClose}
       >
-        <div className={css.promptProjectNameForm}>
-          <h2 className={css.promptProjectNameSubtitle}>
-            Please name your project
-          </h2>
+        <form ref={formRef}>
+          <div className={css.promptProjectNameForm}>
+            <h2 className={css.promptProjectNameSubtitle}>
+              Please name your project
+            </h2>
 
-          <input
-            ref={inputRef}
-            className="form-control"
-            value={projectData.meta.name}
-            onChange={handleSetProjectName}
-            onKeyDown={handleInput}
-            placeholder="Untitled Project"
-          />
-        </div>
+            <input
+              ref={inputRef}
+              className="form-control"
+              value={projectData.meta.name}
+              onChange={handleSetProjectName}
+              onKeyDown={handleInput}
+              placeholder="Untitled Project"
+            />
+          </div>
 
-        <footer className="d-flex justify-content-end">
-          <ui.Button variant="link" onClick={handleClose}>
-            Cancel
-          </ui.Button>
-          <ui.Button variant="success" onClick={handleSubmit}>
-            Save
-          </ui.Button>
-        </footer>
+          <footer className="d-flex justify-content-end">
+            <ui.Button variant="link" onClick={handleClose}>
+              Cancel
+            </ui.Button>
+            <ui.Button variant="success" type="submit">
+              Save
+            </ui.Button>
+          </footer>
+        </form>
       </Modal>
     </div>
   );

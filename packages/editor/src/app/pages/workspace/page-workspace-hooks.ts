@@ -205,14 +205,19 @@ export const usePromptProjectName = () => {
   });
 };
 
-export const openPromptProjectName = () => {
+export const usePromptProjectNamePostEvent = () => {
+  return useSelector((data: stateManager.RootState) => {
+    return data.workspace.promptProjectNamePostEvent;
+  });
+};
+
+export const openPromptProjectName = (postEvent?: unknown) => {
   if (!processor.dispatch) {
     console.warn('workspace processor not ready');
     return;
   }
 
-  const fn = state.workspace.openPromptProjectName as ActionCreatorWithoutPayload;
-  processor.dispatch(fn());
+  processor.dispatch(state.workspace.openPromptProjectName({ postEvent }));
 };
 
 export const closePromptProjectName = () => {
@@ -272,6 +277,7 @@ export default {
   useNewContent,
   resetNewContent,
   usePromptProjectName,
+  usePromptProjectNamePostEvent,
   openPromptProjectName,
   closePromptProjectName,
   usePublishProgress,

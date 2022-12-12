@@ -11,7 +11,7 @@ import { Pages, Models } from './root.types';
 import { rq, sys } from '../services';
 import * as pages from '../pages';
 import * as models from '../models';
-import { menu } from '../services';
+import { menu, events } from '../services';
 import { ProjectBrowser } from '../components';
 
 const Loader = () => {
@@ -72,7 +72,9 @@ const PageRoutes = () => {
                   if (saveRes.data && saveRes.data.action) {
                     switch (saveRes.data.action) {
                       case 'prompt-project-name':
-                        pages.Workspace.openPromptProjectName();
+                        pages.Workspace.openPromptProjectName({
+                          action: events.project.EVENTS.close,
+                        });
                         break;
                     }
                     return;
@@ -102,6 +104,7 @@ const PageRoutes = () => {
     };
 
     menu.API.onProjectClose(closeListener);
+    events.project.onClose(closeListener);
 
     models.Projects.API.onUnsavedCheck(() => {
       models.Projects.API.sendUnsavedStatus({
@@ -115,6 +118,7 @@ const PageRoutes = () => {
 
     return () => {
       menu.API.offProjectClose();
+      events.project.offClose(closeListener);
       models.Projects.API.offUnsavedCheck();
     };
   }, [saveStatus, projectData, assets]);
