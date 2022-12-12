@@ -290,15 +290,22 @@ export const upload = (ev: rq.RequestEvent, req: UploadReq) => {
       });
     }
 
+    const uploadComplete = (result) => {
+      resolve(result);
+    }
+
     const config: OpenDialogOptions = {
       title: 'Import File',
+      properties: [
+        'openFile',
+      ]
     };
 
     if (req.options.assetTypes) {
       config.filters = fs.dialog.getAllowedAssets(req.options.assetTypes);
 
       if (!config.filters.length) {
-        resolve({
+        uploadComplete({
           error: true,
           message: 'Unabled to select asset to import: asset type not supported.',
           data: {
@@ -313,12 +320,12 @@ export const upload = (ev: rq.RequestEvent, req: UploadReq) => {
 
     fs.dialog.open(ev, config).then((res) => {
       if (res.error) {
-        resolve(res);
+        uploadComplete(res);
         return;
       }
 
       if (res.data.canceled) {
-        resolve(res);
+        uploadComplete(res);
         return;
       }
 
@@ -331,7 +338,7 @@ export const upload = (ev: rq.RequestEvent, req: UploadReq) => {
 
       if (infoRes.error) {
         log.error('getting project info failed', infoRes);
-        resolve(infoRes);
+        uploadComplete(infoRes);
         return;
       }
       switch (type) {
@@ -355,7 +362,7 @@ export const upload = (ev: rq.RequestEvent, req: UploadReq) => {
           fs.asset.toWebp(res.data.filePath, dest).then((transformRes) => {
             if (transformRes.error) {
               log.error('asset conversion failed', transformRes);
-              resolve(transformRes);
+              uploadComplete(transformRes);
               return;
             }
 
@@ -390,11 +397,11 @@ export const upload = (ev: rq.RequestEvent, req: UploadReq) => {
             fs.progressWrite(dest, destWorking, sendProgressUpdateImage).then((copyRes) => {
               if (copyRes.error) {
                 log.error('asset copied failed', copyRes);
-                resolve(copyRes);
+                uploadComplete(copyRes);
                 return;
               }
 
-              resolve({
+              uploadComplete({
                 error: false,
                 data: {
                   title: name,
@@ -469,18 +476,18 @@ export const upload = (ev: rq.RequestEvent, req: UploadReq) => {
             });
 
             if (isError) {
-              resolve(errorRes);
+              uploadComplete(errorRes);
               return;
             }
 
             const statsRes = fs.fileStatsSync(res.data.filePath);
 
             if (statsRes.error) {
-              resolve(statsRes);
+              uploadComplete(statsRes);
               return;
             }
 
-            resolve({
+            uploadComplete({
               error: false,
               data: {
                 title: name,
@@ -497,7 +504,7 @@ export const upload = (ev: rq.RequestEvent, req: UploadReq) => {
       }
 
     }).catch((e) => {
-      resolve({
+      uploadComplete({
         error: true,
         message: 'Failed to import file: unexpected error',
         data: {
