@@ -1,6 +1,7 @@
 import React, { useEffect, useLayoutEffect, useRef } from 'react';
 import * as css from './_inline-inputs.scss';
 import { InlineInputTextProps } from './inline-inputs.types';
+import { Elem } from '../../utils';
 
 export const Text = ({
   isEdit,
@@ -49,8 +50,7 @@ export const Text = ({
         ev.currentTarget.blur();
         break;
       case 'Space':
-        ev.stopPropagation();
-        ev.preventDefault();
+        Elem.stopEvent(ev);
         ev.currentTarget.value += ' ';
         break;
     }
