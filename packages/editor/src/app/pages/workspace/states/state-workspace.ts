@@ -8,6 +8,7 @@ export const initialState = {
   isOpenAssetBrowser: false,
   isOpenTemplateBrowser: false,
   isOpenPromptProjectName: false,
+  promptProjectNamePostEvent: '',
   isOpenPublishProgress: false,
   contentFocus: null,
   newSlide: false,
@@ -42,11 +43,20 @@ export const config: stateManager.StateConfig = {
       state.newLesson = false;
       state.newModule = false;
     },
-    openPromptProjectName: (state) => {
+    openPromptProjectName: (state, action) => {
+      const { postEvent } = action.payload;
+
       state.isOpenPromptProjectName = true;
+
+      if (postEvent) {
+        state.promptProjectNamePostEvent = postEvent;
+      }
     },
     closePromptProjectName: (state) => {
       state.isOpenPromptProjectName = false;
+    },
+    resetPromptProjectNamePostEvent: (state) => {
+      state.promptProjectNamePostEvent = '';
     },
     openPublishProgress: (state) => {
       state.isOpenPublishProgress = true;
@@ -87,6 +97,7 @@ export const {
   resetNewContent,
   openPromptProjectName,
   closePromptProjectName,
+  resetPromptProjectNamePostEvent,
   openPublishProgress,
   closePublishProgress
 } = slice.actions;
