@@ -40,14 +40,26 @@
       transform: translate(-2px, -2px);
       box-shadow: var(--owl-box-shadow-active);
       transition: box-shadow 0.1s ease-in-out, transform 0.1s ease-in-out;
+      background-color: #fff !important;
+    }
+
+    &:hover label {
+      background: var(--bs-btn-active-bg);
+      color: var(--owl-template-browser-item-bg);
     }
 
     &.selected {
       font-weight: 600;
-      color: var(--owl-template-browser-active-color);
       border-width: 2px;
       border-color: var(--owl-template-browser-active-border-color);
-      background: var(--owl-template-browser-active-bg);
+    }
+
+    &.active {
+      background-color: white;
+    }
+
+    &.active label {
+      background: var(--bs-btn-active-bg);
     }
 
     &__bg {
