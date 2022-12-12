@@ -54,6 +54,8 @@ export const config: stateManager.StateConfig = {
     },
     closePromptProjectName: (state) => {
       state.isOpenPromptProjectName = false;
+    },
+    resetPromptProjectNamePostEvent: (state) => {
       state.promptProjectNamePostEvent = '';
     },
     openPublishProgress: (state) => {
@@ -95,6 +97,7 @@ export const {
   resetNewContent,
   openPromptProjectName,
   closePromptProjectName,
+  resetPromptProjectNamePostEvent,
   openPublishProgress,
   closePublishProgress
 } = slice.actions;

@@ -205,12 +205,6 @@ export const usePromptProjectName = () => {
   });
 };
 
-export const usePromptProjectNamePostEvent = () => {
-  return useSelector((data: stateManager.RootState) => {
-    return data.workspace.promptProjectNamePostEvent;
-  });
-};
-
 export const openPromptProjectName = (postEvent?: unknown) => {
   if (!processor.dispatch) {
     console.warn('workspace processor not ready');
@@ -227,6 +221,22 @@ export const closePromptProjectName = () => {
   }
 
   const fn = state.workspace.closePromptProjectName as ActionCreatorWithoutPayload;
+  processor.dispatch(fn());
+};
+
+export const usePromptProjectNamePostEvent = () => {
+  return useSelector((data: stateManager.RootState) => {
+    return data.workspace.promptProjectNamePostEvent;
+  });
+};
+
+export const resetPromptProjectNamePostEvent = () => {
+  if (!processor.dispatch) {
+    console.warn('workspace processor not ready');
+    return;
+  }
+
+  const fn = state.workspace.resetPromptProjectNamePostEvent as ActionCreatorWithoutPayload;
   processor.dispatch(fn());
 };
 
@@ -277,9 +287,10 @@ export default {
   useNewContent,
   resetNewContent,
   usePromptProjectName,
-  usePromptProjectNamePostEvent,
   openPromptProjectName,
   closePromptProjectName,
+  usePromptProjectNamePostEvent,
+  resetPromptProjectNamePostEvent,
   usePublishProgress,
   openPublishProgress,
   closePublishProgress,
