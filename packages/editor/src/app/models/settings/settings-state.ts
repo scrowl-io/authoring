@@ -9,7 +9,9 @@ export enum ASPECT_RATIO {
 
 export const initialState = {
   hasWelcomed: false,
+  hasPublished: false,
   lastUsedAt: '',
+  lastPublishedAt: '',
   theme: 'light',
   aspect: ASPECT_RATIO.Fit,
   reducedAnimations: false,
@@ -23,14 +25,22 @@ export const config: stateManager.StateConfig = {
   reducers: {
     setState: (state, action) => {
       utils.updateObj(state, action.payload);
-      
+
       if (action.payload.lastUsedAt) {
         state.hasWelcomed = true;
+      }
+
+      if (action.payload.lastPublishedAt) {
+        state.hasPublished = true;
       }
     },
     setLastUsedAt: (state, action) => {
       state.lastUsedAt = action.payload;
       state.hasWelcomed = true;
+    },
+    setLastPublishedAt: (state, action) => {
+      state.lastPublishedAt = action.payload;
+      state.lastPublishedAt = true;
     },
     setTheme: (state, action) => {
       state.theme = action.payload;
@@ -40,9 +50,9 @@ export const config: stateManager.StateConfig = {
     },
     setAnimation: (state, action) => {
       if (utils.hasProp(action.payload, 'reducedAnimations')) {
-        state.reducedAnimations  = action.payload.reducedAnimations;
+        state.reducedAnimations = action.payload.reducedAnimations;
       }
-      
+
       if (utils.hasProp(action.payload, 'animationDelay')) {
         state.animationDelay = action.payload.animationDelay;
       }
@@ -50,7 +60,7 @@ export const config: stateManager.StateConfig = {
     setPreviewMode: (state, action) => {
       state.previewMode = action.payload;
     },
-  }
+  },
 };
 
 export const slice = createSlice(config);
@@ -61,6 +71,7 @@ export const {
   setAspect,
   setAnimation,
   setLastUsedAt,
+  setLastPublishedAt,
   setPreviewMode,
 } = slice.actions;
 

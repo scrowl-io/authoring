@@ -565,7 +565,7 @@ export const save = (ev: rq.RequestEvent, { data, assets }: SaveReq) => {
         message: 'Unable to save project: name required',
         data: {
           action: 'prompt-project-name',
-        }
+        },
       });
       return;
     }
@@ -614,20 +614,22 @@ export const save = (ev: rq.RequestEvent, { data, assets }: SaveReq) => {
 
       const updateSettings = () => {
         return new Promise<rq.ApiResult>((resolveSettings) => {
-          setSetting(ev, 'lastUsedAt', data.meta.updatedAt).then((settingRes) => {
-            if (settingRes.error) {
-              log.error(settingRes);
+          setSetting(ev, 'lastUsedAt', data.meta.updatedAt).then(
+            (settingRes) => {
+              if (settingRes.error) {
+                log.error(settingRes);
+              }
+
+              resolveSettings({
+                error: false,
+                data: {
+                  updated: true,
+                },
+              });
             }
-  
-            resolveSettings({
-              error: false,
-              data: {
-                updated: true,
-              },
-            });
-          });
+          );
         });
-      }
+      };
 
       const handleRecentProjectsUpdate = () => {
         mu.rebuildMenu().then((updateRes) => {
@@ -635,7 +637,7 @@ export const save = (ev: rq.RequestEvent, { data, assets }: SaveReq) => {
             resolve(updateRes);
             return;
           }
-  
+
           resolve({
             error: false,
             data: {
@@ -644,7 +646,7 @@ export const save = (ev: rq.RequestEvent, { data, assets }: SaveReq) => {
             },
           });
         });
-      }
+      };
 
       writeProjectData(data).then((writeDataRes) => {
         if (writeDataRes.error) {
@@ -665,14 +667,17 @@ export const save = (ev: rq.RequestEvent, { data, assets }: SaveReq) => {
             return;
           }
 
-          fs.copy(fs.APP_PATHS.uploads, fs.joinPath(infoRes.data.folder, 'assets')).then((copyRes) => {
+          fs.copy(
+            fs.APP_PATHS.uploads,
+            fs.joinPath(infoRes.data.folder, 'assets')
+          ).then((copyRes) => {
             if (copyRes.error) {
               resolve(copyRes);
               return;
             }
 
             updateSettings().then(handleRecentProjectsUpdate);
-          })
+          });
         });
       });
     } catch (e) {
@@ -691,65 +696,113 @@ export const publish = (ev: rq.RequestEvent, data: ProjectData) => {
   return new Promise<rq.ApiResult>((resolve) => {
     log.info('publishing project');
 
-    fs.dialog.save(ev, {
-      defaultPath: fs.joinPath(fs.APP_PATHS.downloads, utils.str.toScormCase(data.meta.name)),
-      properties: ['showOverwriteConfirmation', 'createDirectory'],
-      buttonLabel: 'Publish',
-      message: 'Publish SCORM package',
-    }).then((saveRes) => {
-
-      if (saveRes.error) {
-        resolve(saveRes);
-        return;
-      }
-
-      if (saveRes.data.canceled) {
-        resolve(saveRes);
-        return;
-      }
-
-      if (!saveRes.data.filePath) {
-        const missingPathError = {
-          error: true,
-          message: 'File path required',
-          data: saveRes.data,
-        };
-        log.error(missingPathError);
-        resolve(missingPathError);
-        return;
-      }
-
-      fs.fileRemove(fs.APP_PATHS.publish).then((removeRes) => {
-        if (removeRes.error) {
-          resolve(removeRes);
+    fs.dialog
+      .save(ev, {
+        defaultPath: fs.joinPath(
+          fs.APP_PATHS.downloads,
+          utils.str.toScormCase(data.meta.name)
+        ),
+        properties: ['showOverwriteConfirmation', 'createDirectory'],
+        buttonLabel: 'Publish',
+        message: 'Publish SCORM package',
+      })
+      .then((saveRes) => {
+        if (saveRes.error) {
+          resolve(saveRes);
           return;
         }
 
-        const filepath = `${saveRes.data.filePath}.zip`;
-        const projectFileName = fs.joinPath(fs.getDirname(data.meta.filename || ''), projectMetaFilename);
-        
-        fs.fileRead(projectFileName).then((readRes) => {
-          if (readRes.error) {
-            log.error(`Failed to get project meta file: ${projectFileName}`);
-            resolve(readRes);
-            return;
-          }
+        if (saveRes.data.canceled) {
+          resolve(saveRes);
+          return;
+        }
 
-          scorm(data, readRes.data.contents, filepath, fs.APP_PATHS.publish).then(resolve);
-        });
-      }).catch((e) => {
-        const unexpectedError = {
-          error: true,
-          message: 'Failed to publish: unexpected error',
-          data: {
-            trace: e,
-          },
+        if (!saveRes.data.filePath) {
+          const missingPathError = {
+            error: true,
+            message: 'File path required',
+            data: saveRes.data,
+          };
+          log.error(missingPathError);
+          resolve(missingPathError);
+          return;
+        }
+
+        fs.fileRemove(fs.APP_PATHS.publish)
+          .then((removeRes) => {
+            if (removeRes.error) {
+              resolve(removeRes);
+              return;
+            }
+
+            const filepath = `${saveRes.data.filePath}.zip`;
+            const projectFileName = fs.joinPath(
+              fs.getDirname(data.meta.filename || ''),
+              projectMetaFilename
+            );
+
+            fs.fileRead(projectFileName).then((readRes) => {
+              if (readRes.error) {
+                log.error(
+                  `Failed to get project meta file: ${projectFileName}`
+                );
+                resolve(readRes);
+                return;
+              }
+
+              scorm(
+                data,
+                readRes.data.contents,
+                filepath,
+                fs.APP_PATHS.publish
+              ).then(resolve);
+            });
+          })
+          .catch((e) => {
+            const unexpectedError = {
+              error: true,
+              message: 'Failed to publish: unexpected error',
+              data: {
+                trace: e,
+              },
+            };
+
+            log.error(unexpectedError);
+            resolve(unexpectedError);
+          });
+
+        const now = new Date().toISOString();
+        const meta = data.meta as ProjectMeta;
+        const infoRes = getProjectInfo(meta);
+
+        if (infoRes.error) {
+          resolve(infoRes);
+          return;
+        }
+
+        meta.publishedAt = now;
+
+        const updateSettings = () => {
+          return new Promise<rq.ApiResult>((resolveSettings) => {
+            setSetting(ev, 'lastPublishedAt', data.meta.publishedAt).then(
+              (settingRes) => {
+                if (settingRes.error) {
+                  log.error(settingRes);
+                }
+
+                resolveSettings({
+                  error: false,
+                  data: {
+                    updated: true,
+                  },
+                });
+              }
+            );
+          });
         };
 
-        log.error(unexpectedError)
-        resolve(unexpectedError);
+        updateSettings();
       });
-    });
   });
 };
 

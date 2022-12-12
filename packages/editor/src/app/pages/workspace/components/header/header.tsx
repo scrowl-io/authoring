@@ -27,6 +27,7 @@ export const Header = () => {
   );
   const [isOpenPublish, setIsOpenPublish] = useState(false);
   const [isOpenConfirmation, setIsOpenConfirmation] = useState(false);
+  const hasPublished = Settings.useHasPublished();
   const previewMode = Settings.usePreviewMode();
   const animationSettings = Settings.useAnimation();
   const isAnimated = !animationSettings.reducedAnimations;
@@ -227,6 +228,10 @@ export const Header = () => {
         closePublishProgress();
 
         if (pubRes.data.canceled) {
+          return;
+        }
+
+        if (hasPublished) {
           return;
         }
 
