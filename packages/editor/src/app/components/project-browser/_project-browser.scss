@@ -8,7 +8,19 @@
   }
 
   .project-browser-content {
-    padding: 1rem 0.5rem;
+    padding: 0rem 0.5rem 1rem;
+    max-height: 50vh;
+    overflow-y: auto;
+
+    thead {
+      position: sticky;
+      top: 0;
+      background-color: #fff;
+    }
+
+    th {
+      padding-top: 1rem;
+    }
   }
 
   .cell-name {

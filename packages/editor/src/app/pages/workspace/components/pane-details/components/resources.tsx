@@ -7,7 +7,7 @@ import {
   ContextMenuResult,
 } from '../pane-details.types';
 import { Projects } from '../../../../../models';
-import { List } from '../../../../../utils';
+import { List, Elem } from '../../../../../utils';
 import { menu, sys } from '../../../../../services';
 import { AssetIcon } from '../../../../../components';
 import { ResourceOverlay } from '../../overlay';
@@ -90,8 +90,7 @@ export const Resources = () => {
     ev: React.MouseEvent,
     resource?: ResourceItem
   ) => {
-    ev.preventDefault();
-    ev.stopPropagation();
+    Elem.stopEvent(ev);
 
     const target = ev.target as HTMLElement;
 
