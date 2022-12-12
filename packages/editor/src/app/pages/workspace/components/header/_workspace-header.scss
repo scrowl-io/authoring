@@ -37,8 +37,22 @@
   margin-left: 0.5rem;
   padding-right: 0.5rem;
 
+  span {
+    visibility: hidden;
+    position: fixed;
+    min-width: 1px;
+    z-index: -1;
+    top: -1000px;
+    left: -1000px;
+    width: fit-content;
+    white-space: nowrap;
+    user-select: none;
+    pointer-events: none;
+  }
+
   &::after,
-  input {
+  input,
+  span {
     width: auto;
     min-width: 1em;
     grid-area: 1 / 2;

@@ -74,6 +74,10 @@ export const getPosition = (
 };
 
 export const stopEvent = (ev: GenericEvent) => {
+  if (!ev.stopPropagation && !ev.preventDefault) {
+    return;
+  }
+
   ev.stopPropagation();
   ev.preventDefault();
 };
