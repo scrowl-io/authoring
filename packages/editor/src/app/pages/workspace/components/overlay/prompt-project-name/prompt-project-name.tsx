@@ -9,15 +9,16 @@ import {
   usePromptProjectName,
   closePromptProjectName,
   usePromptProjectNamePostEvent,
+  resetPromptProjectNamePostEvent,
 } from '../../../page-workspace-hooks';
 
 const PromptProjectNameElement = ({ isOpen, ...props }, ref) => {
   const title = 'Saving Project';
   const projectData = Projects.useData();
   const assets = Projects.useAssets();
+  const postSuccess = useRef(false);
   const postEvent = usePromptProjectNamePostEvent();
   const inputRef = useRef<HTMLInputElement>(null);
-  const formRef = useRef<HTMLFormElement>(null);
 
   const handleSetProjectName = (ev: React.FormEvent<HTMLInputElement>) => {
     const name = ev.currentTarget.value;
@@ -31,9 +32,7 @@ const PromptProjectNameElement = ({ isOpen, ...props }, ref) => {
         ev.currentTarget.blur();
         break;
       case 'Escape':
-        ev.bubbles = false;
-        ev.stopPropagation();
-        ev.preventDefault();
+        Elem.stopEvent(ev);
         Projects.setMeta({ name: '' });
         ev.currentTarget.blur();
         break;
@@ -44,54 +43,52 @@ const PromptProjectNameElement = ({ isOpen, ...props }, ref) => {
     closePromptProjectName();
   };
 
+  const handleSubmit = (ev: React.FormEvent) => {
+    Elem.stopEvent(ev);
+
+    Projects.save({ data: projectData, assets }).then((res) => {
+      if (res.error) {
+        if (!res.data.action) {
+          sys.messageDialog({
+            message: res.message,
+          });
+        }
+        return;
+      }
+
+      postSuccess.current = true;
+      closePromptProjectName();
+    });
+  };
+
   useEffect(() => {
     setTimeout(() => {
       if (isOpen && inputRef.current) {
         inputRef.current.focus();
       }
     }, 1); // ensure that focus is respected
-  }, [isOpen, inputRef]);
 
-  useEffect(() => {
-    const handleSubmit = (ev: SubmitEvent) => {
-      Elem.stopEvent(ev);
-
-      Projects.save({ data: projectData, assets }).then((res) => {
-        if (res.error) {
-          if (!res.data.action) {
-            sys.messageDialog({
-              message: res.message,
-            });
-          }
-          return;
+    const postAction = () => {
+      if (postEvent) {
+        switch (postEvent.action) {
+          case events.project.EVENTS.close:
+            events.project.close();
+            break;
+          case events.project.EVENTS.open:
+            events.project.open();
+            break;
         }
-
-        // notification - project saved correctly
-        closePromptProjectName();
-
-        if (postEvent) {
-          switch (postEvent.action) {
-            case events.project.EVENTS.close:
-              events.project.close();
-              break;
-            case events.project.EVENTS.open:
-              events.project.open();
-              break;
-          }
-        }
-      });
-    };
-
-    if (formRef.current) {
-      formRef.current.addEventListener('submit', handleSubmit);
-    }
-
-    return () => {
-      if (formRef.current) {
-        formRef.current.removeEventListener('submit', handleSubmit);
       }
+
+      postSuccess.current = false;
+      resetPromptProjectNamePostEvent();
     };
-  }, [postEvent, projectData, formRef.current]);
+
+    if (!isOpen && postSuccess.current) {
+      setTimeout(postAction, 300);
+      // need to trigger after modal animation has ended
+    }
+  }, [isOpen, postEvent, inputRef, postSuccess.current]);
 
   return (
     <div ref={ref}>
@@ -101,7 +98,7 @@ const PromptProjectNameElement = ({ isOpen, ...props }, ref) => {
         isOpen={isOpen}
         onClose={handleClose}
       >
-        <form ref={formRef}>
+        <form onSubmit={handleSubmit}>
           <div className={css.promptProjectNameForm}>
             <h2 className={css.promptProjectNameSubtitle}>
               Please name your project

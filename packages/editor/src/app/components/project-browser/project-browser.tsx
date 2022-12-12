@@ -100,6 +100,81 @@ const ProjectBrowserElement = ({ isOpen, ...props }, ref) => {
     });
   };
 
+  const open = () => {
+    if (!selectedProject) {
+      return;
+    }
+
+    const project = selectedProject.project.versions[0];
+    Workspace.openProject(project);
+
+    if (location.pathname !== Workspace.Path) {
+      navigate(Workspace.Path);
+    }
+  };
+
+  const handleSubmit = (ev: React.FormEvent) => {
+    Elem.stopEvent(ev);
+
+    if (!selectedProject) {
+      return;
+    }
+
+    const promptDiscardProject = () => {
+      sys
+        .messageDialog({
+          type: 'question',
+          title: 'Confirm',
+          message: 'Open Project Without Saving?',
+          detail: 'Your changes are not saved.',
+          buttons: ['Save and Close', 'Discard and Open', 'Cancel'],
+        })
+        .then((res) => {
+          if (res.error) {
+            console.error(res);
+            return;
+          }
+
+          switch (res.data.response) {
+            case 0:
+              Projects.save({
+                data: projectData,
+                assets,
+              }).then((saveRes) => {
+                if (saveRes.data && saveRes.data.action) {
+                  switch (saveRes.data.action) {
+                    case 'prompt-project-name':
+                      Workspace.openPromptProjectName({
+                        action: events.project.EVENTS.open,
+                      });
+                      break;
+                  }
+                  return;
+                } else if (saveRes.error) {
+                  sys.messageDialog({
+                    message: res.message,
+                  });
+                  return;
+                }
+
+                open();
+              });
+              break;
+            case 1:
+              open();
+              break;
+          }
+        });
+    };
+
+    if (location.pathname === Workspace.Path && saveStatus.isUncommitted) {
+      promptDiscardProject();
+      return;
+    }
+
+    open();
+  };
+
   useEffect(() => {
     setFilterInput('');
 
@@ -134,91 +209,10 @@ const ProjectBrowserElement = ({ isOpen, ...props }, ref) => {
       setSelectedProject(null);
     }
 
-    const open = () => {
-      if (!selectedProject) {
-        return;
-      }
-
-      const project = selectedProject.project.versions[0];
-      Workspace.openProject(project);
-
-      if (location.pathname !== Workspace.Path) {
-        navigate(Workspace.Path);
-      }
-    };
-
-    const handleSubmit = (ev: SubmitEvent) => {
-      Elem.stopEvent(ev);
-
-      if (!selectedProject) {
-        return;
-      }
-
-      const promptDiscardProject = () => {
-        sys
-          .messageDialog({
-            type: 'question',
-            title: 'Confirm',
-            message: 'Open Project Without Saving?',
-            detail: 'Your changes are not saved.',
-            buttons: ['Save and Close', 'Discard and Open', 'Cancel'],
-          })
-          .then((res) => {
-            if (res.error) {
-              console.error(res);
-              return;
-            }
-
-            switch (res.data.response) {
-              case 0:
-                Projects.save({
-                  data: projectData,
-                  assets,
-                }).then((saveRes) => {
-                  if (saveRes.data && saveRes.data.action) {
-                    switch (saveRes.data.action) {
-                      case 'prompt-project-name':
-                        Workspace.openPromptProjectName({
-                          action: events.project.EVENTS.open,
-                        });
-                        break;
-                    }
-                    return;
-                  } else if (saveRes.error) {
-                    sys.messageDialog({
-                      message: res.message,
-                    });
-                    return;
-                  }
-
-                  open();
-                });
-                break;
-              case 1:
-                open();
-                break;
-            }
-          });
-      };
-
-      if (location.pathname === Workspace.Path && saveStatus.isUncommitted) {
-        promptDiscardProject();
-        return;
-      }
-
-      open();
-    };
-
-    if (formRef.current) {
-      formRef.current.addEventListener('submit', handleSubmit);
-      events.project.onOpen(open);
-    }
+    events.project.onOpen(open);
 
     return () => {
-      if (formRef.current) {
-        formRef.current.removeEventListener('submit', handleSubmit);
-        events.project.offOpen(open);
-      }
+      events.project.offOpen(open);
     };
   }, [
     isOpen,
@@ -241,7 +235,7 @@ const ProjectBrowserElement = ({ isOpen, ...props }, ref) => {
         onClose={handleClose}
         modalSize="lg"
       >
-        <form ref={formRef}>
+        <form onSubmit={handleSubmit}>
           <div className="project-browser-container">
             <ProjectSearch value={filterInput} onChange={handleFilterInput} />
             <div className="project-browser-content">
