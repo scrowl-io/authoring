@@ -6,9 +6,9 @@ import { FormattedProjectFile } from './project-browser.types';
 import { Modal, filter } from '../';
 import { Projects } from '../../models';
 import { Workspace } from '../../pages';
-import { sys } from '../../services';
+import { sys, events } from '../../services';
 import { ProjectSearch } from './';
-import { List } from '../../utils';
+import { List, Elem } from '../../utils';
 
 const ProjectBrowserElement = ({ isOpen, ...props }, ref) => {
   const navigate = useNavigate();
@@ -30,6 +30,7 @@ const ProjectBrowserElement = ({ isOpen, ...props }, ref) => {
   const saveStatus = Projects.useInteractions();
   const projectData = Projects.useData();
   const assets = Projects.useAssets();
+  const formRef = useRef<HTMLFormElement>(null);
 
   const sortList = () => {
     let sortedList: Array<FormattedProjectFile> = projects.slice();
@@ -92,19 +93,32 @@ const ProjectBrowserElement = ({ isOpen, ...props }, ref) => {
     Projects.closeProjectBrowser();
   };
 
-  const handleSubmit = () => {
+  const handleSelectProject = (project: Projects.ProjectFile, idx: number) => {
+    setSelectedProject({
+      idx,
+      project,
+    });
+  };
+
+  const open = () => {
     if (!selectedProject) {
       return;
     }
 
-    const open = () => {
-      const project = selectedProject.project.versions[0];
-      Workspace.openProject(project);
+    const project = selectedProject.project.versions[0];
+    Workspace.openProject(project);
 
-      if (location.pathname !== Workspace.Path) {
-        navigate(Workspace.Path);
-      }
-    };
+    if (location.pathname !== Workspace.Path) {
+      navigate(Workspace.Path);
+    }
+  };
+
+  const handleSubmit = (ev: React.FormEvent) => {
+    Elem.stopEvent(ev);
+
+    if (!selectedProject) {
+      return;
+    }
 
     const promptDiscardProject = () => {
       sys
@@ -130,7 +144,9 @@ const ProjectBrowserElement = ({ isOpen, ...props }, ref) => {
                 if (saveRes.data && saveRes.data.action) {
                   switch (saveRes.data.action) {
                     case 'prompt-project-name':
-                      Workspace.openPromptProjectName();
+                      Workspace.openPromptProjectName({
+                        action: events.project.EVENTS.open,
+                      });
                       break;
                   }
                   return;
@@ -157,13 +173,6 @@ const ProjectBrowserElement = ({ isOpen, ...props }, ref) => {
     }
 
     open();
-  };
-
-  const handleSelectProject = (project: Projects.ProjectFile, idx: number) => {
-    setSelectedProject({
-      idx,
-      project,
-    });
   };
 
   useEffect(() => {
@@ -199,7 +208,19 @@ const ProjectBrowserElement = ({ isOpen, ...props }, ref) => {
     if (!isOpen) {
       setSelectedProject(null);
     }
-  }, [isOpen]);
+
+    events.project.onOpen(open);
+
+    return () => {
+      events.project.offOpen(open);
+    };
+  }, [
+    isOpen,
+    formRef.current,
+    saveStatus.isUncommitted,
+    location.pathname,
+    selectedProject,
+  ]);
 
   useEffect(() => {
     searchList();
@@ -214,96 +235,100 @@ const ProjectBrowserElement = ({ isOpen, ...props }, ref) => {
         onClose={handleClose}
         modalSize="lg"
       >
-        <div className="project-browser-container">
-          <ProjectSearch value={filterInput} onChange={handleFilterInput} />
-          <div className="project-browser-content">
-            <table className="table">
-              <thead>
-                <tr onClick={handleSortOrder}>
-                  <th
-                    scope="col"
-                    data-sort-field="project.name"
-                    className="cell-name"
-                  >
-                    Name
-                    {sortField === 'project.name' && (
-                      <ui.Icon className="sort-indicator" icon={sortIcon} />
-                    )}
-                  </th>
-                  <th
-                    scope="col"
-                    data-sort-field="createdAt"
-                    className="cell-created-at"
-                  >
-                    Created
-                    {sortField === 'createdAt' && (
-                      <ui.Icon className="sort-indicator" icon={sortIcon} />
-                    )}
-                  </th>
-                  <th
-                    scope="col"
-                    data-sort-field="updatedAt"
-                    className="cell-updated-at"
-                  >
-                    Last Modified
-                    {sortField === 'updatedAt' && (
-                      <ui.Icon className="sort-indicator" icon={sortIcon} />
-                    )}
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredProjects.length ? (
-                  filteredProjects.map(
-                    (project: FormattedProjectFile, idx: number) => {
-                      let classes = 'project-row';
+        <form onSubmit={handleSubmit}>
+          <div className="project-browser-container">
+            <ProjectSearch value={filterInput} onChange={handleFilterInput} />
+            <div className="project-browser-content">
+              <table className="table">
+                <thead>
+                  <tr onClick={handleSortOrder}>
+                    <th
+                      scope="col"
+                      data-sort-field="project.name"
+                      className="cell-name"
+                    >
+                      Name
+                      {sortField === 'project.name' && (
+                        <ui.Icon className="sort-indicator" icon={sortIcon} />
+                      )}
+                    </th>
+                    <th
+                      scope="col"
+                      data-sort-field="createdAt"
+                      className="cell-created-at"
+                    >
+                      Created
+                      {sortField === 'createdAt' && (
+                        <ui.Icon className="sort-indicator" icon={sortIcon} />
+                      )}
+                    </th>
+                    <th
+                      scope="col"
+                      data-sort-field="updatedAt"
+                      className="cell-updated-at"
+                    >
+                      Last Modified
+                      {sortField === 'updatedAt' && (
+                        <ui.Icon className="sort-indicator" icon={sortIcon} />
+                      )}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredProjects.length ? (
+                    filteredProjects.map(
+                      (project: FormattedProjectFile, idx: number) => {
+                        let classes = 'project-row';
 
-                      if (idx === selectedProject?.idx) {
-                        classes += ' active';
+                        if (idx === selectedProject?.idx) {
+                          classes += ' active';
+                        }
+
+                        return (
+                          <tr
+                            key={idx}
+                            className={classes}
+                            onClick={() => {
+                              handleSelectProject(project, idx);
+                            }}
+                          >
+                            <td className="cell-name">
+                              {project.project.name}
+                            </td>
+                            <td className="cell-created-at">
+                              <filter.Date>{project.createdAt}</filter.Date>
+                            </td>
+                            <td className="cell-updated-at">
+                              <filter.Date>{project.updatedAt}</filter.Date>
+                            </td>
+                          </tr>
+                        );
                       }
-
-                      return (
-                        <tr
-                          key={idx}
-                          className={classes}
-                          onClick={() => {
-                            handleSelectProject(project, idx);
-                          }}
-                        >
-                          <td className="cell-name">{project.project.name}</td>
-                          <td className="cell-created-at">
-                            <filter.Date>{project.createdAt}</filter.Date>
-                          </td>
-                          <td className="cell-updated-at">
-                            <filter.Date>{project.updatedAt}</filter.Date>
-                          </td>
-                        </tr>
-                      );
-                    }
-                  )
-                ) : (
-                  <></>
-                )}
-              </tbody>
-            </table>
-            {filteredProjects.length ? (
-              <></>
-            ) : (
-              <div style={{ textAlign: 'center' }} className="mt-3">
-                No Projects
-              </div>
-            )}
+                    )
+                  ) : (
+                    <></>
+                  )}
+                </tbody>
+              </table>
+              {filteredProjects.length ? (
+                <></>
+              ) : (
+                <div style={{ textAlign: 'center' }} className="mt-3">
+                  No Projects
+                </div>
+              )}
+            </div>
           </div>
-        </div>
 
-        <footer className="d-flex justify-content-end">
-          <ui.Button variant="link" onClick={handleClose}>
-            Cancel
-          </ui.Button>
-          <ui.Button variant="primary" onClick={handleSubmit}>
-            Open
-          </ui.Button>
-        </footer>
+          <footer className="d-flex justify-content-end">
+            <ui.Button variant="link" onClick={handleClose}>
+              Cancel
+            </ui.Button>
+            <ui.Button variant="primary" type="submit">
+              Open
+            </ui.Button>
+          </footer>
+        </form>
       </Modal>
     </div>
   );
