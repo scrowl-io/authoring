@@ -1,6 +1,7 @@
 import settingsHandler from 'electron-settings';
 import { SettingsApi } from './settings.types';
-import { rq } from '../../services';
+import { rq, log } from '../../services';
+import { obj } from '../../utils';
 
 export const get = (ev: rq.RequestEvent, key?: string, defaultValue?: any) => {
   return new Promise<rq.ApiResult>((resolve) => {
@@ -88,6 +89,50 @@ export const set = (ev: rq.RequestEvent, key, value) => {
           }
         })
       });
+  });
+};
+
+export const setAll = (ev: rq.RequestEvent, settings: obj.JSON_DATA) => {
+  return new Promise<rq.ApiResult>((resolve) => {
+    const setPromises: Array<Promise<rq.ApiResult>> = [];
+    const setLookups: Array<obj.JSON_DATA> = [];
+
+    for (const [key, value] of Object.entries(settings)) {
+      setPromises.push(set(ev, key, value));
+      setLookups.push({ setting: key, value: value });
+    }
+
+    Promise.allSettled(setPromises).then((setPromiseRes) => {
+      let isError = false;
+      let errorRes;
+
+      setPromiseRes.forEach((setRes, idx) => {
+        if (setRes.status === 'rejected') {
+          log.error(`failed to set ${setLookups[idx]}`);
+          isError = true;
+          return;
+        }
+
+        if (setRes.value.error) {
+          isError = true;
+          errorRes = setRes.value;
+          log.error(`failed to set ${setLookups[idx]}`);
+          return;
+        }
+      });
+
+      if (isError) {
+        resolve(errorRes);
+        return;
+      }
+
+      resolve({
+        error: false,
+        data: {
+          settings,
+        },
+      });
+    });
   });
 };
 
@@ -211,6 +256,7 @@ export const init = () => {
 export default {
   get,
   set,
+  setAll,
   has,
   remove,
   save,
