@@ -289,7 +289,7 @@ export const Header = () => {
         <Navbar fixed="top" expand="xs" className={css.workspaceHeader}>
           <div className={css.projectMeta}>
             <Logo
-              asLink={true}
+              asLink={false}
               sizing="sm"
               isAnimated={isAnimated}
               animationDelay={animationDelay}
