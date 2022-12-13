@@ -116,10 +116,6 @@ const ProjectBrowserElement = ({ isOpen, ...props }, ref) => {
   const handleSubmit = (ev: React.FormEvent) => {
     Elem.stopEvent(ev);
 
-    if (!selectedProject) {
-      return;
-    }
-
     const promptDiscardProject = () => {
       sys
         .messageDialog({
@@ -166,6 +162,17 @@ const ProjectBrowserElement = ({ isOpen, ...props }, ref) => {
           }
         });
     };
+
+    if (!selectedProject) {
+      return;
+    }
+
+    const project = selectedProject.project.versions[0];
+
+    if (projectData.meta.id && projectData.meta.id === project.id) {
+      handleClose();
+      return;
+    }
 
     if (location.pathname === Workspace.Path && saveStatus.isUncommitted) {
       promptDiscardProject();
