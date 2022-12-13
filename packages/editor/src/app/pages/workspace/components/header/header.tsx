@@ -24,6 +24,7 @@ export const Header = () => {
   const [rollbackName, setRollbackName] = useState(projectMeta.name || '');
   const [isOpenPublish, setIsOpenPublish] = useState(false);
   const [isOpenConfirmation, setIsOpenConfirmation] = useState(false);
+  const hasPublished = Settings.useHasPublished();
   const previewMode = Settings.usePreviewMode();
   const animationSettings = Settings.useAnimation();
   const isAnimated = !animationSettings.reducedAnimations;
@@ -227,10 +228,15 @@ export const Header = () => {
           return;
         }
 
+        Settings.setLastPublishedAt(pubRes.data.lastPublishedAt);
         setIsOpenPublish(false);
         closePublishProgress();
 
         if (pubRes.data.canceled) {
+          return;
+        }
+
+        if (hasPublished) {
           return;
         }
 

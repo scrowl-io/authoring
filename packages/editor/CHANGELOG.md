@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.0.66 (2022-12-13)
+
+**Note:** Version bump only for package @scrowl/editor
+
+
+
+
+
+## 0.0.65 (2022-12-12)
+
+**Note:** Version bump only for package @scrowl/editor
+
+
+
+
+
 ## 0.0.64 (2022-12-12)
 
 **Note:** Version bump only for package @scrowl/editor

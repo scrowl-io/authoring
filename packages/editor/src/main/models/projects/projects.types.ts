@@ -77,6 +77,7 @@ export type ProjectMeta = {
   filename: string;
   createdAt: string;
   updatedAt: string;
+  publishedAt: string;
   tags: Array<string>;
   blueprint?: string;
   createdBy?: string;
@@ -109,7 +110,7 @@ export type ProjectAsset = {
 
 export interface ProjectResource extends ProjectAsset {
   description?: string;
-};
+}
 
 export type ProjectModule = {
   id: number;
@@ -137,7 +138,7 @@ export type ProjectGlossaryItem = {
 };
 
 export type ProjectData = {
-  meta: Partial<ProjectMeta>,
+  meta: Partial<ProjectMeta>;
   scorm: Partial<ProjectScorm>;
   modules?: Array<ProjectModule>;
   lessons?: Array<ProjectLesson>;

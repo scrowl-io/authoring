@@ -1,4 +1,6 @@
-import { OpenDialogOptions, BrowserWindow, IpcMainInvokeEvent } from 'electron';
+import { OpenDialogOptions, IpcMainInvokeEvent } from 'electron';
+const { BrowserWindow } = require('electron');
+
 import { v4 as uuid } from 'uuid';
 import {
   ProjectsApi,
@@ -9,7 +11,7 @@ import {
   SaveReq,
   PreviewAssetReq,
   ProjectAsset,
-  PreviewProjectReq
+  PreviewProjectReq,
 } from './projects.types';
 import { Templates } from '../';
 import { set as setSetting } from '../settings';
@@ -32,7 +34,7 @@ const getProjectPath = (name) => {
 const getProjectInfo = (meta: ProjectMeta): rq.ApiResult => {
   const noId = !meta.id;
   const noName = !meta.name;
-    
+
   let folder;
   let info: ProjectFile;
 
@@ -48,17 +50,17 @@ const getProjectInfo = (meta: ProjectMeta): rq.ApiResult => {
           isNew: true,
           uncommitted: true,
           exists: false,
-        }
-      }
+        },
+      };
     }
-  
+
     const fileName = fs.joinPath(folder, projectMetaFilename);
     const existsRes = fs.fileExistsSync(fileName);
-    
+
     if (existsRes.error) {
       return existsRes;
     }
-    
+
     if (!existsRes.data.exists) {
       return {
         error: false,
@@ -68,16 +70,16 @@ const getProjectInfo = (meta: ProjectMeta): rq.ApiResult => {
           fileName,
           exists: false,
           folder,
-        }
-      }
+        },
+      };
     }
-  
+
     const read = fs.fileReadSync(fileName) as rq.ApiResult;
-  
+
     if (read.error) {
       return read;
     }
-  
+
     info = read.data.contents as ProjectFile;
 
     return {
@@ -89,7 +91,7 @@ const getProjectInfo = (meta: ProjectMeta): rq.ApiResult => {
         exists: existsRes.data.exists,
         folder,
         info,
-      }
+      },
     };
   } catch (e) {
     return {
@@ -194,7 +196,7 @@ export const create = (ev: rq.RequestEvent, blueprint?: string) => {
       try {
         for (const [key, item] of Object.entries(content)) {
           const input = item as Templates.InputProps;
-    
+
           switch (input.type) {
             case 'Asset':
               if (input.value) {
@@ -223,7 +225,7 @@ export const create = (ev: rq.RequestEvent, blueprint?: string) => {
       try {
         for (const [key, item] of Object.entries(content)) {
           const input = item as Templates.InputProps;
-    
+
           switch (input.type) {
             case 'Asset':
               if (input.value) {
@@ -236,7 +238,10 @@ export const create = (ev: rq.RequestEvent, blueprint?: string) => {
           }
         }
       } catch (e) {
-        log.error('Failed to update content during create: unexpected error', e);
+        log.error(
+          'Failed to update content during create: unexpected error',
+          e
+        );
       }
     };
 
@@ -266,7 +271,7 @@ export const create = (ev: rq.RequestEvent, blueprint?: string) => {
       project.slides?.forEach((slide) => {
         updateContent(slide.template.content);
       });
-      
+
       resolve({
         error: false,
         data: {
@@ -290,15 +295,22 @@ export const upload = (ev: rq.RequestEvent, req: UploadReq) => {
       });
     }
 
+    const uploadComplete = (result) => {
+      resolve(result);
+    }
+
     const config: OpenDialogOptions = {
       title: 'Import File',
+      properties: [
+        'openFile',
+      ]
     };
 
     if (req.options.assetTypes) {
       config.filters = fs.dialog.getAllowedAssets(req.options.assetTypes);
 
       if (!config.filters.length) {
-        resolve({
+        uploadComplete({
           error: true,
           message: 'Unabled to select asset to import: asset type not supported.',
           data: {
@@ -313,12 +325,12 @@ export const upload = (ev: rq.RequestEvent, req: UploadReq) => {
 
     fs.dialog.open(ev, config).then((res) => {
       if (res.error) {
-        resolve(res);
+        uploadComplete(res);
         return;
       }
 
       if (res.data.canceled) {
-        resolve(res);
+        uploadComplete(res);
         return;
       }
 
@@ -331,7 +343,7 @@ export const upload = (ev: rq.RequestEvent, req: UploadReq) => {
 
       if (infoRes.error) {
         log.error('getting project info failed', infoRes);
-        resolve(infoRes);
+        uploadComplete(infoRes);
         return;
       }
       switch (type) {
@@ -355,7 +367,7 @@ export const upload = (ev: rq.RequestEvent, req: UploadReq) => {
           fs.asset.toWebp(res.data.filePath, dest).then((transformRes) => {
             if (transformRes.error) {
               log.error('asset conversion failed', transformRes);
-              resolve(transformRes);
+              uploadComplete(transformRes);
               return;
             }
 
@@ -390,11 +402,11 @@ export const upload = (ev: rq.RequestEvent, req: UploadReq) => {
             fs.progressWrite(dest, destWorking, sendProgressUpdateImage).then((copyRes) => {
               if (copyRes.error) {
                 log.error('asset copied failed', copyRes);
-                resolve(copyRes);
+                uploadComplete(copyRes);
                 return;
               }
 
-              resolve({
+              uploadComplete({
                 error: false,
                 data: {
                   title: name,
@@ -469,18 +481,18 @@ export const upload = (ev: rq.RequestEvent, req: UploadReq) => {
             });
 
             if (isError) {
-              resolve(errorRes);
+              uploadComplete(errorRes);
               return;
             }
 
             const statsRes = fs.fileStatsSync(res.data.filePath);
 
             if (statsRes.error) {
-              resolve(statsRes);
+              uploadComplete(statsRes);
               return;
             }
 
-            resolve({
+            uploadComplete({
               error: false,
               data: {
                 title: name,
@@ -497,7 +509,7 @@ export const upload = (ev: rq.RequestEvent, req: UploadReq) => {
       }
 
     }).catch((e) => {
-      resolve({
+      uploadComplete({
         error: true,
         message: 'Failed to import file: unexpected error',
         data: {
@@ -520,14 +532,14 @@ const writeProjectData = (projectData: ProjectData) => {
 
     const filename = projectData.meta.filename;
 
-    fs.archive.compress(projectData)
+    fs.archive
+      .compress(projectData)
       .then((compressedRes) => {
-  
         if (compressedRes.error) {
           resolve(compressedRes);
           return;
         }
-  
+
         const data = compressedRes.data.data;
 
         log.info('writing project data', filename);
@@ -552,10 +564,10 @@ const writeProjectData = (projectData: ProjectData) => {
           data: {
             trace: e,
           },
-        })
-      })
+        });
+      });
   });
-}
+};
 
 export const save = (ev: rq.RequestEvent, { data, assets }: SaveReq) => {
   return new Promise<rq.ApiResult>((resolve) => {
@@ -565,7 +577,7 @@ export const save = (ev: rq.RequestEvent, { data, assets }: SaveReq) => {
         message: 'Unable to save project: name required',
         data: {
           action: 'prompt-project-name',
-        }
+        },
       });
       return;
     }
@@ -614,20 +626,22 @@ export const save = (ev: rq.RequestEvent, { data, assets }: SaveReq) => {
 
       const updateSettings = () => {
         return new Promise<rq.ApiResult>((resolveSettings) => {
-          setSetting(ev, 'lastUsedAt', data.meta.updatedAt).then((settingRes) => {
-            if (settingRes.error) {
-              log.error(settingRes);
+          setSetting(ev, 'lastUsedAt', data.meta.updatedAt).then(
+            (settingRes) => {
+              if (settingRes.error) {
+                log.error(settingRes);
+              }
+
+              resolveSettings({
+                error: false,
+                data: {
+                  updated: true,
+                },
+              });
             }
-  
-            resolveSettings({
-              error: false,
-              data: {
-                updated: true,
-              },
-            });
-          });
+          );
         });
-      }
+      };
 
       const handleRecentProjectsUpdate = () => {
         mu.rebuildMenu().then((updateRes) => {
@@ -635,7 +649,7 @@ export const save = (ev: rq.RequestEvent, { data, assets }: SaveReq) => {
             resolve(updateRes);
             return;
           }
-  
+
           resolve({
             error: false,
             data: {
@@ -644,7 +658,7 @@ export const save = (ev: rq.RequestEvent, { data, assets }: SaveReq) => {
             },
           });
         });
-      }
+      };
 
       writeProjectData(data).then((writeDataRes) => {
         if (writeDataRes.error) {
@@ -665,14 +679,17 @@ export const save = (ev: rq.RequestEvent, { data, assets }: SaveReq) => {
             return;
           }
 
-          fs.copy(fs.APP_PATHS.uploads, fs.joinPath(infoRes.data.folder, 'assets')).then((copyRes) => {
+          fs.copy(
+            fs.APP_PATHS.uploads,
+            fs.joinPath(infoRes.data.folder, 'assets')
+          ).then((copyRes) => {
             if (copyRes.error) {
               resolve(copyRes);
               return;
             }
 
             updateSettings().then(handleRecentProjectsUpdate);
-          })
+          });
         });
       });
     } catch (e) {
@@ -688,68 +705,121 @@ export const save = (ev: rq.RequestEvent, { data, assets }: SaveReq) => {
 };
 
 export const publish = (ev: rq.RequestEvent, data: ProjectData) => {
+  const updateSettings = () => {
+    return new Promise<rq.ApiResult>((resolveUpdate) => {
+      const now = new Date().toISOString();
+
+      setSetting(ev, 'lastPublishedAt', now).then(
+        (settingRes) => {
+          if (settingRes.error) {
+            log.error(settingRes);
+          }
+
+          resolveUpdate({
+            error: false,
+            data: {
+              updated: true,
+              lastPublishedAt: now,
+            },
+          });
+        }
+      );
+    });
+  };
+
   return new Promise<rq.ApiResult>((resolve) => {
     log.info('publishing project');
 
-    fs.dialog.save(ev, {
-      defaultPath: fs.joinPath(fs.APP_PATHS.downloads, utils.str.toScormCase(data.meta.name)),
-      properties: ['showOverwriteConfirmation', 'createDirectory'],
-      buttonLabel: 'Publish',
-      message: 'Publish SCORM package',
-    }).then((saveRes) => {
-
-      if (saveRes.error) {
-        resolve(saveRes);
-        return;
-      }
-
-      if (saveRes.data.canceled) {
-        resolve(saveRes);
-        return;
-      }
-
-      if (!saveRes.data.filePath) {
-        const missingPathError = {
-          error: true,
-          message: 'File path required',
-          data: saveRes.data,
-        };
-        log.error(missingPathError);
-        resolve(missingPathError);
-        return;
-      }
-
-      fs.fileRemove(fs.APP_PATHS.publish).then((removeRes) => {
-        if (removeRes.error) {
-          resolve(removeRes);
+    fs.dialog
+      .save(ev, {
+        defaultPath: fs.joinPath(
+          fs.APP_PATHS.downloads,
+          utils.str.toScormCase(data.meta.name)
+        ),
+        properties: ['showOverwriteConfirmation', 'createDirectory'],
+        buttonLabel: 'Publish',
+        message: 'Publish SCORM package',
+      })
+      .then((saveRes) => {
+        if (saveRes.error) {
+          resolve(saveRes);
           return;
         }
 
-        const filepath = `${saveRes.data.filePath}.zip`;
-        const projectFileName = fs.joinPath(fs.getDirname(data.meta.filename || ''), projectMetaFilename);
-        
-        fs.fileRead(projectFileName).then((readRes) => {
-          if (readRes.error) {
-            log.error(`Failed to get project meta file: ${projectFileName}`);
-            resolve(readRes);
-            return;
-          }
+        if (saveRes.data.canceled) {
+          resolve(saveRes);
+          return;
+        }
 
-          scorm(data, readRes.data.contents, filepath, fs.APP_PATHS.publish).then(resolve);
-        });
-      }).catch((e) => {
-        const unexpectedError = {
-          error: true,
-          message: 'Failed to publish: unexpected error',
-          data: {
-            trace: e,
-          },
-        };
+        if (!saveRes.data.filePath) {
+          const missingPathError = {
+            error: true,
+            message: 'File path required',
+            data: saveRes.data,
+          };
+          log.error(missingPathError);
+          resolve(missingPathError);
+          return;
+        }
 
-        log.error(unexpectedError)
-        resolve(unexpectedError);
+        fs.fileRemove(fs.APP_PATHS.publish)
+          .then((removeRes) => {
+            if (removeRes.error) {
+              resolve(removeRes);
+              return;
+            }
+
+            const filepath = `${saveRes.data.filePath}.zip`;
+            const projectFileName = fs.joinPath(
+              fs.getDirname(data.meta.filename || ''),
+              projectMetaFilename
+            );
+
+            fs.fileRead(projectFileName).then((readRes) => {
+              if (readRes.error) {
+                log.error(
+                  `Failed to get project meta file: ${projectFileName}`
+                );
+                resolve(readRes);
+                return;
+              }
+
+              scorm(
+                data,
+                readRes.data.contents,
+                filepath,
+                fs.APP_PATHS.publish
+              ).then((scormRes) => {
+                if (scormRes.error) {
+                  resolve(scormRes);
+                  return;
+                }
+
+                updateSettings().then((updateRes) => {
+                  if (updateRes.error) {
+                    resolve(updateRes);
+                    return;
+                  }
+
+                  scormRes.data.lastPublishedAt = updateRes.data.lastPublishedAt;
+                  resolve(scormRes);
+                })
+              });
+            });
+          })
+          .catch((e) => {
+            const unexpectedError = {
+              error: true,
+              message: 'Failed to publish: unexpected error',
+              data: {
+                trace: e,
+              },
+            };
+
+            log.error(unexpectedError);
+            resolve(unexpectedError);
+          });
       });
-    });
   });
 };
 
@@ -777,13 +847,16 @@ export const list = (ev: rq.RequestEvent, limit?: number) => {
           }
 
           if (fileRes.value.error) {
-            log.error('failed to open: ${drainRes.data.filepaths[idx]}', fileRes.value);
+            log.error(
+              'failed to open: ${drainRes.data.filepaths[idx]}',
+              fileRes.value
+            );
             return;
           }
 
           projects.push(fileRes.value.data.contents);
         });
-        
+
         resolve({
           error: false,
           data: {
@@ -797,7 +870,6 @@ export const list = (ev: rq.RequestEvent, limit?: number) => {
 
 export const open = (ev: rq.RequestEvent, project: ProjectMeta) => {
   return new Promise<rq.ApiResult>((resolve) => {
-
     fs.archive.uncompress(project.filename).then((res) => {
       if (res.error) {
         resolve(res);
@@ -835,7 +907,10 @@ export const previewAsset = (ev: rq.RequestEvent, req: PreviewAssetReq) => {
 
     try {
       const infoRes = getProjectInfo(req.meta);
-      const src = (infoRes.data.isNew || infoRes.data.uncommitted) ? fs.joinPath(fs.APP_PATHS.uploads, req.asset.filename) : fs.joinPath(infoRes.data.folder, 'assets', req.asset.filename);
+      const src =
+        infoRes.data.isNew || infoRes.data.uncommitted
+          ? fs.joinPath(fs.APP_PATHS.uploads, req.asset.filename)
+          : fs.joinPath(infoRes.data.folder, 'assets', req.asset.filename);
 
       win.previewFile(src);
 
@@ -905,7 +980,7 @@ export const previewProject = (ev: rq.RequestEvent, req: PreviewProjectReq) => {
         assets: req.assets,
       };
     }
-    
+
     createPreview(req.project, meta, assetSrc, req.type, req.id).then((res) => {
       if (res.error) {
         resolve(res);
@@ -932,9 +1007,9 @@ export const previewProject = (ev: rq.RequestEvent, req: PreviewProjectReq) => {
         },
       });
 
-      previewWin.on("enter-html-full-screen", async () => {
+      previewWin.on('enter-html-full-screen', async () => {
         // We cannot require the screen module until the app is ready.
-        const { screen } = require("electron");
+        const { screen } = require('electron');
         const primaryDisplay = screen.getPrimaryDisplay();
         const { width, height } = primaryDisplay.workAreaSize;
         const winBounds = win.getContentBounds();
@@ -945,7 +1020,7 @@ export const previewProject = (ev: rq.RequestEvent, req: PreviewProjectReq) => {
         win.setContentBounds({ x: 0, y: 0, width, height }, false);
         win.setSimpleFullScreen(true);
 
-        previewWin.once("leave-html-full-screen", async () => {
+        previewWin.once('leave-html-full-screen', async () => {
           win.setSimpleFullScreen(false);
 
           win.setContentBounds(winBounds, false);
@@ -965,7 +1040,7 @@ export const previewProject = (ev: rq.RequestEvent, req: PreviewProjectReq) => {
 
       previewWin.once('closed', () => {
         resolve(res);
-      })
+      });
     });
   });
 };

@@ -72,6 +72,21 @@ export const useHasWelcomed = () => {
   return useSelector((data: stateManager.RootState) => data.settings.hasWelcomed);
 };
 
+export const useHasPublished = () => {
+  return useSelector(
+    (data: stateManager.RootState) => data.settings.hasPublished
+  );
+};
+
+export const setLastPublishedAt = (data) => {
+  if (!processor.dispatch) {
+    console.warn('settings processor not ready');
+    return;
+  }
+
+  processor.dispatch(state.setLastPublishedAt(data));
+};
+
 export const usePreviewMode = () => {
   return useSelector((data: stateManager.RootState) => {
     return data.settings.previewMode;
@@ -94,12 +109,12 @@ export const setPreviewMode = (type: menu.PreviewTypes) => {
 
 export const init = () => {
   return new Promise((resolve) => {
-    API.get().then(result => {
+    API.get().then((result) => {
       if (result.error) {
         resolve(result);
         return;
       }
-  
+
       setState(result.data.settings);
       resolve(result);
     });
@@ -125,6 +140,8 @@ export default {
   useAnimation,
   setAnimation,
   useHasWelcomed,
+  useHasPublished,
+  setLastPublishedAt,
   usePreviewMode,
   setPreviewMode,
   init,

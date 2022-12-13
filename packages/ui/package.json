@@ -1,6 +1,6 @@
 {
   "name": "@scrowl/ui",
-  "version": "0.0.4",
+  "version": "0.0.6",
   "description": "",
   "license": "MIT",
   "keywords": [],
@@ -62,8 +62,8 @@
     "@parcel/transformer-sass": "2.7.0",
     "@parcel/transformer-typescript-types": "2.7.0",
     "@parcel/validator-typescript": "2.7.0",
-    "@scrowl/config": "^0.0.64",
-    "@scrowl/postcss-prefixer": "^0.0.4",
+    "@scrowl/config": "^0.0.66",
+    "@scrowl/postcss-prefixer": "^0.0.6",
     "@types/react": "^18.0.21",
     "@types/react-dom": "^18.0.6",
     "eslint": "^8.25.0",
