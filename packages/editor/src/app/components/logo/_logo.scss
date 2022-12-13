@@ -19,21 +19,7 @@
   }
 }
 
-a.logo{
-  &:hover {
-    svg {
-      filter: drop-shadow(0px 2px 3px var(--bs-cyan));
-
-      .body {
-        fill: var(--bs-primary-100);
-      }
-
-      .wings {
-        fill: var(--bs-primary-400);
-      }
-    }
-  }
-
+a.logo {
   &:active {
     transform: translateY(1px);
     filter: drop-shadow(0px 0px 4px var(--bs-cyan));

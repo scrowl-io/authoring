@@ -3,6 +3,7 @@ import { ui } from '@scrowl/ui';
 import * as css from '../_pane-details.scss';
 import { Projects } from '../../../../../models';
 import { menu, sys } from '../../../../../services';
+import { Elem } from '../../../../../utils';
 import { GlossaryOverlay } from '../../overlay';
 import { ContextMenuResult, GlossaryItem } from '../pane-details.types';
 
@@ -80,9 +81,7 @@ export const Glossary = () => {
     ev: React.MouseEvent,
     term?: Projects.ProjectGlossaryItem
   ) => {
-    ev.preventDefault();
-    ev.stopPropagation();
-
+    Elem.stopEvent(ev);
     const target = ev.target as HTMLElement;
 
     if (term) {
