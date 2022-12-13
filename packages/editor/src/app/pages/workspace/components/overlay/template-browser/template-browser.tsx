@@ -106,6 +106,13 @@ export const TemplateBrowser = () => {
     }
   }, [newContent.newSlide]);
 
+  useEffect(() => {
+    const queryString = `#template-${activeTemplate.meta.component}`;
+    const templateButton = document.querySelector(queryString);
+
+    (templateButton as HTMLElement)?.focus();
+  }, [isOpen]);
+
   return (
     <Modal
       className="modal-template-browser"
