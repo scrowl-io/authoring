@@ -285,7 +285,7 @@ export const createScormPackage = (src: string, dest: string, project: ProjectDa
     const packagerOpts = {
       source: src,
       title: project.meta.name,
-      version: config.version,
+      version: config.outputFormat,
       language: config.language,
       startingPage: 'content/index.html',
       organization: config.organization,
@@ -298,9 +298,9 @@ export const createScormPackage = (src: string, dest: string, project: ProjectDa
         name: config.name,
         description: config.description,
         author: config.authors,
-        rights: "©Copyright " + new Date().getFullYear(),
-      }
-    }
+        rights: '©Copyright ' + new Date().getFullYear(),
+      },
+    };
     const packageFilename = fs.joinPath(destFolder, `${str.toScormCase(packagerOpts.package.name)}_v${packagerOpts.package.version}_${today}.zip`);
 
     packager(packagerOpts, (message: string) => {

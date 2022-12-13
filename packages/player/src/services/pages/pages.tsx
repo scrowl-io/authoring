@@ -56,35 +56,42 @@ const updateCourseProgress = (project, id) => {
   const Scrowl = window['Scrowl'];
   console.log('inside pages:');
 
-  let lessonsArray: { index: number; targetId: string }[] = [];
+  let lessonsArray: { index: number; targetId: string; lesson: any }[] = [];
   let counter = 1;
   project.outlineConfig.forEach((module, mIdx) => {
-    module.lessons.forEach((_lesson, lIdx) => {
+    module.lessons.forEach((lesson, lIdx) => {
       const lessonObj = {
         index: counter,
         targetId: `module-${mIdx}--lesson-${lIdx}`,
+        lesson: lesson,
       };
       counter++;
       lessonsArray.push(lessonObj);
     });
   });
 
-  const currentSlide = lessonsArray.find((lesson) => {
+  const currentLesson = lessonsArray.find((lesson) => {
     return lesson.targetId === id;
   });
 
-  const currentSlideIndex = currentSlide?.index;
+  const currentLessonIndex = currentLesson?.index;
   const totalLessons = lessonsArray.length;
 
   let percentageCompleted;
 
-  if (currentSlideIndex) {
-    percentageCompleted = currentSlideIndex / totalLessons;
+  if (currentLessonIndex) {
+    percentageCompleted = currentLessonIndex / totalLessons;
   }
-
-  console.log(percentageCompleted);
+  const runtimeLesson = {
+    m: currentLesson?.lesson.lesson.moduleId,
+    l: currentLesson?.lesson.lesson.id,
+    s: currentLesson?.lesson.slides,
+  };
+  console.log(runtimeLesson);
+  console.log('lesson');
+  console.log(currentLesson?.lesson);
   const runtime = Scrowl.runtime;
-  runtime?.updateProgress(percentageCompleted);
+  runtime?.updateLocation(currentLesson?.lesson, percentageCompleted);
 };
 
 const finishCourse = () => {

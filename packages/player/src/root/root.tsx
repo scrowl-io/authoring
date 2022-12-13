@@ -19,7 +19,7 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
       const startRes = runtime.start();
 
       if (startRes.error) {
-        console.error(`unable to start runtime: ${startRes.message}`);
+        console.error('unable to start runtime');
       }
     }
   }
@@ -57,6 +57,17 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
   );
   const pages = Pages.create(config, templateList);
 
+  // @ts-ignore
+  const lessonTotal = pages.length;
+
+  const runtime = window['Scrowl'].runtime;
+  const location = runtime?.getLocation();
+
+  let lessonIdx;
+  if (location) {
+    lessonIdx = location.id + 1;
+  }
+
   return (
     <Router>
       <div id="scrowl-player" {...props}>
@@ -67,7 +78,14 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
                 <Route key={idx} path={page.url} element={<page.Element />} />
               );
             })}
-            <Route path="*" element={<Navigate to={pages[0].url} />} />
+            <Route
+              path="*"
+              element={
+                <Navigate
+                  to={lessonIdx ? pages[lessonIdx].url : pages[0].url}
+                />
+              }
+            />
           </Routes>
         </main>
       </div>

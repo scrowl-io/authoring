@@ -4,15 +4,22 @@
 */
 import { RUNTIME_SERVICE } from "./runtime.types";
 
-const hasProp = (obj: {}, prop: string) => {
-  return Object.prototype.hasOwnProperty.call(obj, prop);
-};
+// const hasProp = (obj: {}, prop: string) => {
+//   return Object.prototype.hasOwnProperty.call(obj, prop);
+// };
 
 export const service: RUNTIME_SERVICE = {
   init: false,
   finished: false,
   _time: {
-    start: undefined,
+    startTime: undefined,
+    getSessionTime: () => {
+      let sessionTime;
+      if (service._time.startTime) {
+        sessionTime = new Date().getTime() - service._time.startTime.getTime();
+      }
+      return service._time.convert(sessionTime);
+    },
     end: undefined,
     convert: (total) => {
       function ZeroPad(val: number, pad: number) {
@@ -68,41 +75,30 @@ export const service: RUNTIME_SERVICE = {
       return timespan;
     },
   },
-  STATUSES: {
-    update: {
-      true: 'true',
-      false: 'false',
-    },
-    lesson: {
-      success: 'passed',
-      failed: 'failed',
-      done: 'completed',
-      active: 'incomplete',
-      viewed: 'browsed',
-      unseen: 'not attempted',
-    },
-    exit: {
-      timeout: 'time-out',
-      save: 'suspend',
-      logout: 'logout',
-    },
-  },
-  courseProgress: 0,
-  lessonLocation: '',
-  isAvailable: () => {
-    const isReady = service.init && !service.finished;
-
-    if (!isReady || !service.API) {
-      return {
-        error: true,
-        message: 'Service is unavailable',
-      };
+  nFindAPITries: 0,
+  // @ts-ignore
+  API: null,
+  maxTries: 500,
+  //@ts-ignore
+  scanForAPI: (win) => {
+    while (win.API_1484_11 == null && win.parent != null && win.parent != win) {
+      service.nFindAPITries++;
+      if (service.nFindAPITries > service.maxTries) {
+        return null;
+      }
+      win = win.parent;
     }
-
-    return {
-      error: false,
-      API: service.API,
-    };
+    return win.API_1484_11;
+  },
+  getAPI: (win) => {
+    if (win.parent != null && win.parent != win) {
+      //@ts-ignore
+      service.API = service.scanForAPI(win.parent);
+    }
+    if (service.API == null && win.opener != null) {
+      // @ts-ignore
+      service.API = service.scanForAPI(win.opener);
+    }
   },
   getError: (printError) => {
     printError =
@@ -113,9 +109,9 @@ export const service: RUNTIME_SERVICE = {
       return res;
     }
 
-    const errorId = res.API.LMSGetLastError();
-    const errorMsg = res.API.LMSGetErrorString(errorId);
-    const errorStack = res.API.LMSGetDiagnostic(errorId);
+    const errorId = res.API.GetLastError();
+    const errorMsg = res.API.GetErrorString(errorId);
+    const errorStack = res.API.GetDiagnostic(errorId);
     const apiError = {
       id: errorId,
       message: errorMsg,
@@ -131,333 +127,152 @@ export const service: RUNTIME_SERVICE = {
       data: apiError,
     };
   },
-  _findAPI: (source) => {
-    let retryCnt = 0;
-    const retryLimit = 7;
-
-    if (source.API) {
-      return {
-        error: false,
-        API: source.API,
-      };
+  commit: () => {
+    if (!service.API) {
+      throw 'MISSING_SCORM_API';
     }
 
-    if (source.parent === source) {
-      return {
-        error: true,
-        message: 'Error: unable to find API - top level reached',
-      };
-    }
+    service.setValue('cmi.session_time', service._time.getSessionTime());
 
-    while (
-      source.API == null &&
-      source.parent != null &&
-      retryCnt < retryLimit
-    ) {
-      retryCnt++;
-      source = source.parent;
-    }
+    service.API.Commit('');
 
-    if (retryCnt >= retryLimit) {
-      return {
-        error: true,
-        message: 'Error: unable to find API - nested to deep',
-      };
+    console.log('API.Commit()');
+    if (service.API.Commit('') === 'false') {
+      throw 'ERROR_COMMIT_SCORM_API';
     }
+  },
+  exit: () => {
+    service.commit();
+  },
+  initialize: () => {
+    if (!service.API) {
+      throw 'MISSING_SCORM_API';
+    }
+    console.log('API.Initialize()');
+    if (service.API.Initialize('') === 'false') {
+      throw 'ERROR_INIT_SCORM_API';
+    }
+  },
+  // { m: 1, l: 1, s?: 3 }
+  updateLocation: (location, progressPercentage) => {
+    service.setValue(
+      'cmi.location',
+      JSON.stringify({ v1: 1, ...location.lesson })
+    );
 
-    return {
-      error: false,
-      API: source.API,
-    };
+    // Update progress
+    progressPercentage = progressPercentage || 0;
+    service.setValue('cmi.progress_measure', progressPercentage);
+
+    service.commit();
+  },
+  getLocation: () => {
+    // {m:1, l:1, s?:3} || {} || null
+    try {
+      return JSON.parse(service.getValue('cmi.location'));
+    } catch (e) {
+      return {};
+    }
   },
   start: () => {
-    const resFind = service._findAPI(window);
+    service._time.startTime = new Date();
+    service.getAPI(window);
 
-    if (resFind.error) {
-      return resFind;
+    if (!service.API) {
+      throw 'MISSING_SCORM_API';
     }
 
-    service.API = resFind.API;
-    service._time.start = new Date();
     service.init = true;
 
-    const resInit = service.API.LMSInitialize();
+    service.initialize();
 
-    if (resInit === service.STATUSES.update.false) {
-      return {
-        error: true,
-        message: 'SCORM service failed to initialize',
-        data: service.getError(),
-      };
-    }
-
-    console.log('cmi version:');
-    const version = service.getValue('cmi._version');
-    console.log(version);
-
-    console.log('lesson Status (1.2):');
-    const lessonStatus = service.getValue('cmi.core.lesson_status');
-    console.log(lessonStatus);
-
-    console.log('completion Status (2004):');
     const completionStatus = service.getValue('cmi.completion_status');
-    console.log(completionStatus);
 
-    console.log('success Status (2004):');
-    const successStatus = service.getValue('cmi.success_status');
-    console.log(successStatus);
+    if (completionStatus === 'unknown') {
+      service.setValue('cmi.completion_status', 'incomplete');
+      service.setValue('cmi.success_status', 'unknown');
+      service.setValue('cmi.suspend_data', '{}');
+    } else {
+      service.setValue(
+        'cmi.score.scaled',
+        service.getValue('cmi.score.scaled')
+      );
+      service.setValue('cmi.score.raw', service.getValue('cmi.score.raw'));
+      service.setValue(
+        'cmi.success_status',
+        service.getValue('cmi.success_status')
+      );
+      service.setValue(
+        'cmi.progress_measure',
+        service.getValue('cmi.progress_measure')
+      );
+      service.setValue(
+        'cmi.completion_status',
+        service.getValue('cmi.completion_status')
+      );
 
-    console.log('lesson location:');
-    const lessonLocation = service.getValue('cmi.core.lesson_location');
-    console.log(lessonLocation);
+    }
 
-    console.log('session time (1.2):');
-    const sessionTime = service.getValue('cmi.core.session_time');
-    console.log(sessionTime);
+    // until we have things hooked up to exit buttons/nav, set exit to 'suspend' as part of start() so that status persists whether the user finishes or exits
+    service.setValue('cmi.exit', 'suspend');
 
-    console.log('total time (1.2):');
-    const totalTime = service.getValue('cmi.core.totalTime');
-    console.log(totalTime);
-
-    console.log('session time (2004):');
-    const sessionTime2004 = service.getValue('cmi.session_time');
-    console.log(sessionTime2004);
-
-    // console.log('score raw (1.2):');
-    // const score_raw = service.getValue('cmi.core.score_raw');
-    // console.log(score_raw);
-
-    // console.log('score to pass (2004):');
-    // const score_pass_1 = service.getValue('cmi.scaled_passing_score');
-    // console.log(score_pass_1);
-
-    // console.log('score mastery (1.2):');
-    // const score_mastery = service.getValue('cmi.student_data.mastery_score');
-    // console.log(score_mastery);
-
-    console.log('course progress (2004):');
-    const progress_measure = service.getValue('cmi.progress_measure');
-    console.log(progress_measure);
-
-    console.log('score (2004):');
-    const scoreVal2004 = service.getValue('cmi.score.raw');
-    console.log(scoreVal2004);
+    service.commit();
 
     return {
       error: false,
     };
   },
-  save: () => {
-    const res = service.isAvailable();
+  finish: () => {
+    service.setValue('cmi.score.min', 0);
+    service.setValue('cmi.score.max', 100);
+    service.setValue('cmi.score.scaled', 1);
+    service.setValue('cmi.score.raw', 100);
+    service.setValue('cmi.success_status', 'passed');
+    service.setValue('cmi.progress_measure', 1);
+    service.setValue('cmi.completion_status', 'completed');
 
-    if (res.error) {
-      return res;
-    }
-
-    const resSave = res.API.LMSCommit();
-
-    if (resSave === service.STATUSES.update.false) {
-      return {
-        error: true,
-        message: 'SCORM service failed to save',
-        data: service.getError(),
-      };
-    }
-
-    return {
-      error: false,
-    };
-  },
-  stop: () => {
-    const res = service.isAvailable();
-
-    if (res.error) {
-      return res;
-    }
-
-    const saveRes = service.save();
-
-    if (saveRes.error) {
-      return saveRes;
-    }
-
-    const resFinish = res.API.LMSFinish();
-
-    if (resFinish === service.STATUSES.update.false) {
-      return {
-        error: true,
-        message: 'SCORM service failed to save',
-        data: service.getError(),
-      };
-    }
-
-    service.finished = true;
-    service.save();
-    console.log('terminating');
-    res.API.Commit();
-    return {
-      error: false,
-    };
+    console.log('SERVICE');
+    console.log(service);
+    service.commit();
+    service.API?.Terminate('');
   },
   setValue: (elem, val) => {
-    const res = service.isAvailable();
-
-    if (res.error) {
-      return res;
+    if (!service.API) {
+      throw 'MISSING_SCORM_API';
     }
 
-    const setRes = res.API.LMSSetValue(elem, val);
+    console.log('API.SetValue', elem, val);
 
-    if (setRes === service.STATUSES.update.false) {
-      return {
-        error: true,
-        message: `SCORM service failed to set ${elem} to ${val}`,
-        data: service.getError(true),
-      };
-    }
+    service.API.SetValue(elem, val);
+
+    // if (service.API.SetValue(elem, val) === 'false') {
+    //   throw {
+    //     message: `SCORM service failed to set ${elem} to ${val}`,
+    //     data: service.getError(true),
+    //   };
+    // }
 
     return {
       error: false,
     };
   },
   getValue: (elem) => {
-    const res = service.isAvailable();
-
-    if (res.error) {
-      return res;
+    if (!service.API) {
+      throw 'MISSING_SCORM_API';
     }
 
-    const getRes = res.API.LMSGetValue(elem);
+    const getRes = service.API.GetValue(elem);
 
-    console.log('GET RES');
-    console.log(getRes);
-
-    if (getRes === service.STATUSES.update.false) {
-      return {
-        error: true,
+    if (getRes === 'false') {
+      throw {
         message: `SCORM service failed to get ${elem}`,
         data: service.getError(true),
       };
     }
 
-    return {
-      error: false,
-    };
-  },
-  getProgress: () => {
-    const res = service.isAvailable();
+    console.log('API.GetValue', elem, getRes);
 
-    if (res.error) {
-      return res;
-    }
-
-    const getRes = res.API.LMSGetValue('cmi.progress_measure');
-    const numberRes = parseFloat(getRes);
-    if (numberRes > 0) {
-      return numberRes;
-    } else {
-      return 0;
-    }
-  },
-  updateStatus: (status) => {
-    const res = service.isAvailable();
-
-    if (res.error) {
-      return res;
-    }
-
-    if (!hasProp(service.STATUSES.lesson, status)) {
-      const validStatuses = Object.keys(service.STATUSES.lesson).join(', ');
-      const msg = `Invalid lesson status: ${status}. Must be one of: ${validStatuses}`;
-
-      console.error(msg);
-      return {
-        error: true,
-        message: msg,
-      };
-    }
-
-    const lessonStatus = service.STATUSES.lesson[status];
-    const setRes = service.setValue('cmi.core.lesson_status', lessonStatus);
-
-    if (setRes.error) {
-      return setRes;
-    }
-
-    return {
-      error: false,
-    };
-  },
-  exit: () => {
-    const res = service.isAvailable();
-
-    if (res.error) {
-      return res;
-    }
-
-    service._time.end = new Date();
-
-    if (!service._time.start) {
-      return {
-        error: true,
-        message: 'Service was never started',
-      };
-    }
-
-    const totalTime =
-      service._time.end.getTime() - service._time.start.getTime();
-    const endRes = service.setValue(
-      'cmi.core.session_time',
-      service._time.convert(totalTime)
-    );
-
-    if (endRes.error) {
-      return endRes;
-    }
-
-    const exitRes = service.setValue(
-      'cmi.core.exit',
-      service.STATUSES.exit.save
-    );
-
-    if (exitRes.error) {
-      return exitRes;
-    }
-
-    return service.stop();
-  },
-  updateProgress: (percentageCompleted) => {
-    console.log('new percentage');
-    console.log(percentageCompleted);
-    console.log('old percentage');
-    console.log(service.getProgress());
-    const oldRes = service.getProgress();
-    if (percentageCompleted > oldRes) {
-      console.log('higher?');
-      // service.courseProgress = percentageCompleted;
-      service.setValue('cmi.progress_measure', percentageCompleted);
-    }
-    console.log(percentageCompleted);
-    service.save();
-  },
-  finish: () => {
-    console.log('DONE');
-
-    // SCORM 2004
-    service.courseProgress = 1;
-    service.setValue('cmi.progress_measure', service.courseProgress);
-    service.setValue('cmi.score.raw', 90.0);
-    service.setValue('cmi.success_status', 'passed');
-
-    // SCORM 1.2 (status is handled separately, but scores will conflict, so only update 1)
-    service.updateStatus('success');
-    // service.setValue('cmi.core.score.raw', 87.0);
-
-    service.save();
-
-    console.log('SERVICE:');
-    console.log(service);
-    service.exit();
+    return getRes;
   },
 };
 
