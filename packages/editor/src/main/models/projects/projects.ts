@@ -1,4 +1,6 @@
-import { OpenDialogOptions, BrowserWindow, IpcMainInvokeEvent } from 'electron';
+import { OpenDialogOptions, IpcMainInvokeEvent } from 'electron';
+const { BrowserWindow } = require('electron');
+
 import { v4 as uuid } from 'uuid';
 import {
   ProjectsApi,
@@ -9,7 +11,7 @@ import {
   SaveReq,
   PreviewAssetReq,
   ProjectAsset,
-  PreviewProjectReq
+  PreviewProjectReq,
 } from './projects.types';
 import { Templates } from '../';
 import { set as setSetting } from '../settings';
@@ -32,7 +34,7 @@ const getProjectPath = (name) => {
 const getProjectInfo = (meta: ProjectMeta): rq.ApiResult => {
   const noId = !meta.id;
   const noName = !meta.name;
-    
+
   let folder;
   let info: ProjectFile;
 
@@ -48,17 +50,17 @@ const getProjectInfo = (meta: ProjectMeta): rq.ApiResult => {
           isNew: true,
           uncommitted: true,
           exists: false,
-        }
-      }
+        },
+      };
     }
-  
+
     const fileName = fs.joinPath(folder, projectMetaFilename);
     const existsRes = fs.fileExistsSync(fileName);
-    
+
     if (existsRes.error) {
       return existsRes;
     }
-    
+
     if (!existsRes.data.exists) {
       return {
         error: false,
@@ -68,16 +70,16 @@ const getProjectInfo = (meta: ProjectMeta): rq.ApiResult => {
           fileName,
           exists: false,
           folder,
-        }
-      }
+        },
+      };
     }
-  
+
     const read = fs.fileReadSync(fileName) as rq.ApiResult;
-  
+
     if (read.error) {
       return read;
     }
-  
+
     info = read.data.contents as ProjectFile;
 
     return {
@@ -89,7 +91,7 @@ const getProjectInfo = (meta: ProjectMeta): rq.ApiResult => {
         exists: existsRes.data.exists,
         folder,
         info,
-      }
+      },
     };
   } catch (e) {
     return {
@@ -194,7 +196,7 @@ export const create = (ev: rq.RequestEvent, blueprint?: string) => {
       try {
         for (const [key, item] of Object.entries(content)) {
           const input = item as Templates.InputProps;
-    
+
           switch (input.type) {
             case 'Asset':
               if (input.value) {
@@ -223,7 +225,7 @@ export const create = (ev: rq.RequestEvent, blueprint?: string) => {
       try {
         for (const [key, item] of Object.entries(content)) {
           const input = item as Templates.InputProps;
-    
+
           switch (input.type) {
             case 'Asset':
               if (input.value) {
@@ -236,7 +238,10 @@ export const create = (ev: rq.RequestEvent, blueprint?: string) => {
           }
         }
       } catch (e) {
-        log.error('Failed to update content during create: unexpected error', e);
+        log.error(
+          'Failed to update content during create: unexpected error',
+          e
+        );
       }
     };
 
@@ -266,7 +271,7 @@ export const create = (ev: rq.RequestEvent, blueprint?: string) => {
       project.slides?.forEach((slide) => {
         updateContent(slide.template.content);
       });
-      
+
       resolve({
         error: false,
         data: {
@@ -527,14 +532,14 @@ const writeProjectData = (projectData: ProjectData) => {
 
     const filename = projectData.meta.filename;
 
-    fs.archive.compress(projectData)
+    fs.archive
+      .compress(projectData)
       .then((compressedRes) => {
-  
         if (compressedRes.error) {
           resolve(compressedRes);
           return;
         }
-  
+
         const data = compressedRes.data.data;
 
         log.info('writing project data', filename);
@@ -559,10 +564,10 @@ const writeProjectData = (projectData: ProjectData) => {
           data: {
             trace: e,
           },
-        })
-      })
+        });
+      });
   });
-}
+};
 
 export const save = (ev: rq.RequestEvent, { data, assets }: SaveReq) => {
   return new Promise<rq.ApiResult>((resolve) => {
@@ -842,13 +847,16 @@ export const list = (ev: rq.RequestEvent, limit?: number) => {
           }
 
           if (fileRes.value.error) {
-            log.error('failed to open: ${drainRes.data.filepaths[idx]}', fileRes.value);
+            log.error(
+              'failed to open: ${drainRes.data.filepaths[idx]}',
+              fileRes.value
+            );
             return;
           }
 
           projects.push(fileRes.value.data.contents);
         });
-        
+
         resolve({
           error: false,
           data: {
@@ -862,7 +870,6 @@ export const list = (ev: rq.RequestEvent, limit?: number) => {
 
 export const open = (ev: rq.RequestEvent, project: ProjectMeta) => {
   return new Promise<rq.ApiResult>((resolve) => {
-
     fs.archive.uncompress(project.filename).then((res) => {
       if (res.error) {
         resolve(res);
@@ -900,7 +907,10 @@ export const previewAsset = (ev: rq.RequestEvent, req: PreviewAssetReq) => {
 
     try {
       const infoRes = getProjectInfo(req.meta);
-      const src = (infoRes.data.isNew || infoRes.data.uncommitted) ? fs.joinPath(fs.APP_PATHS.uploads, req.asset.filename) : fs.joinPath(infoRes.data.folder, 'assets', req.asset.filename);
+      const src =
+        infoRes.data.isNew || infoRes.data.uncommitted
+          ? fs.joinPath(fs.APP_PATHS.uploads, req.asset.filename)
+          : fs.joinPath(infoRes.data.folder, 'assets', req.asset.filename);
 
       win.previewFile(src);
 
@@ -970,7 +980,7 @@ export const previewProject = (ev: rq.RequestEvent, req: PreviewProjectReq) => {
         assets: req.assets,
       };
     }
-    
+
     createPreview(req.project, meta, assetSrc, req.type, req.id).then((res) => {
       if (res.error) {
         resolve(res);
@@ -997,9 +1007,9 @@ export const previewProject = (ev: rq.RequestEvent, req: PreviewProjectReq) => {
         },
       });
 
-      previewWin.on("enter-html-full-screen", async () => {
+      previewWin.on('enter-html-full-screen', async () => {
         // We cannot require the screen module until the app is ready.
-        const { screen } = require("electron");
+        const { screen } = require('electron');
         const primaryDisplay = screen.getPrimaryDisplay();
         const { width, height } = primaryDisplay.workAreaSize;
         const winBounds = win.getContentBounds();
@@ -1010,7 +1020,7 @@ export const previewProject = (ev: rq.RequestEvent, req: PreviewProjectReq) => {
         win.setContentBounds({ x: 0, y: 0, width, height }, false);
         win.setSimpleFullScreen(true);
 
-        previewWin.once("leave-html-full-screen", async () => {
+        previewWin.once('leave-html-full-screen', async () => {
           win.setSimpleFullScreen(false);
 
           win.setContentBounds(winBounds, false);
@@ -1030,7 +1040,7 @@ export const previewProject = (ev: rq.RequestEvent, req: PreviewProjectReq) => {
 
       previewWin.once('closed', () => {
         resolve(res);
-      })
+      });
     });
   });
 };
