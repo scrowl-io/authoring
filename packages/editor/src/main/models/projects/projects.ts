@@ -700,6 +700,28 @@ export const save = (ev: rq.RequestEvent, { data, assets }: SaveReq) => {
 };
 
 export const publish = (ev: rq.RequestEvent, data: ProjectData) => {
+  const updateSettings = () => {
+    return new Promise<rq.ApiResult>((resolveUpdate) => {
+      const now = new Date().toISOString();
+
+      setSetting(ev, 'lastPublishedAt', now).then(
+        (settingRes) => {
+          if (settingRes.error) {
+            log.error(settingRes);
+          }
+
+          resolveUpdate({
+            error: false,
+            data: {
+              updated: true,
+              lastPublishedAt: now,
+            },
+          });
+        }
+      );
+    });
+  };
+
   return new Promise<rq.ApiResult>((resolve) => {
     log.info('publishing project');
 
@@ -762,7 +784,22 @@ export const publish = (ev: rq.RequestEvent, data: ProjectData) => {
                 readRes.data.contents,
                 filepath,
                 fs.APP_PATHS.publish
-              ).then(resolve);
+              ).then((scormRes) => {
+                if (scormRes.error) {
+                  resolve(scormRes);
+                  return;
+                }
+
+                updateSettings().then((updateRes) => {
+                  if (updateRes.error) {
+                    resolve(updateRes);
+                    return;
+                  }
+
+                  scormRes.data.lastPublishedAt = updateRes.data.lastPublishedAt;
+                  resolve(scormRes);
+                })
+              });
             });
           })
           .catch((e) => {
@@ -777,38 +814,6 @@ export const publish = (ev: rq.RequestEvent, data: ProjectData) => {
             log.error(unexpectedError);
             resolve(unexpectedError);
           });
-
-        const now = new Date().toISOString();
-        const meta = data.meta as ProjectMeta;
-        const infoRes = getProjectInfo(meta);
-
-        if (infoRes.error) {
-          resolve(infoRes);
-          return;
-        }
-
-        meta.publishedAt = now;
-
-        const updateSettings = () => {
-          return new Promise<rq.ApiResult>((resolveSettings) => {
-            setSetting(ev, 'lastPublishedAt', data.meta.publishedAt).then(
-              (settingRes) => {
-                if (settingRes.error) {
-                  log.error(settingRes);
-                }
-
-                resolveSettings({
-                  error: false,
-                  data: {
-                    updated: true,
-                  },
-                });
-              }
-            );
-          });
-        };
-
-        updateSettings();
       });
   });
 };

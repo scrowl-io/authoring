@@ -228,6 +228,7 @@ export const Header = () => {
           return;
         }
 
+        Settings.setLastPublishedAt(pubRes.data.lastPublishedAt);
         setIsOpenPublish(false);
         closePublishProgress();
 

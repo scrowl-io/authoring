@@ -40,7 +40,7 @@ export const config: stateManager.StateConfig = {
     },
     setLastPublishedAt: (state, action) => {
       state.lastPublishedAt = action.payload;
-      state.lastPublishedAt = true;
+      state.hasPublished = true;
     },
     setTheme: (state, action) => {
       state.theme = action.payload;

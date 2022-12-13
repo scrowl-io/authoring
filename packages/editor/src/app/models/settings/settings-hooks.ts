@@ -78,6 +78,15 @@ export const useHasPublished = () => {
   );
 };
 
+export const setLastPublishedAt = (data) => {
+  if (!processor.dispatch) {
+    console.warn('settings processor not ready');
+    return;
+  }
+
+  processor.dispatch(state.setLastPublishedAt(data));
+};
+
 export const usePreviewMode = () => {
   return useSelector((data: stateManager.RootState) => {
     return data.settings.previewMode;
@@ -132,6 +141,7 @@ export default {
   setAnimation,
   useHasWelcomed,
   useHasPublished,
+  setLastPublishedAt,
   usePreviewMode,
   setPreviewMode,
   init,
