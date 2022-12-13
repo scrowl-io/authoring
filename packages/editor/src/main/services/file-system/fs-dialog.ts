@@ -1,4 +1,4 @@
-import { dialog, MessageBoxOptions, SaveDialogOptions, OpenDialogOptions, FileFilter } from 'electron';
+import { dialog, MessageBoxOptions, SaveDialogOptions, OpenDialogOptions, FileFilter, BrowserWindow, IpcMainInvokeEvent } from 'electron';
 import { FSApi, AssetType, ASSET_TYPES } from './';
 import { rq } from '../';
 
@@ -92,27 +92,34 @@ export const save = (ev: rq.RequestEvent, options: SaveDialogOptions) => {
 
 export const open = (ev: rq.RequestEvent, options: OpenDialogOptions) => {
   return new Promise<rq.ApiResult>((resolve) => {
-    dialog
-      .showOpenDialog(options)
-      .then(({ canceled, filePaths }) => {
-        resolve({
-          error: false,
-          data: {
-            canceled,
-            filePath: filePaths[0],
-          },
-        });
-      })
-      .catch((e) => {
-        resolve({
-          error: true,
-          message: 'Unable to open dialog - unknown reason',
-          data: {
-            trace: e,
-            options,
-          },
-        });
-      });
+    let dialogResult;
+    let openWin: BrowserWindow | null = null;
+    const openEvent = ev as IpcMainInvokeEvent;
+    const openData = {
+      canceled: false,
+      filePath: '',
+    };
+
+    if (openEvent.sender) {
+      openWin = BrowserWindow.fromWebContents(openEvent.sender);
+    }
+
+    if (openWin) {
+      dialogResult = dialog.showOpenDialogSync(openWin, options);
+    } else {
+      dialogResult = dialog.showOpenDialogSync(options);
+    }
+
+    if (dialogResult === undefined) {
+      openData.canceled = true;
+    } else {
+      openData.filePath = dialogResult[0];
+    }
+
+    resolve({
+      error: false,
+      data: openData,
+    });
   });
 };
 
