@@ -727,15 +727,50 @@ export const publish = (ev: rq.RequestEvent, data: ProjectData) => {
     });
   };
 
+  const updateProjectInfo = (info: ProjectFile, infoSource: string, publishedFilename: string) => {
+    return new Promise<rq.ApiResult>((resolveUpdate) => {
+      info.lastPublishedFilename = publishedFilename;
+
+      fs.fileWrite(infoSource, info).then((writeFileRes) => {
+        if (writeFileRes.error) {
+          log.error(writeFileRes);
+          resolveUpdate(writeFileRes);
+          return;
+        }
+
+        resolveUpdate({
+          error: false,
+          data: {
+            info,
+          },
+        });
+      });
+    });
+  };
+
   return new Promise<rq.ApiResult>((resolve) => {
     log.info('publishing project');
 
+    const meta = data.meta as ProjectMeta;
+    const infoRes = getProjectInfo(meta);
+
+    if (infoRes.error) {
+      log.error('getting project info failed', infoRes);
+      resolve(infoRes);
+      return;
+    }
+
+    const info = infoRes.data.info as ProjectFile;
+    const defaultPath = info.lastPublishedFilename ?
+      info.lastPublishedFilename :
+      fs.joinPath(
+        fs.APP_PATHS.downloads,
+        utils.str.toScormCase(data.meta.name)
+      );
+
     fs.dialog
       .save(ev, {
-        defaultPath: fs.joinPath(
-          fs.APP_PATHS.downloads,
-          utils.str.toScormCase(data.meta.name)
-        ),
+        defaultPath,
         properties: ['showOverwriteConfirmation', 'createDirectory'],
         buttonLabel: 'Publish',
         message: 'Publish SCORM package',
@@ -769,7 +804,9 @@ export const publish = (ev: rq.RequestEvent, data: ProjectData) => {
               return;
             }
 
-            const filepath = `${saveRes.data.filePath}.zip`;
+            const extName = fs.getExt(saveRes.data.filePath);
+            const savePath = saveRes.data.filePath.replace(extName, '');
+            const filepath = `${savePath}.zip`;
             const projectFileName = fs.joinPath(
               fs.getDirname(data.meta.filename || ''),
               projectMetaFilename
@@ -802,7 +839,15 @@ export const publish = (ev: rq.RequestEvent, data: ProjectData) => {
                   }
 
                   scormRes.data.lastPublishedAt = updateRes.data.lastPublishedAt;
-                  resolve(scormRes);
+
+                  updateProjectInfo(info, infoRes.data.fileName, filepath).then((infoUpdateRes) => {
+                    if (infoUpdateRes.error) {
+                      resolve(infoUpdateRes);
+                      return;
+                    }
+
+                    resolve(scormRes);
+                  });
                 })
               });
             });

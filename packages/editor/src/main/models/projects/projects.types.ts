@@ -153,6 +153,7 @@ export type ProjectFile = {
   updatedAt: string;
   assets: Array<ProjectAsset>;
   versions: Array<ProjectMeta>;
+  lastPublishedFilename?: string;
 };
 
 export type TemplateInfo = {
