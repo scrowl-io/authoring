@@ -99,7 +99,6 @@ export const Logo = ({
 
   return (
     <motion.div
-      whileHover={motionOpts.whileHover}
       initial={motionOpts.initial}
       animate={motionOpts.animate}
       transition={motionOpts.transition}
