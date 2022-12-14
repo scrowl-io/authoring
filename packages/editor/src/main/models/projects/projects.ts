@@ -709,25 +709,27 @@ export const publish = (ev: rq.RequestEvent, data: ProjectData) => {
     return new Promise<rq.ApiResult>((resolveUpdate) => {
       const now = new Date().toISOString();
 
-      setSetting(ev, 'lastPublishedAt', now).then(
-        (settingRes) => {
-          if (settingRes.error) {
-            log.error(settingRes);
-          }
-
-          resolveUpdate({
-            error: false,
-            data: {
-              updated: true,
-              lastPublishedAt: now,
-            },
-          });
+      setSetting(ev, 'lastPublishedAt', now).then((settingRes) => {
+        if (settingRes.error) {
+          log.error(settingRes);
         }
-      );
+
+        resolveUpdate({
+          error: false,
+          data: {
+            updated: true,
+            lastPublishedAt: now,
+          },
+        });
+      });
     });
   };
 
-  const updateProjectInfo = (info: ProjectFile, infoSource: string, publishedFilename: string) => {
+  const updateProjectInfo = (
+    info: ProjectFile,
+    infoSource: string,
+    publishedFilename: string
+  ) => {
     return new Promise<rq.ApiResult>((resolveUpdate) => {
       info.lastPublishedFilename = publishedFilename;
 
@@ -761,12 +763,17 @@ export const publish = (ev: rq.RequestEvent, data: ProjectData) => {
     }
 
     const info = infoRes.data.info as ProjectFile;
-    const defaultPath = info.lastPublishedFilename ?
-      info.lastPublishedFilename :
-      fs.joinPath(
-        fs.APP_PATHS.downloads,
-        utils.str.toScormCase(data.meta.name)
-      );
+    const defaultPath = info.lastPublishedFilename
+      ? info.lastPublishedFilename
+      : data.scorm.name
+      ? fs.joinPath(
+          fs.APP_PATHS.downloads,
+          utils.str.toScormCase(data.scorm.name)
+        )
+      : fs.joinPath(
+          fs.APP_PATHS.downloads,
+          utils.str.toScormCase(data.meta.name)
+        );
 
     fs.dialog
       .save(ev, {
@@ -838,17 +845,20 @@ export const publish = (ev: rq.RequestEvent, data: ProjectData) => {
                     return;
                   }
 
-                  scormRes.data.lastPublishedAt = updateRes.data.lastPublishedAt;
+                  scormRes.data.lastPublishedAt =
+                    updateRes.data.lastPublishedAt;
 
-                  updateProjectInfo(info, infoRes.data.fileName, filepath).then((infoUpdateRes) => {
-                    if (infoUpdateRes.error) {
-                      resolve(infoUpdateRes);
-                      return;
+                  updateProjectInfo(info, infoRes.data.fileName, filepath).then(
+                    (infoUpdateRes) => {
+                      if (infoUpdateRes.error) {
+                        resolve(infoUpdateRes);
+                        return;
+                      }
+
+                      resolve(scormRes);
                     }
-
-                    resolve(scormRes);
-                  });
-                })
+                  );
+                });
               });
             });
           })

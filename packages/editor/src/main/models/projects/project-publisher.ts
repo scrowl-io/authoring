@@ -301,7 +301,19 @@ export const createScormPackage = (src: string, dest: string, project: ProjectDa
         rights: '©Copyright ' + new Date().getFullYear(),
       },
     };
-    const packageFilename = fs.joinPath(destFolder, `${str.toScormCase(packagerOpts.package.name)}_v${packagerOpts.package.version}_${today}.zip`);
+    const packageFilename = packagerOpts.package.name
+      ? fs.joinPath(
+          destFolder,
+          `${str.toScormCase(packagerOpts.package.name)}_v${
+            packagerOpts.package.version
+          }_${today}.zip`
+        )
+      : fs.joinPath(
+          destFolder,
+          `${str.toScormCase(packagerOpts.title)}_v${
+            packagerOpts.package.version
+          }_${today}.zip`
+        );
 
     packager(packagerOpts, (message: string) => {
       fs.fileRename(packageFilename, dest).then((res) => {

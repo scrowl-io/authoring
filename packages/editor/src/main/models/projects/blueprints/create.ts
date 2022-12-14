@@ -24,7 +24,7 @@ export const project = (): ProjectData => {
   return {
     meta: {
       id: '',
-      name: '',
+      name: 'Untitled Project',
       filename: '',
       createdAt: now,
       updatedAt: now,
