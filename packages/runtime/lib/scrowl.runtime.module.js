@@ -89,19 +89,19 @@ const $defce2f29876acb7$export$6ed414b8d8bead88 = {
         };
     },
     commit: ()=>{
-        if (!$defce2f29876acb7$export$6ed414b8d8bead88.API) throw "MISSING_SCORM_API";
+        if (!$defce2f29876acb7$export$6ed414b8d8bead88.API) console.error("MISSING_SCORM_API - COMMIT");
         $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.session_time", $defce2f29876acb7$export$6ed414b8d8bead88._time.getSessionTime());
-        $defce2f29876acb7$export$6ed414b8d8bead88.API.Commit("");
+        $defce2f29876acb7$export$6ed414b8d8bead88.API?.Commit("");
         console.log("API.Commit()");
-        if ($defce2f29876acb7$export$6ed414b8d8bead88.API.Commit("") === "false") throw "ERROR_COMMIT_SCORM_API";
+        if ($defce2f29876acb7$export$6ed414b8d8bead88.API?.Commit("") === "false") throw "ERROR_COMMIT_SCORM_API";
     },
     exit: ()=>{
         $defce2f29876acb7$export$6ed414b8d8bead88.commit();
     },
     initialize: ()=>{
-        if (!$defce2f29876acb7$export$6ed414b8d8bead88.API) throw "MISSING_SCORM_API";
+        if (!$defce2f29876acb7$export$6ed414b8d8bead88.API) console.error("MISSING_SCORM_API - INIT");
         console.log("API.Initialize()");
-        if ($defce2f29876acb7$export$6ed414b8d8bead88.API.Initialize("") === "false") throw "ERROR_INIT_SCORM_API";
+        if ($defce2f29876acb7$export$6ed414b8d8bead88.API?.Initialize("") === "false") throw "ERROR_INIT_SCORM_API";
     },
     // { m: 1, l: 1, s?: 3 }
     updateLocation: (location, progressPercentage)=>{
@@ -117,7 +117,8 @@ const $defce2f29876acb7$export$6ed414b8d8bead88 = {
     getLocation: ()=>{
         // {m:1, l:1, s?:3} || {} || null
         try {
-            return JSON.parse($defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.location"));
+            const location = $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.location");
+            if (location !== undefined) return JSON.parse(location);
         } catch (e) {
             return {};
         }
@@ -125,7 +126,7 @@ const $defce2f29876acb7$export$6ed414b8d8bead88 = {
     start: ()=>{
         $defce2f29876acb7$export$6ed414b8d8bead88._time.startTime = new Date();
         $defce2f29876acb7$export$6ed414b8d8bead88.getAPI(window);
-        if (!$defce2f29876acb7$export$6ed414b8d8bead88.API) throw "MISSING_SCORM_API";
+        if (!$defce2f29876acb7$export$6ed414b8d8bead88.API) console.error("MISSING_SCORM_API - START");
         $defce2f29876acb7$export$6ed414b8d8bead88.init = true;
         $defce2f29876acb7$export$6ed414b8d8bead88.initialize();
         const completionStatus = $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.completion_status");
@@ -161,9 +162,9 @@ const $defce2f29876acb7$export$6ed414b8d8bead88 = {
         $defce2f29876acb7$export$6ed414b8d8bead88.API?.Terminate("");
     },
     setValue: (elem, val)=>{
-        if (!$defce2f29876acb7$export$6ed414b8d8bead88.API) throw "MISSING_SCORM_API";
+        if (!$defce2f29876acb7$export$6ed414b8d8bead88.API) console.error("MISSING_SCORM_API - SETVAL");
         console.log("API.SetValue", elem, val);
-        $defce2f29876acb7$export$6ed414b8d8bead88.API.SetValue(elem, val);
+        if (val !== undefined) $defce2f29876acb7$export$6ed414b8d8bead88.API?.SetValue(elem, val);
         // if (service.API.SetValue(elem, val) === 'false') {
         //   throw {
         //     message: `SCORM service failed to set ${elem} to ${val}`,
@@ -175,8 +176,8 @@ const $defce2f29876acb7$export$6ed414b8d8bead88 = {
         };
     },
     getValue: (elem)=>{
-        if (!$defce2f29876acb7$export$6ed414b8d8bead88.API) throw "MISSING_SCORM_API";
-        const getRes = $defce2f29876acb7$export$6ed414b8d8bead88.API.GetValue(elem);
+        if (!$defce2f29876acb7$export$6ed414b8d8bead88.API) console.error("MISSING_SCORM_API - GETVAL");
+        const getRes = $defce2f29876acb7$export$6ed414b8d8bead88.API?.GetValue(elem);
         if (getRes === "false") throw {
             message: `SCORM service failed to get ${elem}`,
             data: $defce2f29876acb7$export$6ed414b8d8bead88.getError(true)

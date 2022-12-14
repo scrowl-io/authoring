@@ -129,15 +129,15 @@ export const service: RUNTIME_SERVICE = {
   },
   commit: () => {
     if (!service.API) {
-      throw 'MISSING_SCORM_API';
+      console.error('MISSING_SCORM_API - COMMIT');
     }
 
     service.setValue('cmi.session_time', service._time.getSessionTime());
 
-    service.API.Commit('');
+    service.API?.Commit('');
 
     console.log('API.Commit()');
-    if (service.API.Commit('') === 'false') {
+    if (service.API?.Commit('') === 'false') {
       throw 'ERROR_COMMIT_SCORM_API';
     }
   },
@@ -146,10 +146,10 @@ export const service: RUNTIME_SERVICE = {
   },
   initialize: () => {
     if (!service.API) {
-      throw 'MISSING_SCORM_API';
+      console.error('MISSING_SCORM_API - INIT');
     }
     console.log('API.Initialize()');
-    if (service.API.Initialize('') === 'false') {
+    if (service.API?.Initialize('') === 'false') {
       throw 'ERROR_INIT_SCORM_API';
     }
   },
@@ -169,7 +169,10 @@ export const service: RUNTIME_SERVICE = {
   getLocation: () => {
     // {m:1, l:1, s?:3} || {} || null
     try {
-      return JSON.parse(service.getValue('cmi.location'));
+      const location = service.getValue('cmi.location');
+      if (location !== undefined) {
+        return JSON.parse(location);
+      }
     } catch (e) {
       return {};
     }
@@ -179,7 +182,7 @@ export const service: RUNTIME_SERVICE = {
     service.getAPI(window);
 
     if (!service.API) {
-      throw 'MISSING_SCORM_API';
+      console.error('MISSING_SCORM_API - START');
     }
 
     service.init = true;
@@ -210,7 +213,6 @@ export const service: RUNTIME_SERVICE = {
         'cmi.completion_status',
         service.getValue('cmi.completion_status')
       );
-
     }
 
     // until we have things hooked up to exit buttons/nav, set exit to 'suspend' as part of start() so that status persists whether the user finishes or exits
@@ -238,12 +240,14 @@ export const service: RUNTIME_SERVICE = {
   },
   setValue: (elem, val) => {
     if (!service.API) {
-      throw 'MISSING_SCORM_API';
+      console.error('MISSING_SCORM_API - SETVAL');
     }
 
     console.log('API.SetValue', elem, val);
 
-    service.API.SetValue(elem, val);
+    if (val !== undefined) {
+      service.API?.SetValue(elem, val);
+    }
 
     // if (service.API.SetValue(elem, val) === 'false') {
     //   throw {
@@ -258,10 +262,10 @@ export const service: RUNTIME_SERVICE = {
   },
   getValue: (elem) => {
     if (!service.API) {
-      throw 'MISSING_SCORM_API';
+      console.error('MISSING_SCORM_API - GETVAL');
     }
 
-    const getRes = service.API.GetValue(elem);
+    const getRes = service.API?.GetValue(elem);
 
     if (getRes === 'false') {
       throw {
