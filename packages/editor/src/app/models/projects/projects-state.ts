@@ -100,7 +100,6 @@ export const config: stateManager.StateConfig = {
         state.isNew = false;
       }
 
-      state.data.scorm.name = state.data.meta.name.slice();
       state.isLoaded = true;
     },
     setMeta: (state, action) => {
@@ -111,7 +110,6 @@ export const config: stateManager.StateConfig = {
     },
     setScorm: (state, action) => {
       updateObj(state.data.scorm, action.payload);
-      state.data.meta.name = state.data.scorm.name.slice();
       state.isDirty = true;
       state.isUncommitted = true;
     },

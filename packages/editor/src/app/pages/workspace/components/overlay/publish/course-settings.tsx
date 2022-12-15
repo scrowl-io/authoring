@@ -26,6 +26,9 @@ export const CourseSettings = ({
   let timerFocusName = useRef<ReturnType<typeof setTimeout>>();
   const { name, description, authors, organization } = data;
 
+  const project = Projects.useData();
+  const placeholderName = project.meta.name;
+
   const handleFormUpdate = () => {
     onChange();
   };
@@ -155,8 +158,7 @@ export const CourseSettings = ({
           className={`form-control form-control-sm${
             errors.name ? ' is-invalid' : ''
           }`}
-          placeholder="Course Name"
-          value={name}
+          placeholder={placeholderName}
           onChange={handleUpdateName}
           onKeyDown={handleInputName}
           onBlur={handleFormUpdate}

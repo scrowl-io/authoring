@@ -82,23 +82,25 @@ const updateCourseProgress = (project, id) => {
   if (currentLessonIndex) {
     percentageCompleted = currentLessonIndex / totalLessons;
   }
-  const runtimeLesson = {
-    m: currentLesson?.lesson.lesson.moduleId,
-    l: currentLesson?.lesson.lesson.id,
-    s: currentLesson?.lesson.slides,
-  };
-  console.log(runtimeLesson);
-  console.log('lesson');
-  console.log(currentLesson?.lesson);
-  const runtime = Scrowl.runtime;
-  runtime?.updateLocation(currentLesson?.lesson, percentageCompleted);
+
+  if (currentLesson && Scrowl.runtime) {
+    const runtimeLesson = {
+      m: currentLesson.lesson.lesson.moduleId,
+      l: currentLesson.lesson.lesson.id,
+      s: currentLesson.lesson.slides,
+    }; // TODO: why is this not used?
+
+    console.debug('lesson', currentLesson.lesson, runtimeLesson);
+    Scrowl.runtime.updateLocation(currentLesson.lesson, percentageCompleted);
+  }
 };
 
 const finishCourse = () => {
   const Scrowl = window['Scrowl'];
-  const runtime = Scrowl.runtime;
 
-  runtime?.finish();
+  if (Scrowl.runtime) {
+    Scrowl.runtime.finish();
+  }
 };
 
 export const create = (project, templateList: PlayerTemplateList) => {

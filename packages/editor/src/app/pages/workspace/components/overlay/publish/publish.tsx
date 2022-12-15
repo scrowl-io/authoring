@@ -49,6 +49,8 @@ const PublishFormElement = (
         ...data,
       });
     }
+    // shouldn't need to do this  on every input change, but setting scorm on handleSubmit isn't working
+    Projects.setScorm(formData);
   };
 
   const handleRollback = (prop: string) => {

@@ -65,7 +65,7 @@ const $defce2f29876acb7$export$6ed414b8d8bead88 = {
         return win.API_1484_11;
     },
     getAPI: (win)=>{
-        if (win.parent != null && win.parent != win) //@ts-ignore
+        if (win.parent != null && win.parent != win) // @ts-ignore
         $defce2f29876acb7$export$6ed414b8d8bead88.API = $defce2f29876acb7$export$6ed414b8d8bead88.scanForAPI(win.parent);
         if ($defce2f29876acb7$export$6ed414b8d8bead88.API == null && win.opener != null) // @ts-ignore
         $defce2f29876acb7$export$6ed414b8d8bead88.API = $defce2f29876acb7$export$6ed414b8d8bead88.scanForAPI(win.opener);
@@ -89,22 +89,57 @@ const $defce2f29876acb7$export$6ed414b8d8bead88 = {
         };
     },
     commit: ()=>{
-        if (!$defce2f29876acb7$export$6ed414b8d8bead88.API) console.error("MISSING_SCORM_API - COMMIT");
+        console.debug(`API.Commit`);
+        const [isInit, API] = $defce2f29876acb7$export$6ed414b8d8bead88.isInitialized();
+        if (!isInit || !API) {
+            console.warn(`Unable to get location: service not initialized`);
+            return [
+                true
+            ];
+        }
         $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.session_time", $defce2f29876acb7$export$6ed414b8d8bead88._time.getSessionTime());
-        $defce2f29876acb7$export$6ed414b8d8bead88.API?.Commit("");
-        console.log("API.Commit()");
-        if ($defce2f29876acb7$export$6ed414b8d8bead88.API?.Commit("") === "false") throw "ERROR_COMMIT_SCORM_API";
+        API.Commit("");
+        return [
+            false
+        ];
     },
     exit: ()=>{
-        $defce2f29876acb7$export$6ed414b8d8bead88.commit();
+        console.debug("API.Exit");
+        return $defce2f29876acb7$export$6ed414b8d8bead88.commit();
     },
-    initialize: ()=>{
-        if (!$defce2f29876acb7$export$6ed414b8d8bead88.API) console.error("MISSING_SCORM_API - INIT");
-        console.log("API.Initialize()");
-        if ($defce2f29876acb7$export$6ed414b8d8bead88.API?.Initialize("") === "false") throw "ERROR_INIT_SCORM_API";
+    isInitialized: ()=>{
+        console.debug("API.Initialize()");
+        $defce2f29876acb7$export$6ed414b8d8bead88.init = false;
+        if (!$defce2f29876acb7$export$6ed414b8d8bead88.API) {
+            console.error("MISSING_SCORM_API - INIT");
+            return [
+                $defce2f29876acb7$export$6ed414b8d8bead88.init,
+                false
+            ];
+        }
+        if ($defce2f29876acb7$export$6ed414b8d8bead88.API.Initialize("") === "false") {
+            console.error("API failed to initialize");
+            return [
+                $defce2f29876acb7$export$6ed414b8d8bead88.init,
+                false
+            ];
+        }
+        $defce2f29876acb7$export$6ed414b8d8bead88.init = true;
+        return [
+            $defce2f29876acb7$export$6ed414b8d8bead88.init,
+            $defce2f29876acb7$export$6ed414b8d8bead88.API
+        ];
     },
     // { m: 1, l: 1, s?: 3 }
     updateLocation: (location, progressPercentage)=>{
+        console.debug(`API.UpdateLocation`);
+        const [isInit, API] = $defce2f29876acb7$export$6ed414b8d8bead88.isInitialized();
+        if (!isInit || !API) {
+            console.warn(`Unable to get location: service not initialized`);
+            return [
+                true
+            ];
+        }
         $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.location", JSON.stringify({
             v1: 1,
             ...location.lesson
@@ -113,42 +148,78 @@ const $defce2f29876acb7$export$6ed414b8d8bead88 = {
         progressPercentage = progressPercentage || 0;
         $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.progress_measure", progressPercentage);
         $defce2f29876acb7$export$6ed414b8d8bead88.commit();
+        return [
+            false
+        ];
     },
     getLocation: ()=>{
+        console.debug(`API.GetLocation`);
+        const [isInit, API] = $defce2f29876acb7$export$6ed414b8d8bead88.isInitialized();
+        if (!isInit || !API) {
+            console.warn(`Unable to get location: service not initialized`);
+            return [
+                true,
+                {}
+            ];
+        }
         // {m:1, l:1, s?:3} || {} || null
         try {
-            const location = $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.location");
-            if (location !== undefined) return JSON.parse(location);
+            const [error, location] = $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.location");
+            if (error || !location) return [
+                true,
+                {}
+            ];
+            return [
+                false,
+                JSON.parse(location)
+            ];
         } catch (e) {
-            return {};
+            console.error(e);
+            return [
+                true,
+                {}
+            ];
         }
     },
     start: ()=>{
+        console.debug(`API.Start`);
         $defce2f29876acb7$export$6ed414b8d8bead88._time.startTime = new Date();
         $defce2f29876acb7$export$6ed414b8d8bead88.getAPI(window);
-        if (!$defce2f29876acb7$export$6ed414b8d8bead88.API) console.error("MISSING_SCORM_API - START");
-        $defce2f29876acb7$export$6ed414b8d8bead88.init = true;
-        $defce2f29876acb7$export$6ed414b8d8bead88.initialize();
-        const completionStatus = $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.completion_status");
+        const [isInit, API] = $defce2f29876acb7$export$6ed414b8d8bead88.isInitialized();
+        if (!isInit || !API) return [
+            true
+        ];
+        const [statusError, completionStatus] = $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.completion_status");
+        if (statusError) return [
+            true
+        ];
         if (completionStatus === "unknown") {
             $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.completion_status", "incomplete");
             $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.success_status", "unknown");
             $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.suspend_data", "{}");
         } else {
-            $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.score.scaled", $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.score.scaled"));
-            $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.score.raw", $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.score.raw"));
-            $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.success_status", $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.success_status"));
-            $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.progress_measure", $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.progress_measure"));
-            $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.completion_status", $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.completion_status"));
+            $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.score.scaled", $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.score.scaled")[1]);
+            $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.score.raw", $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.score.raw")[1]);
+            $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.success_status", $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.success_status")[1]);
+            $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.progress_measure", $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.progress_measure")[1]);
+            $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.completion_status", $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.completion_status")[1]);
         }
         // until we have things hooked up to exit buttons/nav, set exit to 'suspend' as part of start() so that status persists whether the user finishes or exits
         $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.exit", "suspend");
         $defce2f29876acb7$export$6ed414b8d8bead88.commit();
-        return {
-            error: false
-        };
+        return [
+            false
+        ];
     },
     finish: ()=>{
+        console.debug(`API.Finish`);
+        const [isInit, API] = $defce2f29876acb7$export$6ed414b8d8bead88.isInitialized();
+        if (!isInit || !API) {
+            console.warn(`Unable to finish: service not initialized`);
+            return [
+                true
+            ];
+        }
         $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.score.min", 0);
         $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.score.max", 100);
         $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.score.scaled", 1);
@@ -156,34 +227,55 @@ const $defce2f29876acb7$export$6ed414b8d8bead88 = {
         $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.success_status", "passed");
         $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.progress_measure", 1);
         $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.completion_status", "completed");
-        console.log("SERVICE");
-        console.log($defce2f29876acb7$export$6ed414b8d8bead88);
         $defce2f29876acb7$export$6ed414b8d8bead88.commit();
-        $defce2f29876acb7$export$6ed414b8d8bead88.API?.Terminate("");
+        API.Terminate("");
+        return [
+            false
+        ];
     },
     setValue: (elem, val)=>{
-        if (!$defce2f29876acb7$export$6ed414b8d8bead88.API) console.error("MISSING_SCORM_API - SETVAL");
-        console.log("API.SetValue", elem, val);
-        if (val !== undefined) $defce2f29876acb7$export$6ed414b8d8bead88.API?.SetValue(elem, val);
+        console.debug(`API.SetValue for ${elem} to ${val}`);
+        const [isInit, API] = $defce2f29876acb7$export$6ed414b8d8bead88.isInitialized();
+        if (!isInit || !API) {
+            console.warn(`Unable to set value for ${elem}: service not initialized`);
+            return [
+                true
+            ];
+        }
+        if (val !== undefined) API.SetValue(elem, val);
+        else console.warn(`Unable to set value for ${elem}: value undefined`);
         // if (service.API.SetValue(elem, val) === 'false') {
         //   throw {
         //     message: `SCORM service failed to set ${elem} to ${val}`,
         //     data: service.getError(true),
         //   };
         // }
-        return {
-            error: false
-        };
+        return [
+            false
+        ];
     },
     getValue: (elem)=>{
-        if (!$defce2f29876acb7$export$6ed414b8d8bead88.API) console.error("MISSING_SCORM_API - GETVAL");
-        const getRes = $defce2f29876acb7$export$6ed414b8d8bead88.API?.GetValue(elem);
-        if (getRes === "false") throw {
-            message: `SCORM service failed to get ${elem}`,
-            data: $defce2f29876acb7$export$6ed414b8d8bead88.getError(true)
-        };
-        console.log("API.GetValue", elem, getRes);
-        return getRes;
+        console.debug(`API.GetValue for ${elem}`);
+        const [isInit, API] = $defce2f29876acb7$export$6ed414b8d8bead88.isInitialized();
+        if (!isInit || !API) {
+            console.warn(`Unable to set value for ${elem}: service not initialized`);
+            return [
+                true,
+                ""
+            ];
+        }
+        const getRes = API.GetValue(elem);
+        if (getRes === "false") {
+            console.error(`API failed to get value for: ${elem}`);
+            return [
+                true,
+                ""
+            ];
+        }
+        return [
+            false,
+            getRes
+        ];
     }
 };
 var $defce2f29876acb7$export$2e2bcd8739ae039 = {
