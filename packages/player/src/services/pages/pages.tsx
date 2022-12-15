@@ -14,8 +14,10 @@ import { NavBar } from '../../components/navbar';
 
 const css = utils.css.removeMapPrefix(_css);
 
-const Page = ({ slides, controller, templates, ...props }: PageProps) => {
+const Page = ({ slides, templates, ...props }: PageProps) => {
   const player = document.querySelector('.player-main');
+  const Scrowl = window['Scrowl'];
+  const controller = new Scrowl.core.scroll.Controller();
 
   useEffect(() => {
     player?.scrollTo({ top: 0 });
@@ -144,12 +146,7 @@ export const create = (project, templateList: PlayerTemplateList) => {
             <>
               <NavBar pageId={id} project={project} />
               <div className="owlui-lesson">
-                <Page
-                  id={id}
-                  slides={page.slides}
-                  controller={controller}
-                  templates={templateList}
-                />
+                <Page id={id} slides={page.slides} templates={templateList} />
                 <Scrowl.core.Template
                   className="owlui-last"
                   id={`slide-end-${id}`}
