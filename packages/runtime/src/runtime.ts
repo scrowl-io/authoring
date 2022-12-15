@@ -83,18 +83,22 @@ export const service: RUNTIME_SERVICE = {
   scanForAPI: (win) => {
     while (win.API_1484_11 == null && win.parent != null && win.parent != win) {
       service.nFindAPITries++;
+
       if (service.nFindAPITries > service.maxTries) {
         return null;
       }
+
       win = win.parent;
     }
+
     return win.API_1484_11;
   },
   getAPI: (win) => {
     if (win.parent != null && win.parent != win) {
-      //@ts-ignore
+      // @ts-ignore
       service.API = service.scanForAPI(win.parent);
     }
+
     if (service.API == null && win.opener != null) {
       // @ts-ignore
       service.API = service.scanForAPI(win.opener);
@@ -128,33 +132,51 @@ export const service: RUNTIME_SERVICE = {
     };
   },
   commit: () => {
-    if (!service.API) {
-      console.error('MISSING_SCORM_API - COMMIT');
+    console.debug(`API.Commit`);
+
+    const [isInit, API] =  service.isInitialized();
+
+    if (!isInit || !API) {
+      console.warn(`Unable to get location: service not initialized`);
+      return [true];
     }
 
     service.setValue('cmi.session_time', service._time.getSessionTime());
-
-    service.API?.Commit('');
-
-    console.log('API.Commit()');
-    if (service.API?.Commit('') === 'false') {
-      throw 'ERROR_COMMIT_SCORM_API';
-    }
+    API.Commit('');
+    return [false];
   },
   exit: () => {
-    service.commit();
+    console.debug('API.Exit');
+    return service.commit();
   },
-  initialize: () => {
+  isInitialized: () => {
+    console.debug('API.Initialize()');
+    service.init = false;
+
     if (!service.API) {
       console.error('MISSING_SCORM_API - INIT');
+      return [service.init, false];
     }
-    console.log('API.Initialize()');
-    if (service.API?.Initialize('') === 'false') {
-      throw 'ERROR_INIT_SCORM_API';
+
+    if (service.API.Initialize('') === 'false') {
+      console.error('API failed to initialize');
+      return [service.init, false];
     }
+
+    service.init = true;
+    return [service.init, service.API];
   },
   // { m: 1, l: 1, s?: 3 }
   updateLocation: (location, progressPercentage) => {
+    console.debug(`API.UpdateLocation`);
+
+    const [isInit, API] =  service.isInitialized();
+
+    if (!isInit || !API) {
+      console.warn(`Unable to get location: service not initialized`);
+      return [true];
+    }
+
     service.setValue(
       'cmi.location',
       JSON.stringify({ v1: 1, ...location.lesson })
@@ -163,33 +185,48 @@ export const service: RUNTIME_SERVICE = {
     // Update progress
     progressPercentage = progressPercentage || 0;
     service.setValue('cmi.progress_measure', progressPercentage);
-
     service.commit();
+    return [false];
   },
   getLocation: () => {
+    console.debug(`API.GetLocation`);
+
+    const [isInit, API] =  service.isInitialized();
+
+    if (!isInit || !API) {
+      console.warn(`Unable to get location: service not initialized`);
+      return [true, {}];
+    }
     // {m:1, l:1, s?:3} || {} || null
     try {
-      const location = service.getValue('cmi.location');
-      if (location !== undefined) {
-        return JSON.parse(location);
+      const [error, location] = service.getValue('cmi.location');
+
+      if (error || !location) {
+        return [true, {}];
       }
+
+      return [false, JSON.parse(location)];
     } catch (e) {
-      return {};
+      console.error(e);
+      return [true, {}];
     }
   },
   start: () => {
+    console.debug(`API.Start`);
     service._time.startTime = new Date();
     service.getAPI(window);
 
-    if (!service.API) {
-      console.error('MISSING_SCORM_API - START');
+    const [isInit, API] =  service.isInitialized();
+
+    if (!isInit || !API) {
+      return [true];
     }
 
-    service.init = true;
+    const [statusError, completionStatus] = service.getValue('cmi.completion_status');
 
-    service.initialize();
-
-    const completionStatus = service.getValue('cmi.completion_status');
+    if (statusError) {
+      return [true];
+    }
 
     if (completionStatus === 'unknown') {
       service.setValue('cmi.completion_status', 'incomplete');
@@ -198,33 +235,42 @@ export const service: RUNTIME_SERVICE = {
     } else {
       service.setValue(
         'cmi.score.scaled',
-        service.getValue('cmi.score.scaled')
+        service.getValue('cmi.score.scaled')[1]
       );
-      service.setValue('cmi.score.raw', service.getValue('cmi.score.raw'));
+      service.setValue(
+        'cmi.score.raw',
+        service.getValue('cmi.score.raw')[1]
+      );
       service.setValue(
         'cmi.success_status',
-        service.getValue('cmi.success_status')
+        service.getValue('cmi.success_status')[1]
       );
       service.setValue(
         'cmi.progress_measure',
-        service.getValue('cmi.progress_measure')
+        service.getValue('cmi.progress_measure')[1]
       );
       service.setValue(
         'cmi.completion_status',
-        service.getValue('cmi.completion_status')
+        service.getValue('cmi.completion_status')[1]
       );
     }
 
     // until we have things hooked up to exit buttons/nav, set exit to 'suspend' as part of start() so that status persists whether the user finishes or exits
     service.setValue('cmi.exit', 'suspend');
-
     service.commit();
 
-    return {
-      error: false,
-    };
+    return [false];
   },
   finish: () => {
+    console.debug(`API.Finish`);
+
+    const [isInit, API] =  service.isInitialized();
+
+    if (!isInit || !API) {
+      console.warn(`Unable to finish: service not initialized`);
+      return [true];
+    }
+
     service.setValue('cmi.score.min', 0);
     service.setValue('cmi.score.max', 100);
     service.setValue('cmi.score.scaled', 1);
@@ -232,21 +278,25 @@ export const service: RUNTIME_SERVICE = {
     service.setValue('cmi.success_status', 'passed');
     service.setValue('cmi.progress_measure', 1);
     service.setValue('cmi.completion_status', 'completed');
-
-    console.log('SERVICE');
-    console.log(service);
     service.commit();
-    service.API?.Terminate('');
+    API.Terminate('');
+
+    return [false];
   },
   setValue: (elem, val) => {
-    if (!service.API) {
-      console.error('MISSING_SCORM_API - SETVAL');
+    console.debug(`API.SetValue for ${elem} to ${val}`);
+
+    const [isInit, API] =  service.isInitialized();
+
+    if (!isInit || !API) {
+      console.warn(`Unable to set value for ${elem}: service not initialized`);
+      return [true];
     }
 
-    console.log('API.SetValue', elem, val);
-
     if (val !== undefined) {
-      service.API?.SetValue(elem, val);
+      API.SetValue(elem, val);
+    } else {
+      console.warn(`Unable to set value for ${elem}: value undefined`)
     }
 
     // if (service.API.SetValue(elem, val) === 'false') {
@@ -256,27 +306,26 @@ export const service: RUNTIME_SERVICE = {
     //   };
     // }
 
-    return {
-      error: false,
-    };
+    return [false];
   },
   getValue: (elem) => {
-    if (!service.API) {
-      console.error('MISSING_SCORM_API - GETVAL');
+    console.debug(`API.GetValue for ${elem}`);
+
+    const [isInit, API] =  service.isInitialized();
+
+    if (!isInit || !API) {
+      console.warn(`Unable to set value for ${elem}: service not initialized`);
+      return [true, ''];
     }
 
-    const getRes = service.API?.GetValue(elem);
+    const getRes = API.GetValue(elem);
 
     if (getRes === 'false') {
-      throw {
-        message: `SCORM service failed to get ${elem}`,
-        data: service.getError(true),
-      };
+      console.error(`API failed to get value for: ${elem}`);
+      return [true, ''];
     }
 
-    console.log('API.GetValue', elem, getRes);
-
-    return getRes;
+    return [false, getRes];
   },
 };
 

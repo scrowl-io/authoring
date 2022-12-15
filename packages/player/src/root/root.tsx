@@ -12,15 +12,13 @@ import { Error } from '../components';
 import { Pages } from '../services';
 
 export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
-  if (window['Scrowl']) {
-    const runtime = window['Scrowl'].runtime;
+  const Scrowl = window['Scrowl'];
 
-    if (runtime) {
-      const startRes = runtime.start();
+  if (Scrowl.runtime) {
+    const [isStarted] = Scrowl.runtime.start();
 
-      if (startRes.error) {
-        console.error('unable to start runtime');
-      }
+    if (!isStarted) {
+      console.error('unable to start runtime');
     }
   }
 
@@ -59,13 +57,14 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
 
   // @ts-ignore
   const lessonTotal = pages.length;
-
-  const runtime = window['Scrowl'].runtime;
-  const location = runtime?.getLocation();
-
   let lessonIdx;
-  if (location) {
-    lessonIdx = location.id + 1;
+
+  if (Scrowl.runtime) {
+    const [locationError, location] = Scrowl.runtime.getLocation();
+
+    if (!locationError && location) {
+      lessonIdx = location.id + 1;
+    }
   }
 
   return (

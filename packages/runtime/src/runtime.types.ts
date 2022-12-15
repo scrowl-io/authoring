@@ -1,4 +1,5 @@
-export type CMIELement = string;
+export type CMIElement = string;
+export type CMIElementValue = string | number | undefined;
 export type CMIErrorCode = string;
 export type SCORM_STATUS_UPDATE = 'true' | 'false';
 export type SCORM_STATUS_LESSON = 'success' | 'failed' | 'done' | 'active' | 'viewed' | 'unseen';
@@ -9,17 +10,17 @@ export type SCORM_API = {
   GetDiagnostic: (errorCode: CMIErrorCode) => string;
   GetErrorString: (errorCode: CMIErrorCode) => string;
   GetLastError: () => CMIErrorCode;
-  GetValue: (element: CMIELement) => string;
+  GetValue: (element: CMIElement) => string;
   Initialize: (msg?: string) => SCORM_STATUS_UPDATE;
   LMSCommit: (msg?: string) => SCORM_STATUS_UPDATE;
   LMSFinish: (msg?: string) => SCORM_STATUS_UPDATE;
   LMSGetDiagnostic: (errorCode: CMIErrorCode) => string;
   LMSGetErrorString: (errorCode: CMIErrorCode) => string;
   LMSGetLastError: () => CMIErrorCode;
-  LMSGetValue: (element: CMIELement) => string;
+  LMSGetValue: (element: CMIElement) => string;
   LMSInitialize: (msg?: string) => SCORM_STATUS_UPDATE;
-  LMSSetValue: (element: CMIELement, value: string | number) => string;
-  SetValue: (element: CMIELement, value: string | number) => string;
+  LMSSetValue: (element: CMIElement, value: string | number) => string;
+  SetValue: (element: CMIElement, value: string | number) => string;
   Terminate: (msg?: string) => SCORM_STATUS_UPDATE;
   apolloClient: {
     [key: string]: any;
@@ -77,26 +78,22 @@ export type RUNTIME_SERVICE = {
     convert: (total: number) => string;
   };
   nFindAPITries: number;
-  maxTries: number;
+  maxTries: 500;
   getAPI: (window: Window) => void;
-  commit: () => void;
-  exit: () => void;
-  initialize: () => void;
-  start: () => { error: boolean };
-  updateLocation: (location: any, progressPercentage: number) => void;
-
+  commit: () => [error: boolean];
+  exit: () => [error: boolean];
+  isInitialized: () => [error: true, API: SCORM_API] | [error: false, API: false];
+  start: () => [error: boolean];
+  updateLocation: (location: any, progressPercentage: number) => [error: boolean];
   isAvailable: () => RUNTIME_SERVICE_API_RESULT;
   getError: (printError?: boolean) => RUNTIME_SERVICE_RESULT;
-  getLocation: () => any;
+  getLocation: () => [error: boolean, location: any];
   _findAPI: (source: Window) => RUNTIME_SERVICE_API_RESULT;
   save: () => RUNTIME_SERVICE_RESULT;
   stop: () => RUNTIME_SERVICE_RESULT;
-  setValue: (
-    elem: CMIELement,
-    val: string | number | undefined
-  ) => RUNTIME_SERVICE_RESULT;
-  getValue: (elem: CMIELement) => string | undefined;
+  setValue: (elem: CMIElement, val: CMIElementValue) => [error: boolean];
+  getValue: (elem: CMIElement) => [error: boolean, value: string];
   updateStatus: (status: SCORM_STATUS_LESSON) => RUNTIME_SERVICE_RESULT;
   updateProgress: (percentageCompleted: number) => void;
-  finish: () => void;
+  finish: () => [error: boolean];
 };
