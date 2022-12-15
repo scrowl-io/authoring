@@ -160,6 +160,12 @@ export const Template = ({
         if (onProgress) {
           onProgress(ev);
         }
+
+        if (sceneRef.current) {
+          ev.currentTarget = sceneRef.current.firstChild;
+          const sceneEvent = new CustomEvent('slide.progress', { detail: ev });
+          document.dispatchEvent(sceneEvent);
+        }
       };
 
       const handleSceneStart = (ev) => {
@@ -178,6 +184,12 @@ export const Template = ({
         if (onStart) {
           onStart(ev);
         }
+
+        if (sceneRef.current) {
+          ev.currentTarget = sceneRef.current.firstChild;
+          const sceneEvent = new CustomEvent('slide.start', { detail: ev });
+          document.dispatchEvent(sceneEvent);
+        }
       };
 
       const handleSceneEnd = (ev) => {
@@ -193,6 +205,12 @@ export const Template = ({
 
         if (onEnd) {
           onEnd(ev);
+        }
+
+        if (sceneRef.current) {
+          ev.currentTarget = sceneRef.current.firstChild;
+          const sceneEvent = new CustomEvent('slide.end', { detail: ev });
+          document.dispatchEvent(sceneEvent);
         }
       };
 
@@ -226,6 +244,12 @@ export const Template = ({
 
         if (onEnter) {
           onEnter(ev);
+        }
+
+        if (sceneRef.current) {
+          ev.currentTarget = sceneRef.current.firstChild;
+          const sceneEvent = new CustomEvent('slide.enter', { detail: ev });
+          document.dispatchEvent(sceneEvent);
         }
       };
 
@@ -266,6 +290,12 @@ export const Template = ({
 
         if (onLeave) {
           onLeave(ev);
+        }
+
+        if (sceneRef.current) {
+          ev.currentTarget = sceneRef.current.firstChild;
+          const sceneEvent = new CustomEvent('slide.leave', { detail: ev });
+          document.dispatchEvent(sceneEvent);
         }
       };
 

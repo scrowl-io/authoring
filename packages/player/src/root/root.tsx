@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   MemoryRouter as Router,
   Routes,
@@ -66,6 +66,41 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
       lessonIdx = location.id + 1;
     }
   }
+
+  useEffect(() => {
+    const handleSlideEnter = (ev) => {
+      const sceneEvent = ev.detail;
+
+      console.log('slide enter', sceneEvent);
+    };
+    const handleSlideStart = (ev) => {
+      const sceneEvent = ev.detail;
+
+      console.log('slide start', sceneEvent);
+    };
+    const handleSlideEnd = (ev) => {
+      const sceneEvent = ev.detail;
+
+      console.log('slide end', sceneEvent);
+    };
+    const handleSlideLeave = (ev) => {
+      const sceneEvent = ev.detail;
+
+      console.log('slide leave', sceneEvent);
+    };
+
+    document.addEventListener('slide.enter', handleSlideEnter);
+    document.addEventListener('slide.start', handleSlideStart);
+    document.addEventListener('slide.end', handleSlideEnd);
+    document.addEventListener('slide.leave', handleSlideLeave);
+
+    return () => {
+      document.removeEventListener('slide.enter', handleSlideEnter);
+      document.removeEventListener('slide.start', handleSlideStart);
+      document.removeEventListener('slide.end', handleSlideEnd);
+      document.removeEventListener('slide.leave', handleSlideLeave);
+    };
+  }, [project]);
 
   return (
     <Router>
