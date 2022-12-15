@@ -1,6 +1,6 @@
 {
   "name": "@scrowl/config",
-  "version": "0.0.73",
+  "version": "0.0.75",
   "license": "MIT",
   "files": [
     "src",

@@ -105,19 +105,19 @@ const $b3d1e3300d945f09$export$6ed414b8d8bead88 = {
         };
     },
     commit: ()=>{
-        if (!$b3d1e3300d945f09$export$6ed414b8d8bead88.API) throw "MISSING_SCORM_API";
+        if (!$b3d1e3300d945f09$export$6ed414b8d8bead88.API) console.error("MISSING_SCORM_API - COMMIT");
         $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.session_time", $b3d1e3300d945f09$export$6ed414b8d8bead88._time.getSessionTime());
-        $b3d1e3300d945f09$export$6ed414b8d8bead88.API.Commit("");
+        $b3d1e3300d945f09$export$6ed414b8d8bead88.API?.Commit("");
         console.log("API.Commit()");
-        if ($b3d1e3300d945f09$export$6ed414b8d8bead88.API.Commit("") === "false") throw "ERROR_COMMIT_SCORM_API";
+        if ($b3d1e3300d945f09$export$6ed414b8d8bead88.API?.Commit("") === "false") throw "ERROR_COMMIT_SCORM_API";
     },
     exit: ()=>{
         $b3d1e3300d945f09$export$6ed414b8d8bead88.commit();
     },
     initialize: ()=>{
-        if (!$b3d1e3300d945f09$export$6ed414b8d8bead88.API) throw "MISSING_SCORM_API";
+        if (!$b3d1e3300d945f09$export$6ed414b8d8bead88.API) console.error("MISSING_SCORM_API - INIT");
         console.log("API.Initialize()");
-        if ($b3d1e3300d945f09$export$6ed414b8d8bead88.API.Initialize("") === "false") throw "ERROR_INIT_SCORM_API";
+        if ($b3d1e3300d945f09$export$6ed414b8d8bead88.API?.Initialize("") === "false") throw "ERROR_INIT_SCORM_API";
     },
     // { m: 1, l: 1, s?: 3 }
     updateLocation: (location, progressPercentage)=>{
@@ -133,7 +133,8 @@ const $b3d1e3300d945f09$export$6ed414b8d8bead88 = {
     getLocation: ()=>{
         // {m:1, l:1, s?:3} || {} || null
         try {
-            return JSON.parse($b3d1e3300d945f09$export$6ed414b8d8bead88.getValue("cmi.location"));
+            const location = $b3d1e3300d945f09$export$6ed414b8d8bead88.getValue("cmi.location");
+            if (location !== undefined) return JSON.parse(location);
         } catch (e) {
             return {};
         }
@@ -141,7 +142,7 @@ const $b3d1e3300d945f09$export$6ed414b8d8bead88 = {
     start: ()=>{
         $b3d1e3300d945f09$export$6ed414b8d8bead88._time.startTime = new Date();
         $b3d1e3300d945f09$export$6ed414b8d8bead88.getAPI(window);
-        if (!$b3d1e3300d945f09$export$6ed414b8d8bead88.API) throw "MISSING_SCORM_API";
+        if (!$b3d1e3300d945f09$export$6ed414b8d8bead88.API) console.error("MISSING_SCORM_API - START");
         $b3d1e3300d945f09$export$6ed414b8d8bead88.init = true;
         $b3d1e3300d945f09$export$6ed414b8d8bead88.initialize();
         const completionStatus = $b3d1e3300d945f09$export$6ed414b8d8bead88.getValue("cmi.completion_status");
@@ -177,9 +178,9 @@ const $b3d1e3300d945f09$export$6ed414b8d8bead88 = {
         $b3d1e3300d945f09$export$6ed414b8d8bead88.API?.Terminate("");
     },
     setValue: (elem, val)=>{
-        if (!$b3d1e3300d945f09$export$6ed414b8d8bead88.API) throw "MISSING_SCORM_API";
+        if (!$b3d1e3300d945f09$export$6ed414b8d8bead88.API) console.error("MISSING_SCORM_API - SETVAL");
         console.log("API.SetValue", elem, val);
-        $b3d1e3300d945f09$export$6ed414b8d8bead88.API.SetValue(elem, val);
+        if (val !== undefined) $b3d1e3300d945f09$export$6ed414b8d8bead88.API?.SetValue(elem, val);
         // if (service.API.SetValue(elem, val) === 'false') {
         //   throw {
         //     message: `SCORM service failed to set ${elem} to ${val}`,
@@ -191,8 +192,8 @@ const $b3d1e3300d945f09$export$6ed414b8d8bead88 = {
         };
     },
     getValue: (elem)=>{
-        if (!$b3d1e3300d945f09$export$6ed414b8d8bead88.API) throw "MISSING_SCORM_API";
-        const getRes = $b3d1e3300d945f09$export$6ed414b8d8bead88.API.GetValue(elem);
+        if (!$b3d1e3300d945f09$export$6ed414b8d8bead88.API) console.error("MISSING_SCORM_API - GETVAL");
+        const getRes = $b3d1e3300d945f09$export$6ed414b8d8bead88.API?.GetValue(elem);
         if (getRes === "false") throw {
             message: `SCORM service failed to get ${elem}`,
             data: $b3d1e3300d945f09$export$6ed414b8d8bead88.getError(true)

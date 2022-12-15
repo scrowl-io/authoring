@@ -91,8 +91,11 @@ export type RUNTIME_SERVICE = {
   _findAPI: (source: Window) => RUNTIME_SERVICE_API_RESULT;
   save: () => RUNTIME_SERVICE_RESULT;
   stop: () => RUNTIME_SERVICE_RESULT;
-  setValue: (elem: CMIELement, val: string | number) => RUNTIME_SERVICE_RESULT;
-  getValue: (elem: CMIELement) => string;
+  setValue: (
+    elem: CMIELement,
+    val: string | number | undefined
+  ) => RUNTIME_SERVICE_RESULT;
+  getValue: (elem: CMIELement) => string | undefined;
   updateStatus: (status: SCORM_STATUS_LESSON) => RUNTIME_SERVICE_RESULT;
   updateProgress: (percentageCompleted: number) => void;
   finish: () => void;
