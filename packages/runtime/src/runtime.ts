@@ -134,7 +134,7 @@ export const service: RUNTIME_SERVICE = {
   commit: () => {
     console.debug(`API.Commit`);
 
-    const [isInit, API] =  service.isInitialized();
+    const [isInit, API] = service.isInitialized();
 
     if (!isInit || !API) {
       console.warn(`Unable to get location: service not initialized`);
@@ -158,7 +158,8 @@ export const service: RUNTIME_SERVICE = {
       return [service.init, false];
     }
 
-    if (service.API.Initialize('') === 'false') {
+    // @ts-ignore
+    if (service.API.Initialized === 'false') {
       console.error('API failed to initialize');
       return [service.init, false];
     }
@@ -167,20 +168,25 @@ export const service: RUNTIME_SERVICE = {
     return [service.init, service.API];
   },
   // { m: 1, l: 1, s?: 3 }
-  updateLocation: (location, progressPercentage) => {
-    console.debug(`API.UpdateLocation`);
+  updateLocation: (location, progressPercentage, slideId) => {
+    console.log(`API.UpdateLocation`);
 
-    const [isInit, API] =  service.isInitialized();
+    const [isInit, API] = service.isInitialized();
 
     if (!isInit || !API) {
       console.warn(`Unable to get location: service not initialized`);
       return [true];
     }
 
+    console.log(location);
+    console.log(slideId);
+
     service.setValue(
       'cmi.location',
-      JSON.stringify({ v1: 1, ...location.lesson })
+      JSON.stringify({ v1: 1, ...location, slideId: slideId })
     );
+
+    console.log(service.getValue('cmi.location'));
 
     // Update progress
     progressPercentage = progressPercentage || 0;
@@ -191,7 +197,7 @@ export const service: RUNTIME_SERVICE = {
   getLocation: () => {
     console.debug(`API.GetLocation`);
 
-    const [isInit, API] =  service.isInitialized();
+    const [isInit, API] = service.isInitialized();
 
     if (!isInit || !API) {
       console.warn(`Unable to get location: service not initialized`);
@@ -216,13 +222,17 @@ export const service: RUNTIME_SERVICE = {
     service._time.startTime = new Date();
     service.getAPI(window);
 
-    const [isInit, API] =  service.isInitialized();
+    service.API?.Initialize('');
+
+    const [isInit, API] = service.isInitialized();
 
     if (!isInit || !API) {
       return [true];
     }
 
-    const [statusError, completionStatus] = service.getValue('cmi.completion_status');
+    const [statusError, completionStatus] = service.getValue(
+      'cmi.completion_status'
+    );
 
     if (statusError) {
       return [true];
@@ -237,10 +247,7 @@ export const service: RUNTIME_SERVICE = {
         'cmi.score.scaled',
         service.getValue('cmi.score.scaled')[1]
       );
-      service.setValue(
-        'cmi.score.raw',
-        service.getValue('cmi.score.raw')[1]
-      );
+      service.setValue('cmi.score.raw', service.getValue('cmi.score.raw')[1]);
       service.setValue(
         'cmi.success_status',
         service.getValue('cmi.success_status')[1]
@@ -259,12 +266,14 @@ export const service: RUNTIME_SERVICE = {
     service.setValue('cmi.exit', 'suspend');
     service.commit();
 
-    return [false];
+    console.log('runtime started');
+
+    return [true];
   },
   finish: () => {
     console.debug(`API.Finish`);
 
-    const [isInit, API] =  service.isInitialized();
+    const [isInit, API] = service.isInitialized();
 
     if (!isInit || !API) {
       console.warn(`Unable to finish: service not initialized`);
@@ -286,7 +295,7 @@ export const service: RUNTIME_SERVICE = {
   setValue: (elem, val) => {
     console.debug(`API.SetValue for ${elem} to ${val}`);
 
-    const [isInit, API] =  service.isInitialized();
+    const [isInit, API] = service.isInitialized();
 
     if (!isInit || !API) {
       console.warn(`Unable to set value for ${elem}: service not initialized`);
@@ -296,7 +305,7 @@ export const service: RUNTIME_SERVICE = {
     if (val !== undefined) {
       API.SetValue(elem, val);
     } else {
-      console.warn(`Unable to set value for ${elem}: value undefined`)
+      console.warn(`Unable to set value for ${elem}: value undefined`);
     }
 
     // if (service.API.SetValue(elem, val) === 'false') {
@@ -311,7 +320,7 @@ export const service: RUNTIME_SERVICE = {
   getValue: (elem) => {
     console.debug(`API.GetValue for ${elem}`);
 
-    const [isInit, API] =  service.isInitialized();
+    const [isInit, API] = service.isInitialized();
 
     if (!isInit || !API) {
       console.warn(`Unable to set value for ${elem}: service not initialized`);

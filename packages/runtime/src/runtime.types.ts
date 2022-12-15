@@ -82,9 +82,15 @@ export type RUNTIME_SERVICE = {
   getAPI: (window: Window) => void;
   commit: () => [error: boolean];
   exit: () => [error: boolean];
-  isInitialized: () => [error: true, API: SCORM_API] | [error: false, API: false];
+  isInitialized: () =>
+    | [error: true, API: SCORM_API]
+    | [error: false, API: false];
   start: () => [error: boolean];
-  updateLocation: (location: any, progressPercentage: number) => [error: boolean];
+  updateLocation: (
+    location: any,
+    progressPercentage: number,
+    slideId: string
+  ) => [error: boolean];
   isAvailable: () => RUNTIME_SERVICE_API_RESULT;
   getError: (printError?: boolean) => RUNTIME_SERVICE_RESULT;
   getLocation: () => [error: boolean, location: any];

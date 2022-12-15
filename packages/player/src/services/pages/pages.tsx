@@ -15,12 +15,11 @@ import { NavBar } from '../../components/navbar';
 const css = utils.css.removeMapPrefix(_css);
 
 const Page = ({ slides, templates, ...props }: PageProps) => {
-  const player = document.querySelector('.player-main');
   const Scrowl = window['Scrowl'];
   const controller = new Scrowl.core.scroll.Controller();
 
   useEffect(() => {
-    player?.scrollTo({ top: 0 });
+    window.scrollTo({ top: 0 });
   }, [slides]);
 
   useEffect(() => {
@@ -79,6 +78,7 @@ const updateCourseProgress = (project, id) => {
   const currentLessonIndex = currentLesson?.index;
   const totalLessons = lessonsArray.length;
 
+  // @ts-ignore
   let percentageCompleted;
 
   if (currentLessonIndex) {
@@ -93,7 +93,7 @@ const updateCourseProgress = (project, id) => {
     }; // TODO: why is this not used?
 
     console.debug('lesson', currentLesson.lesson, runtimeLesson);
-    Scrowl.runtime.updateLocation(currentLesson.lesson, percentageCompleted);
+    // Scrowl.runtime.updateLocation(currentLesson.lesson, percentageCompleted);
   }
 };
 

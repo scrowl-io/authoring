@@ -117,7 +117,8 @@ const $defce2f29876acb7$export$6ed414b8d8bead88 = {
                 false
             ];
         }
-        if ($defce2f29876acb7$export$6ed414b8d8bead88.API.Initialize("") === "false") {
+        // @ts-ignore
+        if ($defce2f29876acb7$export$6ed414b8d8bead88.API.Initialized === "false") {
             console.error("API failed to initialize");
             return [
                 $defce2f29876acb7$export$6ed414b8d8bead88.init,
@@ -131,8 +132,8 @@ const $defce2f29876acb7$export$6ed414b8d8bead88 = {
         ];
     },
     // { m: 1, l: 1, s?: 3 }
-    updateLocation: (location, progressPercentage)=>{
-        console.debug(`API.UpdateLocation`);
+    updateLocation: (location, progressPercentage, slideId)=>{
+        console.log(`API.UpdateLocation`);
         const [isInit, API] = $defce2f29876acb7$export$6ed414b8d8bead88.isInitialized();
         if (!isInit || !API) {
             console.warn(`Unable to get location: service not initialized`);
@@ -140,10 +141,14 @@ const $defce2f29876acb7$export$6ed414b8d8bead88 = {
                 true
             ];
         }
+        console.log(location);
+        console.log(slideId);
         $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.location", JSON.stringify({
             v1: 1,
-            ...location.lesson
+            ...location,
+            slideId: slideId
         }));
+        console.log($defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.location"));
         // Update progress
         progressPercentage = progressPercentage || 0;
         $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.progress_measure", progressPercentage);
@@ -185,6 +190,7 @@ const $defce2f29876acb7$export$6ed414b8d8bead88 = {
         console.debug(`API.Start`);
         $defce2f29876acb7$export$6ed414b8d8bead88._time.startTime = new Date();
         $defce2f29876acb7$export$6ed414b8d8bead88.getAPI(window);
+        $defce2f29876acb7$export$6ed414b8d8bead88.API?.Initialize("");
         const [isInit, API] = $defce2f29876acb7$export$6ed414b8d8bead88.isInitialized();
         if (!isInit || !API) return [
             true
@@ -207,8 +213,9 @@ const $defce2f29876acb7$export$6ed414b8d8bead88 = {
         // until we have things hooked up to exit buttons/nav, set exit to 'suspend' as part of start() so that status persists whether the user finishes or exits
         $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.exit", "suspend");
         $defce2f29876acb7$export$6ed414b8d8bead88.commit();
+        console.log("runtime started");
         return [
-            false
+            true
         ];
     },
     finish: ()=>{

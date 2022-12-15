@@ -45,6 +45,20 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
   const glossary = project.glossary;
   const name = project.name;
 
+  let moduleIdx;
+  let lessonIdx;
+
+  if (Scrowl.runtime) {
+    const [locationError, location] = Scrowl.runtime.getLocation();
+
+    if (!locationError && location) {
+      console.log('location in pages');
+      console.log(location);
+      moduleIdx = location.module;
+      lessonIdx = location.lesson;
+    }
+  }
+
   const config = Config.create(
     slides,
     lessons,
@@ -57,36 +71,46 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
 
   // @ts-ignore
   const lessonTotal = pages.length;
-  let lessonIdx;
 
-  if (Scrowl.runtime) {
-    const [locationError, location] = Scrowl.runtime.getLocation();
-
-    if (!locationError && location) {
-      lessonIdx = location.id + 1;
-    }
-  }
+  const submitLocationObj = {};
 
   useEffect(() => {
     const handleSlideEnter = (ev) => {
       const sceneEvent = ev.detail;
 
       console.log('slide enter', sceneEvent);
+      const id = sceneEvent.currentTarget.id;
+
+      const splitEntries = id.split('--');
+
+      splitEntries.map((entry) => {
+        const keyPair = entry.split('-');
+        submitLocationObj[keyPair[0]] = parseInt(keyPair[1]);
+      });
+
+      Scrowl.runtime?.updateLocation(
+        submitLocationObj,
+        0.5,
+        sceneEvent.currentTarget.id
+      );
     };
     const handleSlideStart = (ev) => {
+      // @ts-ignore
       const sceneEvent = ev.detail;
 
-      console.log('slide start', sceneEvent);
+      // console.log('slide start', sceneEvent);
     };
     const handleSlideEnd = (ev) => {
+      // @ts-ignore
       const sceneEvent = ev.detail;
 
-      console.log('slide end', sceneEvent);
+      // console.log('slide end', sceneEvent);
     };
     const handleSlideLeave = (ev) => {
+      // @ts-ignore
       const sceneEvent = ev.detail;
 
-      console.log('slide leave', sceneEvent);
+      // console.log('slide leave', sceneEvent);
     };
 
     document.addEventListener('slide.enter', handleSlideEnter);
@@ -102,6 +126,11 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
     };
   }, [project]);
 
+  let targetUrl;
+  if (moduleIdx !== undefined) {
+    targetUrl = `/module-${moduleIdx}--lesson-${lessonIdx}`;
+  }
+
   return (
     <Router>
       <div id="scrowl-player" {...props}>
@@ -116,7 +145,9 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
               path="*"
               element={
                 <Navigate
-                  to={lessonIdx ? pages[lessonIdx].url : pages[0].url}
+                  to={
+                    targetUrl && targetUrl.length > 1 ? targetUrl : pages[0].url
+                  }
                 />
               }
             />
@@ -125,7 +156,7 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
       </div>
     </Router>
   );
-};
+};;
 
 export default {
   Root,
