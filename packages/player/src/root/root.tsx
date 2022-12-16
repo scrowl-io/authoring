@@ -101,14 +101,14 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
       });
 
       if (
-        currentLocationObj.module &&
+        // @ts-ignore
         previousLocation?.[1].module > currentLocationObj.module
       ) {
         return;
       }
 
       if (
-        currentLocationObj.module &&
+        // @ts-ignore
         previousLocation?.[1].module <= currentLocationObj.module
       ) {
         if (
