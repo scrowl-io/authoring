@@ -84,7 +84,7 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
         lesson?: number;
         slide?: number;
       };
-      const submitLocationObj: LocationObject = {};
+      const currentLocationObj: LocationObject = {};
 
       const id = sceneEvent.currentTarget.id;
 
@@ -97,32 +97,31 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
 
       splitEntries.map((entry) => {
         const keyPair = entry.split('-');
-        submitLocationObj[keyPair[0]] = parseInt(keyPair[1]);
+        currentLocationObj[keyPair[0]] = parseInt(keyPair[1]);
       });
 
-
       if (
-        submitLocationObj.module &&
-        previousLocation?.[1].module > submitLocationObj.module
+        currentLocationObj.module &&
+        previousLocation?.[1].module > currentLocationObj.module
       ) {
         return;
       }
 
       if (
-        submitLocationObj.module &&
-        previousLocation?.[1].module <= submitLocationObj.module
+        currentLocationObj.module &&
+        previousLocation?.[1].module <= currentLocationObj.module
       ) {
         if (
           // @ts-ignore
-          previousLocation?.[1].lesson > submitLocationObj.lesson &&
-          previousLocation?.[1].module === submitLocationObj.module
+          previousLocation?.[1].lesson > currentLocationObj.lesson &&
+          previousLocation?.[1].module === currentLocationObj.module
         ) {
           return;
         }
       }
 
       Scrowl.runtime?.updateLocation(
-        submitLocationObj,
+        currentLocationObj,
         0.5,
         sceneEvent.currentTarget.id
       );
