@@ -14,12 +14,16 @@ import { NavBar } from '../../components/navbar';
 
 const css = utils.css.removeMapPrefix(_css);
 
-const Page = ({ slides, templates, ...props }: PageProps) => {
+const Page = ({ slides, templates, slideId, ...props }: PageProps) => {
   const Scrowl = window['Scrowl'];
   const controller = new Scrowl.core.scroll.Controller();
 
   useEffect(() => {
-    window.scrollTo({ top: 0 });
+    if (slideId && slideId?.length > 0) {
+      document.querySelector(`#${slideId}`)?.scrollIntoView();
+    } else {
+      window.scrollTo({ top: 0 });
+    }
   }, [slides]);
 
   useEffect(() => {
@@ -105,7 +109,11 @@ const finishCourse = () => {
   }
 };
 
-export const create = (project, templateList: PlayerTemplateList) => {
+export const create = (
+  project,
+  templateList: PlayerTemplateList,
+  slideId: string
+) => {
   const Scrowl = window['Scrowl'];
   const controller = new Scrowl.core.scroll.Controller();
   const data: Array<PageDefinition> = [];
@@ -146,7 +154,12 @@ export const create = (project, templateList: PlayerTemplateList) => {
             <>
               <NavBar pageId={id} project={project} />
               <div className="owlui-lesson">
-                <Page id={id} slides={page.slides} templates={templateList} />
+                <Page
+                  id={id}
+                  slides={page.slides}
+                  templates={templateList}
+                  slideId={slideId}
+                />
                 <Scrowl.core.Template
                   className="owlui-last"
                   id={`slide-end-${id}`}

@@ -178,15 +178,10 @@ export const service: RUNTIME_SERVICE = {
       return [true];
     }
 
-    console.log(location);
-    console.log(slideId);
-
     service.setValue(
       'cmi.location',
       JSON.stringify({ v1: 1, ...location, slideId: slideId })
     );
-
-    console.log(service.getValue('cmi.location'));
 
     // Update progress
     progressPercentage = progressPercentage || 0;
@@ -268,7 +263,7 @@ export const service: RUNTIME_SERVICE = {
 
     console.log('runtime started');
 
-    return [true];
+    return [false];
   },
   finish: () => {
     console.debug(`API.Finish`);

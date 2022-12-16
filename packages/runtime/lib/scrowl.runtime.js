@@ -157,14 +157,11 @@ const $b3d1e3300d945f09$export$6ed414b8d8bead88 = {
                 true
             ];
         }
-        console.log(location);
-        console.log(slideId);
         $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.location", JSON.stringify({
             v1: 1,
             ...location,
             slideId: slideId
         }));
-        console.log($b3d1e3300d945f09$export$6ed414b8d8bead88.getValue("cmi.location"));
         // Update progress
         progressPercentage = progressPercentage || 0;
         $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.progress_measure", progressPercentage);
@@ -231,7 +228,7 @@ const $b3d1e3300d945f09$export$6ed414b8d8bead88 = {
         $b3d1e3300d945f09$export$6ed414b8d8bead88.commit();
         console.log("runtime started");
         return [
-            true
+            false
         ];
     },
     finish: ()=>{

@@ -47,6 +47,7 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
 
   let moduleIdx;
   let lessonIdx;
+  let slideId;
 
   if (Scrowl.runtime) {
     const [locationError, location] = Scrowl.runtime.getLocation();
@@ -56,6 +57,7 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
       console.log(location);
       moduleIdx = location.module;
       lessonIdx = location.lesson;
+      slideId = location.slideId;
     }
   }
 
@@ -67,19 +69,29 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
     glossary,
     name
   );
-  const pages = Pages.create(config, templateList);
+  const pages = Pages.create(config, templateList, slideId);
 
   // @ts-ignore
   const lessonTotal = pages.length;
 
-  const submitLocationObj = {};
-
   useEffect(() => {
     const handleSlideEnter = (ev) => {
       const sceneEvent = ev.detail;
+      const previousLocation = Scrowl.runtime?.getLocation();
 
-      console.log('slide enter', sceneEvent);
+      type LocationObject = {
+        module?: number;
+        lesson?: number;
+        slide?: number;
+      };
+      const submitLocationObj: LocationObject = {};
+
       const id = sceneEvent.currentTarget.id;
+
+      if (sceneEvent.scrollDirection === 'REVERSE') {
+        return;
+      }
+      console.log('slide enter', sceneEvent);
 
       const splitEntries = id.split('--');
 
@@ -87,6 +99,21 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
         const keyPair = entry.split('-');
         submitLocationObj[keyPair[0]] = parseInt(keyPair[1]);
       });
+
+      // @ts-ignore
+      if (previousLocation?.[1].module > submitLocationObj.module) {
+        return;
+      }
+      // @ts-ignore
+      if (previousLocation?.[1].module <= submitLocationObj.module) {
+        if (
+          // @ts-ignore
+          previousLocation?.[1].lesson > submitLocationObj.lesson &&
+          previousLocation?.[1].module === submitLocationObj.module
+        ) {
+          return;
+        }
+      }
 
       Scrowl.runtime?.updateLocation(
         submitLocationObj,
