@@ -100,12 +100,18 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
         submitLocationObj[keyPair[0]] = parseInt(keyPair[1]);
       });
 
-      // @ts-ignore
-      if (previousLocation?.[1].module > submitLocationObj.module) {
+
+      if (
+        submitLocationObj.module &&
+        previousLocation?.[1].module > submitLocationObj.module
+      ) {
         return;
       }
-      // @ts-ignore
-      if (previousLocation?.[1].module <= submitLocationObj.module) {
+
+      if (
+        submitLocationObj.module &&
+        previousLocation?.[1].module <= submitLocationObj.module
+      ) {
         if (
           // @ts-ignore
           previousLocation?.[1].lesson > submitLocationObj.lesson &&
