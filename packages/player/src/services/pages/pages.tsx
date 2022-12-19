@@ -59,7 +59,6 @@ const Page = ({ slides, templates, slideId, ...props }: PageProps) => {
 
 const updateCourseProgress = (project, id) => {
   const Scrowl = window['Scrowl'];
-  console.log('inside pages:');
 
   let lessonsArray: { index: number; targetId: string; lesson: any }[] = [];
   let counter = 1;
@@ -89,16 +88,7 @@ const updateCourseProgress = (project, id) => {
     percentageCompleted = currentLessonIndex / totalLessons;
   }
 
-  if (currentLesson && Scrowl.runtime) {
-    const runtimeLesson = {
-      m: currentLesson.lesson.lesson.moduleId,
-      l: currentLesson.lesson.lesson.id,
-      s: currentLesson.lesson.slides,
-    }; // TODO: why is this not used?
-
-    console.debug('lesson', currentLesson.lesson, runtimeLesson);
-    // Scrowl.runtime.updateLocation(currentLesson.lesson, percentageCompleted);
-  }
+  Scrowl.runtime?.updateProgress(percentageCompleted);
 };
 
 const finishCourse = () => {

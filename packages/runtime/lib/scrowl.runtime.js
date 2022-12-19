@@ -148,11 +148,8 @@ const $b3d1e3300d945f09$export$6ed414b8d8bead88 = {
         ];
     },
     // { m: 1, l: 1, s?: 3 }
-    updateLocation: (location, progressPercentage, slideId)=>{
+    updateLocation: (location, slideId)=>{
         console.log(`API.UpdateLocation`);
-        console.log(location);
-        console.log(location.cur);
-        console.log(slideId);
         const [isInit, API] = $b3d1e3300d945f09$export$6ed414b8d8bead88.isInitialized();
         if (!isInit || !API) {
             console.warn(`Unable to get location: service not initialized`);
@@ -165,9 +162,6 @@ const $b3d1e3300d945f09$export$6ed414b8d8bead88 = {
             ...location,
             slideId: slideId
         }));
-        // Update progress
-        progressPercentage = progressPercentage || 0;
-        $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.progress_measure", progressPercentage);
         $b3d1e3300d945f09$export$6ed414b8d8bead88.commit();
         return [
             false
@@ -201,6 +195,62 @@ const $b3d1e3300d945f09$export$6ed414b8d8bead88 = {
                 {}
             ];
         }
+    },
+    getProgress: ()=>{
+        console.debug(`API.GetProgress`);
+        const [isInit, API] = $b3d1e3300d945f09$export$6ed414b8d8bead88.isInitialized();
+        if (!isInit || !API) {
+            console.warn(`Unable to get progress: service not initialized`);
+            return [
+                true,
+                {}
+            ];
+        }
+        // {m:1, l:1, s?:3} || {} || null
+        try {
+            const [error, progress] = $b3d1e3300d945f09$export$6ed414b8d8bead88.getValue("cmi.progress_measure");
+            if (error || !progress) return [
+                true,
+                {}
+            ];
+            return [
+                false,
+                progress
+            ];
+        } catch (e) {
+            console.error(e);
+            return [
+                true,
+                {}
+            ];
+        }
+    },
+    updateProgress: (progressPercentage)=>{
+        console.log(`API.UpdateProgress`);
+        const [isInit, API] = $b3d1e3300d945f09$export$6ed414b8d8bead88.isInitialized();
+        if (!isInit || !API) {
+            console.warn(`Unable to update progress: service not initialized`);
+            return [
+                true
+            ];
+        }
+        const [progressError, previousProgress] = $b3d1e3300d945f09$export$6ed414b8d8bead88.getValue("cmi.progress_measure");
+        console.log("PREVIOUS");
+        console.log(parseFloat(previousProgress));
+        console.log("CURRENT");
+        console.log(progressPercentage);
+        if (!progressError) {
+            console.log("larger?");
+            console.log(progressPercentage > parseFloat(previousProgress));
+            if (!previousProgress || parseFloat(previousProgress) === 0 || progressPercentage > parseFloat(previousProgress)) {
+                console.log("inside condition");
+                $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.progress_measure", progressPercentage);
+            }
+            $b3d1e3300d945f09$export$6ed414b8d8bead88.commit();
+        }
+        return [
+            false
+        ];
     },
     start: ()=>{
         console.debug(`API.Start`);

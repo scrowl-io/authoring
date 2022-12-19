@@ -168,7 +168,7 @@ export const service: RUNTIME_SERVICE = {
     return [service.init, service.API];
   },
   // { m: 1, l: 1, s?: 3 }
-  updateLocation: (location, progressPercentage, slideId) => {
+  updateLocation: (location, slideId) => {
     console.log(`API.UpdateLocation`);
 
     const [isInit, API] = service.isInitialized();
@@ -183,9 +183,6 @@ export const service: RUNTIME_SERVICE = {
       JSON.stringify({ v1: 1, ...location, slideId: slideId })
     );
 
-    // Update progress
-    progressPercentage = progressPercentage || 0;
-    service.setValue('cmi.progress_measure', progressPercentage);
     service.commit();
     return [false];
   },
@@ -211,6 +208,56 @@ export const service: RUNTIME_SERVICE = {
       console.error(e);
       return [true, {}];
     }
+  },
+  getProgress: () => {
+    console.debug(`API.GetProgress`);
+
+    const [isInit, API] = service.isInitialized();
+
+    if (!isInit || !API) {
+      console.warn(`Unable to get progress: service not initialized`);
+      return [true, {}];
+    }
+    // {m:1, l:1, s?:3} || {} || null
+    try {
+      const [error, progress] = service.getValue('cmi.progress_measure');
+
+      if (error || !progress) {
+        return [true, {}];
+      }
+
+      return [false, progress];
+    } catch (e) {
+      console.error(e);
+      return [true, {}];
+    }
+  },
+  updateProgress: (progressPercentage) => {
+    console.log(`API.UpdateProgress`);
+
+    const [isInit, API] = service.isInitialized();
+
+    if (!isInit || !API) {
+      console.warn(`Unable to update progress: service not initialized`);
+      return [true];
+    }
+
+    const [progressError, previousProgress] = service.getValue(
+      'cmi.progress_measure'
+    );
+
+    if (!progressError) {
+      if (
+        !previousProgress ||
+        parseFloat(previousProgress) === 0 ||
+        progressPercentage > parseFloat(previousProgress)
+      ) {
+        service.setValue('cmi.progress_measure', progressPercentage);
+      }
+      service.commit();
+    }
+
+    return [false];
   },
   start: () => {
     console.debug(`API.Start`);

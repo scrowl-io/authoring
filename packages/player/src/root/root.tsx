@@ -53,17 +53,11 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
     const [locationError, location] = Scrowl.runtime.getLocation();
 
     if (!locationError && location) {
-      console.log('location in pages');
-      console.log(location);
       moduleIdx = location.cur.module;
       lessonIdx = location.cur.lesson;
       slideId = location.slideId;
     }
   }
-
-  console.log(moduleIdx);
-  console.log(lessonIdx);
-  console.log(slideId);
 
   const config = Config.create(
     slides,
@@ -143,12 +137,8 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
       //   }
       // }
 
-      Scrowl.runtime?.updateLocation(
-        locationObj,
-        0.5,
-        sceneEvent.currentTarget.id
-      );
-    };;
+      Scrowl.runtime?.updateLocation(locationObj, sceneEvent.currentTarget.id);
+    };
     const handleSlideStart = (ev) => {
       // @ts-ignore
       const sceneEvent = ev.detail;
