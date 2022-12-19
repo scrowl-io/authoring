@@ -206,7 +206,6 @@ const $b3d1e3300d945f09$export$6ed414b8d8bead88 = {
                 {}
             ];
         }
-        // {m:1, l:1, s?:3} || {} || null
         try {
             const [error, progress] = $b3d1e3300d945f09$export$6ed414b8d8bead88.getValue("cmi.progress_measure");
             if (error || !progress) return [
@@ -235,17 +234,8 @@ const $b3d1e3300d945f09$export$6ed414b8d8bead88 = {
             ];
         }
         const [progressError, previousProgress] = $b3d1e3300d945f09$export$6ed414b8d8bead88.getValue("cmi.progress_measure");
-        console.log("PREVIOUS");
-        console.log(parseFloat(previousProgress));
-        console.log("CURRENT");
-        console.log(progressPercentage);
         if (!progressError) {
-            console.log("larger?");
-            console.log(progressPercentage > parseFloat(previousProgress));
-            if (!previousProgress || parseFloat(previousProgress) === 0 || progressPercentage > parseFloat(previousProgress)) {
-                console.log("inside condition");
-                $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.progress_measure", progressPercentage);
-            }
+            if (!previousProgress || parseFloat(previousProgress) === 0 || progressPercentage > parseFloat(previousProgress)) $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.progress_measure", progressPercentage);
             $b3d1e3300d945f09$export$6ed414b8d8bead88.commit();
         }
         return [

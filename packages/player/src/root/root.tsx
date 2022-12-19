@@ -53,8 +53,8 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
     const [locationError, location] = Scrowl.runtime.getLocation();
 
     if (!locationError && location) {
-      moduleIdx = location.cur.module;
-      lessonIdx = location.cur.lesson;
+      moduleIdx = location.cur.m;
+      lessonIdx = location.cur.l;
       slideId = location.slideId;
     }
   }
@@ -69,38 +69,32 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
   );
   const pages = Pages.create(config, templateList, slideId);
 
-  // @ts-ignore
-  const lessonTotal = pages.length;
-
   useEffect(() => {
     const handleSlideEnter = (ev) => {
       const sceneEvent = ev.detail;
-      // const previousLocation = Scrowl.runtime?.getLocation();
-      calculateProgress();
-      // TODO: find progress and submit to runtime as a range from 0..1
 
       type LocationObject = {
         cur?: {
-          module?: number;
-          lesson?: number;
-          slide?: number;
+          m?: number;
+          l?: number;
+          s?: number;
         };
         max?: {
-          module?: number;
-          lesson?: number;
-          slide?: number;
+          m?: number;
+          l?: number;
+          s?: number;
         };
       };
       const locationObj: LocationObject = {
         cur: {
-          module: 0,
-          lesson: 0,
-          slide: 0,
+          m: 0,
+          l: 0,
+          s: 0,
         },
         max: {
-          module: 0,
-          lesson: 0,
-          slide: 0,
+          m: 0,
+          l: 0,
+          s: 0,
         },
       };
 
@@ -108,7 +102,12 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
 
       console.log('slide enter', sceneEvent);
 
-      const splitEntries = id.split('--');
+      const shortenedId = id
+        .replace('module', 'm')
+        .replace('lesson', 'l')
+        .replace('slide', 's');
+
+      const splitEntries = shortenedId.split('--');
 
       splitEntries.map((entry) => {
         const keyPair = entry.split('-');
@@ -137,7 +136,7 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
       //   }
       // }
 
-      Scrowl.runtime?.updateLocation(locationObj, sceneEvent.currentTarget.id);
+      Scrowl.runtime?.updateLocation(locationObj, id);
     };
     const handleSlideStart = (ev) => {
       // @ts-ignore
@@ -171,19 +170,8 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
     };
   }, [project]);
 
-  const calculateProgress = () => {
-    let counter = 0;
-    config.outlineConfig.forEach((module) => {
-      module.lessons.forEach((lesson) => {
-        lesson.slides.forEach((_slide) => {
-          counter++;
-        });
-      });
-    });
-    return counter;
-  };
-
   let targetUrl;
+
   if (moduleIdx !== undefined) {
     targetUrl = `/module-${moduleIdx}--lesson-${lessonIdx}`;
   }

@@ -218,7 +218,7 @@ export const service: RUNTIME_SERVICE = {
       console.warn(`Unable to get progress: service not initialized`);
       return [true, {}];
     }
-    // {m:1, l:1, s?:3} || {} || null
+
     try {
       const [error, progress] = service.getValue('cmi.progress_measure');
 
