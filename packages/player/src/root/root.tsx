@@ -55,11 +55,15 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
     if (!locationError && location) {
       console.log('location in pages');
       console.log(location);
-      moduleIdx = location.module;
-      lessonIdx = location.lesson;
+      moduleIdx = location.cur.module;
+      lessonIdx = location.cur.lesson;
       slideId = location.slideId;
     }
   }
+
+  console.log(moduleIdx);
+  console.log(lessonIdx);
+  console.log(slideId);
 
   const config = Config.create(
     slides,
@@ -77,55 +81,74 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
   useEffect(() => {
     const handleSlideEnter = (ev) => {
       const sceneEvent = ev.detail;
-      const previousLocation = Scrowl.runtime?.getLocation();
+      // const previousLocation = Scrowl.runtime?.getLocation();
+      calculateProgress();
+      // TODO: find progress and submit to runtime as a range from 0..1
 
       type LocationObject = {
-        module?: number;
-        lesson?: number;
-        slide?: number;
+        cur?: {
+          module?: number;
+          lesson?: number;
+          slide?: number;
+        };
+        max?: {
+          module?: number;
+          lesson?: number;
+          slide?: number;
+        };
       };
-      const currentLocationObj: LocationObject = {};
+      const locationObj: LocationObject = {
+        cur: {
+          module: 0,
+          lesson: 0,
+          slide: 0,
+        },
+        max: {
+          module: 0,
+          lesson: 0,
+          slide: 0,
+        },
+      };
 
       const id = sceneEvent.currentTarget.id;
 
-      if (sceneEvent.scrollDirection === 'REVERSE') {
-        return;
-      }
       console.log('slide enter', sceneEvent);
 
       const splitEntries = id.split('--');
 
       splitEntries.map((entry) => {
         const keyPair = entry.split('-');
-        currentLocationObj[keyPair[0]] = parseInt(keyPair[1]);
+        if (locationObj && locationObj.cur) {
+          locationObj.cur[keyPair[0]] = parseInt(keyPair[1]);
+        }
       });
 
-      if (
-        // @ts-ignore
-        previousLocation?.[1].module > currentLocationObj.module
-      ) {
-        return;
-      }
+      // if (
+      //   // @ts-ignore
+      //   previousLocation?.[1].m > locationObj.m
+      // ) {
+      //   return;
+      // }
 
-      if (
-        // @ts-ignore
-        previousLocation?.[1].module <= currentLocationObj.module
-      ) {
-        if (
-          // @ts-ignore
-          previousLocation?.[1].lesson > currentLocationObj.lesson &&
-          previousLocation?.[1].module === currentLocationObj.module
-        ) {
-          return;
-        }
-      }
+      // if (
+      //   // @ts-ignore
+      //   previousLocation?.[1].m <= locationObj.m
+      // ) {
+      //   if (
+      //     // @ts-ignore
+      //     previousLocation?.[1].l > locationObj.l &&
+      //     previousLocation?.[1].m === locationObj.m
+      //   ) {
+      //     return;
+      //   }
+      // }
 
       Scrowl.runtime?.updateLocation(
-        currentLocationObj,
+        locationObj,
         0.5,
         sceneEvent.currentTarget.id
       );
-    };
+    };;
     const handleSlideStart = (ev) => {
       // @ts-ignore
       const sceneEvent = ev.detail;
@@ -158,6 +181,18 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
     };
   }, [project]);
 
+  const calculateProgress = () => {
+    let counter = 0;
+    config.outlineConfig.forEach((module) => {
+      module.lessons.forEach((lesson) => {
+        lesson.slides.forEach((_slide) => {
+          counter++;
+        });
+      });
+    });
+    return counter;
+  };
+
   let targetUrl;
   if (moduleIdx !== undefined) {
     targetUrl = `/module-${moduleIdx}--lesson-${lessonIdx}`;
@@ -188,7 +223,7 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
       </div>
     </Router>
   );
-};;
+};
 
 export default {
   Root,

@@ -150,6 +150,9 @@ const $b3d1e3300d945f09$export$6ed414b8d8bead88 = {
     // { m: 1, l: 1, s?: 3 }
     updateLocation: (location, progressPercentage, slideId)=>{
         console.log(`API.UpdateLocation`);
+        console.log(location);
+        console.log(location.cur);
+        console.log(slideId);
         const [isInit, API] = $b3d1e3300d945f09$export$6ed414b8d8bead88.isInitialized();
         if (!isInit || !API) {
             console.warn(`Unable to get location: service not initialized`);
