@@ -82,11 +82,15 @@ export type RUNTIME_SERVICE = {
   getAPI: (window: Window) => void;
   commit: () => [error: boolean];
   exit: () => [error: boolean];
-  isInitialized: () => [error: true, API: SCORM_API] | [error: false, API: false];
+  isInitialized: () =>
+    | [error: true, API: SCORM_API]
+    | [error: false, API: false];
   start: () => [error: boolean];
-  updateLocation: (location: any, progressPercentage: number) => [error: boolean];
+  updateLocation: (location: any, slideId: string) => [error: boolean];
+  updateProgress: (progressPercentage: number) => [error: boolean];
   isAvailable: () => RUNTIME_SERVICE_API_RESULT;
   getError: (printError?: boolean) => RUNTIME_SERVICE_RESULT;
+  getProgress: () => [error: boolean, progress: any];
   getLocation: () => [error: boolean, location: any];
   _findAPI: (source: Window) => RUNTIME_SERVICE_API_RESULT;
   save: () => RUNTIME_SERVICE_RESULT;
@@ -94,6 +98,5 @@ export type RUNTIME_SERVICE = {
   setValue: (elem: CMIElement, val: CMIElementValue) => [error: boolean];
   getValue: (elem: CMIElement) => [error: boolean, value: string];
   updateStatus: (status: SCORM_STATUS_LESSON) => RUNTIME_SERVICE_RESULT;
-  updateProgress: (percentageCompleted: number) => void;
   finish: () => [error: boolean];
 };

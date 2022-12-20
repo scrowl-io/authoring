@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   MemoryRouter as Router,
   Routes,
@@ -45,6 +45,20 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
   const glossary = project.glossary;
   const name = project.name;
 
+  let moduleIdx;
+  let lessonIdx;
+  let slideId;
+
+  if (Scrowl.runtime) {
+    const [locationError, location] = Scrowl.runtime.getLocation();
+
+    if (!locationError && location) {
+      moduleIdx = location.cur.m;
+      lessonIdx = location.cur.l;
+      slideId = location.slideId;
+    }
+  }
+
   const config = Config.create(
     slides,
     lessons,
@@ -53,18 +67,121 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
     glossary,
     name
   );
-  const pages = Pages.create(config, templateList);
+  const pages = Pages.create(config, templateList, slideId);
 
-  // @ts-ignore
-  const lessonTotal = pages.length;
-  let lessonIdx;
+  useEffect(() => {
+    const handleSlideEnter = (ev) => {
+      const sceneEvent = ev.detail;
+      const previousLocation = Scrowl.runtime?.getLocation();
 
-  if (Scrowl.runtime) {
-    const [locationError, location] = Scrowl.runtime.getLocation();
+      type LocationObject = {
+        cur: {
+          m: number;
+          l: number;
+          s?: number;
+        };
+        max: {
+          m?: number;
+          l?: number;
+          s?: number;
+        };
+      };
 
-    if (!locationError && location) {
-      lessonIdx = location.id + 1;
-    }
+      const locationObj: LocationObject = {
+        cur: {
+          m: 0,
+          l: 0,
+          s: 0,
+        },
+        max: {
+          m: previousLocation?.[1].max ? previousLocation[1].max.m : 0,
+          l: previousLocation?.[1].max ? previousLocation[1].max.l : 0,
+          s: previousLocation?.[1].max ? previousLocation[1].max.s : 0,
+        },
+      };
+
+      const id = sceneEvent.currentTarget.id;
+
+      console.log('slide enter', sceneEvent);
+
+      const shortenedId = id
+        .replace('module', 'm')
+        .replace('lesson', 'l')
+        .replace('slide', 's');
+
+      const splitEntries = shortenedId.split('--');
+
+      splitEntries.map((entry) => {
+        const keyPair = entry.split('-');
+        if (locationObj && locationObj.cur) {
+          locationObj.cur[keyPair[0]] = parseInt(keyPair[1]);
+        }
+      });
+
+      if (
+        !previousLocation ||
+        !previousLocation[1].max ||
+        previousLocation[1].max === undefined
+      ) {
+        Scrowl.runtime?.updateLocation(locationObj, id);
+      } else {
+        if (locationObj.cur.m > previousLocation[1].max.m) {
+          console.log('module condition');
+          locationObj.max.m = locationObj.cur.m;
+
+          if (locationObj.cur.l < previousLocation[1].max.l) {
+            console.log('module up, lesson down');
+            locationObj.max.l = locationObj.cur.l;
+          }
+        } else if (locationObj.cur.l > previousLocation?.[1].max.l) {
+          if (locationObj.cur.m >= previousLocation?.[1].max.m) {
+            console.log('lesson condition');
+            locationObj.max.l = locationObj.cur.l;
+          }
+        }
+
+        Scrowl.runtime?.updateLocation(locationObj, id);
+      }
+    
+
+
+    };
+    const handleSlideStart = (ev) => {
+      // @ts-ignore
+      const sceneEvent = ev.detail;
+
+      // console.log('slide start', sceneEvent);
+    };
+    const handleSlideEnd = (ev) => {
+      // @ts-ignore
+      const sceneEvent = ev.detail;
+
+      // console.log('slide end', sceneEvent);
+    };
+    const handleSlideLeave = (ev) => {
+      // @ts-ignore
+      const sceneEvent = ev.detail;
+
+      // console.log('slide leave', sceneEvent);
+    };
+
+    document.addEventListener('slide.enter', handleSlideEnter);
+    document.addEventListener('slide.start', handleSlideStart);
+    document.addEventListener('slide.end', handleSlideEnd);
+    document.addEventListener('slide.leave', handleSlideLeave);
+
+    return () => {
+      document.removeEventListener('slide.enter', handleSlideEnter);
+      document.removeEventListener('slide.start', handleSlideStart);
+      document.removeEventListener('slide.end', handleSlideEnd);
+      document.removeEventListener('slide.leave', handleSlideLeave);
+    };
+  }, [project]);
+
+  let targetUrl;
+
+  if (moduleIdx !== undefined) {
+    targetUrl = `/module-${moduleIdx}--lesson-${lessonIdx}`;
   }
 
   return (
@@ -81,7 +198,9 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
               path="*"
               element={
                 <Navigate
-                  to={lessonIdx ? pages[lessonIdx].url : pages[0].url}
+                  to={
+                    targetUrl && targetUrl.length > 1 ? targetUrl : pages[0].url
+                  }
                 />
               }
             />

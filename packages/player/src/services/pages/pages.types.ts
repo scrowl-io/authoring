@@ -4,7 +4,7 @@ import { PlayerTemplateList, ProjectModule, ProjectLesson, ProjectSlide } from '
 export interface PageCommons {
   slides: Array<ProjectSlide>;
   templates: PlayerTemplateList;
-  controller: any;
+  slideId?: string;
 };
 
 export type PageProps = PageCommons & React.HTMLAttributes<HTMLDivElement>;

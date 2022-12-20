@@ -14,11 +14,16 @@ import { NavBar } from '../../components/navbar';
 
 const css = utils.css.removeMapPrefix(_css);
 
-const Page = ({ slides, controller, templates, ...props }: PageProps) => {
-  const player = document.querySelector('.player-main');
+const Page = ({ slides, templates, slideId, ...props }: PageProps) => {
+  const Scrowl = window['Scrowl'];
+  const controller = new Scrowl.core.scroll.Controller();
 
   useEffect(() => {
-    player?.scrollTo({ top: 0 });
+    if (slideId && slideId?.length > 0) {
+      document.querySelector(`#${slideId}`)?.scrollIntoView();
+    } else {
+      window.scrollTo({ top: 0 });
+    }
   }, [slides]);
 
   useEffect(() => {
@@ -54,7 +59,6 @@ const Page = ({ slides, controller, templates, ...props }: PageProps) => {
 
 const updateCourseProgress = (project, id) => {
   const Scrowl = window['Scrowl'];
-  console.log('inside pages:');
 
   let lessonsArray: { index: number; targetId: string; lesson: any }[] = [];
   let counter = 1;
@@ -77,22 +81,14 @@ const updateCourseProgress = (project, id) => {
   const currentLessonIndex = currentLesson?.index;
   const totalLessons = lessonsArray.length;
 
+  // @ts-ignore
   let percentageCompleted;
 
   if (currentLessonIndex) {
     percentageCompleted = currentLessonIndex / totalLessons;
   }
 
-  if (currentLesson && Scrowl.runtime) {
-    const runtimeLesson = {
-      m: currentLesson.lesson.lesson.moduleId,
-      l: currentLesson.lesson.lesson.id,
-      s: currentLesson.lesson.slides,
-    }; // TODO: why is this not used?
-
-    console.debug('lesson', currentLesson.lesson, runtimeLesson);
-    Scrowl.runtime.updateLocation(currentLesson.lesson, percentageCompleted);
-  }
+  Scrowl.runtime?.updateProgress(percentageCompleted);
 };
 
 const finishCourse = () => {
@@ -103,7 +99,11 @@ const finishCourse = () => {
   }
 };
 
-export const create = (project, templateList: PlayerTemplateList) => {
+export const create = (
+  project,
+  templateList: PlayerTemplateList,
+  slideId: string
+) => {
   const Scrowl = window['Scrowl'];
   const controller = new Scrowl.core.scroll.Controller();
   const data: Array<PageDefinition> = [];
@@ -147,8 +147,8 @@ export const create = (project, templateList: PlayerTemplateList) => {
                 <Page
                   id={id}
                   slides={page.slides}
-                  controller={controller}
                   templates={templateList}
+                  slideId={slideId}
                 />
                 <Scrowl.core.Template
                   className="owlui-last"

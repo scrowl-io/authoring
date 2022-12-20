@@ -133,7 +133,8 @@ const $b3d1e3300d945f09$export$6ed414b8d8bead88 = {
                 false
             ];
         }
-        if ($b3d1e3300d945f09$export$6ed414b8d8bead88.API.Initialize("") === "false") {
+        // @ts-ignore
+        if ($b3d1e3300d945f09$export$6ed414b8d8bead88.API.Initialized === "false") {
             console.error("API failed to initialize");
             return [
                 $b3d1e3300d945f09$export$6ed414b8d8bead88.init,
@@ -147,8 +148,9 @@ const $b3d1e3300d945f09$export$6ed414b8d8bead88 = {
         ];
     },
     // { m: 1, l: 1, s?: 3 }
-    updateLocation: (location, progressPercentage)=>{
-        console.debug(`API.UpdateLocation`);
+    updateLocation: (location, slideId)=>{
+        console.log(`API.UpdateLocation`);
+        console.log(location);
         const [isInit, API] = $b3d1e3300d945f09$export$6ed414b8d8bead88.isInitialized();
         if (!isInit || !API) {
             console.warn(`Unable to get location: service not initialized`);
@@ -158,11 +160,9 @@ const $b3d1e3300d945f09$export$6ed414b8d8bead88 = {
         }
         $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.location", JSON.stringify({
             v1: 1,
-            ...location.lesson
+            ...location,
+            slideId: slideId
         }));
-        // Update progress
-        progressPercentage = progressPercentage || 0;
-        $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.progress_measure", progressPercentage);
         $b3d1e3300d945f09$export$6ed414b8d8bead88.commit();
         return [
             false
@@ -197,10 +197,57 @@ const $b3d1e3300d945f09$export$6ed414b8d8bead88 = {
             ];
         }
     },
+    getProgress: ()=>{
+        console.debug(`API.GetProgress`);
+        const [isInit, API] = $b3d1e3300d945f09$export$6ed414b8d8bead88.isInitialized();
+        if (!isInit || !API) {
+            console.warn(`Unable to get progress: service not initialized`);
+            return [
+                true,
+                {}
+            ];
+        }
+        try {
+            const [error, progress] = $b3d1e3300d945f09$export$6ed414b8d8bead88.getValue("cmi.progress_measure");
+            if (error || !progress) return [
+                true,
+                {}
+            ];
+            return [
+                false,
+                progress
+            ];
+        } catch (e) {
+            console.error(e);
+            return [
+                true,
+                {}
+            ];
+        }
+    },
+    updateProgress: (progressPercentage)=>{
+        console.log(`API.UpdateProgress`);
+        const [isInit, API] = $b3d1e3300d945f09$export$6ed414b8d8bead88.isInitialized();
+        if (!isInit || !API) {
+            console.warn(`Unable to update progress: service not initialized`);
+            return [
+                true
+            ];
+        }
+        const [progressError, previousProgress] = $b3d1e3300d945f09$export$6ed414b8d8bead88.getValue("cmi.progress_measure");
+        if (!progressError) {
+            if (!previousProgress || parseFloat(previousProgress) === 0 || progressPercentage > parseFloat(previousProgress)) $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.progress_measure", progressPercentage);
+            $b3d1e3300d945f09$export$6ed414b8d8bead88.commit();
+        }
+        return [
+            false
+        ];
+    },
     start: ()=>{
         console.debug(`API.Start`);
         $b3d1e3300d945f09$export$6ed414b8d8bead88._time.startTime = new Date();
         $b3d1e3300d945f09$export$6ed414b8d8bead88.getAPI(window);
+        $b3d1e3300d945f09$export$6ed414b8d8bead88.API?.Initialize("");
         const [isInit, API] = $b3d1e3300d945f09$export$6ed414b8d8bead88.isInitialized();
         if (!isInit || !API) return [
             true
@@ -223,6 +270,7 @@ const $b3d1e3300d945f09$export$6ed414b8d8bead88 = {
         // until we have things hooked up to exit buttons/nav, set exit to 'suspend' as part of start() so that status persists whether the user finishes or exits
         $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.exit", "suspend");
         $b3d1e3300d945f09$export$6ed414b8d8bead88.commit();
+        console.log("runtime started");
         return [
             false
         ];
