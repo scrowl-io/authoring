@@ -26,6 +26,12 @@ jobs:
       - name: Install
         run: yarn install --frozen-lockfile
 
+      - name: Prebuild
+        run: yarn run update
+
+      - name: Move into Editor
+        run: cd packages/editor
+
       - name: Build
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
