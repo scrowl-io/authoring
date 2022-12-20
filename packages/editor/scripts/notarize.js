@@ -3,6 +3,10 @@ const dotenv = require("dotenv");
 
 exports.default = async function notarizing(context) {
   const { electronPlatformName, appOutDir } = context;
+
+  console.info('process.env', JSON.stringify(process.env, null, 2));
+  console.info('process.env.NODE_ENV', process.env.CSC_LINK);
+
   if (electronPlatformName !== "darwin") {
     return;
   }
@@ -16,9 +20,6 @@ exports.default = async function notarizing(context) {
   }
 
   const appName = context.packager.appInfo.productFilename;
-
-  console.info('process.env', JSON.stringify(process.env, null, 2));
-  console.info('process.env.NODE_ENV', process.env.CSC_LINK);
 
   return await notarize({
     appBundleId: "io.scrowl.app",

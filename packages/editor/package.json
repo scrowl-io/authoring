@@ -1,6 +1,7 @@
 {
   "name": "@scrowl/editor",
   "productName": "Scrowl",
+  "description": "A LMS course authoring tool",
   "version": "0.0.77",
   "license": "MIT",
   "keywords": [],
