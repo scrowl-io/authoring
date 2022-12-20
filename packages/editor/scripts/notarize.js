@@ -17,7 +17,8 @@ exports.default = async function notarizing(context) {
 
   const appName = context.packager.appInfo.productFilename;
 
-  console.log('process.env.NODE_ENV', process.env.CSC_LINK);
+  console.info('process.env', JSON.stringify(process.env, null, 2));
+  console.info('process.env.NODE_ENV', process.env.CSC_LINK);
 
   return await notarize({
     appBundleId: "io.scrowl.app",
