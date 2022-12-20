@@ -72,19 +72,21 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
   useEffect(() => {
     const handleSlideEnter = (ev) => {
       const sceneEvent = ev.detail;
+      const previousLocation = Scrowl.runtime?.getLocation();
 
       type LocationObject = {
-        cur?: {
-          m?: number;
-          l?: number;
+        cur: {
+          m: number;
+          l: number;
           s?: number;
         };
-        max?: {
+        max: {
           m?: number;
           l?: number;
           s?: number;
         };
       };
+
       const locationObj: LocationObject = {
         cur: {
           m: 0,
@@ -92,9 +94,9 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
           s: 0,
         },
         max: {
-          m: 0,
-          l: 0,
-          s: 0,
+          m: previousLocation?.[1].max ? previousLocation[1].max.m : 0,
+          l: previousLocation?.[1].max ? previousLocation[1].max.l : 0,
+          s: previousLocation?.[1].max ? previousLocation[1].max.s : 0,
         },
       };
 
@@ -116,27 +118,33 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
         }
       });
 
-      // if (
-      //   // @ts-ignore
-      //   previousLocation?.[1].m > locationObj.m
-      // ) {
-      //   return;
-      // }
+      if (
+        !previousLocation ||
+        !previousLocation[1].max ||
+        previousLocation[1].max === undefined
+      ) {
+        Scrowl.runtime?.updateLocation(locationObj, id);
+      } else {
+        if (locationObj.cur.m > previousLocation[1].max.m) {
+          console.log('module condition');
+          locationObj.max.m = locationObj.cur.m;
 
-      // if (
-      //   // @ts-ignore
-      //   previousLocation?.[1].m <= locationObj.m
-      // ) {
-      //   if (
-      //     // @ts-ignore
-      //     previousLocation?.[1].l > locationObj.l &&
-      //     previousLocation?.[1].m === locationObj.m
-      //   ) {
-      //     return;
-      //   }
-      // }
+          if (locationObj.cur.l < previousLocation[1].max.l) {
+            console.log('module up, lesson down');
+            locationObj.max.l = locationObj.cur.l;
+          }
+        } else if (locationObj.cur.l > previousLocation?.[1].max.l) {
+          if (locationObj.cur.m >= previousLocation?.[1].max.m) {
+            console.log('lesson condition');
+            locationObj.max.l = locationObj.cur.l;
+          }
+        }
 
-      Scrowl.runtime?.updateLocation(locationObj, id);
+        Scrowl.runtime?.updateLocation(locationObj, id);
+      }
+    
+
+
     };
     const handleSlideStart = (ev) => {
       // @ts-ignore

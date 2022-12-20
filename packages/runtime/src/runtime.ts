@@ -170,6 +170,7 @@ export const service: RUNTIME_SERVICE = {
   // { m: 1, l: 1, s?: 3 }
   updateLocation: (location, slideId) => {
     console.log(`API.UpdateLocation`);
+    console.log(location);
 
     const [isInit, API] = service.isInitialized();
 
