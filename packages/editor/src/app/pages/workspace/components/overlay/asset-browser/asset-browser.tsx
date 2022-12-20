@@ -126,7 +126,9 @@ export const AssetDrawerElement = (
   const handleAddFile = () => {
     const types = assetTypes as Array<AssetType>;
 
+    setCopyProgress(initialCopyProgress);
     setIsCopying(true);
+
     Projects.upload({ meta: meta, options: { assetTypes: types } }).then(
       (res) => {
         if (res.error) {
