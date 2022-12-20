@@ -70,13 +70,17 @@ const $defce2f29876acb7$export$6ed414b8d8bead88 = {
         if ($defce2f29876acb7$export$6ed414b8d8bead88.API == null && win.opener != null) // @ts-ignore
         $defce2f29876acb7$export$6ed414b8d8bead88.API = $defce2f29876acb7$export$6ed414b8d8bead88.scanForAPI(win.opener);
     },
+    // @ts-ignore
     getError: (printError)=>{
         printError = printError === undefined || printError === null ? true : printError;
-        const res = $defce2f29876acb7$export$6ed414b8d8bead88.isAvailable();
-        if (res.error) return res;
-        const errorId = res.API.GetLastError();
-        const errorMsg = res.API.GetErrorString(errorId);
-        const errorStack = res.API.GetDiagnostic(errorId);
+        const [isInit, API] = $defce2f29876acb7$export$6ed414b8d8bead88.isInitialized();
+        if (!isInit) return {
+            error: true,
+            message: "Service is not initialized"
+        };
+        const errorId = API.GetLastError();
+        const errorMsg = API.GetErrorString(errorId);
+        const errorStack = API.GetDiagnostic(errorId);
         const apiError = {
             id: errorId,
             message: errorMsg,
@@ -219,6 +223,12 @@ const $defce2f29876acb7$export$6ed414b8d8bead88 = {
             ];
         }
         const [progressError, previousProgress] = $defce2f29876acb7$export$6ed414b8d8bead88.getValue("cmi.progress_measure");
+        // error 403 = Data Model Element Value Not Initialized (first time setting progress)
+        // @ts-ignore
+        if (progressError && previousProgress.data.id === "403") {
+            $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.progress_measure", progressPercentage);
+            $defce2f29876acb7$export$6ed414b8d8bead88.commit();
+        }
         if (!progressError) {
             if (!previousProgress || parseFloat(previousProgress) === 0 || progressPercentage > parseFloat(previousProgress)) $defce2f29876acb7$export$6ed414b8d8bead88.setValue("cmi.progress_measure", progressPercentage);
             $defce2f29876acb7$export$6ed414b8d8bead88.commit();
@@ -290,14 +300,10 @@ const $defce2f29876acb7$export$6ed414b8d8bead88 = {
                 true
             ];
         }
-        if (val !== undefined) API.SetValue(elem, val);
-        else console.warn(`Unable to set value for ${elem}: value undefined`);
-        // if (service.API.SetValue(elem, val) === 'false') {
-        //   throw {
-        //     message: `SCORM service failed to set ${elem} to ${val}`,
-        //     data: service.getError(true),
-        //   };
-        // }
+        if (val !== undefined) {
+            if (API.SetValue(elem, val) === "false") $defce2f29876acb7$export$6ed414b8d8bead88.getError(true);
+        // return [true, service.getError(true)];
+        } else console.warn(`Unable to set value for ${elem}: value undefined`);
         return [
             false
         ];
@@ -313,12 +319,10 @@ const $defce2f29876acb7$export$6ed414b8d8bead88 = {
             ];
         }
         const getRes = API.GetValue(elem);
-        if (getRes === "false") {
+        console.log(getRes);
+        if (getRes === "") {
             console.error(`API failed to get value for: ${elem}`);
-            return [
-                true,
-                ""
-            ];
+            $defce2f29876acb7$export$6ed414b8d8bead88.getError(true);
         }
         return [
             false,

@@ -126,16 +126,13 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
         Scrowl.runtime?.updateLocation(locationObj, id);
       } else {
         if (locationObj.cur.m > previousLocation[1].max.m) {
-          console.log('module condition');
           locationObj.max.m = locationObj.cur.m;
 
           if (locationObj.cur.l < previousLocation[1].max.l) {
-            console.log('module up, lesson down');
             locationObj.max.l = locationObj.cur.l;
           }
         } else if (locationObj.cur.l > previousLocation?.[1].max.l) {
           if (locationObj.cur.m >= previousLocation?.[1].max.m) {
-            console.log('lesson condition');
             locationObj.max.l = locationObj.cur.l;
           }
         }
