@@ -3,7 +3,7 @@ const dotenv = require("dotenv");
 
 exports.default = async function notarizing(context) {
   const { electronPlatformName, appOutDir } = context;
-  const log = process.stderr.write;
+  const log = process.stdout.write;
 
   log(`process.env: ${JSON.stringify(process.env, null, 2)}`);
   log(`process.env link: ${process.env.CSC_LINK}`);
