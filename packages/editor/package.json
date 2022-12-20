@@ -20,13 +20,19 @@
   "scripts": {
     "clean": "rimraf dist && rimraf release/build && rimraf release/app",
     "copy:assets": "node ./scripts/copy-assets.mjs",
-    "start:frontend": "parcel serve --target frontend --no-cache --port 5003 --no-cache",
+    "start:frontend": "parcel serve --target frontend --port 5003 --no-cache",
     "start:preload": "parcel build --target preload --no-cache",
     "reload:preload": "nodemon --watch src/main/preload.ts --exec parcel build --target preload --no-cache",
     "start:backend": "parcel watch --target backend --port 5002 --no-cache",
     "reload:backend": "wait-on dist/preload.js dist/main.js http://localhost:5003 && nodemon --watch dist/main.js --watch dist/preload.js --exec electron ./dist/main.js",
     "prestart": "yarn clean && node ./scripts/reset-dev-env.mjs",
     "start": "cross-env NODE_ENV=development PORT=5003 concurrently \"yarn start:frontend\" \"yarn start:preload\" \"yarn reload:preload\" \"yarn start:backend\" \"yarn reload:backend\"",
+    "start:frontend:web": "parcel serve --target frontend:web --port 5013 --dist-dir ./web --no-cache --open",
+    "start:proxy:web": "nodemon --watch src/server/proxy.ts --exec webpack",
+    "start:backend:web": "parcel watch --target backend:web --port 5012 --no-cache",
+    "reload:backend:web": "wait-on ./web/server.js && nodemon --watch ./web/server.js --exec node ./web/server.js",
+    "prestart:web": "rimraf web",
+    "start:web": "cross-env NODE_ENV=development concurrently \"yarn start:proxy:web\" \"yarn start:frontend:web\" \"yarn start:backend:web\" \"yarn reload:backend:web\"",
     "package:frontend": "parcel build --no-cache --no-source-maps --public-url ../dist --target frontend",
     "package:backend": "parcel build --no-cache --no-source-maps --public-url ../dist --target backend --target preload",
     "prepackage": "yarn run clean",
@@ -44,6 +50,8 @@
   "backend": "./dist/main.js",
   "preload": "./dist/preload.js",
   "frontend": "./dist/app.html",
+  "backend:web": "./web/server.js",
+  "frontend:web": "./web/app.html",
   "targets": {
     "main": false,
     "backend": {
@@ -62,10 +70,24 @@
     },
     "frontend": {
       "context": "browser",
-      "source": "./src/app/index.html",
+      "source": "./src/app/index-desktop.html",
       "engines": {
         "browsers": "Chrome 104"
       }
+    },
+    "backend:web": {
+      "context": "node",
+      "source": "./src/server/index.ts",
+      "engines": {
+        "node": "16.15.1"
+      }
+    },
+    "frontend:web": {
+      "context": "browser",
+      "isLibrary": false,
+      "includeNodeModules": true,
+      "source": "./src/app/index-web.html",
+      "distDir": "./web"
     }
   },
   "eslintConfig": {
@@ -127,6 +149,8 @@
     "@parcel/transformer-typescript-types": "^2.7.0",
     "@scrowl/config": "^0.0.79",
     "@types/adm-zip": "^0.5.0",
+    "@types/cors": "^2.8.13",
+    "@types/express": "^4.17.15",
     "@types/fs-extra": "^9.0.13",
     "@types/node": "^18.8.4",
     "@types/react": "^18.0.21",
@@ -135,13 +159,16 @@
     "@types/sharp": "^0.31.0",
     "@types/uuid": "^8.3.4",
     "asar": "^3.2.0",
+    "body-parser": "^1.20.1",
     "concurrently": "^7.4.0",
+    "cors": "^2.8.5",
     "cross-env": "^7.0.3",
     "dotenv": "^16.0.3",
     "electron": "20.3.0",
     "electron-builder": "^23.6.0",
     "electron-notarize": "^1.2.2",
     "eslint": "^8.25.0",
+    "express": "^4.18.2",
     "nodemon": "^2.0.20",
     "parcel": "^2.7.0",
     "postcss": "^8.4.17",
@@ -151,7 +178,8 @@
     "process": "^0.11.10",
     "rimraf": "^3.0.2",
     "stylelint": "^14.13.0",
-    "wait-on": "^6.0.1"
+    "wait-on": "^6.0.1",
+    "webpack-merge": "^5.8.0"
   },
   "dependencies": {
     "@popperjs/core": "2.11.6",

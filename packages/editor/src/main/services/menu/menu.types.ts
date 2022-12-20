@@ -27,7 +27,7 @@ export type ContextMenuPosition = [number, number];
 export type MenuItemProps = {
   API?: rq.RegisterEndpoints;
   register?: () => void;
-  create?: (isMac: boolean) => MenuItemConstructorOptions;
+  create?: (isMac: boolean, isRebuild: boolean) => MenuItemConstructorOptions;
   asyncInit?: (menu: Menu) => Promise<rq.ApiResult>;
   [key: string]: any;
 };

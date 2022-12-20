@@ -23,7 +23,11 @@ export const Checkbox = ({
     validationError !== null &&
     validationError !== undefined &&
     validationError.length;
-  const inputId = `input-checkbox-${field.replace(/\./g, '-')}`;
+  let inputId = '';
+
+  if (field) {
+    inputId = `input-checkbox-${field.replace(/\./g, '-')}`;
+  }
 
   if (inputRef.current && lastFocusState.current !== focus) {
     lastFocusState.current = focus;
