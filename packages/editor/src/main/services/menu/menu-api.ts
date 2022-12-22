@@ -4,24 +4,20 @@ import {
   IpcMainInvokeEvent
 } from 'electron';
 import { rq } from '../';
-import { MenuApi, ContextMenuItem, ContextMenuPosition } from './menu.types';
+import { MenuApi, ContextMenuItem, MenuReqContextMenu, MenuReqToggleMenu } from './menu.types';
 
-export const contextMenu = (ev: rq.RequestEvent, items: Array<ContextMenuItem>, position: ContextMenuPosition, data: any) => {
+export const contextMenu = (ev: rq.RequestEvent, req: MenuReqContextMenu) => {
   return new Promise<rq.ApiResult>((resolve) => {
-    if (!items || !items.length) {
+    if (!req.items || !req.items.length) {
       resolve({
         error: true,
         message: 'Unable to create context menu: Items are required',
-        data: {
-          items,
-          position,
-          data,
-        }
+        data: req,
       });
       return;
     }
 
-    const template = items.map((item: ContextMenuItem) => {
+    const template = req.items.map((item: ContextMenuItem) => {
       if (item.type && item.type === 'separator') {
         return { type: item.type };
       }
@@ -31,11 +27,7 @@ export const contextMenu = (ev: rq.RequestEvent, items: Array<ContextMenuItem>, 
         click: () => {
           resolve({
             error: false,
-            data: {
-              item,
-              position,
-              data,
-            },
+            data: req,
           });
         }
       };
@@ -58,26 +50,23 @@ export const contextMenu = (ev: rq.RequestEvent, items: Array<ContextMenuItem>, 
       resolve({
         error: true,
         message: 'Unable to create context menu: Window not found',
-        data: {
-          items,
-          position,
-        }
+        data: req,
       });
       return;
     }
 
-    if (!position || position.length !== 2) {
+    if (!req.position || req.position.length !== 2) {
       menu.popup({ window });
       return;
     }
 
-    const [x, y] = position;
+    const [x, y] = req.position;
 
     menu.popup({ window, x, y, });
   });
 };
 
-export const toggleMenu = (ev: IpcMainInvokeEvent, id?: Array<string> | string, isEnabled?: boolean) => {
+export const toggleMenu = (ev: IpcMainInvokeEvent, req: MenuReqToggleMenu) => {
   const setMenu = (appMenu, menuId: string) => {
     try {
       const menuItem = appMenu.getMenuItemById(menuId);
@@ -89,8 +78,8 @@ export const toggleMenu = (ev: IpcMainInvokeEvent, id?: Array<string> | string, 
         };
       }
 
-      if (isEnabled !== null && isEnabled !== undefined) {
-        menuItem.enabled = isEnabled;
+      if (req.isEnabled !== null && req.isEnabled !== undefined) {
+        menuItem.enabled = req.isEnabled;
       } else {
         menuItem.enabled = !menuItem.enabled;
       }
@@ -117,7 +106,7 @@ export const toggleMenu = (ev: IpcMainInvokeEvent, id?: Array<string> | string, 
 
   return new Promise<rq.ApiResult>(resolve => {
     try {
-      if (!id) {
+      if (!req.id) {
         resolve({
           error: true,
           message: 'Unable to toggle menu - menu id required',
@@ -130,7 +119,7 @@ export const toggleMenu = (ev: IpcMainInvokeEvent, id?: Array<string> | string, 
       if (!appMenu) {
         resolve({
           error: true,
-          message: `Unable to toggle menu: ${id} - menu not initialized`,
+          message: `Unable to toggle menu: ${req.id} - menu not initialized`,
         });
         return;
       }
@@ -141,16 +130,16 @@ export const toggleMenu = (ev: IpcMainInvokeEvent, id?: Array<string> | string, 
         return setMenu(appMenu, menuId);
       };
   
-      if (Array.isArray(id)) {
-        result = id.map(setMenus);
+      if (Array.isArray(req.id)) {
+        result = req.id.map(setMenus);
       } else {
-        result = setMenu(appMenu, id);
+        result = setMenu(appMenu, req.id);
       }
 
       resolve({
         error: false,
         data: {
-          id,
+          id: req.id,
           result,
         },
       });
@@ -159,8 +148,8 @@ export const toggleMenu = (ev: IpcMainInvokeEvent, id?: Array<string> | string, 
         error: true,
         message: 'Failed to toggle menu',
         data: {
-          id,
-          isEnabled,
+          id: req.id,
+          isEnabled: req.isEnabled,
           trace: e,
         },
       })

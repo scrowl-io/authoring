@@ -1,5 +1,5 @@
 import { MenuItemConstructorOptions, MenuItem, Menu } from 'electron';
-import { MenuItemApiPreview, PreviewTypes } from '../menu.types';
+import { MenuItemApiPreview, PreviewTypes, MenuReqUpdatePreviewMenu } from '../menu.types';
 import { rq, log } from '../..';
 import { get as getSettings, set as setSetting } from '../../../models/settings';
 
@@ -40,9 +40,13 @@ export const create = (isMac: boolean, isRebuild?: boolean) => {
         enabled: isRebuild ? true : false,
         click: (menuItem, browserWindow, ev) => {
           const type: PreviewTypes = 'slide';
+          const settingsPayload = {
+            key: 'previewMode',
+            value: type,
+          };
 
           rq.send(API.open.name, type);
-          setSetting(ev, 'previewMode', type).then((res) => {
+          setSetting(ev, settingsPayload).then((res) => {
             if (res.error) {
               log.error(res);
             }
@@ -57,9 +61,13 @@ export const create = (isMac: boolean, isRebuild?: boolean) => {
         enabled: isRebuild ? true : false,
         click: (menuItem, browserWindow, ev) => {
           const type: PreviewTypes = 'lesson';
+          const settingsPayload = {
+            key: 'previewMode',
+            value: type,
+          };
 
           rq.send(API.open.name, type);
-          setSetting(ev, 'previewMode', type).then((res) => {
+          setSetting(ev, settingsPayload).then((res) => {
             if (res.error) {
               log.error(res);
             }
@@ -74,9 +82,13 @@ export const create = (isMac: boolean, isRebuild?: boolean) => {
         enabled: isRebuild ? true : false,
         click: (menuItem, browserWindow, ev) => {
           const type: PreviewTypes = 'module';
+          const settingsPayload = {
+            key: 'previewMode',
+            value: type,
+          };
 
           rq.send(API.open.name, type);
-          setSetting(ev, 'previewMode', type).then((res) => {
+          setSetting(ev, settingsPayload).then((res) => {
             if (res.error) {
               log.error(res);
             }
@@ -91,9 +103,13 @@ export const create = (isMac: boolean, isRebuild?: boolean) => {
         enabled: isRebuild ? true : false,
         click: (menuItem, browserWindow, ev) => {
           const type: PreviewTypes = 'project';
+          const settingsPayload = {
+            key: 'previewMode',
+            value: type,
+          };
 
           rq.send(API.open.name, type);
-          setSetting(ev, 'previewMode', type).then((res) => {
+          setSetting(ev, settingsPayload).then((res) => {
             if (res.error) {
               log.error(res);
             }
@@ -166,7 +182,7 @@ const updateMenuItems = (menu: Menu, previewMode: PreviewTypes): rq.ApiResult =>
   };
 };
 
-export const updatePreviewMenu = (ev: rq.RequestEvent, type: PreviewTypes) => {
+export const updatePreviewMenu = (ev: rq.RequestEvent, req: MenuReqUpdatePreviewMenu) => {
   return new Promise<rq.ApiResult>((resolve) => {
     const menu = Menu.getApplicationMenu();
 
@@ -178,7 +194,7 @@ export const updatePreviewMenu = (ev: rq.RequestEvent, type: PreviewTypes) => {
       return;
     }
 
-    const updateRes = updateMenuItems(menu, type);
+    const updateRes = updateMenuItems(menu, req.type);
 
     resolve(updateRes);
   });
@@ -203,8 +219,12 @@ export const register = () => {
 export const loadSettings = () => {
   return new Promise<rq.ApiResult>((resolve) => {
     const internalEvent: rq.RequestEvent = {};
+    const settingsPayload = {
+      key: 'previewMode',
+      defaultValue: 'slide',
+    };
 
-    getSettings(internalEvent, 'previewMode', 'slide').then(resolve);
+    getSettings(internalEvent, settingsPayload).then(resolve);
   });
 };
 

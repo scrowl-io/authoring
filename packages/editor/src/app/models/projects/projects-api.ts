@@ -1,9 +1,9 @@
 import {
   ProjectsEndpoints,
-  PreviewAssetReq,
+  ProjectsReqPreviewAsset,
   WindowEndpoints,
   ProjectMeta,
-  PreviewProjectReq,
+  ProjectsReqPreviewProject,
   UnsavedReq
 } from './projects.types';
 import { rq } from '../../services';
@@ -26,7 +26,7 @@ const WINDOW_ENDPOINTS: WindowEndpoints = {
 };
 
 export const create = (blueprint?: string): Promise<rq.ApiResult> => {
-  return rq.invoke(ENDPOINTS.create, blueprint);
+  return rq.invoke(ENDPOINTS.create, { blueprint });
 };
 
 export const upload = (data?): Promise<rq.ApiResult> => {
@@ -50,18 +50,18 @@ export const publish = (data?): Promise<rq.ApiResult> => {
 };
 
 export const list = (limit?: number): Promise<rq.ApiResult> => {
-  return rq.invoke(ENDPOINTS.list, limit);
+  return rq.invoke(ENDPOINTS.list, { limit });
 };
 
 export const open = (data: ProjectMeta): Promise<rq.ApiResult> => {
   return rq.invoke(ENDPOINTS.open, data);
 };
 
-export const previewAsset = (data: PreviewAssetReq) => {
+export const previewAsset = (data: ProjectsReqPreviewAsset) => {
   return rq.invoke(ENDPOINTS.previewAsset, data);
 };
 
-export const preview = (payload: PreviewProjectReq) => {
+export const preview = (payload: ProjectsReqPreviewProject) => {
   return rq.invoke(ENDPOINTS.preview, payload);
 };
 

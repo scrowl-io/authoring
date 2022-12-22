@@ -42,8 +42,6 @@ export const addAll = (router: express.Router, endpoints: RegisterEndpoints) => 
   for (const key in endpoints) {
     add(router, endpoints[key]);
   }
-
-  console.log('ENDPOINTS', ENDPOINTS);
 };
 
 export default {

@@ -57,7 +57,7 @@ export const contextMenu = (
       return data;
     });
 
-    rq.invoke(ENDPOINTS.contextMenu, menuItems, position, ...args)
+    rq.invoke(ENDPOINTS.contextMenu, { menuItems, position, args })
       .then((result) => {
         if (!result.error) {
           const id = result.data.item.id;
@@ -82,7 +82,7 @@ export const contextMenu = (
 
 export const toggleMenu = (id: Array<string> | string, isEnabled?: boolean) => {
   return new Promise<rq.ApiResult>((resolve) => {
-    rq.invoke(ENDPOINTS.toggleMenu, id, isEnabled).then((result) => {
+    rq.invoke(ENDPOINTS.toggleMenu, { id, isEnabled }).then((result) => {
       resolve(result);
     }).
     catch((e) => {
@@ -172,7 +172,7 @@ export const offPreviewOpen = () => {
 };
 
 export const updatePreviewMenu = (type: PreviewTypes) => {
-  return rq.invoke(ENDPOINTS_PREVIEW.update, type);
+  return rq.invoke(ENDPOINTS_PREVIEW.update, { type });
 };
 
 export const onOutlineAddSlide = (listener: rq.Listener) => {

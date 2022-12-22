@@ -7,14 +7,14 @@ type UpdateResolver = (value: rq.ApiResult | PromiseLike<rq.ApiResult>) => void;
 type RequestQueue = Array<{
   endpoint: string;
   method: 'invoke' | 'send' | 'on' | 'removeListener' | 'removeListenerAll';
-  params: unknown[];
+  params: rq.JSON_DATA;
   resolve: UpdateResolver;
 }>;
 type ScrowlProxy = {
   timeout: number;
   inProgress: boolean;
   ENDPOINTS: Array<rq.RegisterEndpoint>;
-  invoke: (endpoint: string, params: unknown[]) => Promise<rq.ApiResult>;
+  invoke: (endpoint: string, params: rq.JSON_DATA) => Promise<rq.ApiResult>;
   on: (endpoint: string, listener: Listener) => void;
   send: (endpoint: string, listener: Listener) => void;
   removeListener: (endpoint: string, listener: Listener) => void;
@@ -77,7 +77,7 @@ const scrowlProxy: ScrowlProxy = {
   timeout: 1000,
   inProgress: true,
   ENDPOINTS: [],
-  invoke: (endpoint: string, params: unknown[]) => {
+  invoke: (endpoint: string, params: rq.JSON_DATA) => {
     return new Promise<rq.ApiResult>((resolve) => {
       const method = 'invoke';
 

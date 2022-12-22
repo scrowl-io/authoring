@@ -1,4 +1,4 @@
-import { TemplatesApi, TemplateSchema } from './templates.types';
+import { TemplatesApi, TemplateSchema, TemplateReqLoad } from './templates.types';
 import { rq, fs, tmpr, log } from '../../services';
 import { list as templateList } from './default-templates';
 
@@ -9,7 +9,7 @@ export const TEMPLATE_PATHS = {
   templates: fs.getSourcePath('assets', 'templates'),
 };
 
-export const load = (ev: rq.RequestEvent, template: TemplateSchema) => {
+export const load = (ev: rq.RequestEvent, req: TemplateReqLoad) => {
 
   const compileFile = (
     filename: string,
@@ -50,12 +50,12 @@ export const load = (ev: rq.RequestEvent, template: TemplateSchema) => {
   };
 
   return new Promise<rq.ApiResult>((resolve) => {
-    if (!template || !template.meta) {
+    if (!req.template || !req.template.meta) {
       const missingDataError: rq.ApiResultError = {
         error: true,
         message: 'Unable to load template - template required',
         data: {
-          template,
+          template: req.template,
         }
       };
       log.error(missingDataError);
@@ -71,17 +71,17 @@ export const load = (ev: rq.RequestEvent, template: TemplateSchema) => {
           return src.indexOf('.hbs') === -1;
         },
       };
-      const templatePath = fs.joinPath(TEMPLATE_PATHS.templates, template.meta.filename);
+      const templatePath = fs.joinPath(TEMPLATE_PATHS.templates, req.template.meta.filename);
       const canvasJsSrc = fs.joinPath(TEMPLATE_PATHS.project, 'canvas.js.hbs');
       const canvasJsDest = fs.joinPath(TEMPLATE_PATHS.working, 'index.js');
       const canvasHtmlSrc = fs.joinPath(TEMPLATE_PATHS.project, 'canvas.html.hbs');;
       const canvasHtmlDest = fs.joinPath(TEMPLATE_PATHS.working, 'index.html');
       const renderData = {
         canvasJs: `./index.js?ver=${cacheBreaker}`,
-        templateJs: `./scrowl.template-${template.meta.filename}.js?ver=${cacheBreaker}`,
-        templateCss: `./scrowl.template-${template.meta.filename}.css?ver=${cacheBreaker}`,
-        templateComponent: template.meta.component,
-        templateContent: JSON.stringify(template.content),
+        templateJs: `./scrowl.template-${req.template.meta.filename}.js?ver=${cacheBreaker}`,
+        templateCss: `./scrowl.template-${req.template.meta.filename}.css?ver=${cacheBreaker}`,
+        templateComponent: req.template.meta.component,
+        templateContent: JSON.stringify(req.template.content),
       };
 
       fs.copy(TEMPLATE_PATHS.project, TEMPLATE_PATHS.working, projectCopyOpts).then((copyProjectFilesRes) => {
@@ -111,7 +111,7 @@ export const load = (ev: rq.RequestEvent, template: TemplateSchema) => {
               error: true,
               message: 'Failed to render template',
               data: {
-                template,
+                template: req.template,
               },
             };
             log.error(renderError);
@@ -169,7 +169,7 @@ export const load = (ev: rq.RequestEvent, template: TemplateSchema) => {
         message :'Failed to load template',
         data: {
           trace: e,
-          template,
+          template: req.template,
         }
       })
     }

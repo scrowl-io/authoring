@@ -8,6 +8,10 @@ export type {
   RegisterEndpointType,
 } from '../../../main/services/requester/requester.types';
 
+export type {
+  JSON_DATA,
+} from '../../../main/utils/json/json.types';
+
 export interface RegisterEndpoint extends Omit<MainRegisterEndpoint, 'fn'> {
   fn?: express.Handler;
 };

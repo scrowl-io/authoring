@@ -11,11 +11,11 @@ export type {
   ProjectModule,
   ProjectLesson,
   ProjectSlide,
-  UploadReq,
-  SaveReq,
-  PreviewAssetReq,
+  ProjectsReqUpload,
+  ProjectsReqSave,
+  ProjectsReqPreviewAsset,
   ProjectFile,
-  PreviewProjectReq
+  ProjectsReqPreviewProject
 } from '../../../main/models/projects/projects.types';
 
 export type { AssetType } from '../../../main/services/file-system/fs.types';

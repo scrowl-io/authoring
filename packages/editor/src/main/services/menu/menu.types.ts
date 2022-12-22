@@ -141,3 +141,18 @@ export type MenuItemEndpointPublish = {
   publish: MenuItemApiPublishExport['name'];
   publishQuick: MenuItemApiPublishExportQuick['name'];
 };
+
+export type MenuReqContextMenu = {
+  items: Array<ContextMenuItem>;
+  position: ContextMenuPosition;
+  data: any;
+};
+
+export type MenuReqToggleMenu = {
+  id?: Array<string> | string;
+  isEnabled?: boolean;
+};
+
+export type MenuReqUpdatePreviewMenu = {
+  type: PreviewTypes;
+};

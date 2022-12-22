@@ -2,14 +2,15 @@ import express from 'express';
 import {
   ProjectsApi,
 } from './projects.types';
-import { rq } from '../../services'
+import { blueprints } from '../../../main/models/projects/blueprints'
 
 export const create: express.Handler = (req, res) => {
-  res.status(rq.status.codes.noContent);
+  const project = blueprints.get('default');
+  console.log('params', req.params);
   res.send({
     error: false,
     data: {
-      project: {},
+      project,
     },
   });
 };
