@@ -193,6 +193,7 @@
     "@scrowl/template-two-column": "^1.0.78",
     "@scrowl/ui": "^0.0.19",
     "adm-zip": "^0.5.9",
+    "axios": "^1.2.1",
     "bootstrap": "^5.2.2",
     "electron-context-menu": "^3.5.0",
     "electron-devtools-installer": "^3.2.0",
