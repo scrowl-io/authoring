@@ -9,6 +9,7 @@ import {
   MenuItemEndpointPublish
 } from './menu.types';
 import { rq } from '../../services';
+import { Elem, ELEM_ALIGNMENT } from '../../utils';
 
 const ENDPOINTS: MenuEndpoints = {
   contextMenu: '/context-menu',
@@ -42,10 +43,21 @@ const ENDPOINTS_PUBLISH: MenuItemEndpointPublish = {
 };
 
 export const contextMenu = (
+  ev: React.MouseEvent,
   items: Array<ContextMenuItem>,
-  position?: ContextMenuPosition | number[],
-  ...args
+  payload?: {
+    [key: string]: any;
+  },
+  options?: {
+    alignment?: ELEM_ALIGNMENT,
+    offset?: [number, number],
+  }
 ) => {
+  Elem.stopEvent(ev);
+
+  const target = ev.target as HTMLElement;
+  const position = !options || !options.alignment ? [ev.clientX, ev.clientY] : Elem.getPosition(target, options);
+
   return new Promise<rq.ApiResult>((resolve) => {
     const menuItemMap = {};
     const menuItems = items.map((item, idx) => {
@@ -56,7 +68,7 @@ export const contextMenu = (
       data.id = id;
       return data;
     });
-    const contextMenuPayload = { menuItems, position, args } as unknown as rq.JSON_DATA;
+    const contextMenuPayload = { menuItems, position, payload } as unknown as rq.JSON_DATA;
 
     rq.invoke(ENDPOINTS.contextMenu, contextMenuPayload)
       .then((result) => {

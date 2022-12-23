@@ -128,7 +128,7 @@ export const Header = () => {
     handleProjectPreview(payload);
   };
 
-  const preivewMenuItems: Array<menu.ContextMenuItem> = [
+  const previewMenuItems: Array<menu.ContextMenuItem> = [
     {
       label: 'Current Slide',
       type: 'radio',
@@ -191,15 +191,10 @@ export const Header = () => {
   ];
 
   const handleOpenPreviewMenu = (ev: React.MouseEvent, offsetX?: number) => {
-    const position = Elem.getPosition(
-      ev.target,
-      Elem.ELEM_ALIGNMENT.LeftBottom,
-      [-100 + (offsetX ? offsetX : 0), 6]
-    );
-    menu.API.contextMenu(preivewMenuItems, position).then((result) => {
-      console.log('menu closed', result);
+    menu.API.contextMenu(ev, previewMenuItems, undefined, {
+      alignment: Elem.ELEM_ALIGNMENT.LeftBottom,
+      offset: [-100 + (offsetX ? offsetX : 0), 6],
     });
-    console.log('opening preview mode');
   };
 
   const handleOpenPublish = () => {

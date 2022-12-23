@@ -143,9 +143,9 @@ export type MenuItemEndpointPublish = {
 };
 
 export type MenuReqContextMenu = {
-  items: Array<ContextMenuItem>;
+  menuItems: Array<ContextMenuItem>;
   position: ContextMenuPosition;
-  data: any;
+  payload: any;
 };
 
 export type MenuReqToggleMenu = {

@@ -3,12 +3,13 @@ import {
   BrowserWindow,
   IpcMainInvokeEvent
 } from 'electron';
-import { rq } from '../';
+import { rq, log } from '../';
 import { MenuApi, ContextMenuItem, MenuReqContextMenu, MenuReqToggleMenu } from './menu.types';
 
 export const contextMenu = (ev: rq.RequestEvent, req: MenuReqContextMenu) => {
   return new Promise<rq.ApiResult>((resolve) => {
-    if (!req.items || !req.items.length) {
+    if (!req.menuItems || !req.menuItems.length) {
+      log.error('Unable to create context menu: Items are required', req);
       resolve({
         error: true,
         message: 'Unable to create context menu: Items are required',
@@ -17,7 +18,7 @@ export const contextMenu = (ev: rq.RequestEvent, req: MenuReqContextMenu) => {
       return;
     }
 
-    const template = req.items.map((item: ContextMenuItem) => {
+    const template = req.menuItems.map((item: ContextMenuItem) => {
       if (item.type && item.type === 'separator') {
         return { type: item.type };
       }
@@ -27,7 +28,10 @@ export const contextMenu = (ev: rq.RequestEvent, req: MenuReqContextMenu) => {
         click: () => {
           resolve({
             error: false,
-            data: req,
+            data: {
+              item,
+              ...req
+            },
           });
         }
       };
@@ -42,11 +46,13 @@ export const contextMenu = (ev: rq.RequestEvent, req: MenuReqContextMenu) => {
 
       return action;
     });
+
     const menu = Menu.buildFromTemplate(template);
     const event = ev as IpcMainInvokeEvent;
     const window = BrowserWindow.fromWebContents(event.sender);
 
     if (!window) {
+      log.warn('Unable to create context menu: Window not found', req);
       resolve({
         error: true,
         message: 'Unable to create context menu: Window not found',

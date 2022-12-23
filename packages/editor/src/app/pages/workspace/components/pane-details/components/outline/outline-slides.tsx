@@ -11,6 +11,7 @@ import {
 } from '../../../../';
 import { menu, sys } from '../../../../../../services';
 import { InlineInput } from '../../../../../../components';
+import { ELEM_ALIGNMENT } from '../../../../../../utils';
 
 export const OutlineSlideItem = ({
   slide,
@@ -98,15 +99,17 @@ export const OutlineSlideItem = ({
     setActiveSlide(slide);
   };
 
-  const handleOpenSlideMenu = (ev: React.MouseEvent) => {
-    ev.preventDefault();
-
+  const handleOpenSlideMenu = (
+    ev: React.MouseEvent,
+    alignment?: ELEM_ALIGNMENT
+  ) => {
     const target = ev.target as HTMLElement;
 
-    menu.API.contextMenu(slideMenuItems).then((result) => {
-      console.log('menu close', result);
-      target.blur();
-    });
+    menu.API.contextMenu(ev, slideMenuItems, undefined, { alignment }).then(
+      (result) => {
+        target.blur();
+      }
+    );
   };
 
   const handleNameChange = (val) => {
@@ -184,8 +187,12 @@ export const OutlineSlideItem = ({
         <ui.Button
           className={css.actionMenu}
           variant="ghost"
-          onClick={handleOpenSlideMenu}
-          onContextMenu={handleOpenSlideMenu}
+          onClick={(ev) => {
+            handleOpenSlideMenu(ev, 'left-bottom');
+          }}
+          onContextMenu={(ev) => {
+            handleOpenSlideMenu(ev, 'left-bottom');
+          }}
         >
           <ui.Icon display="rounded" icon="more_vert" opsz={20} filled />
         </ui.Button>
