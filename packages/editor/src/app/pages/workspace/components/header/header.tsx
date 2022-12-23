@@ -192,7 +192,7 @@ export const Header = () => {
 
   const handleOpenPreviewMenu = (ev: React.MouseEvent, offsetX?: number) => {
     menu.API.contextMenu(ev, previewMenuItems, undefined, {
-      alignment: Elem.ELEM_ALIGNMENT.LeftBottom,
+      alignment: 'left-bottom',
       offset: [-100 + (offsetX ? offsetX : 0), 6],
     });
   };

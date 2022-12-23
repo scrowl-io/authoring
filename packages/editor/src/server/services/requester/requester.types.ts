@@ -5,6 +5,7 @@ import {
 
 export type {
   ApiResult,
+  ApiResultError,
   RegisterEndpointType,
 } from '../../../main/services/requester/requester.types';
 

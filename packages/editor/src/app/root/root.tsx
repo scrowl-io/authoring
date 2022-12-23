@@ -13,7 +13,7 @@ import * as pages from '../pages';
 import * as models from '../models';
 import { menu, events } from '../services';
 import { Elem } from '../utils';
-import { ProjectBrowser } from '../components';
+import { ProjectBrowser, ContextMenu } from '../components';
 
 const Loader = () => {
   return <div>Loading...</div>;
@@ -170,6 +170,7 @@ export const Root = () => {
     <Router>
       <main>{!isReady ? <Loader /> : <PageRoutes />}</main>
       <ProjectBrowser />
+      <ContextMenu.Menu />
     </Router>
   );
 };

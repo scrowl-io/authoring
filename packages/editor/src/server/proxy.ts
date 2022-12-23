@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { rq } from './services';
 import { EndpointsApiGet } from './api/endpoints/endpoints.types';
+import { MenuEndpoints } from '../app/services/menu/menu.types';
 
 type Listener = (...args: unknown[]) => void;
 type UpdateResolver = (value: rq.ApiResult | PromiseLike<rq.ApiResult>) => void;
@@ -21,6 +22,15 @@ type ScrowlProxy = {
   removeListener: (endpoint: string, listener: Listener) => void;
   removeListenerAll: (endpoint: string) => void;
 };
+interface RequestInterceptorsError extends Omit<rq.ApiResultError, 'data'> {
+  message: string;
+  data: {
+    action: string;
+  };
+};
+type RequestInterceptors = {
+  [key in MenuEndpoints['contextMenu']]: RequestInterceptorsError;
+};
 
 axios.interceptors.request.use(
   (config) => {
@@ -39,6 +49,16 @@ axios.interceptors.response.use(
     return Promise.reject(error);
   },
 );
+
+const requestInterceptors:RequestInterceptors = {
+  '/context-menu': {
+    error: true,
+    message: 'Unable to call endpoint: desktop only api',
+    data: {
+      action: 'use-component',
+    },
+  },
+};
 
 const GET = (endpoint, params?: rq.JSON_DATA) => {
   return new Promise<rq.ApiResult>(async (resolve, reject) => {
@@ -111,6 +131,11 @@ const scrowlProxy: ScrowlProxy = {
           type,
           resolve,
         });
+        return;
+      }
+
+      if (requestInterceptors.hasOwnProperty(endpoint)) {
+        resolve(requestInterceptors[endpoint]);
         return;
       }
 

@@ -1,15 +1,16 @@
 import {
   MenuEndpoints,
   ContextMenuItem,
-  ContextMenuPosition,
   MenuItemEndpointFile,
   MenuItemEndpointPreview,
   PreviewTypes,
   MenuItemEndpointOutline,
-  MenuItemEndpointPublish
+  MenuItemEndpointPublish,
+  ContextMenuPayload
 } from './menu.types';
 import { rq } from '../../services';
 import { Elem, ELEM_ALIGNMENT } from '../../utils';
+import { ContextMenu } from '../../components';
 
 const ENDPOINTS: MenuEndpoints = {
   contextMenu: '/context-menu',
@@ -76,9 +77,44 @@ export const contextMenu = (
           const id = result.data.item.id;
 
           menuItemMap[id](result.data);
+          resolve(result);
+          return;
         }
 
-        resolve(result);
+        
+        switch (result.data.action) {
+          case 'use-component':
+            const menuConfig = contextMenuPayload as unknown as ContextMenuPayload;
+
+            ContextMenu.create(target, menuConfig).then((componentResult) => {
+              if (componentResult.error) {
+                console.error(componentResult);
+                resolve(componentResult);
+                return;
+              }
+
+              if (componentResult.data.canceled) {
+                resolve(componentResult);
+                return;
+              }
+
+              if (!componentResult.data.item) {
+                console.warn('context menu did not return a selected item and was not canceled');
+                resolve(componentResult);
+                return;
+              }
+
+              const id = componentResult.data.item.id;
+
+              menuItemMap[id](componentResult.data.item);
+              resolve(componentResult);
+            });
+            break;
+          default:
+            console.error(result);
+            resolve(result);
+            break
+        }
       })
       .catch((e) => {
         console.error('Context Menu Failed', e);
