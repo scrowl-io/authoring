@@ -56,8 +56,9 @@ export const contextMenu = (
       data.id = id;
       return data;
     });
+    const contextMenuPayload = { menuItems, position, args } as unknown as rq.JSON_DATA;
 
-    rq.invoke(ENDPOINTS.contextMenu, { menuItems, position, args })
+    rq.invoke(ENDPOINTS.contextMenu, contextMenuPayload)
       .then((result) => {
         if (!result.error) {
           const id = result.data.item.id;

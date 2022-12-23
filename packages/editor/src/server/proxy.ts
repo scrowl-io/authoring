@@ -1,20 +1,21 @@
 import axios from 'axios';
 import { rq } from './services';
-import { API as EndpointsApi } from './api/endpoints';
+import { EndpointsApiGet } from './api/endpoints/endpoints.types';
 
 type Listener = (...args: unknown[]) => void;
 type UpdateResolver = (value: rq.ApiResult | PromiseLike<rq.ApiResult>) => void;
 type RequestQueue = Array<{
   endpoint: string;
   method: 'invoke' | 'send' | 'on' | 'removeListener' | 'removeListenerAll';
-  params: rq.JSON_DATA;
+  params?: rq.JSON_DATA;
+  type: 'GET' | 'POST';
   resolve: UpdateResolver;
 }>;
 type ScrowlProxy = {
   timeout: number;
   inProgress: boolean;
   ENDPOINTS: Array<rq.RegisterEndpoint>;
-  invoke: (endpoint: string, params: rq.JSON_DATA) => Promise<rq.ApiResult>;
+  invoke: (endpoint: string, params?: rq.JSON_DATA, type?: 'GET' | 'POST') => Promise<rq.ApiResult>;
   on: (endpoint: string, listener: Listener) => void;
   send: (endpoint: string, listener: Listener) => void;
   removeListener: (endpoint: string, listener: Listener) => void;
@@ -39,7 +40,7 @@ axios.interceptors.response.use(
   },
 );
 
-const GET = (endpoint, params?: any) => {
+const GET = (endpoint, params?: rq.JSON_DATA) => {
   return new Promise<rq.ApiResult>(async (resolve, reject) => {
     try {
       const CancelToken = axios.CancelToken;
@@ -48,6 +49,26 @@ const GET = (endpoint, params?: any) => {
         url: `http://localhost:8000/api${endpoint}`,
         method: 'GET',
         params,
+        timeout: (scrowlProxy.timeout * 10),
+        cancelToken: source.token,
+      });
+      
+      resolve(data);
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
+const POST = (endpoint, payload?: rq.JSON_DATA) => {
+  return new Promise<rq.ApiResult>(async (resolve, reject) => {
+    try {
+      const CancelToken = axios.CancelToken;
+      const source = CancelToken.source();
+      const { data } = await axios({
+        url: `http://localhost:8000/api${endpoint}`,
+        method: 'POST',
+        data: payload,
         timeout: (scrowlProxy.timeout * 10),
         cancelToken: source.token,
       });
@@ -77,7 +98,7 @@ const scrowlProxy: ScrowlProxy = {
   timeout: 1000,
   inProgress: true,
   ENDPOINTS: [],
-  invoke: (endpoint: string, params: rq.JSON_DATA) => {
+  invoke: (endpoint: string, params?: rq.JSON_DATA, type = 'GET') => {
     return new Promise<rq.ApiResult>((resolve) => {
       const method = 'invoke';
 
@@ -87,6 +108,7 @@ const scrowlProxy: ScrowlProxy = {
           endpoint,
           method,
           params,
+          type,
           resolve,
         });
         return;
@@ -108,10 +130,8 @@ const scrowlProxy: ScrowlProxy = {
         return;
       }
 
-      GET(endpoint, params).
-        then(resolve)
-        .catch((e) => {
-          console.error(e);
+      const handleRejection = (e) => {
+        console.error(e);
           resolve({
             error: true,
             message: `Failed to invoke: ${endpoint}`,
@@ -119,7 +139,17 @@ const scrowlProxy: ScrowlProxy = {
               trace: e,
             },
           });
-        });
+      };
+
+      switch (type) {
+        case 'POST':
+          POST(endpoint, params).then(resolve).catch(handleRejection);
+          break;
+        case 'GET':
+        default:
+          GET(endpoint, params).then(resolve).catch(handleRejection);
+          break;
+      }
     });
   },
   on: (endpoint: string, listener: Listener) => {
@@ -137,7 +167,13 @@ const scrowlProxy: ScrowlProxy = {
 };
 
 scrowlProxy.inProgress = true;
-GET(EndpointsApi.get.name)
+
+const getEndpoints: EndpointsApiGet = {
+  name: '/endpoints',
+  type: 'invoke',
+};
+
+GET(getEndpoints.name)
   .then((res) => {
     scrowlProxy.inProgress = false;
 
@@ -157,7 +193,7 @@ GET(EndpointsApi.get.name)
 
       switch (req.method) {
         case 'invoke':
-          scrowlProxy.invoke(req.endpoint, req.params).then(req.resolve);
+          scrowlProxy.invoke(req.endpoint, req.params, req.type).then(req.resolve);
           break;
       }
     });

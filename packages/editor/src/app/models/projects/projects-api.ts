@@ -42,11 +42,11 @@ export const offUploadProgress = () => {
 };
 
 export const save = (data?): Promise<rq.ApiResult> => {
-  return rq.invoke(ENDPOINTS.save, data);
+  return rq.invoke(ENDPOINTS.save, data, 'POST');
 };
 
 export const publish = (data?): Promise<rq.ApiResult> => {
-  return rq.invoke(ENDPOINTS.publish, data);
+  return rq.invoke(ENDPOINTS.publish, data, 'POST');
 };
 
 export const list = (limit?: number): Promise<rq.ApiResult> => {
@@ -58,11 +58,11 @@ export const open = (data: ProjectMeta): Promise<rq.ApiResult> => {
 };
 
 export const previewAsset = (data: ProjectsReqPreviewAsset) => {
-  return rq.invoke(ENDPOINTS.previewAsset, data);
+  return rq.invoke(ENDPOINTS.previewAsset, data as rq.JSON_DATA);
 };
 
 export const preview = (payload: ProjectsReqPreviewProject) => {
-  return rq.invoke(ENDPOINTS.preview, payload);
+  return rq.invoke(ENDPOINTS.preview, payload as unknown as rq.JSON_DATA);
 };
 
 export const onUnsavedCheck = (listener: rq.Listener) => {

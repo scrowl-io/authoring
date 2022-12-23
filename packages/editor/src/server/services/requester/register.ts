@@ -17,7 +17,16 @@ export const add = (router: express.Router, endpoint: RegisterEndpoint) => {
       }
 
       ENDPOINTS.push(endpoint);
-      router.get(endpoint.name, endpoint.fn);
+
+      switch (endpoint.method) {
+        case 'POST':
+          router.post(endpoint.name, endpoint.fn);
+          break;
+        case 'GET':
+        default:
+          router.get(endpoint.name, endpoint.fn);
+          break;
+      }
       break;
     case 'on':
 

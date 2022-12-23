@@ -14,6 +14,7 @@ export type {
 
 export interface RegisterEndpoint extends Omit<MainRegisterEndpoint, 'fn'> {
   fn?: express.Handler;
+  method?: 'GET' | 'POST';
 };
 
 export interface RegisterEndpoints {

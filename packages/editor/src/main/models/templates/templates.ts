@@ -1,4 +1,4 @@
-import { TemplatesApi, TemplateSchema, TemplateReqLoad } from './templates.types';
+import { TemplatesApi, TemplateReqLoad } from './templates.types';
 import { rq, fs, tmpr, log } from '../../services';
 import { list as templateList } from './default-templates';
 
