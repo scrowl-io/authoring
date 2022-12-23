@@ -1,11 +1,17 @@
 import settingsHandler from 'electron-settings';
-import { SettingsApi } from './settings.types';
+import {
+  SettingsApi,
+  SettingsReqGet,
+  SettingsReqSet,
+  SettingsReqHas,
+  SettingsReqRemove
+} from './settings.types';
 import { rq, log } from '../../services';
 import { obj } from '../../utils';
 
-export const get = (ev: rq.RequestEvent, key?: string, defaultValue?: any) => {
+export const get = (ev: rq.RequestEvent, req: SettingsReqGet) => {
   return new Promise<rq.ApiResult>((resolve) => {
-    if (!key) {
+    if (!req.key) {
       settingsHandler
         .get()
         .then((settings) => {
@@ -27,18 +33,18 @@ export const get = (ev: rq.RequestEvent, key?: string, defaultValue?: any) => {
         });
     } else {
       settingsHandler
-        .get(key)
+        .get(req.key)
         .then((setting) => {
           if (setting === null || setting === undefined) {
-            setting = defaultValue;
+            setting = req.defaultValue;
           }
 
           resolve({
             error: false,
             data: {
               setting,
-              key,
-              defaultValue,
+              key: req.key,
+              defaultValue: req.defaultValue,
             },
           });
         })
@@ -48,8 +54,8 @@ export const get = (ev: rq.RequestEvent, key?: string, defaultValue?: any) => {
             message: 'Failed to get settings',
             data: {
               trace: e,
-              key,
-              defaultValue,
+              key: req.key,
+              defaultValue: req.defaultValue,
             },
           });
         });
@@ -57,9 +63,9 @@ export const get = (ev: rq.RequestEvent, key?: string, defaultValue?: any) => {
   });
 };
 
-export const set = (ev: rq.RequestEvent, key, value) => {
+export const set = (ev: rq.RequestEvent, req: SettingsReqSet) => {
   return new Promise<rq.ApiResult>((resolve) => {
-    if (key === null || key === undefined) {
+    if (req.key === null || req.key === undefined) {
       resolve({
         error: true,
         message: 'Unable to set setting: key is required',
@@ -68,13 +74,13 @@ export const set = (ev: rq.RequestEvent, key, value) => {
     }
 
     settingsHandler
-      .set(key, value)
+      .set(req.key, req.value)
       .then(() => {
         resolve({
           error: false,
           data: {
-            key,
-            value,
+            key: req.key,
+            value: req.value,
           },
         })
       })
@@ -84,8 +90,8 @@ export const set = (ev: rq.RequestEvent, key, value) => {
           message: 'Failed to set setting',
           data: {
             trace: e,
-            key,
-            value,
+            key: req.key,
+            value: req.value,
           }
         })
       });
@@ -98,7 +104,7 @@ export const setAll = (ev: rq.RequestEvent, settings: obj.JSON_DATA) => {
     const setLookups: Array<obj.JSON_DATA> = [];
 
     for (const [key, value] of Object.entries(settings)) {
-      setPromises.push(set(ev, key, value));
+      setPromises.push(set(ev, { key, value }));
       setLookups.push({ setting: key, value: value });
     }
 
@@ -136,9 +142,9 @@ export const setAll = (ev: rq.RequestEvent, settings: obj.JSON_DATA) => {
   });
 };
 
-export const has = (ev: rq.RequestEvent, key) => {
+export const has = (ev: rq.RequestEvent, req: SettingsReqHas) => {
   return new Promise<rq.ApiResult>((resolve) => {
-    if (key === null || key === undefined) {
+    if (req.key === null || req.key === undefined) {
       resolve({
         error: true,
         message: 'Unable to check setting: key is required',
@@ -147,13 +153,13 @@ export const has = (ev: rq.RequestEvent, key) => {
     }
 
     settingsHandler
-      .has(key)
+      .has(req.key)
       .then((result) => {
         resolve({
           error: false,
           data: {
             has: result,
-            key,
+            key: req.key,
           },
         })
       })
@@ -164,16 +170,16 @@ export const has = (ev: rq.RequestEvent, key) => {
           data: {
             trace: e,
             has: false,
-            key,
+            key: req.key,
           }
         })
       });
   });
 };
 
-export const remove = (ev: rq.RequestEvent, key) => {
+export const remove = (ev: rq.RequestEvent, req: SettingsReqRemove) => {
   return new Promise<rq.ApiResult>((resolve) => {
-    if (key === null || key === undefined) {
+    if (req.key === null || req.key === undefined) {
       resolve({
         error: true,
         message: 'Unable to remove setting: key is required',
@@ -182,13 +188,13 @@ export const remove = (ev: rq.RequestEvent, key) => {
     }
 
     settingsHandler
-      .unset(key)
+      .unset(req.key)
       .then(() => {
         resolve({
           error: false,
           data: {
             removed: true,
-            key,
+            key: req.key,
           },
         })
       })
@@ -199,7 +205,7 @@ export const remove = (ev: rq.RequestEvent, key) => {
           data: {
             trace: e,
             removed: false,
-            key,
+            key: req.key,
           }
         })
       });

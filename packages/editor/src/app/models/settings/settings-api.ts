@@ -10,19 +10,19 @@ const ENDPOINTS: SettingsEndpoints = {
 };
 
 export const get = (key?: string, defaultValue?: any) => {
-  return rq.invoke(ENDPOINTS.get, key, defaultValue);
+  return rq.invoke(ENDPOINTS.get, { key, defaultValue });
 };
 
 export const set = (key: string, value: any) => {
-  return rq.invoke(ENDPOINTS.set, key, value);
+  return rq.invoke(ENDPOINTS.set, { key, value });
 };
 
 export const has = (key: string) => {
-  return rq.invoke(ENDPOINTS.has, key);
+  return rq.invoke(ENDPOINTS.has, { key });
 };
 
 export const remove = (key: string) => {
-  return rq.invoke(ENDPOINTS.remove, key);
+  return rq.invoke(ENDPOINTS.remove, { key });
 };
 
 export const save = (data) => {

@@ -150,3 +150,34 @@
     }
   }
 }
+
+.context-menu {
+  list-style: none;
+  padding: 0.25rem;
+  margin: 0;
+
+  &-container {
+    background: var(--bs-body-bg);
+    box-shadow: var(--owl-box-shadow);
+    border: var(--owl-border-width) solid var(--owl-border-color);
+    position: absolute;
+    z-index: 1080;
+    top: -1000px;
+    left: -1000px;
+  }
+
+  &-item {
+    padding: 0.1rem;
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--owl-sidebar-hover-bg);
+    }
+  }
+
+  &-separator {
+    & hr {
+      margin: 0.25rem;
+    }
+  }
+}

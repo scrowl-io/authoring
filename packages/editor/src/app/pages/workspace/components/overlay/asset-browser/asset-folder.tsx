@@ -21,12 +21,9 @@ export const AssetFolder = (props: any) => {
   ];
 
   const handleAssetMenu = (ev: React.MouseEvent) => {
-    ev.preventDefault();
-
     const target = ev.target as HTMLElement;
 
-    menu.API.contextMenu(assetFolderMenu).then((result) => {
-      console.log('asset folder menu close', result);
+    menu.API.contextMenu(ev, assetFolderMenu).then((result) => {
       target.blur();
     });
   };

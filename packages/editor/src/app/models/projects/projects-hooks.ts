@@ -2,13 +2,13 @@ import { useSelector, useDispatch } from 'react-redux';
 import { ActionCreatorWithoutPayload } from '@reduxjs/toolkit';
 import {
   AssetType,
-  UploadReq,
-  SaveReq,
+  ProjectsReqUpload,
+  ProjectsReqSave,
   ProjectData,
   ProjectAsset,
-  PreviewAssetReq,
+  ProjectsReqPreviewAsset,
   ProjectMeta,
-  PreviewProjectReq
+  ProjectsReqPreviewProject
 } from './projects.types';
 import { stateManager, rq } from '../../services';
 import { API, state } from './';
@@ -435,7 +435,7 @@ export const create = (blueprint?: string): Promise<rq.ApiResult> => {
   });
 };
 
-export const upload = (req: UploadReq): Promise<rq.ApiResult> => {
+export const upload = (req: ProjectsReqUpload): Promise<rq.ApiResult> => {
   return new Promise((resolve) => {
     API.upload(req).then((res) => {
       if (res.error) {
@@ -447,7 +447,7 @@ export const upload = (req: UploadReq): Promise<rq.ApiResult> => {
   });
 };
 
-export const save = (req: SaveReq): Promise<rq.ApiResult> => {
+export const save = (req: ProjectsReqSave): Promise<rq.ApiResult> => {
   return new Promise((resolve) => {
     API.save(req).then((res) => {
       if (processor.dispatch) {
@@ -505,11 +505,11 @@ export const open = (project: ProjectMeta): Promise<rq.ApiResult> => {
   });
 };
 
-export const previewAsset = (data: PreviewAssetReq) => {
+export const previewAsset = (data: ProjectsReqPreviewAsset) => {
   return API.previewAsset(data);
 };
 
-export const preview = (payload: PreviewProjectReq) => {
+export const preview = (payload: ProjectsReqPreviewProject) => {
   return API.preview(payload);
 };
 

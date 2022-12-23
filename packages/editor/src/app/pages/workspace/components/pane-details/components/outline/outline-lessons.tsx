@@ -8,6 +8,7 @@ import { resetActiveSlide, useActiveSlide } from '../../../../';
 import { Projects } from '../../../../../../models';
 import { menu, sys, events } from '../../../../../../services';
 import { InlineInput } from '../../../../../../components';
+import { ELEM_ALIGNMENT } from '../../../../../../utils';
 
 export const OutlineLessonItem = ({
   lesson,
@@ -94,15 +95,17 @@ export const OutlineLessonItem = ({
     setOpen(!isOpen);
   };
 
-  const handleOpenLessonMenu = (ev: React.MouseEvent) => {
-    ev.preventDefault();
-
+  const handleOpenLessonMenu = (
+    ev: React.MouseEvent,
+    alignment?: ELEM_ALIGNMENT
+  ) => {
     const target = ev.target as HTMLElement;
 
-    menu.API.contextMenu(lessonMenuItems).then((result) => {
-      console.log('menu close', result);
-      target.blur();
-    });
+    menu.API.contextMenu(ev, lessonMenuItems, undefined, { alignment }).then(
+      (result) => {
+        target.blur();
+      }
+    );
   };
 
   const handleNameChange = (val) => {
@@ -180,8 +183,12 @@ export const OutlineLessonItem = ({
         <ui.Button
           className={css.actionMenu}
           variant="ghost"
-          onClick={handleOpenLessonMenu}
-          onContextMenu={handleOpenLessonMenu}
+          onClick={(ev) => {
+            handleOpenLessonMenu(ev, 'left-bottom');
+          }}
+          onContextMenu={(ev) => {
+            handleOpenLessonMenu(ev, 'left-bottom');
+          }}
         >
           <ui.Icon display="rounded" icon="more_vert" opsz={20} filled />
         </ui.Button>

@@ -4,7 +4,6 @@ import { ui } from '@scrowl/ui';
 import * as css from '../_canvas.scss';
 import { useActiveSlide, setActiveSlide } from '../../../';
 import { Settings, Projects } from '../../../../../models';
-import { Elem } from '../../../../../utils';
 import { menu } from '../../../../../services';
 
 export const CanvasHeader = () => {
@@ -77,13 +76,9 @@ export const CanvasHeader = () => {
   };
 
   const handelOpenSlideMenu = (ev: React.MouseEvent) => {
-    ev.preventDefault();
-
     const target = ev.target as HTMLElement;
-    const position = Elem.getPosition(target);
 
-    menu.API.contextMenu(slideMenu, position).then((result) => {
-      console.log('menu close', result);
+    menu.API.contextMenu(ev, slideMenu).then((result) => {
       target.blur();
     });
   };

@@ -27,7 +27,7 @@ export type ContextMenuPosition = [number, number];
 export type MenuItemProps = {
   API?: rq.RegisterEndpoints;
   register?: () => void;
-  create?: (isMac: boolean) => MenuItemConstructorOptions;
+  create?: (isMac: boolean, isRebuild: boolean) => MenuItemConstructorOptions;
   asyncInit?: (menu: Menu) => Promise<rq.ApiResult>;
   [key: string]: any;
 };
@@ -140,4 +140,19 @@ export type MenuItemApiPublish = {
 export type MenuItemEndpointPublish = {
   publish: MenuItemApiPublishExport['name'];
   publishQuick: MenuItemApiPublishExportQuick['name'];
+};
+
+export type MenuReqContextMenu = {
+  menuItems: Array<ContextMenuItem>;
+  position: ContextMenuPosition;
+  payload: any;
+};
+
+export type MenuReqToggleMenu = {
+  id?: Array<string> | string;
+  isEnabled?: boolean;
+};
+
+export type MenuReqUpdatePreviewMenu = {
+  type: PreviewTypes;
 };

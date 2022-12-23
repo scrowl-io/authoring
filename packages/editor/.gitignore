@@ -107,4 +107,5 @@ scripts/dev.env.json
 release/app/*
 release/build/*
 dist/
+web/
  

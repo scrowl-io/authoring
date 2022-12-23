@@ -40,3 +40,21 @@ export type SettingsEndpoints = {
   remove: SettingsApiRemove['name'];
   save: SettingsApiSave['name'];
 };
+
+export type SettingsReqGet = {
+  key?: string;
+  defaultValue?: any;
+};
+
+export type SettingsReqSet = {
+  key: string;
+  value: any;
+};
+
+export type SettingsReqHas = {
+  key: string;
+};
+
+export type SettingsReqRemove = {
+  key: string;
+};

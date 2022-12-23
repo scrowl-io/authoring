@@ -1,43 +1,29 @@
-import { GenericEvent } from './utils.types';
+import { GenericEvent, ELEM_ALIGNMENT } from './utils.types';
 
-export enum ELEM_ALIGNMENT {
-  LeftTop = "left-top",
-  LeftCenter = "left-center",
-  LeftBottom = "left-bottom",
+const getAlignment = (alignment: ELEM_ALIGNMENT = 'center-center') => {
+  const [alignmentX, alignmentY] = alignment.split('-');
 
-  CenterTop = "center-top",
-  CenterCenter = "center-center",
-  CenterBottom = "center-bottom",
-
-  RightTop = "right-top",
-  RightCenter = "right-center",
-  RightBottom = "right-bottom",
-}
+  return [alignmentX, alignmentY];
+};
 
 export const getPosition = (
   elem: any,
-  alignment?: ELEM_ALIGNMENT,
-  offset?: [number, number],
+  options?: {
+    alignment?: ELEM_ALIGNMENT,
+    offset?: [number, number],
+  }
 ): [number, number] | undefined => {
   if (!elem) {
     return;
   }
 
-  if (!alignment || !alignment.includes("-")) {
-    alignment = ELEM_ALIGNMENT.CenterCenter;
-  }
-
-  let alignmentParts: any = alignment.split("-");
-  if (alignmentParts.length !== 2) {
-    alignmentParts = ELEM_ALIGNMENT.CenterCenter.split("-");
-  }
-
+  const [alignmentX, alignmentY] = getAlignment(options?.alignment);
   const elemBounds = elem.getBoundingClientRect();
+
   let x: number;
   let y: number;
 
-  // x
-  switch (alignmentParts[0]) {
+  switch (alignmentX) {
     case "left":
       x = elemBounds.left;
       break;
@@ -45,11 +31,11 @@ export const getPosition = (
       x = elemBounds.right;
       break;
     default: // center
-    x = (elemBounds.left + elemBounds.right) / 2;
+      x = (elemBounds.left + elemBounds.right) / 2;
+      break;
   }
 
-  // y
-  switch (alignmentParts[1]) {
+  switch (alignmentY) {
     case "top":
       y = elemBounds.top;
       break;
@@ -57,20 +43,21 @@ export const getPosition = (
       y = elemBounds.bottom;
       break;
     default: // center
-    y = (elemBounds.top + elemBounds.bottom) / 2;
+      y = (elemBounds.top + elemBounds.bottom) / 2;
+      break;
   }
 
   if (x === undefined || y === undefined) {
     return;
   }
 
-  if (offset) {
-    const [offsetX, offsetY] = offset;
-
-    return [Math.round(x += offsetX), Math.round(y += offsetY)];  
+  if (!options || !options.offset) {
+    return [Math.round(x), Math.round(y)];
   }
   
-  return [Math.round(x), Math.round(y)];
+  const [offsetX, offsetY] = options.offset;
+
+  return [Math.round(x += offsetX), Math.round(y += offsetY)];  
 };
 
 export const stopEvent = (ev: GenericEvent) => {
@@ -83,7 +70,6 @@ export const stopEvent = (ev: GenericEvent) => {
 };
 
 export default {
-  ELEM_ALIGNMENT,
   getPosition,
   stopEvent,
 };

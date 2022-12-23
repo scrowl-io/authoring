@@ -168,24 +168,32 @@ export type TemplateMap = {
   [key: string]: TemplateInfo;
 };
 
-export type UploadReq = {
+export type ProjectsReqCreate = {
+  blueprint: string
+};
+
+export type ProjectsReqUpload = {
   meta: ProjectMeta;
   options: {
     assetTypes: Array<AssetType>;
   };
 };
 
-export type SaveReq = {
+export type ProjectsReqSave = {
   data: ProjectData;
   assets: Array<ProjectAsset>;
 };
 
-export type PreviewAssetReq = {
+export type ProjectsReqList = {
+  limit?: number;
+};
+
+export type ProjectsReqPreviewAsset = {
   asset: ProjectAsset | ProjectResource;
   meta: ProjectMeta;
 };
 
-export type PreviewProjectReq = {
+export type ProjectsReqPreviewProject = {
   project: ProjectData;
   assets: Array<ProjectAsset>;
   type: mu.PreviewTypes;

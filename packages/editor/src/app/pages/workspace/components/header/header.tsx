@@ -80,7 +80,9 @@ export const Header = () => {
     }
   };
 
-  const handleProjectPreview = (payload: Projects.PreviewProjectReq) => {
+  const handleProjectPreview = (
+    payload: Projects.ProjectsReqPreviewProject
+  ) => {
     Settings.setPreviewMode(payload.type);
 
     menu.API.updatePreviewMenu(payload.type).then((res) => {
@@ -105,7 +107,7 @@ export const Header = () => {
   };
 
   const handlePreviewDefault = () => {
-    const payload: Projects.PreviewProjectReq = {
+    const payload: Projects.ProjectsReqPreviewProject = {
       type: previewMode,
       project: projectData,
       assets,
@@ -126,13 +128,13 @@ export const Header = () => {
     handleProjectPreview(payload);
   };
 
-  const preivewMenuItems: Array<menu.ContextMenuItem> = [
+  const previewMenuItems: Array<menu.ContextMenuItem> = [
     {
       label: 'Current Slide',
       type: 'radio',
       checked: previewMode === 'slide',
       click: () => {
-        const payload: Projects.PreviewProjectReq = {
+        const payload: Projects.ProjectsReqPreviewProject = {
           type: 'slide',
           project: projectData,
           assets,
@@ -147,7 +149,7 @@ export const Header = () => {
       type: 'radio',
       checked: previewMode === 'lesson',
       click: () => {
-        const payload: Projects.PreviewProjectReq = {
+        const payload: Projects.ProjectsReqPreviewProject = {
           type: 'lesson',
           project: projectData,
           assets,
@@ -162,7 +164,7 @@ export const Header = () => {
       type: 'radio',
       checked: previewMode === 'module',
       click: () => {
-        const payload: Projects.PreviewProjectReq = {
+        const payload: Projects.ProjectsReqPreviewProject = {
           type: 'module',
           project: projectData,
           assets,
@@ -177,7 +179,7 @@ export const Header = () => {
       type: 'radio',
       checked: previewMode === 'project',
       click: () => {
-        const payload: Projects.PreviewProjectReq = {
+        const payload: Projects.ProjectsReqPreviewProject = {
           type: 'project',
           project: projectData,
           assets,
@@ -189,15 +191,10 @@ export const Header = () => {
   ];
 
   const handleOpenPreviewMenu = (ev: React.MouseEvent, offsetX?: number) => {
-    const position = Elem.getPosition(
-      ev.target,
-      Elem.ELEM_ALIGNMENT.LeftBottom,
-      [-100 + (offsetX ? offsetX : 0), 6]
-    );
-    menu.API.contextMenu(preivewMenuItems, position).then((result) => {
-      console.log('menu closed', result);
+    menu.API.contextMenu(ev, previewMenuItems, undefined, {
+      alignment: 'left-bottom',
+      offset: [-100 + (offsetX ? offsetX : 0), 6],
     });
-    console.log('opening preview mode');
   };
 
   const handleOpenPublish = () => {

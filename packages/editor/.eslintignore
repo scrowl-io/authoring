@@ -1,4 +1,5 @@
 dist/*
+web/*
 assets/*
 node_modules/*
 .vscode/*

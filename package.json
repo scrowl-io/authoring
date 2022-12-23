@@ -10,6 +10,7 @@
     "prestart:update": "yarn run update",
     "start:update": "yarn workspace @scrowl/editor run start",
     "start": "yarn workspace @scrowl/editor run start",
+    "start:web": "yarn workspace @scrowl/editor run start:web",
     "prepackage": "yarn run update",
     "package": "yarn workspace @scrowl/editor run package",
     "package:test": "yarn workspace @scrowl/editor run package:test",

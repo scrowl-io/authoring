@@ -1,21 +1,21 @@
-import { Listener } from './requester.types';
+import { Listener, JSON_DATA } from './requester.types';
 
-export const invoke = (endpoint: string, ...args: unknown[]) => {
-  return window.scrowlAPI.actions.invoke(endpoint, ...args);
+export const invoke = (endpoint: string, params?: JSON_DATA, type?: 'GET' | 'POST') => {
+  return window.scrowlProxy.invoke(endpoint, params, type);
 };
 
 export const on = (endpoint: string, listener: Listener) => {
-  window.scrowlAPI.actions.on(endpoint, listener);
+  window.scrowlProxy.on(endpoint, listener);
 };
 
 export const send = (endpoint: string, ...args: unknown[]) => {
-  window.scrowlAPI.actions.send(endpoint, ...args);
+  window.scrowlProxy.send(endpoint, ...args);
 };
 
 export const off = (endpoint: string, listener: Listener) => {
-  window.scrowlAPI.actions.removeListener(endpoint, listener);
+  window.scrowlProxy.removeListener(endpoint, listener);
 };
 
 export const offAll = (endpoint: string) => {
-  window.scrowlAPI.actions.removeListenerAll(endpoint);
+  window.scrowlProxy.removeListenerAll(endpoint);
 };
