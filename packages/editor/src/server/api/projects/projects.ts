@@ -6,7 +6,7 @@ import { blueprints } from '../../../main/models/projects/blueprints'
 
 export const create: express.Handler = (req, res) => {
   const project = blueprints.get('default');
-  console.log('params', req.params);
+
   res.send({
     error: false,
     data: {

@@ -3,6 +3,7 @@ import {
   TemplatesApiGet as MainTemplatesApiGet,
   TemplatesApiLoad as MainTemplatesApiLoad,
 } from '../../../main/models/templates/templates.types';
+import { rq } from '../../services';
 
 export type {
   TemplatesEndpoints,
@@ -18,7 +19,12 @@ export interface TemplatesApiLoad extends Omit<MainTemplatesApiLoad, 'fn'> {
   method: 'POST';
 };
 
+export interface TemplatesApiViewer extends Omit<rq.RegisterEndpoint, 'name'> {
+  name: '/templates/viewer/*'
+}
+
 export type TemplatesApi = {
   get: TemplatesApiGet;
   load: TemplatesApiLoad;
+  viewer: TemplatesApiViewer;
 };

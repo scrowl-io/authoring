@@ -2,9 +2,9 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import api from './api';
+import { port } from './config';
 
 const app = express();
-const port = 8000;
 
 app.set('json spaces', 2);
 app.use(cors({ credentials: true, origin: true }));
