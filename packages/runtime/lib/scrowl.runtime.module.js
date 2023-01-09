@@ -21,10 +21,14 @@ const $defce2f29876acb7$export$6ed414b8d8bead88 = {
         getSessionTime: ()=>{
             let sessionTime;
             if ($defce2f29876acb7$export$6ed414b8d8bead88._time.startTime) sessionTime = new Date().getTime() - $defce2f29876acb7$export$6ed414b8d8bead88._time.startTime.getTime();
+            console.log("GET TIME");
+            console.log(sessionTime);
+            console.log($defce2f29876acb7$export$6ed414b8d8bead88._time.convert(sessionTime));
             return $defce2f29876acb7$export$6ed414b8d8bead88._time.convert(sessionTime);
         },
         end: undefined,
         convert: (total)=>{
+            // @ts-ignore
             function ZeroPad(val, pad) {
                 let res = new String(val);
                 const len = res.length;
@@ -46,8 +50,13 @@ const $defce2f29876acb7$export$6ed414b8d8bead88 = {
                 totalS = Math.floor(totalS);
                 totalMs = total - totalH * 3600000 - totalM * 60000 - totalS * 1000;
             }
-            let timespan = ZeroPad(totalH, 4) + ":" + ZeroPad(totalM, 2) + ":" + ZeroPad(totalS, 2);
+            let timespan = "PT" + totalH + // ZeroPad(totalH, 4) +
+            "H" + totalM + // ZeroPad(totalM, 2) +
+            "M" + totalS + // ZeroPad(totalS, 2) +
+            "S";
             if (totalH > 9999) timespan = "9999:99:99";
+            console.log("TIMESPAN");
+            console.log(timespan);
             return timespan;
         }
     },
@@ -70,7 +79,6 @@ const $defce2f29876acb7$export$6ed414b8d8bead88 = {
         if ($defce2f29876acb7$export$6ed414b8d8bead88.API == null && win.opener != null) // @ts-ignore
         $defce2f29876acb7$export$6ed414b8d8bead88.API = $defce2f29876acb7$export$6ed414b8d8bead88.scanForAPI(win.opener);
     },
-    // @ts-ignore
     getError: (printError)=>{
         printError = printError === undefined || printError === null ? true : printError;
         const [isInit, API] = $defce2f29876acb7$export$6ed414b8d8bead88.isInitialized();
@@ -319,7 +327,6 @@ const $defce2f29876acb7$export$6ed414b8d8bead88 = {
             ];
         }
         const getRes = API.GetValue(elem);
-        console.log(getRes);
         if (getRes === "") {
             console.error(`API failed to get value for: ${elem}`);
             $defce2f29876acb7$export$6ed414b8d8bead88.getError(true);

@@ -102,8 +102,6 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
 
       const id = sceneEvent.currentTarget.id;
 
-      console.log('slide enter', sceneEvent);
-
       const shortenedId = id
         .replace('module', 'm')
         .replace('lesson', 'l')

@@ -22,6 +22,7 @@ export const service: RUNTIME_SERVICE = {
     },
     end: undefined,
     convert: (total) => {
+      // @ts-ignore
       function ZeroPad(val: number, pad: number) {
         let res = new String(val);
         const len = res.length;
@@ -61,12 +62,18 @@ export const service: RUNTIME_SERVICE = {
         totalMs = total - totalH * 3600000 - totalM * 60000 - totalS * 1000;
       }
 
+      // should eventually check SCORM version and format time accordingly
       let timespan =
-        ZeroPad(totalH, 4) +
-        ':' +
-        ZeroPad(totalM, 2) +
-        ':' +
-        ZeroPad(totalS, 2);
+        'PT' +
+        totalH +
+        // ZeroPad(totalH, 4) +
+        'H' +
+        totalM +
+        // ZeroPad(totalM, 2) +
+        'M' +
+        totalS +
+        // ZeroPad(totalS, 2) +
+        'S';
 
       if (totalH > 9999) {
         timespan = '9999:99:99';
