@@ -47,6 +47,9 @@ export const Page = () => {
   const [inProgress, setProgress] = useState(false);
   const isListening = useRef(false);
 
+  console.log('high level in progress');
+  console.log(inProgress);
+
   useEffect(() => {
     isListening.current = true;
 
@@ -116,7 +119,10 @@ export const Page = () => {
     };
 
     const createListener = () => {
+      console.log('in Progress?');
+      console.log(inProgress);
       if (inProgress) {
+        console.log('test');
         return;
       }
 
@@ -126,13 +132,21 @@ export const Page = () => {
         resetWorkspace();
         resetActiveSlide();
 
+        console.log('inside new proj');
+
         Projects.create().then((result) => {
           if (result.error) {
+            console.log('result.error?');
             setProgress(false);
             console.error(result);
             return;
+          } else {
+            console.log('result no error?');
+            setProgress(false);
           }
         });
+        console.log('in progress after?');
+        console.log(inProgress);
       };
 
       const promptDiscardProject = () => {
