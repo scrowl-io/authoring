@@ -278,6 +278,12 @@ export const Header = () => {
     };
   }, [projectData]);
 
+  useEffect(() => {
+    if (!rollbackName || rollbackName === '') {
+      setRollbackName(projectMeta.name as string);
+    }
+  }, [projectData]);
+
   return (
     <>
       <motion.div
