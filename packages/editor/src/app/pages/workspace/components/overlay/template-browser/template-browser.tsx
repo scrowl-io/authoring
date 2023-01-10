@@ -107,10 +107,20 @@ export const TemplateBrowser = () => {
   }, [newContent.newSlide]);
 
   useEffect(() => {
-    const queryString = `#template-${activeTemplate.meta.component}`;
+    if (selectedTemplate.meta.component === '') {
+      setSelectedTemplate(activeTemplate);
+    }
+    const queryString = activeTemplate.meta.component
+      ? `#template-${activeTemplate.meta.component}`
+      : '#template-BlockText';
+
     const templateButton = document.querySelector(queryString);
 
     (templateButton as HTMLElement)?.focus();
+  }, [isOpen]);
+
+  useEffect(() => {
+    setSelectedTemplate(activeTemplate);
   }, [isOpen]);
 
   return (
@@ -123,8 +133,6 @@ export const TemplateBrowser = () => {
       <div className={css.templateBrowserContainer}>
         <div className={css.templateBrowserContent}>
           {templateList.map((template, idx) => {
-            const isActive =
-              activeTemplate.meta.component === template.meta.component;
             const isSelected =
               selectedTemplate.meta.component === template.meta.component;
             const icon = template.meta.icon as IconType;
@@ -134,9 +142,8 @@ export const TemplateBrowser = () => {
                 type="button"
                 id={`template-${template.meta.component}`}
                 key={idx}
-                className={`${css.templateBrowserItem}${
-                  isActive ? ' active' : ''
-                }${isSelected ? ' selected' : ''}`}
+                className={`${css.templateBrowserItem}
+                ${isSelected ? ' selected' : ''}`}
                 onClick={() => {
                   setSelectedTemplate(template);
                 }}
@@ -165,7 +172,7 @@ export const TemplateBrowser = () => {
                   <span>{template.meta.label}</span>
                   <small>{`v${template.meta.version}`}</small>
                 </label>
-                {isActive && (
+                {isSelected && (
                   <span className={css.templateBrowserItemActive}>
                     <ui.Icon
                       icon="check_circle"

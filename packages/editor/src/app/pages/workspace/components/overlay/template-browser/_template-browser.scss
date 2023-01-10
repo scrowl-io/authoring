@@ -36,22 +36,52 @@
     background: var(--owl-template-browser-item-bg);
     box-shadow: var(--owl-box-shadow);
 
+    &:focus {
+      font-weight: 600;
+      border-width: 2px;
+      border-color: var(--owl-template-browser-active-border-color);
+      box-shadow: var(--bs-btn-box-shadow), var(--bs-btn-focus-box-shadow);
+    }
+
+    &:focus label {
+      color: white;
+      background: var(--bs-btn-active-bg);
+    }
+
     &:hover {
       transform: translate(-2px, -2px);
       box-shadow: var(--owl-box-shadow-active);
       transition: box-shadow 0.1s ease-in-out, transform 0.1s ease-in-out;
-      background-color: #fff !important;
+      background-color: #ffffff !important;
     }
 
     &:hover label {
-      background: var(--bs-btn-active-bg);
-      color: var(--owl-template-browser-item-bg);
+      color: var(--owl-dropdown-color);
+    }
+
+    &:hover,
+    :focus label {
+      color: white;
+    }
+
+    &:active:hover label {
+      color: white;
+    }
+
+    &:active:hover,
+    :hover label {
+      color: white;
     }
 
     &.selected {
       font-weight: 600;
       border-width: 2px;
       border-color: var(--owl-template-browser-active-border-color);
+    }
+
+    &.selected label {
+      background: var(--bs-btn-active-bg);
+      color: white;
     }
 
     &.active {
