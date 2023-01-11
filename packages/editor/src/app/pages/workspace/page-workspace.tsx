@@ -135,18 +135,12 @@ export const Page = () => {
         console.log('inside new proj');
 
         Projects.create().then((result) => {
+          setProgress(false);
           if (result.error) {
-            console.log('result.error?');
-            setProgress(false);
             console.error(result);
             return;
-          } else {
-            console.log('result no error?');
-            setProgress(false);
           }
         });
-        console.log('in progress after?');
-        console.log(inProgress);
       };
 
       const promptDiscardProject = () => {
