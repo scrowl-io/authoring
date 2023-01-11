@@ -120,7 +120,7 @@ const GlossaryFormElement = (
       word: true,
     });
     setFormTerm(update);
-    validateForm(update);
+    // validateForm(update);
   };
 
   const handleWordInput = (ev: React.KeyboardEvent<HTMLInputElement>) => {
@@ -150,7 +150,7 @@ const GlossaryFormElement = (
       definition: true,
     });
     setFormTerm(update);
-    validateForm(update);
+    // validateForm(update);
   };
 
   const handleDefinitionInput = (
@@ -251,7 +251,6 @@ const GlossaryFormElement = (
                       value={formTerm.word}
                       onChange={handleWordChange}
                       onKeyDown={handleWordInput}
-                      onBlur={handleFormUpdate}
                     />
                     {formErrors.word && (
                       <div className="invalid-feedback">{formErrors.word}</div>
@@ -273,7 +272,6 @@ const GlossaryFormElement = (
                       value={formTerm.definition}
                       onChange={handleDefinitionChange}
                       onKeyDown={handleDefinitionInput}
-                      onBlur={handleFormUpdate}
                     />
                     {formErrors.definition && (
                       <div className="invalid-feedback">

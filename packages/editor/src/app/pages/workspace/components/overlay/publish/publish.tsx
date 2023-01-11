@@ -50,12 +50,11 @@ const PublishFormElement = (
       });
     }
     // shouldn't need to do this  on every input change, but setting scorm on handleSubmit isn't working
-    Projects.setScorm(formData);
+    // Projects.setScorm(formData);
   };
 
   const handleRollback = (prop: string) => {
     const update = {};
-
     update[prop] = rollbackData[prop];
     setFormData({
       ...formData,
@@ -115,6 +114,9 @@ const PublishFormElement = (
                       onSubmit={handleSubmit}
                       errors={publishErrors}
                       isOpen={isOpen}
+                      formData={formData}
+                      setFormData={setFormData}
+                      rollbackData={rollbackData}
                     />
                     <Reporting
                       data={formData}

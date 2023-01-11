@@ -147,7 +147,7 @@ const ResourceFormElement = (
       filename: true,
     });
     setResource(update);
-    validateForm(update);
+    // validateForm(update);
   };
 
   const handleChangeResourceTitle = (
@@ -164,7 +164,7 @@ const ResourceFormElement = (
       title: true,
     });
     setResource(update);
-    validateForm(update);
+    // validateForm(update);
   };
 
   const handleInputResourceTitle = (
@@ -348,7 +348,7 @@ const ResourceFormElement = (
                       value={resource.title}
                       onChange={handleChangeResourceTitle}
                       onKeyDown={handleInputResourceTitle}
-                      onBlur={handleFormUpdate}
+                      // onBlur={handleFormUpdate}
                     />
                     {formErrors.title && (
                       <div className="invalid-feedback">{formErrors.title}</div>
@@ -371,7 +371,7 @@ const ResourceFormElement = (
                       value={resource.description}
                       onChange={handleChangeResourceDescription}
                       onKeyDown={handleInputResourceDescription}
-                      onBlur={handleFormUpdate}
+                      // onBlur={handleFormUpdate}
                     />
                   </div>
 
