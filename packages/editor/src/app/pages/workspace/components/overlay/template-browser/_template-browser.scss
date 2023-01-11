@@ -43,7 +43,7 @@
       box-shadow: var(--bs-btn-box-shadow), var(--bs-btn-focus-box-shadow);
     }
 
-    &:focus label {
+    &:focus:not(:active:hover) label {
       color: white;
       background: var(--bs-btn-active-bg);
     }
@@ -57,20 +57,6 @@
 
     &:hover label {
       color: var(--owl-dropdown-color);
-    }
-
-    &:hover,
-    :focus label {
-      color: white;
-    }
-
-    &:active:hover label {
-      color: white;
-    }
-
-    &:active:hover,
-    :hover label {
-      color: white;
     }
 
     &.selected {
