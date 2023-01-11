@@ -22,6 +22,7 @@ export const service: RUNTIME_SERVICE = {
     },
     end: undefined,
     convert: (total) => {
+      // @ts-ignore
       function ZeroPad(val: number, pad: number) {
         let res = new String(val);
         const len = res.length;
@@ -61,12 +62,18 @@ export const service: RUNTIME_SERVICE = {
         totalMs = total - totalH * 3600000 - totalM * 60000 - totalS * 1000;
       }
 
+      // should eventually check SCORM version and format time accordingly
       let timespan =
-        ZeroPad(totalH, 4) +
-        ':' +
-        ZeroPad(totalM, 2) +
-        ':' +
-        ZeroPad(totalS, 2);
+        'PT' +
+        totalH +
+        // ZeroPad(totalH, 4) +
+        'H' +
+        totalM +
+        // ZeroPad(totalM, 2) +
+        'M' +
+        totalS +
+        // ZeroPad(totalS, 2) +
+        'S';
 
       if (totalH > 9999) {
         timespan = '9999:99:99';
@@ -107,15 +114,19 @@ export const service: RUNTIME_SERVICE = {
   getError: (printError) => {
     printError =
       printError === undefined || printError === null ? true : printError;
-    const res = service.isAvailable();
 
-    if (res.error) {
-      return res;
+    const [isInit, API] = service.isInitialized();
+
+    if (!isInit) {
+      return {
+        error: true,
+        message: 'Service is not initialized',
+      };
     }
 
-    const errorId = res.API.GetLastError();
-    const errorMsg = res.API.GetErrorString(errorId);
-    const errorStack = res.API.GetDiagnostic(errorId);
+    const errorId = API.GetLastError();
+    const errorMsg = API.GetErrorString(errorId);
+    const errorStack = API.GetDiagnostic(errorId);
     const apiError = {
       id: errorId,
       message: errorMsg,
@@ -247,6 +258,13 @@ export const service: RUNTIME_SERVICE = {
       'cmi.progress_measure'
     );
 
+    // error 403 = Data Model Element Value Not Initialized (first time setting progress)
+    // @ts-ignore
+    if (progressError && previousProgress.data.id === '403') {
+      service.setValue('cmi.progress_measure', progressPercentage);
+      service.commit();
+    }
+
     if (!progressError) {
       if (
         !previousProgress ||
@@ -346,17 +364,13 @@ export const service: RUNTIME_SERVICE = {
     }
 
     if (val !== undefined) {
-      API.SetValue(elem, val);
+      if (API.SetValue(elem, val) === 'false') {
+        service.getError(true);
+        // return [true, service.getError(true)];
+      }
     } else {
       console.warn(`Unable to set value for ${elem}: value undefined`);
     }
-
-    // if (service.API.SetValue(elem, val) === 'false') {
-    //   throw {
-    //     message: `SCORM service failed to set ${elem} to ${val}`,
-    //     data: service.getError(true),
-    //   };
-    // }
 
     return [false];
   },
@@ -372,9 +386,9 @@ export const service: RUNTIME_SERVICE = {
 
     const getRes = API.GetValue(elem);
 
-    if (getRes === 'false') {
+    if (getRes === '') {
       console.error(`API failed to get value for: ${elem}`);
-      return [true, ''];
+      service.getError(true);
     }
 
     return [false, getRes];
