@@ -45,10 +45,6 @@ export const Asset = ({
 
   const showAssetBrowser = () => {
     setIsOpenAssetBrowser(true);
-
-    if (onFocus) {
-      onFocus(field);
-    }
   };
 
   const closeAssetBrowser = () => {
@@ -79,14 +75,6 @@ export const Asset = ({
     showAssetBrowser();
   };
 
-  const handleButtonFocus = (ev: React.MouseEvent<HTMLButtonElement>) => {
-    ev.currentTarget.blur();
-
-    if (inputRef.current) {
-      inputRef.current.focus();
-    }
-  };
-
   let inputClasses = 'form-control form-control-sm';
 
   if (isInvalid) {
@@ -103,7 +91,6 @@ export const Asset = ({
     disabled: disabled,
     readOnly: true,
     tabIndex: '-1',
-    onFocus: handleAssetFocus,
   };
 
   let controlClasses = 'control-asset mb-2 template-content-input';
@@ -162,8 +149,7 @@ export const Asset = ({
             className="btn btn-outline-primary post"
             type="button"
             disabled={disabled}
-            onFocus={handleAssetFocus}
-            onClick={handleButtonFocus}
+            onClick={handleAssetFocus}
           >
             Select
           </button>

@@ -127,8 +127,8 @@ export const Page = () => {
         resetActiveSlide();
 
         Projects.create().then((result) => {
+          setProgress(false);
           if (result.error) {
-            setProgress(false);
             console.error(result);
             return;
           }
