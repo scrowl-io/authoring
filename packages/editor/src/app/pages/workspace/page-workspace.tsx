@@ -16,7 +16,8 @@ import {
   PublishProgress,
 } from './components';
 import { Projects, Settings } from '../../models';
-import { menu, sys } from '../../services';
+import { menu, sys, events } from '../../services';
+import { Workspace } from '../../pages';
 
 export const Path = '/workspace';
 
@@ -50,6 +51,53 @@ export const Page = () => {
   useEffect(() => {
     isListening.current = true;
 
+    const promptDiscardProject = (project) => {
+      sys
+        .messageDialog({
+          type: 'question',
+          title: 'Confirm',
+          message: 'Open Project Without Saving?',
+          detail: 'Your changes are not saved.',
+          buttons: ['Save and Close', 'Discard and Open', 'Cancel'],
+        })
+        .then((res) => {
+          if (res.error) {
+            console.error(res);
+            return;
+          }
+
+          switch (res.data.response) {
+            case 0:
+              Projects.save({
+                data: projectData,
+                assets,
+              }).then((saveRes) => {
+                if (saveRes.data && saveRes.data.action) {
+                  switch (saveRes.data.action) {
+                    case 'prompt-project-name':
+                      Workspace.openPromptProjectName({
+                        action: events.project.EVENTS.open,
+                      });
+                      break;
+                  }
+                  return;
+                } else if (saveRes.error) {
+                  sys.messageDialog({
+                    message: res.message,
+                  });
+                  return;
+                }
+
+                openProject(project);
+              });
+              break;
+            case 1:
+              openProject(project);
+              break;
+          }
+        });
+    };
+
     const saveListener = () => {
       Projects.save({ data: projectData, assets }).then((res) => {
         if (!isListening.current) {
@@ -76,7 +124,12 @@ export const Page = () => {
 
     const openListener = (ev, project?: Projects.ProjectMeta) => {
       if (project) {
-        openProject(project);
+        if (projectInteractions.isUncommitted) {
+          promptDiscardProject(project);
+          return;
+        } else {
+          openProject(project);
+        }
         return;
       }
 
