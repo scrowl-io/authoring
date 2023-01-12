@@ -3,6 +3,38 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.0.23 (2023-01-11)
+
+**Note:** Version bump only for package @scrowl/postcss-prefixer
+
+
+
+
+
+## 0.0.22 (2023-01-11)
+
+**Note:** Version bump only for package @scrowl/postcss-prefixer
+
+
+
+
+
+## 0.0.21 (2023-01-11)
+
+**Note:** Version bump only for package @scrowl/postcss-prefixer
+
+
+
+
+
+## 0.0.20 (2023-01-11)
+
+**Note:** Version bump only for package @scrowl/postcss-prefixer
+
+
+
+
+
 ## 0.0.19 (2022-12-20)
 
 **Note:** Version bump only for package @scrowl/postcss-prefixer

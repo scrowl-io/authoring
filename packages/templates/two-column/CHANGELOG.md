@@ -3,6 +3,38 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 1.0.82 (2023-01-11)
+
+**Note:** Version bump only for package @scrowl/template-two-column
+
+
+
+
+
+## 1.0.81 (2023-01-11)
+
+**Note:** Version bump only for package @scrowl/template-two-column
+
+
+
+
+
+## 1.0.80 (2023-01-11)
+
+**Note:** Version bump only for package @scrowl/template-two-column
+
+
+
+
+
+## 1.0.79 (2023-01-11)
+
+**Note:** Version bump only for package @scrowl/template-two-column
+
+
+
+
+
 ## 1.0.78 (2022-12-20)
 
 **Note:** Version bump only for package @scrowl/template-two-column
