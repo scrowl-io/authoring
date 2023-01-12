@@ -38,6 +38,13 @@ export const toScormCase = (str) => {
     .replace(/\s/g, '');
 };
 
+export const toSnakeCase = (str) => {
+  return str
+    .toLowerCase()
+    .replace(/[^\p{L}0-9]+/gu, '_')
+    .replace(/\s/g, '');
+};
+
 export const hasLettersOnly = str => {
   return /^[a-zA-Z]+$/.test(str);
 };

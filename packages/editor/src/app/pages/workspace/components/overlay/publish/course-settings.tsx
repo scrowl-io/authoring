@@ -12,9 +12,6 @@ export type CourseSettingsProps = {
     [key: string]: string;
   };
   isOpen: boolean;
-  formData: any;
-  setFormData: any;
-  rollbackData: any;
 };
 
 export const CourseSettings = ({
@@ -24,9 +21,6 @@ export const CourseSettings = ({
   onSubmit,
   errors,
   isOpen,
-  formData,
-  setFormData,
-  rollbackData,
 }: CourseSettingsProps) => {
   const inputRefName = useRef<HTMLInputElement>(null);
   let timerFocusName = useRef<ReturnType<typeof setTimeout>>();
@@ -49,18 +43,10 @@ export const CourseSettings = ({
   };
 
   const handleInputName = (ev: React.KeyboardEvent<HTMLInputElement>) => {
-    console.log(rollbackData);
-    console.log(formData);
-    console.log(rollbackData.name);
     switch (ev.key) {
       case 'Escape':
-        const update = {
-          ...formData,
-          name: rollbackData.name,
-        };
         Elem.stopEvent(ev);
         onRollback('name');
-        setFormData(update);
         ev.currentTarget.blur();
         break;
     }
@@ -172,6 +158,7 @@ export const CourseSettings = ({
           className={`form-control form-control-sm${
             errors.name ? ' is-invalid' : ''
           }`}
+          value={name}
           placeholder={placeholderName}
           onChange={handleUpdateName}
           onKeyDown={handleInputName}
