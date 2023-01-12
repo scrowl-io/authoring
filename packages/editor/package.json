@@ -27,9 +27,9 @@
     "reload:backend": "wait-on dist/preload.js dist/main.js http://localhost:5003 && nodemon --watch dist/main.js --watch dist/preload.js --exec electron ./dist/main.js",
     "prestart": "yarn clean && node ./scripts/reset-dev-env.mjs",
     "start": "cross-env NODE_ENV=development PORT=5003 concurrently \"yarn start:frontend\" \"yarn start:preload\" \"yarn reload:preload\" \"yarn start:backend\" \"yarn reload:backend\"",
-    "start:frontend:web": "parcel serve --target frontend:web --port 5013 --dist-dir ./web --no-cache --open",
+    "start:frontend:web": "parcel watch --target frontend:web --no-cache",
     "start:proxy:web": "nodemon --watch src/server/proxy.ts --exec webpack",
-    "start:backend:web": "parcel watch --target backend:web --port 5012 --no-cache",
+    "start:backend:web": "wait-on ./web/app.html && parcel watch --target backend:web --no-cache",
     "reload:backend:web": "wait-on ./web/server.js && nodemon --watch ./web/server.js --exec node ./web/server.js",
     "prestart:web": "rimraf web",
     "start:web": "cross-env NODE_ENV=development concurrently \"yarn start:proxy:web\" \"yarn start:frontend:web\" \"yarn start:backend:web\" \"yarn reload:backend:web\"",
@@ -87,7 +87,8 @@
       "isLibrary": false,
       "includeNodeModules": true,
       "source": "./src/app/index-web.html",
-      "distDir": "./web"
+      "distDir": "./web",
+      "publicUrl": "/public"
     }
   },
   "eslintConfig": {

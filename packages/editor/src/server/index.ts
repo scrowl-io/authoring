@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import api from './api';
+import routes from './routes';
 import { port } from './config';
 
 const app = express();
@@ -12,7 +13,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 api.init(app);
+routes.init(app);
 
 app.listen(port, () => {
-  console.info(`Scrowl Web Server running at http://localhost:${port}`);
+  console.info(`Scrowl Web Server running at http://localhost:${port}/app`);
 });
