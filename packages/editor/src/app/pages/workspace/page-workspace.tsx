@@ -17,7 +17,6 @@ import {
 } from './components';
 import { Projects, Settings } from '../../models';
 import { menu, sys, events } from '../../services';
-import { Workspace } from '../../pages';
 
 export const Path = '/workspace';
 
@@ -75,7 +74,7 @@ export const Page = () => {
                 if (saveRes.data && saveRes.data.action) {
                   switch (saveRes.data.action) {
                     case 'prompt-project-name':
-                      Workspace.openPromptProjectName({
+                      openPromptProjectName({
                         action: events.project.EVENTS.open,
                       });
                       break;
@@ -124,6 +123,9 @@ export const Page = () => {
 
     const openListener = (ev, project?: Projects.ProjectMeta) => {
       if (project) {
+        if (project.id === projectData.meta.id) {
+          return;
+        }
         if (projectInteractions.isUncommitted) {
           promptDiscardProject(project);
           return;
