@@ -336,7 +336,7 @@ export const upload = (ev: rq.RequestEvent, req: UploadReq) => {
 
       let dest: string;
       let destWorking: string;
-      const ext = fs.getExt(res.data.filePath).replace('.', '');
+      const ext = fs.getExt(res.data.filePath).toLowerCase().replace('.', '');
       const name = fs.getBasename(res.data.filePath, ext).replace('.', '');
       const type = fs.assetTypeByExt(ext);
       const infoRes = getProjectInfo(req.meta);
