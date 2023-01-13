@@ -208,9 +208,15 @@ export const Header = () => {
     setIsOpenPublish(false);
   };
 
-  const handelSubmitPublish = () => {
+  const handelSubmitPublish = (formData) => {
     openPublishProgress();
-    Projects.save({ data: projectData, assets }).then((saveRes) => {
+
+    const submittedData = {
+      ...projectData,
+      scorm: formData,
+    };
+
+    Projects.save({ data: submittedData, assets }).then((saveRes) => {
       if (saveRes.error) {
         closePublishProgress();
         sys.messageDialog({
@@ -268,9 +274,9 @@ export const Header = () => {
       setIsOpenPublish(true);
     });
 
-    menu.API.onPublishQuick(() => {
-      handelSubmitPublish();
-    });
+    // menu.API.onPublishQuick(() => {
+    //   handelSubmitPublish();
+    // });
 
     return () => {
       menu.API.offPublish();

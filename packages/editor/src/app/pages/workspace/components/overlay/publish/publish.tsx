@@ -49,8 +49,6 @@ const PublishFormElement = (
         ...data,
       });
     }
-    // shouldn't need to do this  on every input change, but setting scorm on handleSubmit isn't working
-    Projects.setScorm(formData);
   };
 
   const handleRollback = (prop: string) => {
@@ -64,12 +62,10 @@ const PublishFormElement = (
 
   const handleSubmit = (ev: React.SyntheticEvent) => {
     Elem.stopEvent(ev);
-    Projects.setScorm(formData);
-    onSubmit();
+    onSubmit(formData);
   };
 
   useEffect(() => {
-    Projects.setScorm(formData);
     if (isOpen) {
       setPublishErrors(initialErrorState);
       setFormData(publishData);
