@@ -79,27 +79,34 @@ export const message = (ev: rq.RequestEvent, options: MessageBoxOptions) => {
 
 export const save = (ev: rq.RequestEvent, options: SaveDialogOptions) => {
   return new Promise<rq.ApiResult>((resolve) => {
-    dialog
-      .showSaveDialog(options)
-      .then(({ canceled, filePath }) => {
-        resolve({
-          error: false,
-          data: {
-            canceled,
-            filePath,
-          },
-        });
-      })
-      .catch((e) => {
-        resolve({
-          error: true,
-          message: 'Save dialog failed: unexpected',
-          data: {
-            trace: e,
-            options,
-          },
-        });
-      });
+    let dialogResult;
+    let saveWin: BrowserWindow | null = null;
+    const saveEvent = ev as IpcMainInvokeEvent;
+    const saveData = {
+      canceled: false,
+      filePath: '',
+    };
+
+    if (saveEvent.sender) {
+      saveWin = BrowserWindow.fromWebContents(saveEvent.sender);
+    }
+
+    if (saveWin) {
+      dialogResult = dialog.showSaveDialogSync(saveWin, options);
+    } else {
+      dialogResult = dialog.showSaveDialogSync(options);
+    }
+
+    if (dialogResult === undefined) {
+      saveData.canceled = true;
+    } else {
+      saveData.filePath = dialogResult;
+    }
+
+    resolve({
+      error: false,
+      data: saveData,
+    });
   });
 };
 
