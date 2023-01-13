@@ -10,5 +10,10 @@ declare global {
       removeListener: (channel: string, listener: (...args: any[]) => void) => void;
       removeListenerAll: (channel: string) => void;
     };
+    Scrowl: {
+      config: {
+        desktop: boolean;
+      };
+    };
   }
 }
