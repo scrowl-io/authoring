@@ -348,7 +348,7 @@ const ResourceFormElement = (
                       value={resource.title}
                       onChange={handleChangeResourceTitle}
                       onKeyDown={handleInputResourceTitle}
-                      // onBlur={handleFormUpdate}
+                      onBlur={handleFormUpdate}
                     />
                     {formErrors.title && (
                       <div className="invalid-feedback">{formErrors.title}</div>
@@ -371,7 +371,7 @@ const ResourceFormElement = (
                       value={resource.description}
                       onChange={handleChangeResourceDescription}
                       onKeyDown={handleInputResourceDescription}
-                      // onBlur={handleFormUpdate}
+                      onBlur={handleFormUpdate}
                     />
                   </div>
 
