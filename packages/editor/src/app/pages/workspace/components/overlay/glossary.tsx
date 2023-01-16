@@ -126,6 +126,8 @@ const GlossaryFormElement = (
   const handleWordInput = (ev: React.KeyboardEvent<HTMLInputElement>) => {
     switch (ev.key) {
       case 'Escape':
+        console.log('rollback term', formRollback);
+        console.log('form term:', formTerm);
         const update = {
           ...formTerm,
           word: formRollback.word,
@@ -163,6 +165,8 @@ const GlossaryFormElement = (
         }
         break;
       case 'Escape':
+        console.log('rollback term', formRollback);
+        console.log('form term:', formTerm);
         const update = {
           ...formTerm,
           definition: formRollback.definition,
@@ -251,6 +255,7 @@ const GlossaryFormElement = (
                       value={formTerm.word}
                       onChange={handleWordChange}
                       onKeyDown={handleWordInput}
+                      onBlur={handleFormUpdate}
                     />
                     {formErrors.word && (
                       <div className="invalid-feedback">{formErrors.word}</div>
@@ -272,6 +277,7 @@ const GlossaryFormElement = (
                       value={formTerm.definition}
                       onChange={handleDefinitionChange}
                       onKeyDown={handleDefinitionInput}
+                      onBlur={handleFormUpdate}
                     />
                     {formErrors.definition && (
                       <div className="invalid-feedback">
