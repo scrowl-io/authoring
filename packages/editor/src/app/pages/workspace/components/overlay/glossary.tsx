@@ -91,12 +91,6 @@ const GlossaryFormElement = (
     }
   };
 
-  const handleFormUpdate = (ev) => {
-    // const [isValid, validationUpdate] = validateForm(formTerm);
-    // setFormRollback(validationUpdate);
-    setFormRollback(formTerm);
-  };
-
   const handleSubmit = (ev: React.FormEvent) => {
     Elem.stopEvent(ev);
 
@@ -118,6 +112,11 @@ const GlossaryFormElement = (
     });
   };
 
+  const handleFormUpdate = (ev) => {
+    handleResetErrors(ev);
+    setFormRollback(formTerm);
+  };
+
   const handleWordChange = (ev: React.FormEvent<HTMLInputElement>) => {
     const word = ev.currentTarget.value;
     const update = {
@@ -130,7 +129,6 @@ const GlossaryFormElement = (
       word: true,
     });
     setFormTerm(update);
-    // validateForm(update);
   };
 
   const handleWordInput = (ev: React.KeyboardEvent<HTMLInputElement>) => {
@@ -140,6 +138,7 @@ const GlossaryFormElement = (
           ...formTerm,
           word: formRollback.word,
         };
+
         Elem.stopEvent(ev);
         setFormTerm(update);
         ev.currentTarget.blur();
@@ -159,7 +158,6 @@ const GlossaryFormElement = (
       definition: true,
     });
     setFormTerm(update);
-    // validateForm(update);
   };
 
   const handleDefinitionInput = (
@@ -260,8 +258,7 @@ const GlossaryFormElement = (
                       value={formTerm.word}
                       onChange={handleWordChange}
                       onKeyDown={handleWordInput}
-                      onBlur={handleFormUpdate}
-                      onFocus={handleResetErrors}
+                      onFocus={handleFormUpdate}
                     />
                     {formErrors.word && (
                       <div className="invalid-feedback">{formErrors.word}</div>
@@ -283,8 +280,7 @@ const GlossaryFormElement = (
                       value={formTerm.definition}
                       onChange={handleDefinitionChange}
                       onKeyDown={handleDefinitionInput}
-                      onBlur={handleFormUpdate}
-                      onFocus={handleResetErrors}
+                      onFocus={handleFormUpdate}
                     />
                     {formErrors.definition && (
                       <div className="invalid-feedback">

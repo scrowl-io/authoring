@@ -90,13 +90,15 @@ const ResourceFormElement = (
     return [isValid, update];
   };
 
-  const handleFormUpdate = (ev) => {
-    const [isValid, validationUpdate] = validateForm(resource);
+  const handleResetErrors = (ev) => {
+    if (ev.target.id === 'resource-title') {
+      setFormErrors({ ...formErrors, title: '' });
+    }
+  };
 
-    setFormRollback({
-      ...resource,
-      ...validationUpdate,
-    });
+  const handleFormUpdate = (ev) => {
+    handleResetErrors(ev);
+    setFormRollback(resource);
   };
 
   const handleSubmit = (ev: React.FormEvent) => {
@@ -118,6 +120,7 @@ const ResourceFormElement = (
   };
 
   const handleAssetBrowse = () => {
+    setFormErrors({ ...formErrors, filename: '' });
     setIsOpenAssetBrowser(true);
   };
 
@@ -147,7 +150,6 @@ const ResourceFormElement = (
       filename: true,
     });
     setResource(update);
-    // validateForm(update);
   };
 
   const handleChangeResourceTitle = (
@@ -164,7 +166,6 @@ const ResourceFormElement = (
       title: true,
     });
     setResource(update);
-    // validateForm(update);
   };
 
   const handleInputResourceTitle = (
@@ -348,7 +349,7 @@ const ResourceFormElement = (
                       value={resource.title}
                       onChange={handleChangeResourceTitle}
                       onKeyDown={handleInputResourceTitle}
-                      onBlur={handleFormUpdate}
+                      onFocus={handleFormUpdate}
                     />
                     {formErrors.title && (
                       <div className="invalid-feedback">{formErrors.title}</div>
@@ -371,7 +372,7 @@ const ResourceFormElement = (
                       value={resource.description}
                       onChange={handleChangeResourceDescription}
                       onKeyDown={handleInputResourceDescription}
-                      onBlur={handleFormUpdate}
+                      onFocus={handleFormUpdate}
                     />
                   </div>
 
