@@ -162,7 +162,7 @@ export const CourseSettings = ({
           placeholder={placeholderName}
           onChange={handleUpdateName}
           onKeyDown={handleInputName}
-          onBlur={handleFormUpdate}
+          onFocus={handleFormUpdate}
         />
         {errors.name && <div className="invalid-feedback">{errors.name}</div>}
       </div>
@@ -178,7 +178,7 @@ export const CourseSettings = ({
           value={description}
           onChange={handleUpdateDescription}
           onKeyDown={handleInputDescription}
-          onBlur={handleFormUpdate}
+          onFocus={handleFormUpdate}
         ></textarea>
       </div>
       <div className="mb-2">
@@ -194,7 +194,7 @@ export const CourseSettings = ({
           value={authors}
           onChange={handleUpdateAuthors}
           onKeyDown={handleInputAuthors}
-          onBlur={handleFormUpdate}
+          onFocus={handleFormUpdate}
         />
       </div>
       <div className="mb-2">
@@ -210,7 +210,7 @@ export const CourseSettings = ({
           value={organization}
           onChange={handleUpdateOrganization}
           onKeyDown={handleInputOrganization}
-          onBlur={handleFormUpdate}
+          onFocus={handleFormUpdate}
         />
       </div>
     </Accordion>

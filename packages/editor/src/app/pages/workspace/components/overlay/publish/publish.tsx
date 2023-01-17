@@ -39,7 +39,7 @@ const PublishFormElement = (
   };
 
   const handleChange = (data) => {
-    validateForm(data);
+    setPublishErrors({ ...publishErrors, name: '' });
 
     if (!data) {
       setRollbackData(formData);
