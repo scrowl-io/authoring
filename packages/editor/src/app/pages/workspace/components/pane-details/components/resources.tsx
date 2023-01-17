@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ui } from '@scrowl/ui';
 import * as css from '../_pane-details.scss';
 import {
@@ -15,6 +15,8 @@ import { ProjectResource } from '../../../../../models/projects';
 
 export const Resources = () => {
   const [isOpenResourceBrowser, setIsOpenResourceBrowser] = useState(false);
+  const [isOpenAssetBrowser, setIsOpenAssetBrowser] = useState(false);
+
   const newResource: NewResourceItem = {
     isNew: true,
     title: '',
@@ -126,6 +128,28 @@ export const Resources = () => {
     setIsOpenResourceBrowser(false);
   };
 
+  useEffect(() => {
+    const handleControls = (ev: KeyboardEvent) => {
+      switch (ev.code) {
+        case 'Escape':
+          if (!isOpenAssetBrowser) {
+            setIsOpenResourceBrowser(false);
+            break;
+          }
+      }
+    };
+
+    if (isOpenResourceBrowser) {
+      window.addEventListener('keydown', handleControls);
+    } else {
+      window.removeEventListener('keydown', handleControls);
+    }
+
+    return () => {
+      window.removeEventListener('keydown', handleControls);
+    };
+  }, [isOpenResourceBrowser, isOpenAssetBrowser]);
+
   return (
     <>
       <div>
@@ -205,6 +229,8 @@ export const Resources = () => {
         onClose={handleCloseResourceBrowser}
         onSubmit={handleSubmitResource}
         resourceItem={selectedResource}
+        isOpenAssetBrowser={isOpenAssetBrowser}
+        setIsOpenAssetBrowser={setIsOpenAssetBrowser}
       />
     </>
   );

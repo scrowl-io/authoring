@@ -15,6 +15,8 @@ export interface ResourceFormProps
   onClose: () => void;
   onSubmit: (resource: ResourceItem) => void;
   resourceItem: ResourceItem;
+  isOpenAssetBrowser: boolean;
+  setIsOpenAssetBrowser: any;
 }
 
 const ResourceFormElement = (
@@ -24,6 +26,8 @@ const ResourceFormElement = (
     onClose,
     onSubmit,
     resourceItem,
+    isOpenAssetBrowser,
+    setIsOpenAssetBrowser,
     ...props
   }: ResourceFormProps,
   ref
@@ -31,7 +35,6 @@ const ResourceFormElement = (
   const animationSettings = Settings.useAnimation();
   const isAnimated = !animationSettings.reducedAnimations;
   const modalTitle = resourceItem.isNew ? 'Add New' : 'Edit';
-  const [isOpenAssetBrowser, setIsOpenAssetBrowser] = useState(false);
   const inputRefTitle = useRef<HTMLInputElement>(null);
   let timerFocusTitle = useRef<ReturnType<typeof setTimeout>>();
   const initialFormState = {
@@ -266,6 +269,26 @@ const ResourceFormElement = (
       }
     };
   }, [resourceItem, isOpen]);
+
+  useEffect(() => {
+    const handleControls = (ev: KeyboardEvent) => {
+      switch (ev.code) {
+        case 'Escape':
+          setIsOpenAssetBrowser(false);
+          break;
+      }
+    };
+
+    if (isOpenAssetBrowser) {
+      window.addEventListener('keydown', handleControls);
+    } else {
+      window.removeEventListener('keydown', handleControls);
+    }
+
+    return () => {
+      window.removeEventListener('keydown', handleControls);
+    };
+  }, [isOpenAssetBrowser]);
 
   return (
     <div ref={ref}>
