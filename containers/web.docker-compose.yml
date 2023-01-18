@@ -1,12 +1,15 @@
-version: '3'
+version: '3.9'
 services:
-  server:
+  authoring-editor-server:
     build:
       context: ../
       dockerfile: containers/web.dockerfile
     ports:
       - '${SRPORT}:${SRPORT}'
-  db:
+    volumes:
+      - ../packages/editor/src/server:/usr/authoring/packages/editor/src/server
+      - ../packages/editor/src/app:/usr/authoring/packages/editor/src/app
+  authoring-editor-db:
     image: '${DBIMAGE}'
     restart: 'always'
     ports:
