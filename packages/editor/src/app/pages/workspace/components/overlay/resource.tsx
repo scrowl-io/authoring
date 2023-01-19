@@ -337,7 +337,7 @@ const ResourceFormElement = (
                         }`}
                         placeholder="File Attachment"
                         aria-label="File Attachment"
-                        value={resource.filename}
+                        value={resource.sourceFilename}
                       />
                       <div className="owlui-input-group-append">
                         <ui.Button
