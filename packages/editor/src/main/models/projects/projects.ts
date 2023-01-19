@@ -54,9 +54,6 @@ const getProjectInfo = (meta: ProjectMeta): rq.ApiResult => {
       };
     }
 
-    console.log('***folder');
-    console.log(folder);
-
     const fileName = fs.joinPath(folder, projectMetaFilename);
     const existsRes = fs.fileExistsSync(fileName);
 
@@ -800,9 +797,6 @@ export const publish = (ev: rq.RequestEvent, data: ProjectData) => {
           utils.str.toSnakeCase(data.meta.name)
         );
 
-    console.log('***statements');
-    console.log(defaultPath);
-
     fs.dialog
       .save(ev, {
         defaultPath,
@@ -859,9 +853,6 @@ export const publish = (ev: rq.RequestEvent, data: ProjectData) => {
               const scormFilePath = utils.str.toScormCase(
                 fs.getBasename(saveRes.data.filePath, `.${extName}`)
               );
-
-              console.log('*** scorm name');
-              console.log(scormFilePath);
 
               scorm(
                 data,

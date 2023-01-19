@@ -347,9 +347,6 @@ export const createScormPackage = (
         );
 
     packager(packagerOpts, (message: string) => {
-      console.log('***inside packager');
-      console.log('scorm path', scormFilePath);
-      console.log(packageFilename, dest);
       fs.fileRename(packageFilename, dest).then((res) => {
         if (res.error) {
           resolve(res);
