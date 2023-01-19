@@ -15,7 +15,7 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
   const Scrowl = window['Scrowl'];
 
   if (Scrowl.runtime) {
-    const [isStarted] = Scrowl.runtime.start();
+    const [isStarted] = Scrowl.runtime.start('2004v3');
 
     if (!isStarted) {
       console.error('unable to start runtime');
@@ -52,7 +52,7 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
   if (Scrowl.runtime) {
     const [locationError, location] = Scrowl.runtime.getLocation();
 
-    if (!locationError && location) {
+    if (!locationError && location && location.cur) {
       moduleIdx = location.cur.m;
       lessonIdx = location.cur.l;
       slideId = location.slideId;
@@ -137,9 +137,6 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
 
         Scrowl.runtime?.updateLocation(locationObj, id);
       }
-    
-
-
     };
     const handleSlideStart = (ev) => {
       // @ts-ignore
@@ -178,6 +175,9 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
   if (moduleIdx !== undefined) {
     targetUrl = `/module-${moduleIdx}--lesson-${lessonIdx}`;
   }
+
+  console.log('----root target URL');
+  console.log(targetUrl);
 
   return (
     <Router>

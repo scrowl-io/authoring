@@ -202,9 +202,10 @@ export const createScormEntry = ({ scorm, meta, ...project}: ProjectData, source
     const entryJsSrc = fs.joinPath(Templates.TEMPLATE_PATHS.project, 'scorm.js.hbs');
     const entryJsDest = fs.joinPath(dest, 'index.js');
     const renderData = {
+      // stringify the scorm data to make available to handlebar
       project: JSON.stringify(project),
       templates,
-    }
+    };
 
     const renderEntryFile = (src, dest) => {
       return new Promise<rq.ApiResult>((resolve) => {
