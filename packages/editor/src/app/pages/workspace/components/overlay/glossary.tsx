@@ -81,10 +81,14 @@ const GlossaryFormElement = (
     return [isValid, update];
   };
 
-  const handleFormUpdate = (ev) => {
-    const [isValid, validationUpdate] = validateForm(formTerm);
-
-    setFormRollback(validationUpdate);
+  const handleResetErrors = (ev) => {
+    switch (ev.target.id) {
+      case 'glossary-definition':
+        setFormErrors({ ...formErrors, definition: '' });
+        break;
+      case 'term-word':
+        setFormErrors({ ...formErrors, word: '' });
+    }
   };
 
   const handleSubmit = (ev: React.FormEvent) => {
@@ -108,6 +112,11 @@ const GlossaryFormElement = (
     });
   };
 
+  const handleFormUpdate = (ev) => {
+    handleResetErrors(ev);
+    setFormRollback(formTerm);
+  };
+
   const handleWordChange = (ev: React.FormEvent<HTMLInputElement>) => {
     const word = ev.currentTarget.value;
     const update = {
@@ -120,7 +129,6 @@ const GlossaryFormElement = (
       word: true,
     });
     setFormTerm(update);
-    validateForm(update);
   };
 
   const handleWordInput = (ev: React.KeyboardEvent<HTMLInputElement>) => {
@@ -150,7 +158,6 @@ const GlossaryFormElement = (
       definition: true,
     });
     setFormTerm(update);
-    validateForm(update);
   };
 
   const handleDefinitionInput = (
@@ -251,7 +258,7 @@ const GlossaryFormElement = (
                       value={formTerm.word}
                       onChange={handleWordChange}
                       onKeyDown={handleWordInput}
-                      onBlur={handleFormUpdate}
+                      onFocus={handleFormUpdate}
                     />
                     {formErrors.word && (
                       <div className="invalid-feedback">{formErrors.word}</div>
@@ -273,7 +280,7 @@ const GlossaryFormElement = (
                       value={formTerm.definition}
                       onChange={handleDefinitionChange}
                       onKeyDown={handleDefinitionInput}
-                      onBlur={handleFormUpdate}
+                      onFocus={handleFormUpdate}
                     />
                     {formErrors.definition && (
                       <div className="invalid-feedback">

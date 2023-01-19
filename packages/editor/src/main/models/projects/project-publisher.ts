@@ -5,7 +5,9 @@ import { rq, fs, tmpr, log } from '../../services';
 import { dt, lt, str } from '../../utils';
 import { TEMPLATE_PATHS } from '../templates';
 
-export const getProjectTemplates = (project: ProjectData): [false | Set<string>, TemplateList] => {
+export const getProjectTemplates = (
+  project: ProjectData
+): [false | Set<string>, TemplateList] => {
   let templatePath;
   const templatePaths = new Set<string>();
   const templateList: TemplateList = [];
@@ -16,7 +18,10 @@ export const getProjectTemplates = (project: ProjectData): [false | Set<string>,
   }
 
   project.slides.forEach((slide) => {
-    templatePath = fs.joinPath(TEMPLATE_PATHS.templates, slide.template.meta.filename);
+    templatePath = fs.joinPath(
+      TEMPLATE_PATHS.templates,
+      slide.template.meta.filename
+    );
 
     if (fs.fileExistsSync(templatePath)) {
       templatePaths.add(templatePath);
@@ -25,7 +30,7 @@ export const getProjectTemplates = (project: ProjectData): [false | Set<string>,
         templateMap[slide.template.meta.component] = {
           component: slide.template.meta.component,
           js: `./scrowl.template-${slide.template.meta.filename}.js`,
-          css: `./scrowl.template-${slide.template.meta.filename}.css`
+          css: `./scrowl.template-${slide.template.meta.filename}.css`,
         };
       }
     }
@@ -38,7 +43,11 @@ export const getProjectTemplates = (project: ProjectData): [false | Set<string>,
   return [templatePaths, templateList];
 };
 
-export const getProjectUploads = (project: ProjectData, meta: ProjectFile, src: string) => {
+export const getProjectUploads = (
+  project: ProjectData,
+  meta: ProjectFile,
+  src: string
+) => {
   const assets = new Set<string>();
 
   if (!project.slides) {
@@ -59,11 +68,11 @@ export const getProjectUploads = (project: ProjectData, meta: ProjectFile, src: 
       assetPath = fs.joinPath(src, fs.getBasename(asset));
       assetExists = fs.fileExistsSync(assetPath);
     }
-    
+
     if (assetExists.error || !assetExists.data.exists) {
       return false;
     }
-    
+
     return assetPath;
   };
 
@@ -90,7 +99,7 @@ export const getProjectUploads = (project: ProjectData, meta: ProjectFile, src: 
     }
 
     return list;
-  }
+  };
 
   const scanResources = () => {
     if (!project.resources || !project.resources.length) {
@@ -116,7 +125,12 @@ export const getProjectUploads = (project: ProjectData, meta: ProjectFile, src: 
   return assets;
 };
 
-export const createScormSource = (project: ProjectData, meta: ProjectFile, source: string, dest: string) => {
+export const createScormSource = (
+  project: ProjectData,
+  meta: ProjectFile,
+  source: string,
+  dest: string
+) => {
   return new Promise<rq.ApiResult>((resolve) => {
     const appSource = Templates.TEMPLATE_PATHS.project;
     const appCopyOpts = {
@@ -194,17 +208,28 @@ export const createScormSource = (project: ProjectData, meta: ProjectFile, sourc
   });
 };
 
-export const createScormEntry = ({ scorm, meta, ...project}: ProjectData, source: string, dest: string, templates: TemplateList) => {
+export const createScormEntry = (
+  { scorm, meta, ...project }: ProjectData,
+  source: string,
+  dest: string,
+  templates: TemplateList
+) => {
   // create project files [html, js] and add them to publish folder
   return new Promise<rq.ApiResult>((resolve) => {
-    const entryHtmlSrc = fs.joinPath(Templates.TEMPLATE_PATHS.project, 'scorm.html.hbs');
+    const entryHtmlSrc = fs.joinPath(
+      Templates.TEMPLATE_PATHS.project,
+      'scorm.html.hbs'
+    );
     const entryHtmlDest = fs.joinPath(dest, 'index.html');
-    const entryJsSrc = fs.joinPath(Templates.TEMPLATE_PATHS.project, 'scorm.js.hbs');
+    const entryJsSrc = fs.joinPath(
+      Templates.TEMPLATE_PATHS.project,
+      'scorm.js.hbs'
+    );
     const entryJsDest = fs.joinPath(dest, 'index.js');
     const renderData = {
       project: JSON.stringify(project),
       templates,
-    }
+    };
 
     const renderEntryFile = (src, dest) => {
       return new Promise<rq.ApiResult>((resolve) => {
@@ -222,8 +247,8 @@ export const createScormEntry = ({ scorm, meta, ...project}: ProjectData, source
           }
 
           fs.fileWrite(dest, renderRes.data.contents).then(resolve);
-        })
-      })
+        });
+      });
     };
 
     const renderPromises = [
@@ -276,7 +301,13 @@ export const createScormEntry = ({ scorm, meta, ...project}: ProjectData, source
   });
 };
 
-export const createScormPackage = (src: string, dest: string, project: ProjectData, meta: ProjectFile) => {
+export const createScormPackage = (
+  src: string,
+  dest: string,
+  project: ProjectData,
+  meta: ProjectFile,
+  scormFilePath: string
+) => {
   return new Promise<rq.ApiResult>((resolve) => {
     const config = project.scorm;
     const today = dt.getDateStampLocal();
@@ -334,42 +365,58 @@ export const createScormPackage = (src: string, dest: string, project: ProjectDa
   });
 };
 
-export const scorm = (project: ProjectData, meta: ProjectFile, pubDest: string, tempDest: string) => {
+export const scorm = (
+  project: ProjectData,
+  meta: ProjectFile,
+  pubDest: string,
+  tempDest: string,
+  scormFilePath: string
+) => {
   return new Promise<rq.ApiResult>((resolve) => {
-    const projectSource =  fs.getDirname(project.meta.filename || '');
+    const projectSource = fs.getDirname(project.meta.filename || '');
     const projectDest = fs.joinPath(tempDest, 'content');
 
-    createScormSource(project, meta, projectSource, projectDest).then((sourceRes) => {
-      if (sourceRes.error) {
-        resolve(sourceRes);
-        return;
-      }
-
-      const templates = sourceRes.data.templates;
-
-      createScormEntry(project, projectSource, projectDest, templates).then((entryRes) => {
-        if (entryRes.error) {
-          resolve(entryRes);
+    createScormSource(project, meta, projectSource, projectDest).then(
+      (sourceRes) => {
+        if (sourceRes.error) {
+          resolve(sourceRes);
           return;
         }
 
-        createScormPackage(tempDest, pubDest, project, meta).then((packRes) => {
-          if (packRes.error) {
-            resolve(packRes);
-            return;
-          }
+        const templates = sourceRes.data.templates;
 
-          log.info(`Published project: ${pubDest}`);
-          resolve({
-            error: false,
-            data: {
+        createScormEntry(project, projectSource, projectDest, templates).then(
+          (entryRes) => {
+            if (entryRes.error) {
+              resolve(entryRes);
+              return;
+            }
+
+            createScormPackage(
+              tempDest,
+              pubDest,
               project,
-              dest: pubDest,
-            },
-          });
-        });
-      });
-    });
+              meta,
+              scormFilePath
+            ).then((packRes) => {
+              if (packRes.error) {
+                resolve(packRes);
+                return;
+              }
+
+              log.info(`Published project: ${pubDest}`);
+              resolve({
+                error: false,
+                data: {
+                  project,
+                  dest: pubDest,
+                },
+              });
+            });
+          }
+        );
+      }
+    );
   });
 };
 

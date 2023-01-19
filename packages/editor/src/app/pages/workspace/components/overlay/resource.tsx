@@ -15,6 +15,8 @@ export interface ResourceFormProps
   onClose: () => void;
   onSubmit: (resource: ResourceItem) => void;
   resourceItem: ResourceItem;
+  isOpenAssetBrowser: boolean;
+  setIsOpenAssetBrowser: any;
 }
 
 const ResourceFormElement = (
@@ -24,6 +26,8 @@ const ResourceFormElement = (
     onClose,
     onSubmit,
     resourceItem,
+    isOpenAssetBrowser,
+    setIsOpenAssetBrowser,
     ...props
   }: ResourceFormProps,
   ref
@@ -31,7 +35,6 @@ const ResourceFormElement = (
   const animationSettings = Settings.useAnimation();
   const isAnimated = !animationSettings.reducedAnimations;
   const modalTitle = resourceItem.isNew ? 'Add New' : 'Edit';
-  const [isOpenAssetBrowser, setIsOpenAssetBrowser] = useState(false);
   const inputRefTitle = useRef<HTMLInputElement>(null);
   let timerFocusTitle = useRef<ReturnType<typeof setTimeout>>();
   const initialFormState = {
@@ -90,13 +93,15 @@ const ResourceFormElement = (
     return [isValid, update];
   };
 
-  const handleFormUpdate = (ev) => {
-    const [isValid, validationUpdate] = validateForm(resource);
+  const handleResetErrors = (ev) => {
+    if (ev.target.id === 'resource-title') {
+      setFormErrors({ ...formErrors, title: '' });
+    }
+  };
 
-    setFormRollback({
-      ...resource,
-      ...validationUpdate,
-    });
+  const handleFormUpdate = (ev) => {
+    handleResetErrors(ev);
+    setFormRollback(resource);
   };
 
   const handleSubmit = (ev: React.FormEvent) => {
@@ -118,6 +123,7 @@ const ResourceFormElement = (
   };
 
   const handleAssetBrowse = () => {
+    setFormErrors({ ...formErrors, filename: '' });
     setIsOpenAssetBrowser(true);
   };
 
@@ -147,7 +153,6 @@ const ResourceFormElement = (
       filename: true,
     });
     setResource(update);
-    validateForm(update);
   };
 
   const handleChangeResourceTitle = (
@@ -164,7 +169,6 @@ const ResourceFormElement = (
       title: true,
     });
     setResource(update);
-    validateForm(update);
   };
 
   const handleInputResourceTitle = (
@@ -266,6 +270,26 @@ const ResourceFormElement = (
     };
   }, [resourceItem, isOpen]);
 
+  useEffect(() => {
+    const handleControls = (ev: KeyboardEvent) => {
+      switch (ev.code) {
+        case 'Escape':
+          setIsOpenAssetBrowser(false);
+          break;
+      }
+    };
+
+    if (isOpenAssetBrowser) {
+      window.addEventListener('keydown', handleControls);
+    } else {
+      window.removeEventListener('keydown', handleControls);
+    }
+
+    return () => {
+      window.removeEventListener('keydown', handleControls);
+    };
+  }, [isOpenAssetBrowser]);
+
   return (
     <div ref={ref}>
       <AnimatePresence>
@@ -313,7 +337,7 @@ const ResourceFormElement = (
                         }`}
                         placeholder="File Attachment"
                         aria-label="File Attachment"
-                        value={resource.filename}
+                        value={resource.sourceFilename}
                       />
                       <div className="owlui-input-group-append">
                         <ui.Button
@@ -348,7 +372,7 @@ const ResourceFormElement = (
                       value={resource.title}
                       onChange={handleChangeResourceTitle}
                       onKeyDown={handleInputResourceTitle}
-                      onBlur={handleFormUpdate}
+                      onFocus={handleFormUpdate}
                     />
                     {formErrors.title && (
                       <div className="invalid-feedback">{formErrors.title}</div>
@@ -371,7 +395,7 @@ const ResourceFormElement = (
                       value={resource.description}
                       onChange={handleChangeResourceDescription}
                       onKeyDown={handleInputResourceDescription}
-                      onBlur={handleFormUpdate}
+                      onFocus={handleFormUpdate}
                     />
                   </div>
 

@@ -438,7 +438,6 @@ export const upload = (ev: rq.RequestEvent, req: UploadReq) => {
               );
             });
             break;
-
           case undefined:
             const undefinedError = {
               error: true,
@@ -446,7 +445,6 @@ export const upload = (ev: rq.RequestEvent, req: UploadReq) => {
             };
             uploadComplete(undefinedError);
             break;
-
           default:
             dest =
               infoRes.data.isNew || infoRes.data.uncommitted
@@ -801,16 +799,15 @@ export const publish = (ev: rq.RequestEvent, data: ProjectData) => {
     }
 
     const info = infoRes.data.info as ProjectFile;
-    const defaultPath = info.lastPublishedFilename
-      ? info.lastPublishedFilename
-      : data.scorm.name
+
+    const defaultPath = data.scorm.name
       ? fs.joinPath(
           fs.APP_PATHS.downloads,
-          utils.str.toScormCase(data.scorm.name)
+          utils.str.toSnakeCase(data.scorm.name)
         )
       : fs.joinPath(
           fs.APP_PATHS.downloads,
-          utils.str.toScormCase(data.meta.name)
+          utils.str.toSnakeCase(data.meta.name)
         );
 
     fs.dialog
@@ -866,11 +863,16 @@ export const publish = (ev: rq.RequestEvent, data: ProjectData) => {
                 return;
               }
 
+              const scormFilePath = utils.str.toScormCase(
+                fs.getBasename(saveRes.data.filePath, `.${extName}`)
+              );
+
               scorm(
                 data,
                 readRes.data.contents,
                 filepath,
-                fs.APP_PATHS.publish
+                fs.APP_PATHS.publish,
+                scormFilePath
               ).then((scormRes) => {
                 if (scormRes.error) {
                   resolve(scormRes);
