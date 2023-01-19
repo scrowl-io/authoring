@@ -68,6 +68,7 @@
     padding-bottom: 0;
     border-width: 2px;
     border-color: transparent;
+    max-width: 47vw;
 
     &:hover {
       border-color: $input-border-color;
