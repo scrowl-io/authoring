@@ -165,8 +165,6 @@ export const Page = () => {
           });
           return;
         }
-
-        console.log('preview result', res);
       });
     };
 

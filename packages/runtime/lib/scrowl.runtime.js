@@ -37,9 +37,6 @@ const $b3d1e3300d945f09$export$6ed414b8d8bead88 = {
         getSessionTime: ()=>{
             let sessionTime;
             if ($b3d1e3300d945f09$export$6ed414b8d8bead88._time.startTime) sessionTime = new Date().getTime() - $b3d1e3300d945f09$export$6ed414b8d8bead88._time.startTime.getTime();
-            console.log("GET TIME");
-            console.log(sessionTime);
-            console.log($b3d1e3300d945f09$export$6ed414b8d8bead88._time.convert(sessionTime));
             return $b3d1e3300d945f09$export$6ed414b8d8bead88._time.convert(sessionTime);
         },
         end: undefined,
@@ -66,13 +63,12 @@ const $b3d1e3300d945f09$export$6ed414b8d8bead88 = {
                 totalS = Math.floor(totalS);
                 totalMs = total - totalH * 3600000 - totalM * 60000 - totalS * 1000;
             }
+            // should eventually check SCORM version and format time accordingly
             let timespan = "PT" + totalH + // ZeroPad(totalH, 4) +
             "H" + totalM + // ZeroPad(totalM, 2) +
             "M" + totalS + // ZeroPad(totalS, 2) +
             "S";
             if (totalH > 9999) timespan = "9999:99:99";
-            console.log("TIMESPAN");
-            console.log(timespan);
             return timespan;
         }
     },
@@ -161,8 +157,8 @@ const $b3d1e3300d945f09$export$6ed414b8d8bead88 = {
     },
     // { m: 1, l: 1, s?: 3 }
     updateLocation: (location, slideId)=>{
-        console.log(`API.UpdateLocation`);
-        console.log(location);
+        console.info(`API.UpdateLocation`);
+        console.info(location);
         const [isInit, API] = $b3d1e3300d945f09$export$6ed414b8d8bead88.isInitialized();
         if (!isInit || !API) {
             console.warn(`Unable to get location: service not initialized`);
@@ -238,7 +234,7 @@ const $b3d1e3300d945f09$export$6ed414b8d8bead88 = {
         }
     },
     updateProgress: (progressPercentage)=>{
-        console.log(`API.UpdateProgress`);
+        console.info(`API.UpdateProgress`);
         const [isInit, API] = $b3d1e3300d945f09$export$6ed414b8d8bead88.isInitialized();
         if (!isInit || !API) {
             console.warn(`Unable to update progress: service not initialized`);
@@ -288,7 +284,7 @@ const $b3d1e3300d945f09$export$6ed414b8d8bead88 = {
         // until we have things hooked up to exit buttons/nav, set exit to 'suspend' as part of start() so that status persists whether the user finishes or exits
         $b3d1e3300d945f09$export$6ed414b8d8bead88.setValue("cmi.exit", "suspend");
         $b3d1e3300d945f09$export$6ed414b8d8bead88.commit();
-        console.log("runtime started");
+        console.info("runtime started");
         return [
             false
         ];
