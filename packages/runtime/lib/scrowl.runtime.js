@@ -42,14 +42,6 @@ const $29add62a37af587e$export$6ed414b8d8bead88 = {
         },
         end: undefined,
         convert: (total)=>{
-            // @ts-ignore
-            function ZeroPad(val, pad) {
-                let res = new String(val);
-                const len = res.length;
-                if (len > pad) return res.substr(0, pad);
-                for(let i = len; i < pad; i++)res = "0" + res;
-                return res;
-            }
             let totalMs = total % 1000;
             let totalS = (total - totalMs) / 1000 % 60;
             let totalM = (total - totalMs - totalS * 1000) / 60000 % 60;
@@ -64,18 +56,12 @@ const $29add62a37af587e$export$6ed414b8d8bead88 = {
                 totalS = Math.floor(totalS);
                 totalMs = total - totalH * 3600000 - totalM * 60000 - totalS * 1000;
             }
-            // should eventually check SCORM version and format time accordingly
-            let timespan = "PT" + totalH + // ZeroPad(totalH, 4) +
-            "H" + totalM + // ZeroPad(totalM, 2) +
-            "M" + totalS + // ZeroPad(totalS, 2) +
-            "S";
+            let timespan = "PT" + totalH + "H" + totalM + "M" + totalS + "S";
             if (totalH > 9999) timespan = "9999:99:99";
             return timespan;
         }
     },
-    // @ts-ignore
     API: null,
-    //@ts-ignore
     getError: (printError)=>{
         printError = printError === undefined || printError === null ? true : printError;
         const [isInit, API] = $29add62a37af587e$export$6ed414b8d8bead88.isInitialized();
@@ -117,7 +103,6 @@ const $29add62a37af587e$export$6ed414b8d8bead88 = {
         return $29add62a37af587e$export$6ed414b8d8bead88.commit();
     },
     isInitialized: ()=>{
-        console.log("API.Initialize()");
         $29add62a37af587e$export$6ed414b8d8bead88.init = false;
         if (!$29add62a37af587e$export$6ed414b8d8bead88.API) {
             console.error("MISSING_SCORM_API - INIT");
@@ -140,7 +125,6 @@ const $29add62a37af587e$export$6ed414b8d8bead88 = {
             $29add62a37af587e$export$6ed414b8d8bead88.API
         ];
     },
-    // { m: 1, l: 1, s?: 3 }
     updateLocation: (location, slideId)=>{
         console.log(`API.UpdateLocation`);
         console.log(location);
@@ -171,7 +155,6 @@ const $29add62a37af587e$export$6ed414b8d8bead88 = {
                 {}
             ];
         }
-        // {m:1, l:1, s?:3} || {} || null
         try {
             const [error, location] = $29add62a37af587e$export$6ed414b8d8bead88.getValue("cmi.location");
             if (error || !location) return [
@@ -243,9 +226,7 @@ const $29add62a37af587e$export$6ed414b8d8bead88 = {
         ];
     },
     start: (api)=>{
-        console.log(`API.Start`);
-        console.log("STARTING AFTER RESTRUCTURE 2004");
-        // @ts-ignore
+        console.log(`API.Start 2004v3`);
         $29add62a37af587e$export$6ed414b8d8bead88.API = api;
         $29add62a37af587e$export$6ed414b8d8bead88._time.startTime = new Date();
         $29add62a37af587e$export$6ed414b8d8bead88.API?.Initialize("");
@@ -381,7 +362,6 @@ const $bc9227963e5f4dff$export$6ed414b8d8bead88 = {
             return timespan;
         }
     },
-    // @ts-ignore
     API: null,
     getError: (printError)=>{
         printError = printError === undefined || printError === null ? true : printError;
@@ -424,7 +404,6 @@ const $bc9227963e5f4dff$export$6ed414b8d8bead88 = {
         return $bc9227963e5f4dff$export$6ed414b8d8bead88.commit();
     },
     isInitialized: ()=>{
-        // console.log('API.Initialize()');
         $bc9227963e5f4dff$export$6ed414b8d8bead88.init = false;
         if (!$bc9227963e5f4dff$export$6ed414b8d8bead88.API) {
             console.error("MISSING_SCORM_API - INIT");
@@ -478,7 +457,6 @@ const $bc9227963e5f4dff$export$6ed414b8d8bead88 = {
                 {}
             ];
         }
-        // {m:1, l:1, s?:3} || {} || null
         try {
             const [error, location] = $bc9227963e5f4dff$export$6ed414b8d8bead88.getValue("cmi.core.lesson_location");
             if (error || !location) return [
@@ -507,7 +485,6 @@ const $bc9227963e5f4dff$export$6ed414b8d8bead88 = {
                 {}
             ];
         }
-        // TODO: update to use suspend data
         try {
             const [error, progress] = $bc9227963e5f4dff$export$6ed414b8d8bead88.getValue("cmi.suspend_data");
             if (error || !progress) return [
@@ -551,10 +528,8 @@ const $bc9227963e5f4dff$export$6ed414b8d8bead88 = {
         ];
     },
     start: (api)=>{
-        console.log(`API.Start`);
-        console.log("STARTING AFTER RESTRUCTURE 1.2");
+        console.log(`API.Start 1.2`);
         $bc9227963e5f4dff$export$6ed414b8d8bead88._time.startTime = new Date();
-        // @ts-ignore
         $bc9227963e5f4dff$export$6ed414b8d8bead88.API = api;
         $bc9227963e5f4dff$export$6ed414b8d8bead88.API?.LMSInitialize("");
         const [isInit, API] = $bc9227963e5f4dff$export$6ed414b8d8bead88.isInitialized();
@@ -616,7 +591,6 @@ const $bc9227963e5f4dff$export$6ed414b8d8bead88 = {
         }
         if (val !== undefined) {
             if (API.LMSSetValue(elem, val) === "false") $bc9227963e5f4dff$export$6ed414b8d8bead88.getError(true);
-        // return [true, service.getError(true)];
         } else console.warn(`Unable to set value for ${elem}: value undefined`);
         return [
             false
@@ -652,14 +626,13 @@ var $bc9227963e5f4dff$export$2e2bcd8739ae039 = {
 
 const $b3d1e3300d945f09$export$6ed414b8d8bead88 = {
     API: null,
-    version: null,
+    version: "1.2",
     _scanApi: (win, v)=>{
         let retries = 0;
         // Check to see if the window (win) contains the API
         // if the window (win) does not contain the API and
         // the window (win) has a parent window and the parent window
         // is not the same as the window (win)
-        // @ts-ignore
         while(win[v] == null && win.parent != null && win.parent != win){
             // increment the number of findAPITries
             retries++;
@@ -673,9 +646,9 @@ const $b3d1e3300d945f09$export$6ed414b8d8bead88 = {
             // then search for the API again
             win = win.parent;
         }
-        // @ts-ignore
         return win[v];
     },
+    // @ts-ignore
     start: (apiPreference)=>{
         let API;
         switch(apiPreference){
@@ -698,7 +671,7 @@ const $b3d1e3300d945f09$export$6ed414b8d8bead88 = {
             ];
         }
         $b3d1e3300d945f09$export$6ed414b8d8bead88.API = API;
-        console.log("-----runtime API");
+        // @ts-ignore
         $b3d1e3300d945f09$export$6ed414b8d8bead88.start(API);
         return [
             true

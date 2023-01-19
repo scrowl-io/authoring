@@ -77,7 +77,6 @@ export const service: RUNTIME_SERVICE = {
       return timespan;
     },
   },
-  // @ts-ignore
   API: null,
   getError: (printError) => {
     printError =
@@ -129,7 +128,6 @@ export const service: RUNTIME_SERVICE = {
     return service.commit();
   },
   isInitialized: () => {
-    // console.log('API.Initialize()');
     service.init = false;
 
     if (!service.API) {
@@ -175,7 +173,6 @@ export const service: RUNTIME_SERVICE = {
       console.warn(`Unable to get location: service not initialized`);
       return [true, {}];
     }
-    // {m:1, l:1, s?:3} || {} || null
     try {
       const [error, location] = service.getValue('cmi.core.lesson_location');
 
@@ -199,7 +196,6 @@ export const service: RUNTIME_SERVICE = {
       return [true, {}];
     }
 
-    // TODO: update to use suspend data
     try {
       const [error, progress] = service.getValue('cmi.suspend_data');
 
@@ -247,11 +243,9 @@ export const service: RUNTIME_SERVICE = {
     return [false];
   },
   start: (api) => {
-    console.log(`API.Start`);
-    console.log('STARTING AFTER RESTRUCTURE 1.2');
+    console.log(`API.Start 1.2`);
     service._time.startTime = new Date();
 
-    // @ts-ignore
     service.API = api;
 
     service.API?.LMSInitialize('');
@@ -333,7 +327,6 @@ export const service: RUNTIME_SERVICE = {
     if (val !== undefined) {
       if (API.LMSSetValue(elem, val) === 'false') {
         service.getError(true);
-        // return [true, service.getError(true)];
       }
     } else {
       console.warn(`Unable to set value for ${elem}: value undefined`);

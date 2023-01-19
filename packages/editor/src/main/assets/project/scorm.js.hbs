@@ -9,6 +9,7 @@ class App extends React.Component {
   }
   render() {
     const project = {{{data.project}}};
+    const scorm = {{{data.scorm}}}
     const templateList = {
       {{#each data.templates as | temp |}}
       '{{temp.component}}': {{temp.component}},
@@ -20,6 +21,7 @@ class App extends React.Component {
       {
         project,
         templateList,
+        scorm
       },
       null
     );

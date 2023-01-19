@@ -205,6 +205,7 @@ export const createScormEntry = ({ scorm, meta, ...project}: ProjectData, source
       // stringify the scorm data to make available to handlebar
       project: JSON.stringify(project),
       templates,
+      scorm: JSON.stringify(scorm),
     };
 
     const renderEntryFile = (src, dest) => {

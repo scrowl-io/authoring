@@ -67,9 +67,21 @@ export type ProjectData = {
   resources?: Array<ProjectResource>;
 };
 
+export type ScormData = {
+  authors?: string;
+  description?: string;
+  identifier?: string;
+  name?: string;
+  optimizeMedia?: string;
+  organization?: string;
+  outputFormat?: string;
+  reportStatus?: string;
+};
+
 export interface PlayerRootCommons {
   project: ProjectData;
   templateList: PlayerTemplateList;
+  scorm: ScormData;
 }
 
 export type PlayerRootProps = PlayerRootCommons &

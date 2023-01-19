@@ -2,20 +2,20 @@
   SCORM API REF
   https://scorm.com/scorm-explained/technical-scorm/run-time/run-time-reference/
 */
-// import { RUNTIME_SERVICE } from "./runtime.types";
+import { RUNTIME_SERVICE_WRAPPER } from './runtime.types';
 import { service as service2004 } from '../src/versions/runtimeScorm2004';
 import { service as service12 } from '../src/versions/runtimeScorm12';
 
-export const service = {
+export const service: RUNTIME_SERVICE_WRAPPER = {
   API: null,
-  version: null,
+  version: '1.2',
   _scanApi: (win, v) => {
     let retries = 0;
     // Check to see if the window (win) contains the API
     // if the window (win) does not contain the API and
     // the window (win) has a parent window and the parent window
     // is not the same as the window (win)
-    // @ts-ignore
+
     while (win[v] == null && win.parent != null && win.parent != win) {
       // increment the number of findAPITries
       retries++;
@@ -31,9 +31,10 @@ export const service = {
       // then search for the API again
       win = win.parent;
     }
-    // @ts-ignore
+
     return win[v];
   },
+  // @ts-ignore
   start: (apiPreference) => {
     let API;
 
@@ -58,8 +59,9 @@ export const service = {
 
     service.API = API;
 
-    console.log('-----runtime API');
+    // @ts-ignore
     service.start(API);
+
     return [true];
   },
 };

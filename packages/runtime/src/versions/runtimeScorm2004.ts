@@ -19,22 +19,6 @@ export const service: RUNTIME_SERVICE = {
     },
     end: undefined,
     convert: (total) => {
-      // @ts-ignore
-      function ZeroPad(val: number, pad: number) {
-        let res = new String(val);
-        const len = res.length;
-
-        if (len > pad) {
-          return res.substr(0, pad);
-        }
-
-        for (let i = len; i < pad; i++) {
-          res = '0' + res;
-        }
-
-        return res;
-      }
-
       let totalMs = total % 1000;
       let totalS = ((total - totalMs) / 1000) % 60;
       let totalM = ((total - totalMs - totalS * 1000) / 60000) % 60;
@@ -59,18 +43,7 @@ export const service: RUNTIME_SERVICE = {
         totalMs = total - totalH * 3600000 - totalM * 60000 - totalS * 1000;
       }
 
-      // should eventually check SCORM version and format time accordingly
-      let timespan =
-        'PT' +
-        totalH +
-        // ZeroPad(totalH, 4) +
-        'H' +
-        totalM +
-        // ZeroPad(totalM, 2) +
-        'M' +
-        totalS +
-        // ZeroPad(totalS, 2) +
-        'S';
+      let timespan = 'PT' + totalH + 'H' + totalM + 'M' + totalS + 'S';
 
       if (totalH > 9999) {
         timespan = '9999:99:99';
@@ -79,9 +52,7 @@ export const service: RUNTIME_SERVICE = {
       return timespan;
     },
   },
-  // @ts-ignore
   API: null,
-  //@ts-ignore
   getError: (printError) => {
     printError =
       printError === undefined || printError === null ? true : printError;
@@ -132,7 +103,6 @@ export const service: RUNTIME_SERVICE = {
     return service.commit();
   },
   isInitialized: () => {
-    console.log('API.Initialize()');
     service.init = false;
 
     if (!service.API) {
@@ -149,7 +119,6 @@ export const service: RUNTIME_SERVICE = {
     service.init = true;
     return [service.init, service.API];
   },
-  // { m: 1, l: 1, s?: 3 }
   updateLocation: (location, slideId) => {
     console.log(`API.UpdateLocation`);
     console.log(location);
@@ -178,7 +147,6 @@ export const service: RUNTIME_SERVICE = {
       console.warn(`Unable to get location: service not initialized`);
       return [true, {}];
     }
-    // {m:1, l:1, s?:3} || {} || null
     try {
       const [error, location] = service.getValue('cmi.location');
 
@@ -250,9 +218,8 @@ export const service: RUNTIME_SERVICE = {
     return [false];
   },
   start: (api) => {
-    console.log(`API.Start`);
-    console.log('STARTING AFTER RESTRUCTURE 2004');
-    // @ts-ignore
+    console.log(`API.Start 2004v3`);
+
     service.API = api;
     service._time.startTime = new Date();
     service.API?.Initialize('');

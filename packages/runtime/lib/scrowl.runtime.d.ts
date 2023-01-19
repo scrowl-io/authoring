@@ -58,8 +58,14 @@ export type RUNTIME_SERVICE_RESULT = {
     message?: string;
     data?: string | GENERIC_DATA;
 };
+export type RUNTIME_WRAPPER = {
+    version: '1.2' | '2004v4' | '2004v3' | null;
+    API: SCORM_API | null;
+    _scanApi: (win: Window, v: string) => SCORM_API;
+    start: (apiPreference: '1.2' | '2004v4' | '2004v3' | null) => [error: boolean];
+};
 export type RUNTIME_SERVICE = {
-    version: '1.2' | '2004v4' | '2004v3';
+    version: '1.2' | '2004v4' | '2004v3' | null;
     API?: SCORM_API | null;
     init: boolean;
     finished: boolean;
@@ -72,7 +78,7 @@ export type RUNTIME_SERVICE = {
     commit: () => [error: boolean];
     exit: () => [error: boolean];
     isInitialized: () => [error: true, API: SCORM_API] | [error: false, API: false];
-    start: (test?: string) => [error: boolean];
+    start: (api: any) => [error: boolean];
     updateLocation: (location: any, slideId: string) => [error: boolean];
     updateProgress: (progressPercentage: number) => [error: boolean];
     isAvailable?: () => RUNTIME_SERVICE_API_RESULT;
@@ -86,11 +92,7 @@ export type RUNTIME_SERVICE = {
     updateStatus?: (status: SCORM_STATUS_LESSON) => RUNTIME_SERVICE_RESULT;
     finish: () => [error: boolean];
 };
-export const service: {
-    API: null;
-    version: null;
-    _scanApi: (win: any, v: any) => any;
-    start: (apiPreference: any) => boolean[];
-};
+export type RUNTIME_SERVICE_WRAPPER = Partial<RUNTIME_SERVICE> & RUNTIME_WRAPPER;
+export const service: RUNTIME_SERVICE_WRAPPER;
 
 //# sourceMappingURL=scrowl.runtime.d.ts.map

@@ -11,11 +11,25 @@ import Config from './config';
 import { Error } from '../components';
 import { Pages } from '../services';
 
-export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
+export const Root = ({
+  project,
+  templateList,
+  scorm,
+  ...props
+}: PlayerRootProps) => {
   const Scrowl = window['Scrowl'];
+  let apiPreference;
+  switch (scorm.outputFormat) {
+    case '2004 3rd Edition':
+      apiPreference = '2004v3';
+      break;
+    case '1.2':
+    default:
+      apiPreference = '1.2';
+  }
 
   if (Scrowl.runtime) {
-    const [isStarted] = Scrowl.runtime.start('2004v3');
+    const [isStarted] = Scrowl.runtime.start(apiPreference);
 
     if (!isStarted) {
       console.error('unable to start runtime');
