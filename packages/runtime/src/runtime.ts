@@ -180,9 +180,8 @@ export const service: RUNTIME_SERVICE = {
   },
   // { m: 1, l: 1, s?: 3 }
   updateLocation: (location, slideId) => {
-    console.log(`API.UpdateLocation`);
-    console.log(location);
-
+    console.info(`API.UpdateLocation`);
+    console.info(location);
     const [isInit, API] = service.isInitialized();
 
     if (!isInit || !API) {
@@ -245,7 +244,7 @@ export const service: RUNTIME_SERVICE = {
     }
   },
   updateProgress: (progressPercentage) => {
-    console.log(`API.UpdateProgress`);
+    console.info(`API.UpdateProgress`);
 
     const [isInit, API] = service.isInitialized();
 
@@ -327,7 +326,7 @@ export const service: RUNTIME_SERVICE = {
     service.setValue('cmi.exit', 'suspend');
     service.commit();
 
-    console.log('runtime started');
+    console.info('runtime started');
 
     return [false];
   },
