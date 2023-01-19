@@ -39,7 +39,7 @@ const PublishFormElement = (
   };
 
   const handleChange = (data) => {
-    validateForm(data);
+    setPublishErrors({ ...publishErrors, name: '' });
 
     if (!data) {
       setRollbackData(formData);
@@ -49,13 +49,10 @@ const PublishFormElement = (
         ...data,
       });
     }
-    // shouldn't need to do this  on every input change, but setting scorm on handleSubmit isn't working
-    Projects.setScorm(formData);
   };
 
   const handleRollback = (prop: string) => {
     const update = {};
-
     update[prop] = rollbackData[prop];
     setFormData({
       ...formData,
@@ -65,8 +62,7 @@ const PublishFormElement = (
 
   const handleSubmit = (ev: React.SyntheticEvent) => {
     Elem.stopEvent(ev);
-    Projects.setScorm(formData);
-    onSubmit();
+    onSubmit(formData);
   };
 
   useEffect(() => {
@@ -76,6 +72,26 @@ const PublishFormElement = (
       setRollbackData(publishData);
     }
   }, [isOpen, publishData]);
+
+  useEffect(() => {
+    const handleControls = (ev: KeyboardEvent) => {
+      switch (ev.code) {
+        case 'Escape':
+          onClose();
+          break;
+      }
+    };
+
+    if (isOpen) {
+      window.addEventListener('keydown', handleControls);
+    } else {
+      window.removeEventListener('keydown', handleControls);
+    }
+
+    return () => {
+      window.removeEventListener('keydown', handleControls);
+    };
+  }, [isOpen]);
 
   return (
     <div ref={ref}>
