@@ -104,7 +104,6 @@ export const config: stateManager.StateConfig = {
     },
     setMeta: (state, action) => {
       updateObj(state.data.meta, action.payload);
-      state.data.scorm.name = state.data.meta.name.slice();
       state.isDirty = true;
       state.isUncommitted = true;
     },
