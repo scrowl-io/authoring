@@ -337,8 +337,13 @@ export const upload = (ev: rq.RequestEvent, req: UploadReq) => {
 
         let dest: string;
         let destWorking: string;
-        const ext = fs.getExt(res.data.filePath).replace('.', '');
-        const name = fs.getBasename(res.data.filePath, ext).replace('.', '');
+        const ext = fs.getExt(res.data.filePath).replace('.', '').toLowerCase();
+
+        const name = fs
+          .getBasename(res.data.filePath, ext)
+          .replace('.', '')
+          .replace(/ /g, '_');
+
         const type = fs.assetTypeByExt(ext);
         const infoRes = getProjectInfo(req.meta);
 
@@ -347,6 +352,7 @@ export const upload = (ev: rq.RequestEvent, req: UploadReq) => {
           uploadComplete(infoRes);
           return;
         }
+
         switch (type) {
           case 'image':
             dest =
@@ -431,6 +437,13 @@ export const upload = (ev: rq.RequestEvent, req: UploadReq) => {
                 }
               );
             });
+            break;
+          case undefined:
+            const undefinedError = {
+              error: true,
+              message: 'Unable to upload file: malformed extension',
+            };
+            uploadComplete(undefinedError);
             break;
           default:
             dest =

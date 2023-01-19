@@ -136,6 +136,7 @@ export const AssetDrawerElement = (
           setCopyProgress(initialCopyProgress);
           sys.messageDialog({
             message: res.message,
+            detail: res.data.trace.message,
           });
           return;
         }
