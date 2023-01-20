@@ -1,6 +1,6 @@
 {
   "name": "@scrowl/template-two-column",
-  "version": "1.0.88",
+  "version": "1.0.89",
   "meta": {
     "label": "Two Column",
     "component": "TwoColumn",
@@ -69,7 +69,7 @@
     "@parcel/transformer-sass": "2.7.0",
     "@parcel/transformer-typescript-types": "2.7.0",
     "@parcel/validator-typescript": "2.7.0",
-    "@scrowl/config": "^0.0.89",
+    "@scrowl/config": "^0.0.90",
     "@types/react": "^18.0.21",
     "@types/react-dom": "^18.0.6",
     "eslint": "^8.25.0",
@@ -86,8 +86,8 @@
     "webpack-merge": "^5.8.0"
   },
   "dependencies": {
-    "@scrowl/template-core": "^1.0.88",
-    "@scrowl/ui": "^0.0.29",
+    "@scrowl/template-core": "^1.0.89",
+    "@scrowl/ui": "^0.0.30",
     "react": "^18.2.0"
   }
 }
