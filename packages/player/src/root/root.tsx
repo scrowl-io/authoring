@@ -158,20 +158,14 @@ export const Root = ({
     const handleSlideStart = (ev) => {
       // @ts-ignore
       const sceneEvent = ev.detail;
-
-      // console.log('slide start', sceneEvent);
     };
     const handleSlideEnd = (ev) => {
       // @ts-ignore
       const sceneEvent = ev.detail;
-
-      // console.log('slide end', sceneEvent);
     };
     const handleSlideLeave = (ev) => {
       // @ts-ignore
       const sceneEvent = ev.detail;
-
-      // console.log('slide leave', sceneEvent);
     };
 
     document.addEventListener('slide.enter', handleSlideEnter);
