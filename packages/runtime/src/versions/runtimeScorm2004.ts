@@ -120,8 +120,8 @@ export const service: RUNTIME_SERVICE = {
     return [service.init, service.API];
   },
   updateLocation: (location, slideId) => {
-    console.log(`API.UpdateLocation`);
-    console.log(location);
+    console.debug(`API.UpdateLocation`);
+    console.debug(location);
 
     const [isInit, API] = service.isInitialized();
 
@@ -184,7 +184,7 @@ export const service: RUNTIME_SERVICE = {
     }
   },
   updateProgress: (progressPercentage) => {
-    console.log(`API.UpdateProgress`);
+    console.debug(`API.UpdateProgress`);
 
     const [isInit, API] = service.isInitialized();
 
@@ -218,7 +218,7 @@ export const service: RUNTIME_SERVICE = {
     return [false];
   },
   start: (api) => {
-    console.log(`API.Start 2004v3`);
+    console.debug(`API.Start 2004v3`);
 
     service.API = api;
     service._time.startTime = new Date();
@@ -266,7 +266,7 @@ export const service: RUNTIME_SERVICE = {
     service.setValue('cmi.exit', 'suspend');
     service.commit();
 
-    console.log('runtime started');
+    console.debug('runtime started');
 
     return [false];
   },
@@ -305,7 +305,6 @@ export const service: RUNTIME_SERVICE = {
     if (val !== undefined) {
       if (API.SetValue(elem, val) === 'false') {
         service.getError(true);
-        // return [true, service.getError(true)];
       }
     } else {
       console.warn(`Unable to set value for ${elem}: value undefined`);

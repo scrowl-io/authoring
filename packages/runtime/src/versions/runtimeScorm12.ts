@@ -4,10 +4,6 @@
 */
 import { RUNTIME_SERVICE } from '../runtime.types';
 
-// const hasProp = (obj: {}, prop: string) => {
-//   return Object.prototype.hasOwnProperty.call(obj, prop);
-// };
-
 export const service: RUNTIME_SERVICE = {
   version: '1.2',
   init: false,
@@ -110,7 +106,7 @@ export const service: RUNTIME_SERVICE = {
     };
   },
   commit: () => {
-    console.log(`API.Commit`);
+    console.debug(`API.Commit`);
 
     const [isInit, API] = service.isInitialized();
 
@@ -124,7 +120,7 @@ export const service: RUNTIME_SERVICE = {
     return [false];
   },
   exit: () => {
-    console.log('API.Exit');
+    console.debug('API.Exit');
     return service.commit();
   },
   isInitialized: () => {
@@ -144,10 +140,9 @@ export const service: RUNTIME_SERVICE = {
     service.init = true;
     return [service.init, service.API];
   },
-  // { m: 1, l: 1, s?: 3 }
   updateLocation: (location, slideId) => {
-    console.log(`API.UpdateLocation`);
-    console.log(location);
+    console.debug(`API.UpdateLocation`);
+    console.debug(location);
 
     const [isInit, API] = service.isInitialized();
 
@@ -165,7 +160,7 @@ export const service: RUNTIME_SERVICE = {
     return [false];
   },
   getLocation: () => {
-    console.log(`API.GetLocation`);
+    console.debug(`API.GetLocation`);
 
     const [isInit, API] = service.isInitialized();
 
@@ -187,7 +182,7 @@ export const service: RUNTIME_SERVICE = {
     }
   },
   getProgress: () => {
-    console.log(`API.GetProgress`);
+    console.debug(`API.GetProgress`);
 
     const [isInit, API] = service.isInitialized();
 
@@ -210,7 +205,7 @@ export const service: RUNTIME_SERVICE = {
     }
   },
   updateProgress: (progressPercentage) => {
-    console.log(`API.UpdateProgress`);
+    console.debug(`API.UpdateProgress`);
 
     const [isInit, API] = service.isInitialized();
 
@@ -243,7 +238,7 @@ export const service: RUNTIME_SERVICE = {
     return [false];
   },
   start: (api) => {
-    console.log(`API.Start 1.2`);
+    console.debug(`API.Start 1.2`);
     service._time.startTime = new Date();
 
     service.API = api;
@@ -266,10 +261,7 @@ export const service: RUNTIME_SERVICE = {
 
     if (lessonStatus === 'unknown' || lessonStatus === 'not attempted') {
       service.setValue('cmi.core.lesson_status', 'incomplete');
-      // service.setValue('cmi.success_status', 'unknown');
-      // service.setValue('cmi.suspend_data', '{}');
     } else {
-      // service.setValue('cmi.score.raw', service.getValue('cmi.score.raw')[1]);
       service.setValue(
         'cmi.core.lesson_status',
         service.getValue('cmi.core.lesson_status')[1]
@@ -278,22 +270,18 @@ export const service: RUNTIME_SERVICE = {
         'cmi.progress_measure',
         service.getValue('cmi.suspend_data')[1]
       );
-      // service.setValue(
-      //   'cmi.completion_status',
-      //   service.getValue('cmi.completion_status')[1]
-      // );
     }
 
     // until we have things hooked up to exit buttons/nav, set exit to 'suspend' as part of start() so that status persists whether the user finishes or exits
     service.setValue('cmi.core.exit', 'suspend');
     service.commit();
 
-    console.log('runtime started');
+    console.debug('runtime started');
 
     return [false];
   },
   finish: () => {
-    console.log(`API.Finish`);
+    console.debug(`API.Finish`);
 
     const [isInit, API] = service.isInitialized();
 
@@ -302,20 +290,16 @@ export const service: RUNTIME_SERVICE = {
       return [true];
     }
 
-    // service.setValue('cmi.score.min', 0);
-    // service.setValue('cmi.score.max', 100);
-    // service.setValue('cmi.score.scaled', 1);
     service.setValue('cmi.core.score.raw', 100);
     service.setValue('cmi.core.lesson_status', 'passed');
     service.setValue('cmi.suspend_data', 1);
-    // service.setValue('cmi.completion_status', 'completed');
     service.commit();
     API.LMSFinish('');
 
     return [false];
   },
   setValue: (elem, val) => {
-    console.log(`API.SetValue for ${elem} to ${val}`);
+    console.debug(`API.SetValue for ${elem} to ${val}`);
 
     const [isInit, API] = service.isInitialized();
 
@@ -335,7 +319,7 @@ export const service: RUNTIME_SERVICE = {
     return [false];
   },
   getValue: (elem) => {
-    console.log(`API.GetValue for ${elem}`);
+    console.debug(`API.GetValue for ${elem}`);
 
     const [isInit, API] = service.isInitialized();
 
@@ -345,9 +329,6 @@ export const service: RUNTIME_SERVICE = {
     }
 
     const getRes = API.LMSGetValue(elem);
-
-    console.log('get Res');
-    console.log(getRes);
 
     if (getRes === '') {
       console.error(`API failed to get value for: ${elem}`);
