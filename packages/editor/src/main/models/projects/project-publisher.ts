@@ -227,8 +227,10 @@ export const createScormEntry = (
     );
     const entryJsDest = fs.joinPath(dest, 'index.js');
     const renderData = {
+      // stringify the scorm data to make available to handlebar
       project: JSON.stringify(project),
       templates,
+      scorm: JSON.stringify(scorm),
     };
 
     const renderEntryFile = (src, dest) => {

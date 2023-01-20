@@ -11,11 +11,28 @@ import Config from './config';
 import { Error } from '../components';
 import { Pages } from '../services';
 
-export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
+export const Root = ({
+  project,
+  templateList,
+  scorm,
+  ...props
+}: PlayerRootProps) => {
   const Scrowl = window['Scrowl'];
+  let apiPreference;
+  if (scorm && scorm.outputFormat) {
+    switch (scorm.outputFormat) {
+      case '2004 3rd Edition':
+        apiPreference = '2004v3';
+        break;
+      case '1.2':
+      default:
+        apiPreference = '1.2';
+    }
+  }
+
 
   if (Scrowl.runtime) {
-    const [isStarted] = Scrowl.runtime.start();
+    const [isStarted] = Scrowl.runtime.start(apiPreference);
 
     if (!isStarted) {
       console.error('unable to start runtime');
@@ -52,7 +69,7 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
   if (Scrowl.runtime) {
     const [locationError, location] = Scrowl.runtime.getLocation();
 
-    if (!locationError && location) {
+    if (!locationError && location && location.cur) {
       moduleIdx = location.cur.m;
       lessonIdx = location.cur.l;
       slideId = location.slideId;
@@ -169,6 +186,9 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
   if (moduleIdx !== undefined) {
     targetUrl = `/module-${moduleIdx}--lesson-${lessonIdx}`;
   }
+
+  console.log('----root target URL');
+  console.log(targetUrl);
 
   return (
     <Router>
