@@ -142,7 +142,7 @@ export const Asset = ({
             </button>
           ) : null}
 
-          <input id={inputId} {...inputProps} />
+          <input id={inputId} {...inputProps} disabled />
 
           <button
             style={{ width: '25%', maxWidth: '75px' }}
