@@ -299,13 +299,11 @@ export const upload = (ev: rq.RequestEvent, req: ProjectsReqUpload) => {
 
     const uploadComplete = (result) => {
       resolve(result);
-    }
+    };
 
     const config: OpenDialogOptions = {
       title: 'Import File',
-      properties: [
-        'openFile',
-      ]
+      properties: ['openFile'],
     };
 
     if (req.options.assetTypes) {
@@ -314,7 +312,8 @@ export const upload = (ev: rq.RequestEvent, req: ProjectsReqUpload) => {
       if (!config.filters.length) {
         uploadComplete({
           error: true,
-          message: 'Unabled to select asset to import: asset type not supported.',
+          message:
+            'Unabled to select asset to import: asset type not supported.',
           data: {
             req,
           },
@@ -322,89 +321,212 @@ export const upload = (ev: rq.RequestEvent, req: ProjectsReqUpload) => {
         return;
       }
     } else {
-      config.filters = fs.dialog.getAllowedAssets(['image', 'document'])
+      config.filters = fs.dialog.getAllowedAssets(['image', 'document']);
     }
 
-    fs.dialog.open(ev, config).then((res) => {
-      if (res.error) {
-        uploadComplete(res);
-        return;
-      }
+    fs.dialog
+      .open(ev, config)
+      .then((res) => {
+        if (res.error) {
+          uploadComplete(res);
+          return;
+        }
 
-      if (res.data.canceled) {
-        uploadComplete(res);
-        return;
-      }
+        if (res.data.canceled) {
+          uploadComplete(res);
+          return;
+        }
 
-      let dest: string;
-      let destWorking: string;
-      const ext = fs.getExt(res.data.filePath).replace('.', '');
-      const name = fs.getBasename(res.data.filePath, ext).replace('.', '');
-      const type = fs.assetTypeByExt(ext);
-      const infoRes = getProjectInfo(req.meta);
+        let dest: string;
+        let destWorking: string;
+        const ext = fs.getExt(res.data.filePath).replace('.', '').toLowerCase();
 
-      if (infoRes.error) {
-        log.error('getting project info failed', infoRes);
-        uploadComplete(infoRes);
-        return;
-      }
-      switch (type) {
-        case 'image':
-          dest = (infoRes.data.isNew || infoRes.data.uncommitted) ? fs.joinPath(fs.APP_PATHS.uploads, `${name}.webp`) : fs.joinPath(infoRes.data.folder, 'assets', `${name}.webp`);
-          destWorking = fs.joinPath(fs.APP_PATHS.temp, 'templates', 'assets', `${name}.webp`);
-       
-          rq.send(API.uploadProgress.name, {
-            type: 'start',
-            filename: name,
-            message: 'Optimizing image...',
-            steps: 2,
-            step: 1,
-            stats: {
-              completed: 50,
-              progress: 50,
-              total: 100,
-            }
-          });
+        const name = fs
+          .getBasename(res.data.filePath, ext)
+          .replace('.', '')
+          .replace(/ /g, '_');
 
-          fs.asset.toWebp(res.data.filePath, dest).then((transformRes) => {
-            if (transformRes.error) {
-              log.error('asset conversion failed', transformRes);
-              uploadComplete(transformRes);
-              return;
-            }
+        const type = fs.assetTypeByExt(ext);
+        const infoRes = getProjectInfo(req.meta);
+
+        if (infoRes.error) {
+          log.error('getting project info failed', infoRes);
+          uploadComplete(infoRes);
+          return;
+        }
+
+        switch (type) {
+          case 'image':
+            dest =
+              infoRes.data.isNew || infoRes.data.uncommitted
+                ? fs.joinPath(fs.APP_PATHS.uploads, `${name}.webp`)
+                : fs.joinPath(infoRes.data.folder, 'assets', `${name}.webp`);
+            destWorking = fs.joinPath(
+              fs.APP_PATHS.temp,
+              'templates',
+              'assets',
+              `${name}.webp`
+            );
 
             rq.send(API.uploadProgress.name, {
               type: 'start',
               filename: name,
-              message: 'Adding image...',
+              message: 'Optimizing image...',
               steps: 2,
-              step: 2,
+              step: 1,
               stats: {
-                completed: 0,
-                progress: 0,
-                total: 0,
-              }
+                completed: 50,
+                progress: 50,
+                total: 100,
+              },
             });
 
-            const sendProgressUpdateImage = (completed, progress, total) => {
+            fs.asset.toWebp(res.data.filePath, dest).then((transformRes) => {
+              if (transformRes.error) {
+                log.error('asset conversion failed', transformRes);
+                uploadComplete(transformRes);
+                return;
+              }
+
               rq.send(API.uploadProgress.name, {
-                type: 'update',
+                type: 'start',
                 filename: name,
                 message: 'Adding image...',
                 steps: 2,
                 step: 2,
                 stats: {
+                  completed: 0,
+                  progress: 0,
+                  total: 0,
+                },
+              });
+
+              const sendProgressUpdateImage = (completed, progress, total) => {
+                rq.send(API.uploadProgress.name, {
+                  type: 'update',
+                  filename: name,
+                  message: 'Adding image...',
+                  steps: 2,
+                  step: 2,
+                  stats: {
+                    completed,
+                    progress,
+                    total,
+                  },
+                });
+              };
+
+              fs.progressWrite(dest, destWorking, sendProgressUpdateImage).then(
+                (copyRes) => {
+                  if (copyRes.error) {
+                    log.error('asset copied failed', copyRes);
+                    uploadComplete(copyRes);
+                    return;
+                  }
+
+                  uploadComplete({
+                    error: false,
+                    data: {
+                      title: name,
+                      filename: `./assets/${name}.webp`,
+                      type,
+                      ext: 'webp',
+                      size: transformRes.data.size,
+                      sourceExt: ext,
+                      sourceFilename: `${name}.${ext}`,
+                    },
+                  });
+                }
+              );
+            });
+            break;
+          case undefined:
+            const undefinedError = {
+              error: true,
+              message: 'Unable to upload file: malformed extension',
+            };
+            uploadComplete(undefinedError);
+            break;
+          default:
+            dest =
+              infoRes.data.isNew || infoRes.data.uncommitted
+                ? fs.joinPath(fs.APP_PATHS.uploads, `${name}.${ext}`)
+                : fs.joinPath(infoRes.data.folder, 'assets', `${name}.${ext}`);
+            destWorking = fs.joinPath(
+              fs.APP_PATHS.temp,
+              'templates',
+              'assets',
+              `${name}.${ext}`
+            );
+
+            rq.send(API.uploadProgress.name, {
+              type: 'start',
+              filename: name,
+              message: `Adding ${type}...`,
+              steps: 1,
+              step: 1,
+              stats: {
+                completed: 0,
+                progress: 0,
+                total: 0,
+              },
+            });
+
+            const sendProgressUpdate = (completed, progress, total) => {
+              rq.send(API.uploadProgress.name, {
+                type: 'update',
+                filename: name,
+                message: `Adding ${type}...`,
+                steps: 1,
+                step: 1,
+                stats: {
                   completed,
                   progress,
                   total,
+                },
+              });
+            };
+            const copyPaths = [
+              `${res.data.filePath} to ${dest}`,
+              `${res.data.filePath} to ${destWorking}`,
+            ];
+            const copyPromises = [
+              fs.copy(res.data.filePath, dest),
+              fs.progressWrite(
+                res.data.filePath,
+                destWorking,
+                sendProgressUpdate
+              ),
+            ];
+
+            Promise.allSettled(copyPromises).then((copyAllRes) => {
+              let isError = false;
+              let errorRes;
+
+              copyAllRes.forEach((copyRes, idx) => {
+                if (copyRes.status === 'rejected') {
+                  log.error(`failed to copy: ${copyPaths[idx]}`);
+                  isError = true;
+                  return;
+                }
+
+                if (copyRes.value.error) {
+                  isError = true;
+                  errorRes = copyRes.value;
+                  log.error(`failed to copy: ${copyPaths[idx]}`);
+                  return;
                 }
               });
-            }
 
-            fs.progressWrite(dest, destWorking, sendProgressUpdateImage).then((copyRes) => {
-              if (copyRes.error) {
-                log.error('asset copied failed', copyRes);
-                uploadComplete(copyRes);
+              if (isError) {
+                uploadComplete(errorRes);
+                return;
+              }
+
+              const statsRes = fs.fileStatsSync(res.data.filePath);
+
+              if (statsRes.error) {
+                uploadComplete(statsRes);
                 return;
               }
 
@@ -412,113 +534,27 @@ export const upload = (ev: rq.RequestEvent, req: ProjectsReqUpload) => {
                 error: false,
                 data: {
                   title: name,
-                  filename: `./assets/${name}.webp`,
+                  filename: `./assets/${name}.${ext}`,
                   type,
-                  ext: 'webp',
-                  size: transformRes.data.size,
+                  ext,
+                  size: statsRes.data.stats.size,
                   sourceExt: ext,
                   sourceFilename: `${name}.${ext}`,
                 },
               });
             });
-          });
-          break;
-        default:
-          dest = (infoRes.data.isNew || infoRes.data.uncommitted) ? fs.joinPath(fs.APP_PATHS.uploads, `${name}.${ext}`) : fs.joinPath(infoRes.data.folder, 'assets', `${name}.${ext}`);
-          destWorking = fs.joinPath(fs.APP_PATHS.temp, 'templates', 'assets', `${name}.${ext}`);
-          
-          rq.send(API.uploadProgress.name, {
-            type: 'start',
-            filename: name,
-            message: `Adding ${type}...`,
-            steps: 1,
-            step: 1,
-            stats: {
-              completed: 0,
-              progress: 0,
-              total: 0,
-            }
-          });
-
-          const sendProgressUpdate = (completed, progress, total) => {
-            rq.send(API.uploadProgress.name, {
-              type: 'update',
-              filename: name,
-              message: `Adding ${type}...`,
-              steps: 1,
-              step: 1,
-              stats: {
-                completed,
-                progress,
-                total,
-              }
-            });
-          }
-          const copyPaths = [
-            `${res.data.filePath} to ${dest}`,
-            `${res.data.filePath} to ${destWorking}`,
-          ];
-          const copyPromises = [
-            fs.copy(res.data.filePath, dest),
-            fs.progressWrite(res.data.filePath, destWorking, sendProgressUpdate),
-          ];
-
-          Promise.allSettled(copyPromises).then((copyAllRes) => {
-            let isError = false;
-            let errorRes;
-
-            copyAllRes.forEach((copyRes, idx) => {
-              if (copyRes.status === 'rejected') {
-                log.error(`failed to copy: ${copyPaths[idx]}`);
-                isError = true;
-                return;
-              }
-    
-              if (copyRes.value.error) {
-                isError = true;
-                errorRes = copyRes.value;
-                log.error(`failed to copy: ${copyPaths[idx]}`);
-                return;
-              }
-            });
-
-            if (isError) {
-              uploadComplete(errorRes);
-              return;
-            }
-
-            const statsRes = fs.fileStatsSync(res.data.filePath);
-
-            if (statsRes.error) {
-              uploadComplete(statsRes);
-              return;
-            }
-
-            uploadComplete({
-              error: false,
-              data: {
-                title: name,
-                filename: `./assets/${name}.${ext}`,
-                type,
-                ext,
-                size: statsRes.data.stats.size,
-                sourceExt: ext,
-                sourceFilename: `${name}.${ext}`,
-              },
-            })
-          });
-          break;
-      }
-
-    }).catch((e) => {
-      uploadComplete({
-        error: true,
-        message: 'Failed to import file: unexpected error',
-        data: {
-          trace: e,
-        },
+            break;
+        }
+      })
+      .catch((e) => {
+        uploadComplete({
+          error: true,
+          message: 'Failed to import file: unexpected error',
+          data: {
+            trace: e,
+          },
+        });
       });
-    });
   });
 };
 
@@ -774,16 +810,15 @@ export const publish = (ev: rq.RequestEvent, data: ProjectData) => {
     }
 
     const info = infoRes.data.info as ProjectFile;
-    const defaultPath = info.lastPublishedFilename
-      ? info.lastPublishedFilename
-      : data.scorm.name
+
+    const defaultPath = data.scorm.name
       ? fs.joinPath(
           fs.APP_PATHS.downloads,
-          utils.str.toScormCase(data.scorm.name)
+          utils.str.toSnakeCase(data.scorm.name)
         )
       : fs.joinPath(
           fs.APP_PATHS.downloads,
-          utils.str.toScormCase(data.meta.name)
+          utils.str.toSnakeCase(data.meta.name)
         );
 
     fs.dialog
@@ -839,11 +874,16 @@ export const publish = (ev: rq.RequestEvent, data: ProjectData) => {
                 return;
               }
 
+              const scormFilePath = utils.str.toScormCase(
+                fs.getBasename(saveRes.data.filePath, `.${extName}`)
+              );
+
               scorm(
                 data,
                 readRes.data.contents,
                 filepath,
-                fs.APP_PATHS.publish
+                fs.APP_PATHS.publish,
+                scormFilePath
               ).then((scormRes) => {
                 if (scormRes.error) {
                   resolve(scormRes);

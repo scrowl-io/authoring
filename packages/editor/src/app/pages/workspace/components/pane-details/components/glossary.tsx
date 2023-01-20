@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { ui } from '@scrowl/ui';
 import * as css from '../_pane-details.scss';
 import { Projects } from '../../../../../models';
@@ -109,6 +109,26 @@ export const Glossary = () => {
 
     setIsOpenGlossaryForm(false);
   };
+
+  useEffect(() => {
+    const handleControls = (ev: KeyboardEvent) => {
+      switch (ev.code) {
+        case 'Escape':
+          setIsOpenGlossaryForm(false);
+          break;
+      }
+    };
+
+    if (isOpenGlossaryForm) {
+      window.addEventListener('keydown', handleControls);
+    } else {
+      window.removeEventListener('keydown', handleControls);
+    }
+
+    return () => {
+      window.removeEventListener('keydown', handleControls);
+    };
+  }, [isOpenGlossaryForm]);
 
   return (
     <>

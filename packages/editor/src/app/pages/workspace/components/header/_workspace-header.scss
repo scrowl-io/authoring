@@ -68,6 +68,7 @@
     padding-bottom: 0;
     border-width: 2px;
     border-color: transparent;
+    max-width: 47vw;
 
     &:hover {
       border-color: $input-border-color;
@@ -93,12 +94,12 @@
   flex-direction: row;
 
   .owlui-btn-ghost {
-    border-color: var(--bs-btn-hover-border-color);
+    border-color: var(--owl-border-color);
     color: var(--owl-color-default);
 
     &:hover,
     &:hover + .dropdown-toggle-split {
-      color: #fff;
+      color: #ffffff;
       text-decoration: none;
       background-color: #006295;
       border-color: #006295;
