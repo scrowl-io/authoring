@@ -19,14 +19,17 @@ export const Root = ({
 }: PlayerRootProps) => {
   const Scrowl = window['Scrowl'];
   let apiPreference;
-  switch (scorm.outputFormat) {
-    case '2004 3rd Edition':
-      apiPreference = '2004v3';
-      break;
-    case '1.2':
-    default:
-      apiPreference = '1.2';
+  if (scorm && scorm.outputFormat) {
+    switch (scorm.outputFormat) {
+      case '2004 3rd Edition':
+        apiPreference = '2004v3';
+        break;
+      case '1.2':
+      default:
+        apiPreference = '1.2';
+    }
   }
+
 
   if (Scrowl.runtime) {
     const [isStarted] = Scrowl.runtime.start(apiPreference);
