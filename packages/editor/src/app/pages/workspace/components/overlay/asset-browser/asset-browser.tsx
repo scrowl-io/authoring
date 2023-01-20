@@ -136,6 +136,7 @@ export const AssetDrawerElement = (
           setCopyProgress(initialCopyProgress);
           sys.messageDialog({
             message: res.message,
+            detail: res.data.trace.message,
           });
           return;
         }
@@ -180,6 +181,26 @@ export const AssetDrawerElement = (
       });
     };
   }, [isCopying]);
+
+  useEffect(() => {
+    const handleControls = (ev: KeyboardEvent) => {
+      switch (ev.code) {
+        case 'Escape':
+          onClose();
+          break;
+      }
+    };
+
+    if (isOpen) {
+      window.addEventListener('keydown', handleControls);
+    } else {
+      window.removeEventListener('keydown', handleControls);
+    }
+
+    return () => {
+      window.removeEventListener('keydown', handleControls);
+    };
+  });
 
   useEffect(() => {
     searchAssetList();

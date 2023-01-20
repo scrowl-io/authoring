@@ -3,6 +3,86 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.0.89 (2023-01-19)
+
+**Note:** Version bump only for package @scrowl/config
+
+
+
+
+
+## 0.0.88 (2023-01-19)
+
+**Note:** Version bump only for package @scrowl/config
+
+
+
+
+
+## 0.0.87 (2023-01-19)
+
+**Note:** Version bump only for package @scrowl/config
+
+
+
+
+
+## 0.0.86 (2023-01-19)
+
+**Note:** Version bump only for package @scrowl/config
+
+
+
+
+
+## 0.0.85 (2023-01-19)
+
+**Note:** Version bump only for package @scrowl/config
+
+
+
+
+
+## 0.0.84 (2023-01-19)
+
+**Note:** Version bump only for package @scrowl/config
+
+
+
+
+
+## 0.0.83 (2023-01-11)
+
+**Note:** Version bump only for package @scrowl/config
+
+
+
+
+
+## 0.0.82 (2023-01-11)
+
+**Note:** Version bump only for package @scrowl/config
+
+
+
+
+
+## 0.0.81 (2023-01-11)
+
+**Note:** Version bump only for package @scrowl/config
+
+
+
+
+
+## 0.0.80 (2023-01-11)
+
+**Note:** Version bump only for package @scrowl/config
+
+
+
+
+
 ## 0.0.79 (2022-12-20)
 
 **Note:** Version bump only for package @scrowl/config

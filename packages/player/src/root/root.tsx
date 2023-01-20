@@ -102,8 +102,6 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
 
       const id = sceneEvent.currentTarget.id;
 
-      console.log('slide enter', sceneEvent);
-
       const shortenedId = id
         .replace('module', 'm')
         .replace('lesson', 'l')
@@ -126,43 +124,31 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
         Scrowl.runtime?.updateLocation(locationObj, id);
       } else {
         if (locationObj.cur.m > previousLocation[1].max.m) {
-          console.log('module condition');
           locationObj.max.m = locationObj.cur.m;
 
           if (locationObj.cur.l < previousLocation[1].max.l) {
-            console.log('module up, lesson down');
             locationObj.max.l = locationObj.cur.l;
           }
         } else if (locationObj.cur.l > previousLocation?.[1].max.l) {
           if (locationObj.cur.m >= previousLocation?.[1].max.m) {
-            console.log('lesson condition');
             locationObj.max.l = locationObj.cur.l;
           }
         }
 
         Scrowl.runtime?.updateLocation(locationObj, id);
       }
-    
-
-
     };
     const handleSlideStart = (ev) => {
       // @ts-ignore
       const sceneEvent = ev.detail;
-
-      // console.log('slide start', sceneEvent);
     };
     const handleSlideEnd = (ev) => {
       // @ts-ignore
       const sceneEvent = ev.detail;
-
-      // console.log('slide end', sceneEvent);
     };
     const handleSlideLeave = (ev) => {
       // @ts-ignore
       const sceneEvent = ev.detail;
-
-      // console.log('slide leave', sceneEvent);
     };
 
     document.addEventListener('slide.enter', handleSlideEnter);
