@@ -77,6 +77,15 @@ export const service: RUNTIME_SERVICE = {
 
     if (printError) {
       console.error(`Error:\n${JSON.stringify(apiError, null, 2)}`);
+      const errorEvent = new CustomEvent('registerScormError', {
+        detail: apiError,
+      });
+      document.dispatchEvent(errorEvent);
+
+      return {
+        error: true,
+        data: apiError,
+      };
     }
 
     return {

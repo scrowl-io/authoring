@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useLayoutEffect } from 'react';
 import {
   MemoryRouter as Router,
   Routes,
@@ -8,7 +8,8 @@ import {
 import './_root.scss';
 import { PlayerRootProps } from './root.types';
 import Config from './config';
-import { Error } from '../components';
+import { Error as ErrorComponent } from '../components';
+import { ErrorModal } from '../components/modal';
 import { Pages } from '../services';
 
 export const Root = ({
@@ -30,7 +31,6 @@ export const Root = ({
     }
   }
 
-
   if (Scrowl.runtime) {
     const [isStarted] = Scrowl.runtime.start(apiPreference);
 
@@ -40,19 +40,19 @@ export const Root = ({
   }
 
   if (!templateList || !Object.keys(templateList).length) {
-    return <Error msg="Templates missing" />;
+    return <ErrorComponent msg="Templates missing" />;
   }
 
   if (!project || !project.slides || !project.slides.length) {
-    return <Error msg="Slides missing" />;
+    return <ErrorComponent msg="Slides missing" />;
   }
 
   if (!project || !project.lessons || !project.lessons.length) {
-    return <Error msg="Lessons missing" />;
+    return <ErrorComponent msg="Lessons missing" />;
   }
 
   if (!project || !project.modules || !project.modules.length) {
-    return <Error msg="Modules missing" />;
+    return <ErrorComponent msg="Modules missing" />;
   }
 
   const slides = project.slides;
@@ -67,7 +67,15 @@ export const Root = ({
   let slideId;
 
   if (Scrowl.runtime) {
-    const [locationError, location] = Scrowl.runtime.getLocation();
+    let locationError;
+    let location;
+    try {
+      console.log('inside try');
+      [locationError, location] = Scrowl.runtime.getLocation();
+    } catch (e) {
+      console.log('inside catch');
+      console.log(e);
+    }
 
     if (!locationError && location && location.cur) {
       moduleIdx = location.cur.m;
@@ -187,13 +195,65 @@ export const Root = ({
     targetUrl = `/module-${moduleIdx}--lesson-${lessonIdx}`;
   }
 
-  console.log('----root target URL');
-  console.log(targetUrl);
+  useLayoutEffect(() => {
+    if (!Scrowl.runtime || Scrowl.runtime.API === null) {
+      const errorObject = {
+        id: '300',
+        message: 'Unable to connect to API',
+        stack:
+          'This course was not able to connect to the SCORM API. Course data will not be saved to the LMS',
+      };
+      const errorEvent = new CustomEvent('APIError', { detail: errorObject });
+      document.dispatchEvent(errorEvent);
+    }
+  }, [project, slides]);
+
+  useEffect(() => {
+    window.addEventListener('error', (event) => {
+      console.log('error fired');
+      console.log(event);
+      const errorEvent = new CustomEvent('registerError', { detail: event });
+      document.dispatchEvent(errorEvent);
+    });
+  }, [slides, project]);
+
+  useLayoutEffect(() => {
+    if (window.navigator.onLine === false) {
+      const errorObject = {
+        id: '700',
+        message: 'No internet connection',
+        stack:
+          'You are not connected to the internet. Course data will not be saved.',
+      };
+      console.log('above is true');
+      const onlineEvent = new CustomEvent('registerOnline', {
+        detail: errorObject,
+      });
+      document.dispatchEvent(onlineEvent);
+      console.log(onlineEvent);
+    }
+  }, [slides, project]);
+
+  const handleTest = () => {
+    const badCode = 'const s;';
+    // eval(badCode);
+    try {
+      eval(badCode);
+    } catch (e) {
+      const errorEvent = new CustomEvent('registerError', {
+        detail: e,
+      });
+      document.dispatchEvent(errorEvent);
+    }
+  };
 
   return (
     <Router>
       <div id="scrowl-player" {...props}>
         <main className="owlui-lesson-wrapper">
+          <button onClick={handleTest}>test</button>
+          {/* @ts-ignore */}
+          <ErrorModal />
           <Routes>
             {pages.map((page, idx) => {
               return (
