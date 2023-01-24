@@ -387,7 +387,13 @@ const $bc9227963e5f4dff$export$6ed414b8d8bead88 = {
             message: errorMsg,
             stack: errorStack
         };
-        if (printError) console.error(`Error:\n${JSON.stringify(apiError, null, 2)}`);
+        if (printError) {
+            console.error(`Error:\n${JSON.stringify(apiError, null, 2)}`);
+            const errorEvent = new CustomEvent("registerScormError", {
+                detail: apiError
+            });
+            document.dispatchEvent(errorEvent);
+        }
         return {
             error: false,
             data: apiError
@@ -551,7 +557,7 @@ const $bc9227963e5f4dff$export$6ed414b8d8bead88 = {
         if (lessonStatus === "unknown" || lessonStatus === "not attempted") $bc9227963e5f4dff$export$6ed414b8d8bead88.setValue("cmi.core.lesson_status", "incomplete");
         else {
             $bc9227963e5f4dff$export$6ed414b8d8bead88.setValue("cmi.core.lesson_status", $bc9227963e5f4dff$export$6ed414b8d8bead88.getValue("cmi.core.lesson_status")[1]);
-            $bc9227963e5f4dff$export$6ed414b8d8bead88.setValue("cmi.progress_measure", $bc9227963e5f4dff$export$6ed414b8d8bead88.getValue("cmi.suspend_data")[1]);
+            $bc9227963e5f4dff$export$6ed414b8d8bead88.setValue("cmi.suspend_data", $bc9227963e5f4dff$export$6ed414b8d8bead88.getValue("cmi.suspend_data")[1]);
         }
         // until we have things hooked up to exit buttons/nav, set exit to 'suspend' as part of start() so that status persists whether the user finishes or exits
         $bc9227963e5f4dff$export$6ed414b8d8bead88.setValue("cmi.core.exit", "suspend");
@@ -606,10 +612,18 @@ const $bc9227963e5f4dff$export$6ed414b8d8bead88 = {
             ];
         }
         const getRes = API.LMSGetValue(elem);
-        if (getRes === "") {
-            console.error(`API failed to get value for: ${elem}`);
-            $bc9227963e5f4dff$export$6ed414b8d8bead88.getError(true);
+        if (getRes === "" || getRes === null || getRes === undefined) {
+            const apiError = {
+                id: "403",
+                message: `Data Model Element Not Initialized`,
+                stack: `The ${elem} field has not been set for this SCO`
+            };
+            const errorEvent = new CustomEvent("registerScormError", {
+                detail: apiError
+            });
+            document.dispatchEvent(errorEvent);
         }
+        if (getRes === "") console.error(`API failed to get value for: ${elem}`);
         return [
             false,
             getRes

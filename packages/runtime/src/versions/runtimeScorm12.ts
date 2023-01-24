@@ -98,6 +98,10 @@ export const service: RUNTIME_SERVICE = {
 
     if (printError) {
       console.error(`Error:\n${JSON.stringify(apiError, null, 2)}`);
+      const errorEvent = new CustomEvent('registerScormError', {
+        detail: apiError,
+      });
+      document.dispatchEvent(errorEvent);
     }
 
     return {
@@ -267,7 +271,7 @@ export const service: RUNTIME_SERVICE = {
         service.getValue('cmi.core.lesson_status')[1]
       );
       service.setValue(
-        'cmi.progress_measure',
+        'cmi.suspend_data',
         service.getValue('cmi.suspend_data')[1]
       );
     }
@@ -330,9 +334,22 @@ export const service: RUNTIME_SERVICE = {
 
     const getRes = API.LMSGetValue(elem);
 
+    if (getRes === '' || getRes === null || getRes === undefined) {
+      const apiError = {
+        id: '403',
+        message: `Data Model Element Not Initialized`,
+        stack: `The ${elem} field has not been set for this SCO`,
+      };
+
+      const errorEvent = new CustomEvent('registerScormError', {
+        detail: apiError,
+      });
+      document.dispatchEvent(errorEvent);
+    }
+
     if (getRes === '') {
       console.error(`API failed to get value for: ${elem}`);
-      service.getError(true);
+      // service.getError(true);
     }
 
     return [false, getRes];
