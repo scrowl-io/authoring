@@ -82,6 +82,8 @@
   "dependencies": {
     "@scrowl/template-core": "^1.0.91",
     "@scrowl/ui": "^0.0.32",
+    "@sentry/browser": "^7.33.0",
+    "@sentry/tracing": "^7.33.0",
     "bootstrap": "^5.2.2",
     "react": "^18.2.0",
     "react-bootstrap": "^2.5.0",

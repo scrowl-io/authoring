@@ -5,6 +5,7 @@ import {
   Route,
   Navigate,
 } from 'react-router-dom';
+import { captureMessage } from '@sentry/browser';
 import './_root.scss';
 import { PlayerRootProps } from './root.types';
 import Config from './config';
@@ -229,24 +230,27 @@ export const Root = ({
     }
   }, [slides, project]);
 
-  // const handleTest = () => {
-  //   const badCode = 'const s;';
-  //   // eval(badCode);
-  //   try {
-  //     eval(badCode);
-  //   } catch (e) {
-  //     const errorEvent = new CustomEvent('playerError', {
-  //       detail: e,
-  //     });
-  //     document.dispatchEvent(errorEvent);
-  //   }
-  // };
+  const handleTest = () => {
+    const badCode = 'const s;';
+    // eval(badCode);
+    try {
+      eval(badCode);
+    } catch (e) {
+      // @ts-ignore
+      captureMessage(e);
+      console.log(e);
+      const errorEvent = new CustomEvent('playerError', {
+        detail: e,
+      });
+      document.dispatchEvent(errorEvent);
+    }
+  };
 
   return (
     <Router>
       <div id="scrowl-player" {...props}>
         <main className="owlui-lesson-wrapper">
-          {/* <button onClick={handleTest}>test</button> */}
+          <button onClick={handleTest}>test</button>
           {/* @ts-ignore */}
           <ErrorModal />
           <Routes>

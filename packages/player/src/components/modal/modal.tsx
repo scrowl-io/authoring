@@ -3,6 +3,7 @@ import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { Modal, ThemeProvider } from 'react-bootstrap';
 import { ui } from '@scrowl/ui';
 // import { translateError } from '../../services/error-message';
+import { captureMessage } from '@sentry/browser';
 
 import * as _css from './_modal.scss';
 import utils, { CssMapProps } from '../../utils';
@@ -74,6 +75,8 @@ export const ErrorModal = () => {
       console.log('inside scorm error handler');
       console.log(ev);
       const errorEvent = ev.detail;
+
+      captureMessage(errorEvent.stack);
 
       setModalErrorId(errorEvent.id);
       setModalError(errorEvent.message);
