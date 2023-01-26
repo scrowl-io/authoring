@@ -77,7 +77,7 @@ export const service: RUNTIME_SERVICE = {
 
     if (printError) {
       console.error(`Error:\n${JSON.stringify(apiError, null, 2)}`);
-      const errorEvent = new CustomEvent('registerScormError', {
+      const errorEvent = new CustomEvent('scormError', {
         detail: apiError,
       });
       document.dispatchEvent(errorEvent);
@@ -252,11 +252,11 @@ export const service: RUNTIME_SERVICE = {
       service.setValue('cmi.success_status', 'unknown');
       service.setValue('cmi.suspend_data', '{}');
     } else {
-      service.setValue(
-        'cmi.score.scaled',
-        service.getValue('cmi.score.scaled')[1]
-      );
-      service.setValue('cmi.score.raw', service.getValue('cmi.score.raw')[1]);
+      // service.setValue(
+      //   'cmi.score.scaled',
+      //   service.getValue('cmi.score.scaled')[1]
+      // );
+      // service.setValue('cmi.score.raw', service.getValue('cmi.score.raw')[1]);
       service.setValue(
         'cmi.success_status',
         service.getValue('cmi.success_status')[1]
@@ -335,7 +335,8 @@ export const service: RUNTIME_SERVICE = {
 
     if (getRes === '') {
       console.error(`API failed to get value for: ${elem}`);
-      service.getError(true);
+      // for now, don't throw an error every time a field doesn't have a value
+      // service.getError(true);
     }
 
     return [false, getRes];

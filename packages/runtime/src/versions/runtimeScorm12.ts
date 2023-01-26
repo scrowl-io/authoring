@@ -98,7 +98,7 @@ export const service: RUNTIME_SERVICE = {
 
     if (printError) {
       console.error(`Error:\n${JSON.stringify(apiError, null, 2)}`);
-      const errorEvent = new CustomEvent('registerScormError', {
+      const errorEvent = new CustomEvent('scormError', {
         detail: apiError,
       });
       document.dispatchEvent(errorEvent);
@@ -334,21 +334,24 @@ export const service: RUNTIME_SERVICE = {
 
     const getRes = API.LMSGetValue(elem);
 
-    if (getRes === '' || getRes === null || getRes === undefined) {
-      const apiError = {
-        id: '403',
-        message: `Data Model Element Not Initialized`,
-        stack: `The ${elem} field has not been set for this SCO`,
-      };
+    // Unlike in SCORM 2004v3, failing to retrieve a value from the LMS does not cause an error: it just returns an empty string and continues. Below has been added to keep 1.2 consistent with 2004, but for now I don't think we should treat this as an error
 
-      const errorEvent = new CustomEvent('registerScormError', {
-        detail: apiError,
-      });
-      document.dispatchEvent(errorEvent);
-    }
+    // if (getRes === '' || getRes === null || getRes === undefined) {
+    //   const apiError = {
+    //     id: '403',
+    //     message: `Data Model Element Not Initialized`,
+    //     stack: `The ${elem} field has not been set for this SCO.`,
+    //   };
+
+    //   const errorEvent = new CustomEvent('scormError', {
+    //     detail: apiError,
+    //   });
+    //   document.dispatchEvent(errorEvent);
+    // }
 
     if (getRes === '') {
       console.error(`API failed to get value for: ${elem}`);
+      // for now, don't throw an error every time a field doesn't have a value
       // service.getError(true);
     }
 

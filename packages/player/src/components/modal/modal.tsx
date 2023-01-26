@@ -2,6 +2,7 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { Modal, ThemeProvider } from 'react-bootstrap';
 import { ui } from '@scrowl/ui';
+// import { translateError } from '../../services/error-message';
 
 import * as _css from './_modal.scss';
 import utils, { CssMapProps } from '../../utils';
@@ -55,19 +56,17 @@ export const ErrorModal = () => {
 
   useEffect(() => {
     const handleErrorCatch = (ev) => {
-      console.log('inside root error handler');
+      console.log('inside app root error handler');
       console.log(ev);
       const errorEvent = ev.detail;
       setModalErrorId('500');
       setModalError(errorEvent.message);
       setModalErrorStack(errorEvent.stack.substring(0, 350));
-      // setModalError(errorEvent.error.message);
-      // setModalErrorStack(errorEvent.error.stack.substring(0, 200));
 
       setShowModal(true);
     };
 
-    document.addEventListener('registerError', handleErrorCatch);
+    document.addEventListener('playerError', handleErrorCatch);
   }, [showModal]);
 
   useEffect(() => {
@@ -83,7 +82,7 @@ export const ErrorModal = () => {
       setShowModal(true);
     };
 
-    document.addEventListener('registerScormError', handleErrorCatchScorm);
+    document.addEventListener('scormError', handleErrorCatchScorm);
   }, [showModal]);
 
   useLayoutEffect(() => {
@@ -94,7 +93,7 @@ export const ErrorModal = () => {
 
       setShowModal(true);
     };
-    document.addEventListener('registerOnline', handleOnline);
+    document.addEventListener('connectionError', handleOnline);
   }, []);
 
   useLayoutEffect(() => {

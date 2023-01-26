@@ -70,10 +70,8 @@ export const Root = ({
     let locationError;
     let location;
     try {
-      console.log('inside try');
       [locationError, location] = Scrowl.runtime.getLocation();
     } catch (e) {
-      console.log('inside catch');
       console.log(e);
     }
 
@@ -201,7 +199,7 @@ export const Root = ({
         id: '300',
         message: 'Unable to connect to API',
         stack:
-          'This course was not able to connect to the SCORM API. Course data will not be saved to the LMS',
+          'This course was not able to connect to the SCORM API. Course data will not be saved to the LMS.',
       };
       const errorEvent = new CustomEvent('APIError', { detail: errorObject });
       document.dispatchEvent(errorEvent);
@@ -210,9 +208,8 @@ export const Root = ({
 
   useEffect(() => {
     window.addEventListener('error', (event) => {
-      console.log('error fired');
-      console.log(event);
-      const errorEvent = new CustomEvent('registerError', { detail: event });
+      console.log('error fired', event);
+      const errorEvent = new CustomEvent('playerError', { detail: event });
       document.dispatchEvent(errorEvent);
     });
   }, [slides, project]);
@@ -225,33 +222,31 @@ export const Root = ({
         stack:
           'You are not connected to the internet. Course data will not be saved.',
       };
-      console.log('above is true');
-      const onlineEvent = new CustomEvent('registerOnline', {
+      const onlineEvent = new CustomEvent('connectionError', {
         detail: errorObject,
       });
       document.dispatchEvent(onlineEvent);
-      console.log(onlineEvent);
     }
   }, [slides, project]);
 
-  const handleTest = () => {
-    const badCode = 'const s;';
-    // eval(badCode);
-    try {
-      eval(badCode);
-    } catch (e) {
-      const errorEvent = new CustomEvent('registerError', {
-        detail: e,
-      });
-      document.dispatchEvent(errorEvent);
-    }
-  };
+  // const handleTest = () => {
+  //   const badCode = 'const s;';
+  //   // eval(badCode);
+  //   try {
+  //     eval(badCode);
+  //   } catch (e) {
+  //     const errorEvent = new CustomEvent('playerError', {
+  //       detail: e,
+  //     });
+  //     document.dispatchEvent(errorEvent);
+  //   }
+  // };
 
   return (
     <Router>
       <div id="scrowl-player" {...props}>
         <main className="owlui-lesson-wrapper">
-          <button onClick={handleTest}>test</button>
+          {/* <button onClick={handleTest}>test</button> */}
           {/* @ts-ignore */}
           <ErrorModal />
           <Routes>
