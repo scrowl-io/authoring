@@ -351,8 +351,7 @@ export const service: RUNTIME_SERVICE = {
 
     if (getRes === '') {
       console.error(`API failed to get value for: ${elem}`);
-      // for now, don't throw an error every time a field doesn't have a value
-      // service.getError(true);
+      service.getError(true);
     }
 
     return [false, getRes];

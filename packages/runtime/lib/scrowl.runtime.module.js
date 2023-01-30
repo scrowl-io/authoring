@@ -303,7 +303,10 @@ const $704b14303ded74fd$export$6ed414b8d8bead88 = {
             ];
         }
         const getRes = API.GetValue(elem);
-        if (getRes === "") console.error(`API failed to get value for: ${elem}`);
+        if (getRes === "") {
+            console.error(`API failed to get value for: ${elem}`);
+            $704b14303ded74fd$export$6ed414b8d8bead88.getError(true);
+        }
         return [
             false,
             getRes
@@ -608,7 +611,10 @@ const $0f0d20ec2fcb698f$export$6ed414b8d8bead88 = {
         //   });
         //   document.dispatchEvent(errorEvent);
         // }
-        if (getRes === "") console.error(`API failed to get value for: ${elem}`);
+        if (getRes === "") {
+            console.error(`API failed to get value for: ${elem}`);
+            $0f0d20ec2fcb698f$export$6ed414b8d8bead88.getError(true);
+        }
         return [
             false,
             getRes

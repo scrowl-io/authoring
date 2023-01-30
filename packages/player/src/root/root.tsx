@@ -1,3 +1,4 @@
+// @ts-ignore
 import React, { useEffect, useLayoutEffect } from 'react';
 import {
   MemoryRouter as Router,
@@ -5,7 +6,6 @@ import {
   Route,
   Navigate,
 } from 'react-router-dom';
-import { captureMessage } from '@sentry/browser';
 import './_root.scss';
 import { PlayerRootProps } from './root.types';
 import Config from './config';
@@ -188,16 +188,16 @@ export const Root = ({
     };
   }, [project]);
 
-  let targetUrl;
+  useEffect(() => {
+    if (Scrowl && Scrowl.runtime) {
+      Scrowl.runtime.getError(true);
+    }
+  }, []);
 
-  if (moduleIdx !== undefined) {
-    targetUrl = `/module-${moduleIdx}--lesson-${lessonIdx}`;
-  }
-
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (!Scrowl.runtime || Scrowl.runtime.API === null) {
       const errorObject = {
-        id: '300',
+        id: '600',
         message: 'Unable to connect to API',
         stack:
           'This course was not able to connect to the SCORM API. Course data will not be saved to the LMS.',
@@ -205,17 +205,6 @@ export const Root = ({
       const errorEvent = new CustomEvent('APIError', { detail: errorObject });
       document.dispatchEvent(errorEvent);
     }
-  }, [project, slides]);
-
-  useEffect(() => {
-    window.addEventListener('error', (event) => {
-      console.log('error fired', event);
-      const errorEvent = new CustomEvent('playerError', { detail: event });
-      document.dispatchEvent(errorEvent);
-    });
-  }, [slides, project]);
-
-  useLayoutEffect(() => {
     if (window.navigator.onLine === false) {
       const errorObject = {
         id: '700',
@@ -228,30 +217,22 @@ export const Root = ({
       });
       document.dispatchEvent(onlineEvent);
     }
-  }, [slides, project]);
-
-  const handleTest = () => {
-    const badCode = 'const s;';
-    // eval(badCode);
-    try {
-      eval(badCode);
-    } catch (e) {
-      // @ts-ignore
-      captureMessage(e);
-      console.log(e);
-      const errorEvent = new CustomEvent('playerError', {
-        detail: e,
-      });
+    window.addEventListener('error', (event) => {
+      const errorEvent = new CustomEvent('playerError', { detail: event });
       document.dispatchEvent(errorEvent);
-    }
-  };
+    });
+  }, [project, slides]);
+
+  let targetUrl;
+
+  if (moduleIdx !== undefined) {
+    targetUrl = `/module-${moduleIdx}--lesson-${lessonIdx}`;
+  }
 
   return (
     <Router>
       <div id="scrowl-player" {...props}>
         <main className="owlui-lesson-wrapper">
-          <button onClick={handleTest}>test</button>
-          {/* @ts-ignore */}
           <ErrorModal />
           <Routes>
             {pages.map((page, idx) => {

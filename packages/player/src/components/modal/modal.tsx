@@ -1,14 +1,11 @@
-// @ts-ignore
-import React, { useEffect, useLayoutEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Modal, ThemeProvider } from 'react-bootstrap';
 import { ui } from '@scrowl/ui';
 // import { translateError } from '../../services/error-message';
-import { captureMessage } from '@sentry/browser';
 
 import * as _css from './_modal.scss';
 import utils, { CssMapProps } from '../../utils';
 
-// @ts-ignore
 const css = utils.css.removeMapPrefix(_css);
 
 export const ErrorModal = () => {
@@ -49,16 +46,11 @@ export const ErrorModal = () => {
   useEffect(() => {
     if (showModal) {
       document.body.style.overflow = 'hidden';
-    }
-    if (!showModal) {
+    } else {
       document.body.style.overflow = 'unset';
     }
-  }, [showModal]);
 
-  useEffect(() => {
-    const handleErrorCatch = (ev) => {
-      console.log('inside app root error handler');
-      console.log(ev);
+    const handleCatchError = (ev) => {
       const errorEvent = ev.detail;
       setModalErrorId('500');
       setModalError(errorEvent.message);
@@ -67,51 +59,41 @@ export const ErrorModal = () => {
       setShowModal(true);
     };
 
-    document.addEventListener('playerError', handleErrorCatch);
+    const handleCatchScormError = (ev) => {
+      const errorEvent = ev.detail;
+
+      // SCORM 2004 gives error 403 when getValue tries to read a value that has not been set, while SCORM 1.2 does not consider this an error, so the error code returned by GetLastError() is 0. Do not display the modal for these errors
+      if (
+        errorEvent.id !== 0 &&
+        errorEvent.id !== '0' &&
+        errorEvent.id !== '403'
+      ) {
+        setModalErrorId(errorEvent.id);
+        setModalError(errorEvent.message);
+        setModalErrorStack(errorEvent.stack);
+
+        setShowModal(true);
+      }
+    };
+
+    document.addEventListener('scormError', handleCatchScormError);
+    document.addEventListener('playerError', handleCatchError);
   }, [showModal]);
 
   useEffect(() => {
-    const handleErrorCatchScorm = (ev) => {
-      console.log('inside scorm error handler');
-      console.log(ev);
-      const errorEvent = ev.detail;
-
-      captureMessage(errorEvent.stack);
-
-      setModalErrorId(errorEvent.id);
-      setModalError(errorEvent.message);
-      setModalErrorStack(errorEvent.stack);
-
-      setShowModal(true);
-    };
-
-    document.addEventListener('scormError', handleErrorCatchScorm);
-  }, [showModal]);
-
-  useLayoutEffect(() => {
-    const handleOnline = (errorObject) => {
+    const handleConnectionError = (errorObject) => {
       setModalErrorId(errorObject.detail.id);
       setModalError(errorObject.detail.message);
       setModalErrorStack(errorObject.detail.stack);
 
       setShowModal(true);
     };
-    document.addEventListener('connectionError', handleOnline);
+    document.addEventListener('APIError', handleConnectionError);
+    document.addEventListener('connectionError', handleConnectionError);
   }, []);
 
-  useLayoutEffect(() => {
-    const handleAPIError = (errorObject) => {
-      setModalErrorId(errorObject.detail.id);
-      setModalError(errorObject.detail.message);
-      setModalErrorStack(errorObject.detail.stack);
-
-      setShowModal(true);
-    };
-    document.addEventListener('APIError', handleAPIError);
-  }, []);
-
-  return (
-    showModal && (
+  if (showModal) {
+    return (
       <ThemeProvider prefixes={themePrefixes}>
         {/* <Modal className={css.modalContainer}> */}
         <div className={css.darkBackground} onClick={toggleModal} />
@@ -138,8 +120,10 @@ export const ErrorModal = () => {
 
         {/* </Modal> */}
       </ThemeProvider>
-    )
-  );
+    );
+  } else {
+    return null;
+  }
 };
 
 export default {
