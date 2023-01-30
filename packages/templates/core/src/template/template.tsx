@@ -5,6 +5,8 @@ import { TemplateProps } from './template.types';
 
 export const Template = ({
   id,
+  // @ts-ignore
+  baseId,
   className,
   controller,
   onEnter,
@@ -321,11 +323,82 @@ export const Template = ({
     };
   }, [windowSize, duration, isReady.current, triggerRef.current]);
 
+  const previousSlide = (ev) => {
+    const domSlideParents = document.querySelectorAll('.inner-content');
+    const domSlides = Array.from(domSlideParents).map((parent) => {
+      return parent.firstElementChild?.id;
+    });
+    domSlides.pop();
+    const slideContent = ev.target.parentElement.firstChild.id;
+    console.log(slideContent);
+    const index = domSlides.indexOf(slideContent);
+    const targetIndex = domSlides[index + -1];
+    const previousTarget = document.querySelector(`#${targetIndex}`);
+
+    console.log(previousTarget);
+
+    previousTarget?.scrollIntoView(false);
+  };
+
+  const nextSlide = (ev) => {
+    const domSlideParents = document.querySelectorAll('.inner-content');
+    const domSlides = Array.from(domSlideParents).map((parent) => {
+      return parent.firstElementChild?.id;
+    });
+
+    const slideContent = ev.target.parentElement.firstChild.id;
+    domSlides.pop();
+    console.log(slideContent);
+    const index = domSlides.indexOf(slideContent);
+    const targetIndex = domSlides[index + 1];
+    const nextTarget = document.querySelector(`#${targetIndex}`);
+
+    nextTarget?.scrollIntoView();
+
+    // keep below for now:
+
+    // shouldn't be using the DOM for all this, but slide IDs are inconsistent between the DOM elements and the objects in the project. Make these consistent and then we can use object Ids from the project instead of pulling from the DOM
+
+    // @ts-ignore
+    // const slides = props.slides;
+    // console.log('---slides', slides);
+
+    // const targets = slides.map((slide) => {
+    //   return `module-${slide.moduleId}--lesson-${slide.lessonId}--slide-${slide.id}-${slide.template.meta.filename}`;
+    // });
+
+    // const another = targets.find((t) => {
+    //   console.log('---s', slideContent);
+    //   console.log('---t', t);
+    //   return t === slideContent;
+    // });
+
+    // const currentIndex = targets.indexOf(another);
+
+    // const targetIndex = targets[currentIndex + 1];
+
+    // const nextTarget = document.querySelector(`#${targetIndex}`);
+
+    // nextTarget?.scrollIntoView();
+  };
+
   return (
     <div ref={slideRef} className={classes} {...props}>
       <div ref={triggerRef} className="scene-trigger"></div>
       <div ref={sceneRef} className="inner-content">
         {children}
+        <button
+          style={{ position: 'absolute', bottom: '8em', left: '20em' }}
+          onClick={previousSlide}
+        >
+          Previous
+        </button>
+        <button
+          style={{ position: 'absolute', bottom: '8em', right: '20em' }}
+          onClick={nextSlide}
+        >
+          Next
+        </button>
       </div>
     </div>
   );

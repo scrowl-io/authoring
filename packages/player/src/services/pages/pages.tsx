@@ -35,6 +35,7 @@ const Page = ({ slides, templates, slideId, ...props }: PageProps) => {
   return (
     <>
       {slides.map((slide, idx) => {
+        const baseId = props.id;
         const id = `${props.id}--slide-${idx}`;
         const component = slide.template.meta.component;
 
@@ -50,6 +51,8 @@ const Page = ({ slides, templates, slideId, ...props }: PageProps) => {
             id={id}
             schema={slide.template}
             controller={controller}
+            slides={slides}
+            baseId={baseId}
           />
         );
       })}

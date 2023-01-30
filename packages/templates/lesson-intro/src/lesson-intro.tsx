@@ -1,4 +1,5 @@
-import React, { useRef } from 'react';
+// @ts-ignore
+import React, { useRef, useState } from 'react';
 import './_index.scss';
 import { LessonIntroProps } from './lesson-intro.types';
 
@@ -7,7 +8,7 @@ export const LessonIntro = ({ id, schema, ...props }: LessonIntroProps) => {
   let classes = 'template-lesson-intro';
   const editMode = props.editMode ? true : false;
   const focusElement = editMode ? props.focusElement : null;
-  const contentId = `${id}-template-lesson-intro-intro`;
+  const contentId = `${id}-lesson-intro`;
   const title = schema.content.title.value;
   let titleClasses = 'template-lesson-intro-title can-focus';
   const subtitle = schema.content.subtitle.value;
@@ -24,6 +25,8 @@ export const LessonIntro = ({ id, schema, ...props }: LessonIntroProps) => {
   const bgStyles = {
     backgroundImage: `url("${bgUrl}")`,
   };
+
+  const [scroll, setScroll] = useState(false);
 
   if (focusElement === 'title') {
     titleClasses += ' has-focus';
@@ -78,6 +81,7 @@ export const LessonIntro = ({ id, schema, ...props }: LessonIntroProps) => {
   };
 
   const handleFocusStartLabel = () => {
+    setScroll(true);
     if (editMode) {
       Scrowl.core.host.sendMessage({
         type: 'focus',
@@ -95,11 +99,18 @@ export const LessonIntro = ({ id, schema, ...props }: LessonIntroProps) => {
     }
   };
 
+  if (!scroll) {
+    document.body.style.overflow = 'hidden';
+  } else {
+    document.body.style.overflow = 'scroll';
+  }
+
   return (
     <Scrowl.core.Template
       id={`slide-${contentId}`}
       className={classes}
       notScene={true}
+      style={{ overflow: 'hidden' }}
       {...props}
     >
       <div id={contentId} className="content">

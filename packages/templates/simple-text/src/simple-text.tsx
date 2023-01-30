@@ -10,7 +10,7 @@ export const SimpleText = ({ id, schema, ...props }: SimpleTextProps) => {
   const textAnimation = useRef<any>();
   const editMode = props.editMode ? true : false;
   const focusElement = editMode ? props.focusElement : null;
-  const contentId = `${id}-block-text`;
+  const contentId = `${id}-simple-text`;
   const text = schema.content.text.value;
   const textFocusCss = focusElement === 'text' && 'has-focus';
   const textRef = useRef<HTMLDivElement>(null);
