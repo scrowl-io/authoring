@@ -70,9 +70,16 @@ export const Template = ({
     let sceneTrigger: Scene;
     let scene: Scene;
 
-    // @ts-ignore
     if (!Scrowl || !Scrowl.runtime || Scrowl.runtime.API === null) {
       setScroll(true);
+    }
+
+    if (Scrowl && Scrowl.runtime && Scrowl.runtime.API !== null) {
+      const [locationError, location] = Scrowl.runtime.getLocation();
+
+      if (!locationError && Object.keys(location).length > 0) {
+        setScroll(true);
+      }
     }
 
     const createScene = () => {
