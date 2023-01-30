@@ -1,12 +1,10 @@
-import * as dotenv from 'dotenv';
-dotenv.config();
-
 import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import api from './api';
 import routes from './routes';
 import { port } from './config';
+import { db } from './db';
 
 const app = express();
 
@@ -19,10 +17,12 @@ api.init(app);
 routes.init(app);
 
 app.listen(port, () => {
-  console.log('db config');
-  console.log('port:', process.env.DBPORT);
-  console.log('host:', process.env.DBHOST);
-  console.log('user:', process.env.DBUSER);
-  console.log('pass:', process.env.DBPASS);
+
+  try {
+    db.get();
+  } catch (e) {
+    console.error(e);
+  }
+  
   console.info(`Scrowl Web Server running at http://localhost:${port}/app`);
 });

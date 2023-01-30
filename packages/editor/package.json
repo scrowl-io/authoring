@@ -33,6 +33,8 @@
     "reload:backend:web": "wait-on ./web/server.js && nodemon --watch ./web/server.js --exec node ./web/server.js",
     "prestart:web": "rimraf web",
     "start:web": "cross-env NODE_ENV=development concurrently \"yarn start:proxy:web\" \"yarn start:frontend:web\" \"yarn start:backend:web\" \"yarn reload:backend:web\"",
+    "preseed:web": "parcel build --target seed:web --no-cache",
+    "seed:web": "node ./web/seed-db.js",
     "package:frontend": "parcel build --no-cache --no-source-maps --public-url ../dist --target frontend",
     "package:backend": "parcel build --no-cache --no-source-maps --public-url ../dist --target backend --target preload",
     "prepackage": "yarn run clean",
@@ -52,6 +54,7 @@
   "frontend": "./dist/app.html",
   "backend:web": "./web/server.js",
   "frontend:web": "./web/app.html",
+  "seed:web": "./web/seed-db.js",
   "targets": {
     "main": false,
     "backend": {
@@ -89,6 +92,13 @@
       "source": "./src/app/index-web.html",
       "distDir": "./web",
       "publicUrl": "/public"
+    },
+    "seed:web": {
+      "context": "node",
+      "source": "./src/server/seed-db.ts",
+      "engines": {
+        "node": "16.15.1"
+      }
     }
   },
   "eslintConfig": {
@@ -205,6 +215,7 @@
     "fs-extra": "^10.1.0",
     "handlebars": "^4.7.7",
     "hasha": "^5.2.2",
+    "knex": "^2.4.2",
     "lottie-web": "^5.9.6",
     "md5": "^2.3.0",
     "react": "^18.2.0",
