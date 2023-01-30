@@ -32,6 +32,15 @@ export const Template = ({
     height: window.innerHeight,
     width: window.innerWidth,
   });
+  const [scroll, setScroll] = useState(false);
+
+  const Scrowl = window['Scrowl'];
+
+  if (!scroll) {
+    document.body.style.overflow = 'hidden';
+  } else {
+    document.body.style.overflow = 'scroll';
+  }
 
   if (className) {
     classes += ` ${className}`;
@@ -60,6 +69,11 @@ export const Template = ({
   useEffect(() => {
     let sceneTrigger: Scene;
     let scene: Scene;
+
+    // @ts-ignore
+    if (!Scrowl || !Scrowl.runtime || Scrowl.runtime.API === null) {
+      setScroll(true);
+    }
 
     const createScene = () => {
       if (isNotScene) {
@@ -323,37 +337,51 @@ export const Template = ({
     };
   }, [windowSize, duration, isReady.current, triggerRef.current]);
 
-  const previousSlide = (ev) => {
-    const domSlideParents = document.querySelectorAll('.inner-content');
-    const domSlides = Array.from(domSlideParents).map((parent) => {
-      return parent.firstElementChild?.id;
-    });
-    domSlides.pop();
-    const slideContent = ev.target.parentElement.firstChild.id;
-    console.log(slideContent);
-    const index = domSlides.indexOf(slideContent);
-    const targetIndex = domSlides[index + -1];
-    const previousTarget = document.querySelector(`#${targetIndex}`);
+  useEffect(() => {
+    const handleStart = (ev) => {
+      setScroll(true);
+      const domSlideParents = document.querySelectorAll('.inner-content');
+      const domSlides = Array.from(domSlideParents).map((parent) => {
+        return parent.firstElementChild?.id;
+      });
 
-    console.log(previousTarget);
+      const slideContent = ev.detail.target.parentElement.parentElement.id;
+      domSlides.pop();
+      const index = domSlides.indexOf(slideContent);
+      const targetIndex = domSlides[index + 1];
+      const nextTarget = document.querySelector(`#${targetIndex}`);
 
-    previousTarget?.scrollIntoView(false);
-  };
+      nextTarget?.scrollIntoView();
+    };
+    document.addEventListener('startCourse', handleStart);
+  }, []);
 
   const nextSlide = (ev) => {
-    const domSlideParents = document.querySelectorAll('.inner-content');
-    const domSlides = Array.from(domSlideParents).map((parent) => {
-      return parent.firstElementChild?.id;
-    });
+    if (scroll) {
+      const domSlideParents = document.querySelectorAll('.inner-content');
+      const domSlides = Array.from(domSlideParents).map((parent) => {
+        return parent.firstElementChild?.id;
+      });
 
-    const slideContent = ev.target.parentElement.firstChild.id;
-    domSlides.pop();
-    console.log(slideContent);
-    const index = domSlides.indexOf(slideContent);
-    const targetIndex = domSlides[index + 1];
-    const nextTarget = document.querySelector(`#${targetIndex}`);
+      const slideContent = ev.target.parentElement.firstChild.id;
+      domSlides.pop();
 
-    nextTarget?.scrollIntoView();
+      const index = domSlides.indexOf(slideContent);
+      let targetIndex;
+      let nextTarget;
+      switch (ev.target.innerText) {
+        case 'Next':
+          targetIndex = domSlides[index + 1];
+          nextTarget = document.querySelector(`#${targetIndex}`);
+          nextTarget?.scrollIntoView();
+          break;
+        case 'Previous':
+          targetIndex = domSlides[index - 1];
+          nextTarget = document.querySelector(`#${targetIndex}`);
+          nextTarget?.scrollIntoView(false);
+          break;
+      }
+    }
 
     // keep below for now:
 
@@ -361,7 +389,6 @@ export const Template = ({
 
     // @ts-ignore
     // const slides = props.slides;
-    // console.log('---slides', slides);
 
     // const targets = slides.map((slide) => {
     //   return `module-${slide.moduleId}--lesson-${slide.lessonId}--slide-${slide.id}-${slide.template.meta.filename}`;
@@ -389,7 +416,7 @@ export const Template = ({
         {children}
         <button
           style={{ position: 'absolute', bottom: '8em', left: '20em' }}
-          onClick={previousSlide}
+          onClick={nextSlide}
         >
           Previous
         </button>

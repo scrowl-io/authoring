@@ -26,8 +26,6 @@ export const LessonIntro = ({ id, schema, ...props }: LessonIntroProps) => {
     backgroundImage: `url("${bgUrl}")`,
   };
 
-  const [scroll, setScroll] = useState(false);
-
   if (focusElement === 'title') {
     titleClasses += ' has-focus';
   }
@@ -80,13 +78,15 @@ export const LessonIntro = ({ id, schema, ...props }: LessonIntroProps) => {
     }
   };
 
-  const handleFocusStartLabel = () => {
-    setScroll(true);
+  const handleFocusStartLabel = (ev) => {
     if (editMode) {
       Scrowl.core.host.sendMessage({
         type: 'focus',
         field: 'startLabel',
       });
+    } else {
+      const startEvent = new CustomEvent('startCourse', { detail: ev });
+      document.dispatchEvent(startEvent);
     }
   };
 
@@ -98,12 +98,6 @@ export const LessonIntro = ({ id, schema, ...props }: LessonIntroProps) => {
       });
     }
   };
-
-  if (!scroll) {
-    document.body.style.overflow = 'hidden';
-  } else {
-    document.body.style.overflow = 'scroll';
-  }
 
   return (
     <Scrowl.core.Template
