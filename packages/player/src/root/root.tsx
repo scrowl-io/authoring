@@ -187,9 +187,6 @@ export const Root = ({
     targetUrl = `/module-${moduleIdx}--lesson-${lessonIdx}`;
   }
 
-  console.log('----root target URL');
-  console.log(targetUrl);
-
   return (
     <Router>
       <div id="scrowl-player" {...props}>

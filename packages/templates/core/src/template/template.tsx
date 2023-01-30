@@ -7,6 +7,8 @@ export const Template = ({
   id,
   // @ts-ignore
   baseId,
+  // @ts-ignore
+  slides,
   className,
   controller,
   onEnter,
@@ -370,7 +372,7 @@ export const Template = ({
         return parent.firstElementChild?.id;
       });
 
-      const slideContent = ev.target.parentElement.firstChild.id;
+      const slideContent = ev.target.parentElement.parentElement.firstChild.id;
       domSlides.pop();
 
       const index = domSlides.indexOf(slideContent);
@@ -421,18 +423,22 @@ export const Template = ({
       <div ref={triggerRef} className="scene-trigger"></div>
       <div ref={sceneRef} className="inner-content">
         {children}
-        <button
-          style={{ position: 'absolute', bottom: '8em', left: '20em' }}
-          onClick={nextSlide}
-        >
-          Previous
-        </button>
-        <button
-          style={{ position: 'absolute', bottom: '8em', right: '20em' }}
-          onClick={nextSlide}
-        >
-          Next
-        </button>
+        {/* @ts-ignore */}
+        <div className={css.buttonContainer}>
+          <button onClick={nextSlide}>Previous</button>
+          <button onClick={nextSlide}>Next</button>
+        </div>
+        {/* {slides !== undefined &&
+          children &&
+          // @ts-ignore
+          children.props &&
+          // @ts-ignore
+          !children.props.id.includes('lesson-intro') && (
+            <div className={css.buttonContainer}>
+              <button onClick={nextSlide}>Previous</button>
+              <button onClick={nextSlide}>Next</button>
+            </div>
+          )} */}
       </div>
     </div>
   );
