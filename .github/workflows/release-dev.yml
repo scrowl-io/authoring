@@ -21,7 +21,7 @@ jobs:
         run: test -z $(git rev-list  --after="24 hours"  ${{ github.sha }}) &amp;&amp; echo "::set-output name=has-recent-update::false"
   releases-dev:
     needs: check_changes
-    if: ${{ needs.check_changes.outputs.has-recent-update !== 'false' }}
+    if: ${{ needs.check_changes.outputs.has-recent-update != 'false' }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
