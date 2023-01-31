@@ -403,10 +403,16 @@ export const Template = ({
       <div ref={sceneRef} className="inner-content">
         {children}
         {/* @ts-ignore */}
-        <div className={css.buttonContainer}>
-          <button onClick={nextSlide}>Previous</button>
-          <button onClick={nextSlide}>Next</button>
-        </div>
+        {slideRef.current &&
+          slideRef.current.className &&
+          !slideRef.current.className.includes('template-lesson-intro') &&
+          !slideRef.current.className.includes('owlui-last') && (
+            // @ts-ignore
+            <div className={css.buttonContainer}>
+              <button onClick={nextSlide}>Previous</button>
+              <button onClick={nextSlide}>Next</button>
+            </div>
+          )}
       </div>
     </div>
   );
