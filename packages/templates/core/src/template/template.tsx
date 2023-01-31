@@ -366,33 +366,35 @@ export const Template = ({
     if (scroll) {
       const slideContent = ev.target.parentElement.parentElement.firstChild.id;
 
-      const targets = slides.map((slide) => {
+      const targets = slides?.map((slide) => {
         return `module-${slide.moduleId}--lesson-${slide.lessonId}--slide-${slide.id}-${slide.template.meta.filename}`;
       });
 
-      const matchingId = targets.find((t) => {
+      const matchingId = targets?.find((t) => {
         return t === slideContent;
       });
 
       let currentIndex;
       if (matchingId) {
-        currentIndex = targets.indexOf(matchingId);
+        currentIndex = targets?.indexOf(matchingId);
       }
 
       let targetIndex;
       let targetElement;
 
-      switch (ev.target.innerText) {
-        case 'Next':
-          targetIndex = targets[currentIndex + 1];
-          targetElement = document.querySelector(`#${targetIndex}`);
-          targetElement?.scrollIntoView();
-          break;
-        case 'Previous':
-          targetIndex = targets[currentIndex - 1];
-          targetElement = document.querySelector(`#${targetIndex}`);
-          targetElement?.scrollIntoView(false);
-          break;
+      if (targets) {
+        switch (ev.target.innerText) {
+          case 'Next':
+            targetIndex = targets[currentIndex + 1];
+            targetElement = document.querySelector(`#${targetIndex}`);
+            targetElement?.scrollIntoView();
+            break;
+          case 'Previous':
+            targetIndex = targets[currentIndex - 1];
+            targetElement = document.querySelector(`#${targetIndex}`);
+            targetElement?.scrollIntoView(false);
+            break;
+        }
       }
     }
   };

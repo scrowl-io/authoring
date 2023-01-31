@@ -71,7 +71,7 @@ export interface TemplateCommons {
   onProgress?: (ev: TemplateEventProgress) => void;
   onEnd?: (ev: TemplateEventEnd) => void;
   onLeave?: (ev: TemplateEventLeave) => void;
-  slides: ProjectSlide[];
+  slides?: ProjectSlide[];
 }
 
 export type TemplateProps = TemplateCommons & React.AllHTMLAttributes<HTMLDivElement>;
