@@ -195,16 +195,20 @@ export const Root = ({
   }, []);
 
   useEffect(() => {
-    if (!Scrowl.runtime || Scrowl.runtime.API === null) {
-      const errorObject = {
-        id: '600',
-        message: 'Unable to connect to API',
-        stack:
-          'This course was not able to connect to the SCORM API. Course data will not be saved to the LMS.',
-      };
-      const errorEvent = new CustomEvent('APIError', { detail: errorObject });
-      document.dispatchEvent(errorEvent);
+    if (Scrowl.runtime && Scrowl.runtime !== null) {
+      // @ts-ignore
+      if (Scrowl.runtime?.API === null) {
+        const errorObject = {
+          id: '600',
+          message: 'Unable to connect to API',
+          stack:
+            'This course was not able to connect to the SCORM API. Course data will not be saved to the LMS.',
+        };
+        const errorEvent = new CustomEvent('APIError', { detail: errorObject });
+        document.dispatchEvent(errorEvent);
+      }
     }
+
     if (window.navigator.onLine === false) {
       const errorObject = {
         id: '700',
