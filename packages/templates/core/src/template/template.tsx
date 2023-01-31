@@ -5,9 +5,6 @@ import { TemplateProps } from './template.types';
 
 export const Template = ({
   id,
-  // @ts-ignore
-  baseId,
-  // @ts-ignore
   slides,
   className,
   controller,
@@ -355,7 +352,7 @@ export const Template = ({
       });
 
       const slideContent = ev.detail.target.parentElement.parentElement.id;
-      domSlides.pop();
+
       const index = domSlides.indexOf(slideContent);
       const targetIndex = domSlides[index + 1];
       const nextTarget = document.querySelector(`#${targetIndex}`);
@@ -377,7 +374,10 @@ export const Template = ({
         return t === slideContent;
       });
 
-      const currentIndex = targets.indexOf(matchingId);
+      let currentIndex;
+      if (matchingId) {
+        currentIndex = targets.indexOf(matchingId);
+      }
 
       let targetIndex;
       let targetElement;
@@ -402,7 +402,6 @@ export const Template = ({
       <div ref={triggerRef} className="scene-trigger"></div>
       <div ref={sceneRef} className="inner-content">
         {children}
-        {/* @ts-ignore */}
         {slideRef.current &&
           slideRef.current.className &&
           !slideRef.current.className.includes('template-lesson-intro') &&
