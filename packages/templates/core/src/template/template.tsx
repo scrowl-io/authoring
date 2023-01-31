@@ -367,55 +367,34 @@ export const Template = ({
 
   const nextSlide = (ev) => {
     if (scroll) {
-      const domSlideParents = document.querySelectorAll('.inner-content');
-      const domSlides = Array.from(domSlideParents).map((parent) => {
-        return parent.firstElementChild?.id;
+      const slideContent = ev.target.parentElement.parentElement.firstChild.id;
+
+      const targets = slides.map((slide) => {
+        return `module-${slide.moduleId}--lesson-${slide.lessonId}--slide-${slide.id}-${slide.template.meta.filename}`;
       });
 
-      const slideContent = ev.target.parentElement.parentElement.firstChild.id;
-      domSlides.pop();
+      const matchingId = targets.find((t) => {
+        return t === slideContent;
+      });
 
-      const index = domSlides.indexOf(slideContent);
+      const currentIndex = targets.indexOf(matchingId);
+
       let targetIndex;
-      let nextTarget;
+      let targetElement;
+
       switch (ev.target.innerText) {
         case 'Next':
-          targetIndex = domSlides[index + 1];
-          nextTarget = document.querySelector(`#${targetIndex}`);
-          nextTarget?.scrollIntoView();
+          targetIndex = targets[currentIndex + 1];
+          targetElement = document.querySelector(`#${targetIndex}`);
+          targetElement?.scrollIntoView();
           break;
         case 'Previous':
-          targetIndex = domSlides[index - 1];
-          nextTarget = document.querySelector(`#${targetIndex}`);
-          nextTarget?.scrollIntoView(false);
+          targetIndex = targets[currentIndex - 1];
+          targetElement = document.querySelector(`#${targetIndex}`);
+          targetElement?.scrollIntoView(false);
           break;
       }
     }
-
-    // keep below for now:
-
-    // shouldn't be using the DOM for all this, but slide IDs are inconsistent between the DOM elements and the objects in the project. Make these consistent and then we can use object Ids from the project instead of pulling from the DOM
-
-    // @ts-ignore
-    // const slides = props.slides;
-
-    // const targets = slides.map((slide) => {
-    //   return `module-${slide.moduleId}--lesson-${slide.lessonId}--slide-${slide.id}-${slide.template.meta.filename}`;
-    // });
-
-    // const another = targets.find((t) => {
-    //   console.log('---s', slideContent);
-    //   console.log('---t', t);
-    //   return t === slideContent;
-    // });
-
-    // const currentIndex = targets.indexOf(another);
-
-    // const targetIndex = targets[currentIndex + 1];
-
-    // const nextTarget = document.querySelector(`#${targetIndex}`);
-
-    // nextTarget?.scrollIntoView();
   };
 
   return (
@@ -428,17 +407,6 @@ export const Template = ({
           <button onClick={nextSlide}>Previous</button>
           <button onClick={nextSlide}>Next</button>
         </div>
-        {/* {slides !== undefined &&
-          children &&
-          // @ts-ignore
-          children.props &&
-          // @ts-ignore
-          !children.props.id.includes('lesson-intro') && (
-            <div className={css.buttonContainer}>
-              <button onClick={nextSlide}>Previous</button>
-              <button onClick={nextSlide}>Next</button>
-            </div>
-          )} */}
       </div>
     </div>
   );

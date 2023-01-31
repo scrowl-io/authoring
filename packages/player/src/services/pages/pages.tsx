@@ -36,7 +36,7 @@ const Page = ({ slides, templates, slideId, ...props }: PageProps) => {
     <>
       {slides.map((slide, idx) => {
         const baseId = props.id;
-        const id = `${props.id}--slide-${idx}`;
+        const id = `${props.id}--slide-${slide.id}`;
         const component = slide.template.meta.component;
 
         if (!templates.hasOwnProperty(component)) {
