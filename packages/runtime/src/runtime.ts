@@ -5,8 +5,6 @@
 import { RUNTIME_SERVICE_WRAPPER } from './runtime.types';
 import { service as service2004 } from '../src/versions/runtimeScorm2004';
 import { service as service12 } from '../src/versions/runtimeScorm12';
-import { service as previewService } from '../src/versions/runtimeScormPreview';
-import 'scorm-again';
 
 export const service: RUNTIME_SERVICE_WRAPPER = {
   API: null,
@@ -41,14 +39,6 @@ export const service: RUNTIME_SERVICE_WRAPPER = {
     let API;
 
     switch (apiPreference) {
-      case previewService.version:
-        service.version = apiPreference;
-        // @ts-ignore
-        window.API_1484_11 = new window.Scorm2004API({});
-        // @ts-ignore
-        API = service._scanApi(window, 'API_1484_11');
-        Object.assign(service, previewService);
-        break;
       case service2004.version:
         API = service._scanApi(window, 'API_1484_11');
         service.version = apiPreference;

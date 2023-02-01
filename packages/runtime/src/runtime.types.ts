@@ -77,7 +77,7 @@ export type RUNTIME_WRAPPER = {
 };
 
 export type RUNTIME_SERVICE = {
-  version: '1.2' | '2004v4' | '2004v3' | 'Preview' | null;
+  version: '1.2' | '2004v4' | '2004v3' | null;
   API?: SCORM_API | null;
   init: boolean;
   finished: boolean;

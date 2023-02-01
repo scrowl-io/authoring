@@ -19,21 +19,25 @@ export const createPreviewSource = (
 
       const templates = sourceRes.data.templates;
 
-      createScormEntry(project, source, dest, templates).then((entryRes) => {
-        if (entryRes.error) {
-          log.error(entryRes);
-          resolve(entryRes);
-          return;
-        }
+      const previewFile = 'preview.html.hbs';
 
-        const cacheBreaker = new Date().valueOf();
-        resolve({
-          error: false,
-          data: {
-            url: `${rq.previewServerUrl}/index.html?ver=${cacheBreaker}`,
-          },
-        });
-      });
+      createScormEntry(project, source, dest, templates, previewFile).then(
+        (entryRes) => {
+          if (entryRes.error) {
+            log.error(entryRes);
+            resolve(entryRes);
+            return;
+          }
+
+          const cacheBreaker = new Date().valueOf();
+          resolve({
+            error: false,
+            data: {
+              url: `${rq.previewServerUrl}/index.html?ver=${cacheBreaker}`,
+            },
+          });
+        }
+      );
     });
   });
 };
@@ -191,7 +195,6 @@ export const preview = (
       return;
     }
 
-    previewData['preview'] = true;
     createPreviewSource(previewData, meta, source, previewDest).then(resolve);
   });
 };
