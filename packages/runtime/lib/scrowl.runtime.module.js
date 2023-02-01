@@ -1,3 +1,5 @@
+import "scorm-again";
+
 function $parcel$defineInteropFlag(a) {
   Object.defineProperty(a, '__esModule', {value: true, configurable: true});
 }
@@ -626,6 +628,346 @@ var $0f0d20ec2fcb698f$export$2e2bcd8739ae039 = {
 };
 
 
+
+const $9254fb36930dbb01$export$6ed414b8d8bead88 = {
+    version: "Preview",
+    init: false,
+    finished: false,
+    _time: {
+        startTime: undefined,
+        getSessionTime: ()=>{
+            let sessionTime;
+            if ($9254fb36930dbb01$export$6ed414b8d8bead88._time.startTime) sessionTime = new Date().getTime() - $9254fb36930dbb01$export$6ed414b8d8bead88._time.startTime.getTime();
+            return $9254fb36930dbb01$export$6ed414b8d8bead88._time.convert(sessionTime);
+        },
+        end: undefined,
+        convert: (total)=>{
+            function ZeroPad(val, pad) {
+                let res = new String(val);
+                const len = res.length;
+                if (len > pad) return res.substr(0, pad);
+                for(let i = len; i < pad; i++)res = "0" + res;
+                return res;
+            }
+            let totalMs = total % 1000;
+            let totalS = (total - totalMs) / 1000 % 60;
+            let totalM = (total - totalMs - totalS * 1000) / 60000 % 60;
+            let totalH = (total - totalMs - totalS * 1000 - totalM * 60000) / 3600000;
+            if (totalH == 10000) {
+                totalH = 9999;
+                totalM = (total - totalH * 3600000) / 60000;
+                if (totalM == 100) totalM = 99;
+                totalM = Math.floor(totalM);
+                totalS = (total - totalH * 3600000 - totalM * 60000) / 1000;
+                if (totalS == 100) totalS = 99;
+                totalS = Math.floor(totalS);
+                totalMs = total - totalH * 3600000 - totalM * 60000 - totalS * 1000;
+            }
+            // should eventually check SCORM version and format time accordingly
+            let timespan = ZeroPad(totalH, 4) + ":" + ZeroPad(totalM, 2) + ":" + ZeroPad(totalS, 2);
+            if (totalH > 9999) timespan = "9999:99:99";
+            return timespan;
+        }
+    },
+    API: null,
+    getError: (printError)=>{
+        printError = printError === undefined || printError === null ? true : printError;
+        const [isInit, API] = $9254fb36930dbb01$export$6ed414b8d8bead88.isInitialized();
+        if (!isInit) return {
+            error: true,
+            message: "Service is not initialized"
+        };
+        const errorId = API.LMSGetLastError();
+        const errorMsg = API.LMSGetErrorString(errorId);
+        const errorStack = API.LMSGetDiagnostic(errorId);
+        const apiError = {
+            id: errorId,
+            message: errorMsg,
+            stack: errorStack
+        };
+        if (printError) {
+            console.error(`Error:\n${JSON.stringify(apiError, null, 2)}`);
+            const errorEvent = new CustomEvent("scormError", {
+                detail: apiError
+            });
+            document.dispatchEvent(errorEvent);
+        }
+        return {
+            error: false,
+            data: apiError
+        };
+    },
+    commit: ()=>{
+        console.debug(`API.Commit`);
+        const [isInit, API] = $9254fb36930dbb01$export$6ed414b8d8bead88.isInitialized();
+        if (!isInit || !API) {
+            console.warn(`Unable to get location: service not initialized`);
+            return [
+                true
+            ];
+        }
+        $9254fb36930dbb01$export$6ed414b8d8bead88.setValue("cmi.core.session_time", $9254fb36930dbb01$export$6ed414b8d8bead88._time.getSessionTime());
+        API.LMSCommit("");
+        return [
+            false
+        ];
+    },
+    exit: ()=>{
+        console.debug("API.Exit");
+        return $9254fb36930dbb01$export$6ed414b8d8bead88.commit();
+    },
+    isInitialized: ()=>{
+        $9254fb36930dbb01$export$6ed414b8d8bead88.init = false;
+        if (!$9254fb36930dbb01$export$6ed414b8d8bead88.API) {
+            console.error("MISSING_SCORM_API - INIT");
+            return [
+                $9254fb36930dbb01$export$6ed414b8d8bead88.init,
+                false
+            ];
+        }
+        // @ts-ignore
+        if ($9254fb36930dbb01$export$6ed414b8d8bead88.API.Initialized === "false") {
+            console.error("API failed to initialize");
+            return [
+                $9254fb36930dbb01$export$6ed414b8d8bead88.init,
+                false
+            ];
+        }
+        $9254fb36930dbb01$export$6ed414b8d8bead88.init = true;
+        return [
+            $9254fb36930dbb01$export$6ed414b8d8bead88.init,
+            $9254fb36930dbb01$export$6ed414b8d8bead88.API
+        ];
+    },
+    updateLocation: (location, slideId)=>{
+        console.debug(`API.UpdateLocation`);
+        console.debug(location);
+        const [isInit, API] = $9254fb36930dbb01$export$6ed414b8d8bead88.isInitialized();
+        if (!isInit || !API) {
+            console.warn(`Unable to get location: service not initialized`);
+            return [
+                true
+            ];
+        }
+        $9254fb36930dbb01$export$6ed414b8d8bead88.setValue("cmi.core.lesson_location", JSON.stringify({
+            v1: 1,
+            ...location,
+            slideId: slideId
+        }));
+        $9254fb36930dbb01$export$6ed414b8d8bead88.commit();
+        return [
+            false
+        ];
+    },
+    getLocation: ()=>{
+        console.debug(`API.GetLocation`);
+        const [isInit, API] = $9254fb36930dbb01$export$6ed414b8d8bead88.isInitialized();
+        if (!isInit || !API) {
+            console.warn(`Unable to get location: service not initialized`);
+            return [
+                true,
+                {}
+            ];
+        }
+        try {
+            const [error, location] = $9254fb36930dbb01$export$6ed414b8d8bead88.getValue("cmi.core.lesson_location");
+            if (error || !location) return [
+                true,
+                {}
+            ];
+            return [
+                false,
+                JSON.parse(location)
+            ];
+        } catch (e) {
+            console.error(e);
+            return [
+                true,
+                {}
+            ];
+        }
+    },
+    getProgress: ()=>{
+        console.debug(`API.GetProgress`);
+        const [isInit, API] = $9254fb36930dbb01$export$6ed414b8d8bead88.isInitialized();
+        if (!isInit || !API) {
+            console.warn(`Unable to get progress: service not initialized`);
+            return [
+                true,
+                {}
+            ];
+        }
+        try {
+            const [error, progress] = $9254fb36930dbb01$export$6ed414b8d8bead88.getValue("cmi.suspend_data");
+            if (error || !progress) return [
+                true,
+                {}
+            ];
+            return [
+                false,
+                progress
+            ];
+        } catch (e) {
+            console.error(e);
+            return [
+                true,
+                {}
+            ];
+        }
+    },
+    updateProgress: (progressPercentage)=>{
+        console.debug(`API.UpdateProgress`);
+        const [isInit, API] = $9254fb36930dbb01$export$6ed414b8d8bead88.isInitialized();
+        if (!isInit || !API) {
+            console.warn(`Unable to update progress: service not initialized`);
+            return [
+                true
+            ];
+        }
+        const [progressError, previousProgress] = $9254fb36930dbb01$export$6ed414b8d8bead88.getValue("cmi.suspend_data");
+        // error 403 = Data Model Element Value Not Initialized (first time setting progress)
+        // @ts-ignore
+        if (progressError && previousProgress.data.id === "403") {
+            $9254fb36930dbb01$export$6ed414b8d8bead88.setValue("cmi.suspend_data", progressPercentage);
+            $9254fb36930dbb01$export$6ed414b8d8bead88.commit();
+        }
+        if (!progressError) {
+            if (!previousProgress || parseFloat(previousProgress) === 0 || progressPercentage > parseFloat(previousProgress)) $9254fb36930dbb01$export$6ed414b8d8bead88.setValue("cmi.suspend_data", progressPercentage);
+            $9254fb36930dbb01$export$6ed414b8d8bead88.commit();
+        }
+        return [
+            false
+        ];
+    },
+    start: (api)=>{
+        console.debug(`API.Start Preview`);
+        console.log(api);
+        $9254fb36930dbb01$export$6ed414b8d8bead88.API = api;
+        console.log("service", $9254fb36930dbb01$export$6ed414b8d8bead88);
+        // prettier-ignore
+        var initialData = {
+            "learner_id": "123",
+            "learner_name": "Sean Clarke"
+        };
+        $9254fb36930dbb01$export$6ed414b8d8bead88._time.startTime = new Date();
+        console.log("service", $9254fb36930dbb01$export$6ed414b8d8bead88);
+        // @ts-ignore
+        console.log(window.API_1484_11);
+        // service.API = window.API_1484_11;
+        // @ts-ignore
+        $9254fb36930dbb01$export$6ed414b8d8bead88.API?.loadFromJSON(initialData);
+        // @ts-ignore
+        $9254fb36930dbb01$export$6ed414b8d8bead88.API?.Initialize();
+        // @ts-ignore
+        $9254fb36930dbb01$export$6ed414b8d8bead88.API?.lmsSetValue("cmi.completion_status", "incomplete");
+        console.log($9254fb36930dbb01$export$6ed414b8d8bead88);
+        console.log("api", api);
+        $9254fb36930dbb01$export$6ed414b8d8bead88.API?.Commit();
+        // const [isInit, API] = service.isInitialized();
+        // if (!isInit || !API) {
+        //   return [true];
+        // }
+        // console.log(isInit);
+        // const [statusError, lessonStatus] = service.getValue(
+        //   'cmi.core.lesson_status'
+        // );
+        // if (statusError) {
+        //   return [true];
+        // }
+        // if (lessonStatus === 'unknown' || lessonStatus === 'not attempted') {
+        //   service.setValue('cmi.core.lesson_status', 'incomplete');
+        // } else {
+        //   service.setValue(
+        //     'cmi.core.lesson_status',
+        //     service.getValue('cmi.core.lesson_status')[1]
+        //   );
+        //   service.setValue(
+        //     'cmi.suspend_data',
+        //     service.getValue('cmi.suspend_data')[1]
+        //   );
+        // }
+        // until we have things hooked up to exit buttons/nav, set exit to 'suspend' as part of start() so that status persists whether the user finishes or exits
+        // service.setValue('cmi.core.exit', 'suspend');
+        // service.commit();
+        console.debug("runtime started");
+        console.log("END OF METHOD");
+        return [
+            false
+        ];
+    },
+    finish: ()=>{
+        console.debug(`API.Finish`);
+        const [isInit, API] = $9254fb36930dbb01$export$6ed414b8d8bead88.isInitialized();
+        if (!isInit || !API) {
+            console.warn(`Unable to finish: service not initialized`);
+            return [
+                true
+            ];
+        }
+        $9254fb36930dbb01$export$6ed414b8d8bead88.setValue("cmi.core.score.raw", 100);
+        $9254fb36930dbb01$export$6ed414b8d8bead88.setValue("cmi.core.lesson_status", "passed");
+        $9254fb36930dbb01$export$6ed414b8d8bead88.setValue("cmi.suspend_data", 1);
+        $9254fb36930dbb01$export$6ed414b8d8bead88.commit();
+        API.LMSFinish("");
+        return [
+            false
+        ];
+    },
+    setValue: (elem, val)=>{
+        console.debug(`API.SetValue for ${elem} to ${val}`);
+        const [isInit, API] = $9254fb36930dbb01$export$6ed414b8d8bead88.isInitialized();
+        if (!isInit || !API) {
+            console.warn(`Unable to set value for ${elem}: service not initialized`);
+            return [
+                true
+            ];
+        }
+        if (val !== undefined) {
+            if (API.LMSSetValue(elem, val) === "false") $9254fb36930dbb01$export$6ed414b8d8bead88.getError(true);
+        } else console.warn(`Unable to set value for ${elem}: value undefined`);
+        return [
+            false
+        ];
+    },
+    getValue: (elem)=>{
+        console.debug(`API.GetValue for ${elem}`);
+        const [isInit, API] = $9254fb36930dbb01$export$6ed414b8d8bead88.isInitialized();
+        if (!isInit || !API) {
+            console.warn(`Unable to set value for ${elem}: service not initialized`);
+            return [
+                true,
+                ""
+            ];
+        }
+        const getRes = API.LMSGetValue(elem);
+        // Unlike in SCORM 2004v3, failing to retrieve a value from the LMS does not cause an error: it just returns an empty string and continues. Below has been added to keep 1.2 consistent with 2004, but for now I don't think we should treat this as an error
+        // if (getRes === '' || getRes === null || getRes === undefined) {
+        //   const apiError = {
+        //     id: '403',
+        //     message: `Data Model Element Not Initialized`,
+        //     stack: `The ${elem} field has not been set for this SCO.`,
+        //   };
+        //   const errorEvent = new CustomEvent('scormError', {
+        //     detail: apiError,
+        //   });
+        //   document.dispatchEvent(errorEvent);
+        // }
+        if (getRes === "") {
+            console.error(`API failed to get value for: ${elem}`);
+            $9254fb36930dbb01$export$6ed414b8d8bead88.getError(true);
+        }
+        return [
+            false,
+            getRes
+        ];
+    }
+};
+var $9254fb36930dbb01$export$2e2bcd8739ae039 = {
+    service: $9254fb36930dbb01$export$6ed414b8d8bead88
+};
+
+
+
 const $defce2f29876acb7$export$6ed414b8d8bead88 = {
     API: null,
     version: "1.2",
@@ -654,6 +996,14 @@ const $defce2f29876acb7$export$6ed414b8d8bead88 = {
     start: (apiPreference)=>{
         let API;
         switch(apiPreference){
+            case (0, $9254fb36930dbb01$export$6ed414b8d8bead88).version:
+                $defce2f29876acb7$export$6ed414b8d8bead88.version = apiPreference;
+                // @ts-ignore
+                window.API_1484_11 = new window.Scorm2004API({});
+                // @ts-ignore
+                API = $defce2f29876acb7$export$6ed414b8d8bead88._scanApi(window, "API_1484_11");
+                Object.assign($defce2f29876acb7$export$6ed414b8d8bead88, (0, $9254fb36930dbb01$export$6ed414b8d8bead88));
+                break;
             case (0, $704b14303ded74fd$export$6ed414b8d8bead88).version:
                 API = $defce2f29876acb7$export$6ed414b8d8bead88._scanApi(window, "API_1484_11");
                 $defce2f29876acb7$export$6ed414b8d8bead88.version = apiPreference;

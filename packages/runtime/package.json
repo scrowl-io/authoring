@@ -69,5 +69,8 @@
     "rimraf": "^3.0.2",
     "stylelint": "^14.13.0",
     "typescript": "4.7.4"
+  },
+  "dependencies": {
+    "scorm-again": "^1.7.1"
   }
 }

@@ -21,7 +21,12 @@ export const Root = ({
 }: PlayerRootProps) => {
   const Scrowl = window['Scrowl'];
   let apiPreference;
-  if (scorm && scorm.outputFormat) {
+  // @ts-ignore
+  if (project.preview) {
+    apiPreference = 'Preview';
+  }
+  // @ts-ignore
+  if (scorm && scorm.outputFormat && !project.preview) {
     switch (scorm.outputFormat) {
       case '2004 3rd Edition':
         apiPreference = '2004v3';
@@ -67,7 +72,8 @@ export const Root = ({
   let lessonIdx;
   let slideId;
 
-  if (Scrowl.runtime) {
+  // @ts-ignore
+  if (Scrowl.runtime && !project.preview) {
     let locationError;
     let location;
     try {
@@ -95,6 +101,10 @@ export const Root = ({
 
   useEffect(() => {
     const handleSlideEnter = (ev) => {
+      // @ts-ignore
+      if (project.preview) {
+        return;
+      }
       const sceneEvent = ev.detail;
       const previousLocation = Scrowl.runtime?.getLocation();
 
@@ -189,7 +199,8 @@ export const Root = ({
   }, [project]);
 
   useEffect(() => {
-    if (Scrowl && Scrowl.runtime) {
+    // @ts-ignore
+    if (Scrowl && Scrowl.runtime && !project.preview) {
       Scrowl.runtime.getError(true);
     }
   }, []);
@@ -197,7 +208,7 @@ export const Root = ({
   useEffect(() => {
     if (Scrowl.runtime && Scrowl.runtime !== null) {
       // @ts-ignore
-      if (Scrowl.runtime?.API === null) {
+      if (Scrowl.runtime?.API === null && !project.preview) {
         const errorObject = {
           id: '600',
           message: 'Unable to connect to API',
