@@ -216,7 +216,6 @@ export const createScormEntry = (
   fileOverride?: string
 ) => {
   // create project files [html, js] and add them to publish folder
-  // console.log(filename);
   return new Promise<rq.ApiResult>((resolve) => {
     const entryHtmlSrc = fs.joinPath(
       Templates.TEMPLATE_PATHS.project,

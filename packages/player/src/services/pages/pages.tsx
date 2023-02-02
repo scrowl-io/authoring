@@ -11,6 +11,7 @@ import utils from '../../utils';
 import * as _css from '../../root/_root.scss';
 import { Error } from '../../components';
 import { NavBar } from '../../components/navbar';
+import 'scorm-again';
 
 const css = utils.css.removeMapPrefix(_css);
 
@@ -81,7 +82,6 @@ const updateCourseProgress = (project, id) => {
   const currentLessonIndex = currentLesson?.index;
   const totalLessons = lessonsArray.length;
 
-  // @ts-ignore
   let percentageCompleted;
 
   if (currentLessonIndex) {
@@ -89,6 +89,55 @@ const updateCourseProgress = (project, id) => {
   }
 
   Scrowl.runtime?.updateProgress(percentageCompleted);
+  if (window['API_1484_11']) {
+    window['API_1484_11'].SetValue('cmi.progress_measure', percentageCompleted);
+  }
+};
+
+const formatResponse = (response) => {
+  const {
+    location,
+    completion_status,
+    completion_threshold,
+    credit,
+    entry,
+    // exit,
+    launch_data,
+    learner_id,
+    learner_name,
+    max_time_allowed,
+    mode,
+    progress_measure,
+    scaled_passing_score,
+    // session_time,
+    success_status,
+    suspend_data,
+    time_limit_action,
+    total_time,
+    ...rest
+  } = response;
+  const loc = JSON.parse(location);
+
+  rest['location'] = loc;
+  rest['completion_status'] = completion_status;
+  rest['completion_threshold'] = completion_threshold;
+  rest['credit'] = credit;
+  rest['entry'] = entry;
+  // rest['exit'] = exit;
+  rest['launch_data'] = launch_data;
+  rest['learner_id'] = learner_id;
+  rest['learner_name'] = learner_name;
+  rest['max_time_allowed'] = max_time_allowed;
+  rest['mode'] = mode;
+  rest['progress_measure'] = progress_measure;
+  rest['scaled_passing_score'] = scaled_passing_score;
+  // rest['session_time'] = session_time;
+  rest['success_status'] = success_status;
+  rest['suspend_data'] = suspend_data;
+  rest['time_limit_action'] = time_limit_action;
+  rest['total_time'] = total_time;
+
+  return JSON.stringify(rest, null, 2);
 };
 
 const finishCourse = () => {
@@ -96,6 +145,21 @@ const finishCourse = () => {
 
   if (Scrowl.runtime) {
     Scrowl.runtime.finish();
+  }
+
+  if (window['API_1484_11']) {
+    window['API_1484_11'].SetValue('cmi.score.raw', 90);
+    window['API_1484_11'].SetValue('cmi.score.min', 70);
+    window['API_1484_11'].SetValue('cmi.score.max', 100);
+    window['API_1484_11'].SetValue('cmi.score.scaled', 90 / 100);
+    window['API_1484_11'].SetValue('cmi.success_status', 'passed');
+    window['API_1484_11'].SetValue('cmi.completion_status', 'completed');
+
+    const value = window['API_1484_11'].GetValue('cmi');
+    const p = document.querySelector('#test-paragraph');
+    if (p) {
+      p.textContent = formatResponse(value);
+    }
   }
 };
 
