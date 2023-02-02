@@ -14,6 +14,7 @@ import { Pages } from '../services';
 import 'scorm-again';
 import * as _css from './_root.scss';
 import utils from '../utils';
+import { formatResponse } from '../utils/formatResponse';
 
 const css = utils.css.removeMapPrefix(_css);
 
@@ -109,54 +110,6 @@ export const Root = ({
   );
   const pages = Pages.create(config, templateList, slideId);
 
-  const formatResponse = (response) => {
-    // const location = response['location'];
-    // ask Chris about destructuring issue
-    const {
-      location,
-      completion_status,
-      completion_threshold,
-      credit,
-      entry,
-      // exit,
-      launch_data,
-      learner_id,
-      learner_name,
-      max_time_allowed,
-      mode,
-      progress_measure,
-      scaled_passing_score,
-      // session_time,
-      success_status,
-      suspend_data,
-      time_limit_action,
-      total_time,
-      ...rest
-    } = response;
-    const loc = JSON.parse(location);
-
-    rest['location'] = loc;
-    rest['completion_status'] = completion_status;
-    rest['completion_threshold'] = completion_threshold;
-    rest['credit'] = credit;
-    rest['entry'] = entry;
-    // rest['exit'] = exit;
-    rest['launch_data'] = launch_data;
-    rest['learner_id'] = learner_id;
-    rest['learner_name'] = learner_name;
-    rest['max_time_allowed'] = max_time_allowed;
-    rest['mode'] = mode;
-    rest['progress_measure'] = progress_measure;
-    rest['scaled_passing_score'] = scaled_passing_score;
-    // rest['session_time'] = session_time;
-    rest['success_status'] = success_status;
-    rest['suspend_data'] = suspend_data;
-    rest['time_limit_action'] = time_limit_action;
-    rest['total_time'] = total_time;
-
-    return JSON.stringify(rest, null, 2);
-  };
-
   useEffect(() => {
     const handleSlideEnter = (ev) => {
       const sceneEvent = ev.detail;
@@ -215,11 +168,6 @@ export const Root = ({
             'cmi.location',
             JSON.stringify(locationObj)
           );
-          const value = window['API_1484_11'].GetValue('cmi');
-          const p = document.querySelector('#test-paragraph');
-          if (p) {
-            p.textContent = formatResponse(value);
-          }
         }
       } else {
         if (locationObj.cur.m > previousLocation[1].max.m) {
@@ -313,14 +261,18 @@ export const Root = ({
         <h3>SCORM Preview</h3>
         <pre>window.API_1484_11.cmi = &#123;</pre>
         <pre>"cmi":</pre>
-        <pre id="test-paragraph"></pre>
+        <pre id="scorm-preview-content"></pre>
       </div>
     );
   };
 
   if (window['API_1484_11']) {
     window['API_1484_11'].on('SetValue.cmi.*', () => {
-      console.log('on Set');
+      const value = window['API_1484_11'].GetValue('cmi');
+      const p = document.querySelector('#scorm-preview-content');
+      if (p) {
+        p.textContent = formatResponse(value);
+      }
     });
   }
 
