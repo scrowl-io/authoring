@@ -130,7 +130,6 @@ export const service: RUNTIME_SERVICE = {
   },
   updateLocation: (location, slideId) => {
     console.debug(`API.UpdateLocation`);
-    console.debug(location);
 
     const [isInit, API] = service.isInitialized();
 
@@ -251,6 +250,19 @@ export const service: RUNTIME_SERVICE = {
       service.setValue('cmi.completion_status', 'incomplete');
       service.setValue('cmi.success_status', 'unknown');
       service.setValue('cmi.suspend_data', '{}');
+      const startLocation = {
+        cur: {
+          m: 0,
+          l: 0,
+          s: 0,
+        },
+        max: {
+          m: 0,
+          l: 0,
+          s: 0,
+        },
+      };
+      service.setValue('cmi.location', JSON.stringify(startLocation));
     } else {
       // service.setValue(
       //   'cmi.score.scaled',

@@ -121,7 +121,6 @@ const $704b14303ded74fd$export$6ed414b8d8bead88 = {
     },
     updateLocation: (location, slideId)=>{
         console.debug(`API.UpdateLocation`);
-        console.debug(location);
         const [isInit, API] = $704b14303ded74fd$export$6ed414b8d8bead88.isInitialized();
         if (!isInit || !API) {
             console.warn(`Unable to get location: service not initialized`);
@@ -236,6 +235,19 @@ const $704b14303ded74fd$export$6ed414b8d8bead88 = {
             $704b14303ded74fd$export$6ed414b8d8bead88.setValue("cmi.completion_status", "incomplete");
             $704b14303ded74fd$export$6ed414b8d8bead88.setValue("cmi.success_status", "unknown");
             $704b14303ded74fd$export$6ed414b8d8bead88.setValue("cmi.suspend_data", "{}");
+            const startLocation = {
+                cur: {
+                    m: 0,
+                    l: 0,
+                    s: 0
+                },
+                max: {
+                    m: 0,
+                    l: 0,
+                    s: 0
+                }
+            };
+            $704b14303ded74fd$export$6ed414b8d8bead88.setValue("cmi.location", JSON.stringify(startLocation));
         } else {
             // service.setValue(
             //   'cmi.score.scaled',
@@ -430,7 +442,6 @@ const $0f0d20ec2fcb698f$export$6ed414b8d8bead88 = {
     },
     updateLocation: (location, slideId)=>{
         console.debug(`API.UpdateLocation`);
-        console.debug(location);
         const [isInit, API] = $0f0d20ec2fcb698f$export$6ed414b8d8bead88.isInitialized();
         if (!isInit || !API) {
             console.warn(`Unable to get location: service not initialized`);
@@ -541,8 +552,22 @@ const $0f0d20ec2fcb698f$export$6ed414b8d8bead88 = {
         if (statusError) return [
             true
         ];
-        if (lessonStatus === "unknown" || lessonStatus === "not attempted") $0f0d20ec2fcb698f$export$6ed414b8d8bead88.setValue("cmi.core.lesson_status", "incomplete");
-        else {
+        if (lessonStatus === "unknown" || lessonStatus === "not attempted") {
+            $0f0d20ec2fcb698f$export$6ed414b8d8bead88.setValue("cmi.core.lesson_status", "incomplete");
+            const startLocation = {
+                cur: {
+                    m: 0,
+                    l: 0,
+                    s: 0
+                },
+                max: {
+                    m: 0,
+                    l: 0,
+                    s: 0
+                }
+            };
+            $0f0d20ec2fcb698f$export$6ed414b8d8bead88.setValue("cmi.core.lesson_location", JSON.stringify(startLocation));
+        } else {
             $0f0d20ec2fcb698f$export$6ed414b8d8bead88.setValue("cmi.core.lesson_status", $0f0d20ec2fcb698f$export$6ed414b8d8bead88.getValue("cmi.core.lesson_status")[1]);
             $0f0d20ec2fcb698f$export$6ed414b8d8bead88.setValue("cmi.suspend_data", $0f0d20ec2fcb698f$export$6ed414b8d8bead88.getValue("cmi.suspend_data")[1]);
         }

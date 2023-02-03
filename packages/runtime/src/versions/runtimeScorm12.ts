@@ -146,7 +146,6 @@ export const service: RUNTIME_SERVICE = {
   },
   updateLocation: (location, slideId) => {
     console.debug(`API.UpdateLocation`);
-    console.debug(location);
 
     const [isInit, API] = service.isInitialized();
 
@@ -265,6 +264,22 @@ export const service: RUNTIME_SERVICE = {
 
     if (lessonStatus === 'unknown' || lessonStatus === 'not attempted') {
       service.setValue('cmi.core.lesson_status', 'incomplete');
+      const startLocation = {
+        cur: {
+          m: 0,
+          l: 0,
+          s: 0,
+        },
+        max: {
+          m: 0,
+          l: 0,
+          s: 0,
+        },
+      };
+      service.setValue(
+        'cmi.core.lesson_location',
+        JSON.stringify(startLocation)
+      );
     } else {
       service.setValue(
         'cmi.core.lesson_status',
