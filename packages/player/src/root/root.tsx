@@ -12,7 +12,6 @@ import { Error as ErrorComponent } from '../components';
 import { ErrorModal } from '../components/modal';
 import { Preview as PreviewPanel } from '../components/preview';
 import { Pages } from '../services';
-import 'scorm-again';
 import { formatResponse } from '../utils/formatResponse';
 
 export const Root = ({
@@ -43,6 +42,19 @@ export const Root = ({
   }
 
   if (window['API_1484_11'] !== undefined) {
+    let authors;
+    if (scorm) {
+      authors = scorm.authors;
+    } else {
+      authors = '';
+    }
+    const initialData = {
+      'learner_id': '1',
+      'learner_name': authors,
+      'completion_status': 'incomplete',
+    };
+    window['API_1484_11'].loadFromJSON(initialData);
+
     window['API_1484_11'].Initialize();
   }
 

@@ -20,9 +20,13 @@ export const formatResponse = (response: any) => {
     total_time,
     ...rest
   } = response;
-  const loc = JSON.parse(location);
+  let parsedLocation;
 
-  rest['location'] = loc;
+  if (location) {
+    parsedLocation = JSON.parse(location);
+  }
+
+  rest['location'] = parsedLocation;
   rest['completion_status'] = completion_status;
   rest['completion_threshold'] = completion_threshold;
   rest['credit'] = credit;

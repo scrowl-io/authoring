@@ -11,7 +11,6 @@ import utils from '../../utils';
 import * as _css from '../../root/_root.scss';
 import { Error } from '../../components';
 import { NavBar } from '../../components/navbar';
-import 'scorm-again';
 
 const css = utils.css.removeMapPrefix(_css);
 
@@ -108,6 +107,7 @@ const finishCourse = () => {
     window['API_1484_11'].SetValue('cmi.score.scaled', 90 / 100);
     window['API_1484_11'].SetValue('cmi.success_status', 'passed');
     window['API_1484_11'].SetValue('cmi.completion_status', 'completed');
+    window['API_1484_11'].SetValue('cmi.progress_measure', 1);
   }
 };
 
