@@ -10,13 +10,10 @@ import { PlayerRootProps } from './root.types';
 import Config from './config';
 import { Error as ErrorComponent } from '../components';
 import { ErrorModal } from '../components/modal';
+import { Preview as PreviewPanel } from '../components/preview';
 import { Pages } from '../services';
 import 'scorm-again';
-import * as _css from './_root.scss';
-import utils from '../utils';
 import { formatResponse } from '../utils/formatResponse';
-
-const css = utils.css.removeMapPrefix(_css);
 
 export const Root = ({
   project,
@@ -254,17 +251,6 @@ export const Root = ({
   if (moduleIdx !== undefined) {
     targetUrl = `/module-${moduleIdx}--lesson-${lessonIdx}`;
   }
-
-  const PreviewPanel = () => {
-    return (
-      <div className={css.previewPanel}>
-        <h3>SCORM Preview</h3>
-        <pre>window.API_1484_11.cmi = &#123;</pre>
-        <pre>"cmi":</pre>
-        <pre id="scorm-preview-content"></pre>
-      </div>
-    );
-  };
 
   if (window['API_1484_11']) {
     window['API_1484_11'].on('SetValue.cmi.*', () => {
