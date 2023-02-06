@@ -251,6 +251,7 @@ const $29add62a37af587e$export$6ed414b8d8bead88 = {
             $29add62a37af587e$export$6ed414b8d8bead88.setValue("cmi.completion_status", "incomplete");
             $29add62a37af587e$export$6ed414b8d8bead88.setValue("cmi.success_status", "unknown");
             $29add62a37af587e$export$6ed414b8d8bead88.setValue("cmi.suspend_data", "{}");
+            $29add62a37af587e$export$6ed414b8d8bead88.setValue("cmi.progress_measure", 0);
             const startLocation = {
                 cur: {
                     m: 0,
@@ -570,6 +571,7 @@ const $bc9227963e5f4dff$export$6ed414b8d8bead88 = {
         ];
         if (lessonStatus === "unknown" || lessonStatus === "not attempted") {
             $bc9227963e5f4dff$export$6ed414b8d8bead88.setValue("cmi.core.lesson_status", "incomplete");
+            $bc9227963e5f4dff$export$6ed414b8d8bead88.setValue("cmi.suspend_data", 0);
             const startLocation = {
                 cur: {
                     m: 0,

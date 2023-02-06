@@ -250,6 +250,7 @@ export const service: RUNTIME_SERVICE = {
       service.setValue('cmi.completion_status', 'incomplete');
       service.setValue('cmi.success_status', 'unknown');
       service.setValue('cmi.suspend_data', '{}');
+      service.setValue('cmi.progress_measure', 0);
       const startLocation = {
         cur: {
           m: 0,

@@ -264,6 +264,8 @@ export const service: RUNTIME_SERVICE = {
 
     if (lessonStatus === 'unknown' || lessonStatus === 'not attempted') {
       service.setValue('cmi.core.lesson_status', 'incomplete');
+      service.setValue('cmi.suspend_data', 0);
+      
       const startLocation = {
         cur: {
           m: 0,
