@@ -389,8 +389,13 @@ export const Template = ({
       if (targets) {
         switch (ev.target.innerText) {
           case 'Next':
-            targetIndex = targets[currentIndex + 1];
-            targetElement = document.querySelector(`#${targetIndex}`);
+            if (currentIndex + 1 === targets.length) {
+              targetElement = document.querySelector('.owlui-last');
+            } else {
+              targetIndex = targets[currentIndex + 1];
+              console.log(targetIndex);
+              targetElement = document.querySelector(`#${targetIndex}`);
+            }
             targetElement?.scrollIntoView();
             break;
           case 'Previous':
