@@ -30,8 +30,6 @@ export const TemplateBrowser = () => {
 
   const handelClose = () => {
     if (newContent.newSlide) {
-      setActiveSlide(activeSlideRef.current);
-      setSelectedTemplate(activeSlideRef.current.template);
       Projects.removeSlide(latestSlide);
       resetNewContent();
     }
@@ -117,10 +115,6 @@ export const TemplateBrowser = () => {
     const templateButton = document.querySelector(queryString);
 
     (templateButton as HTMLElement)?.focus();
-  }, [isOpen]);
-
-  useEffect(() => {
-    setSelectedTemplate(activeTemplate);
   }, [isOpen]);
 
   return (

@@ -77,7 +77,17 @@ const $29add62a37af587e$export$6ed414b8d8bead88 = {
             message: errorMsg,
             stack: errorStack
         };
-        if (printError) console.error(`Error:\n${JSON.stringify(apiError, null, 2)}`);
+        if (printError) {
+            console.error(`Error:\n${JSON.stringify(apiError, null, 2)}`);
+            const errorEvent = new CustomEvent("scormError", {
+                detail: apiError
+            });
+            document.dispatchEvent(errorEvent);
+            return {
+                error: true,
+                data: apiError
+            };
+        }
         return {
             error: false,
             data: apiError
@@ -126,8 +136,7 @@ const $29add62a37af587e$export$6ed414b8d8bead88 = {
         ];
     },
     updateLocation: (location, slideId)=>{
-        console.log(`API.UpdateLocation`);
-        console.log(location);
+        console.debug(`API.UpdateLocation`);
         const [isInit, API] = $29add62a37af587e$export$6ed414b8d8bead88.isInitialized();
         if (!isInit || !API) {
             console.warn(`Unable to get location: service not initialized`);
@@ -202,7 +211,7 @@ const $29add62a37af587e$export$6ed414b8d8bead88 = {
         }
     },
     updateProgress: (progressPercentage)=>{
-        console.log(`API.UpdateProgress`);
+        console.debug(`API.UpdateProgress`);
         const [isInit, API] = $29add62a37af587e$export$6ed414b8d8bead88.isInitialized();
         if (!isInit || !API) {
             console.warn(`Unable to update progress: service not initialized`);
@@ -226,7 +235,7 @@ const $29add62a37af587e$export$6ed414b8d8bead88 = {
         ];
     },
     start: (api)=>{
-        console.log(`API.Start 2004v3`);
+        console.debug(`API.Start 2004v3`);
         $29add62a37af587e$export$6ed414b8d8bead88.API = api;
         $29add62a37af587e$export$6ed414b8d8bead88._time.startTime = new Date();
         $29add62a37af587e$export$6ed414b8d8bead88.API?.Initialize("");
@@ -242,9 +251,25 @@ const $29add62a37af587e$export$6ed414b8d8bead88 = {
             $29add62a37af587e$export$6ed414b8d8bead88.setValue("cmi.completion_status", "incomplete");
             $29add62a37af587e$export$6ed414b8d8bead88.setValue("cmi.success_status", "unknown");
             $29add62a37af587e$export$6ed414b8d8bead88.setValue("cmi.suspend_data", "{}");
+            const startLocation = {
+                cur: {
+                    m: 0,
+                    l: 0,
+                    s: 0
+                },
+                max: {
+                    m: 0,
+                    l: 0,
+                    s: 0
+                }
+            };
+            $29add62a37af587e$export$6ed414b8d8bead88.setValue("cmi.location", JSON.stringify(startLocation));
         } else {
-            $29add62a37af587e$export$6ed414b8d8bead88.setValue("cmi.score.scaled", $29add62a37af587e$export$6ed414b8d8bead88.getValue("cmi.score.scaled")[1]);
-            $29add62a37af587e$export$6ed414b8d8bead88.setValue("cmi.score.raw", $29add62a37af587e$export$6ed414b8d8bead88.getValue("cmi.score.raw")[1]);
+            // service.setValue(
+            //   'cmi.score.scaled',
+            //   service.getValue('cmi.score.scaled')[1]
+            // );
+            // service.setValue('cmi.score.raw', service.getValue('cmi.score.raw')[1]);
             $29add62a37af587e$export$6ed414b8d8bead88.setValue("cmi.success_status", $29add62a37af587e$export$6ed414b8d8bead88.getValue("cmi.success_status")[1]);
             $29add62a37af587e$export$6ed414b8d8bead88.setValue("cmi.progress_measure", $29add62a37af587e$export$6ed414b8d8bead88.getValue("cmi.progress_measure")[1]);
             $29add62a37af587e$export$6ed414b8d8bead88.setValue("cmi.completion_status", $29add62a37af587e$export$6ed414b8d8bead88.getValue("cmi.completion_status")[1]);
@@ -252,7 +277,7 @@ const $29add62a37af587e$export$6ed414b8d8bead88 = {
         // until we have things hooked up to exit buttons/nav, set exit to 'suspend' as part of start() so that status persists whether the user finishes or exits
         $29add62a37af587e$export$6ed414b8d8bead88.setValue("cmi.exit", "suspend");
         $29add62a37af587e$export$6ed414b8d8bead88.commit();
-        console.log("runtime started");
+        console.debug("runtime started");
         return [
             false
         ];
@@ -290,7 +315,6 @@ const $29add62a37af587e$export$6ed414b8d8bead88 = {
         }
         if (val !== undefined) {
             if (API.SetValue(elem, val) === "false") $29add62a37af587e$export$6ed414b8d8bead88.getError(true);
-        // return [true, service.getError(true)];
         } else console.warn(`Unable to set value for ${elem}: value undefined`);
         return [
             false
@@ -378,14 +402,20 @@ const $bc9227963e5f4dff$export$6ed414b8d8bead88 = {
             message: errorMsg,
             stack: errorStack
         };
-        if (printError) console.error(`Error:\n${JSON.stringify(apiError, null, 2)}`);
+        if (printError) {
+            console.error(`Error:\n${JSON.stringify(apiError, null, 2)}`);
+            const errorEvent = new CustomEvent("scormError", {
+                detail: apiError
+            });
+            document.dispatchEvent(errorEvent);
+        }
         return {
             error: false,
             data: apiError
         };
     },
     commit: ()=>{
-        console.log(`API.Commit`);
+        console.debug(`API.Commit`);
         const [isInit, API] = $bc9227963e5f4dff$export$6ed414b8d8bead88.isInitialized();
         if (!isInit || !API) {
             console.warn(`Unable to get location: service not initialized`);
@@ -400,7 +430,7 @@ const $bc9227963e5f4dff$export$6ed414b8d8bead88 = {
         ];
     },
     exit: ()=>{
-        console.log("API.Exit");
+        console.debug("API.Exit");
         return $bc9227963e5f4dff$export$6ed414b8d8bead88.commit();
     },
     isInitialized: ()=>{
@@ -426,10 +456,8 @@ const $bc9227963e5f4dff$export$6ed414b8d8bead88 = {
             $bc9227963e5f4dff$export$6ed414b8d8bead88.API
         ];
     },
-    // { m: 1, l: 1, s?: 3 }
     updateLocation: (location, slideId)=>{
-        console.log(`API.UpdateLocation`);
-        console.log(location);
+        console.debug(`API.UpdateLocation`);
         const [isInit, API] = $bc9227963e5f4dff$export$6ed414b8d8bead88.isInitialized();
         if (!isInit || !API) {
             console.warn(`Unable to get location: service not initialized`);
@@ -448,7 +476,7 @@ const $bc9227963e5f4dff$export$6ed414b8d8bead88 = {
         ];
     },
     getLocation: ()=>{
-        console.log(`API.GetLocation`);
+        console.debug(`API.GetLocation`);
         const [isInit, API] = $bc9227963e5f4dff$export$6ed414b8d8bead88.isInitialized();
         if (!isInit || !API) {
             console.warn(`Unable to get location: service not initialized`);
@@ -476,7 +504,7 @@ const $bc9227963e5f4dff$export$6ed414b8d8bead88 = {
         }
     },
     getProgress: ()=>{
-        console.log(`API.GetProgress`);
+        console.debug(`API.GetProgress`);
         const [isInit, API] = $bc9227963e5f4dff$export$6ed414b8d8bead88.isInitialized();
         if (!isInit || !API) {
             console.warn(`Unable to get progress: service not initialized`);
@@ -504,7 +532,7 @@ const $bc9227963e5f4dff$export$6ed414b8d8bead88 = {
         }
     },
     updateProgress: (progressPercentage)=>{
-        console.log(`API.UpdateProgress`);
+        console.debug(`API.UpdateProgress`);
         const [isInit, API] = $bc9227963e5f4dff$export$6ed414b8d8bead88.isInitialized();
         if (!isInit || !API) {
             console.warn(`Unable to update progress: service not initialized`);
@@ -528,7 +556,7 @@ const $bc9227963e5f4dff$export$6ed414b8d8bead88 = {
         ];
     },
     start: (api)=>{
-        console.log(`API.Start 1.2`);
+        console.debug(`API.Start 1.2`);
         $bc9227963e5f4dff$export$6ed414b8d8bead88._time.startTime = new Date();
         $bc9227963e5f4dff$export$6ed414b8d8bead88.API = api;
         $bc9227963e5f4dff$export$6ed414b8d8bead88.API?.LMSInitialize("");
@@ -540,26 +568,35 @@ const $bc9227963e5f4dff$export$6ed414b8d8bead88 = {
         if (statusError) return [
             true
         ];
-        if (lessonStatus === "unknown" || lessonStatus === "not attempted") $bc9227963e5f4dff$export$6ed414b8d8bead88.setValue("cmi.core.lesson_status", "incomplete");
-        else {
-            // service.setValue('cmi.score.raw', service.getValue('cmi.score.raw')[1]);
+        if (lessonStatus === "unknown" || lessonStatus === "not attempted") {
+            $bc9227963e5f4dff$export$6ed414b8d8bead88.setValue("cmi.core.lesson_status", "incomplete");
+            const startLocation = {
+                cur: {
+                    m: 0,
+                    l: 0,
+                    s: 0
+                },
+                max: {
+                    m: 0,
+                    l: 0,
+                    s: 0
+                }
+            };
+            $bc9227963e5f4dff$export$6ed414b8d8bead88.setValue("cmi.core.lesson_location", JSON.stringify(startLocation));
+        } else {
             $bc9227963e5f4dff$export$6ed414b8d8bead88.setValue("cmi.core.lesson_status", $bc9227963e5f4dff$export$6ed414b8d8bead88.getValue("cmi.core.lesson_status")[1]);
-            $bc9227963e5f4dff$export$6ed414b8d8bead88.setValue("cmi.progress_measure", $bc9227963e5f4dff$export$6ed414b8d8bead88.getValue("cmi.suspend_data")[1]);
-        // service.setValue(
-        //   'cmi.completion_status',
-        //   service.getValue('cmi.completion_status')[1]
-        // );
+            $bc9227963e5f4dff$export$6ed414b8d8bead88.setValue("cmi.suspend_data", $bc9227963e5f4dff$export$6ed414b8d8bead88.getValue("cmi.suspend_data")[1]);
         }
         // until we have things hooked up to exit buttons/nav, set exit to 'suspend' as part of start() so that status persists whether the user finishes or exits
         $bc9227963e5f4dff$export$6ed414b8d8bead88.setValue("cmi.core.exit", "suspend");
         $bc9227963e5f4dff$export$6ed414b8d8bead88.commit();
-        console.log("runtime started");
+        console.debug("runtime started");
         return [
             false
         ];
     },
     finish: ()=>{
-        console.log(`API.Finish`);
+        console.debug(`API.Finish`);
         const [isInit, API] = $bc9227963e5f4dff$export$6ed414b8d8bead88.isInitialized();
         if (!isInit || !API) {
             console.warn(`Unable to finish: service not initialized`);
@@ -567,13 +604,9 @@ const $bc9227963e5f4dff$export$6ed414b8d8bead88 = {
                 true
             ];
         }
-        // service.setValue('cmi.score.min', 0);
-        // service.setValue('cmi.score.max', 100);
-        // service.setValue('cmi.score.scaled', 1);
         $bc9227963e5f4dff$export$6ed414b8d8bead88.setValue("cmi.core.score.raw", 100);
         $bc9227963e5f4dff$export$6ed414b8d8bead88.setValue("cmi.core.lesson_status", "passed");
         $bc9227963e5f4dff$export$6ed414b8d8bead88.setValue("cmi.suspend_data", 1);
-        // service.setValue('cmi.completion_status', 'completed');
         $bc9227963e5f4dff$export$6ed414b8d8bead88.commit();
         API.LMSFinish("");
         return [
@@ -581,7 +614,7 @@ const $bc9227963e5f4dff$export$6ed414b8d8bead88 = {
         ];
     },
     setValue: (elem, val)=>{
-        console.log(`API.SetValue for ${elem} to ${val}`);
+        console.debug(`API.SetValue for ${elem} to ${val}`);
         const [isInit, API] = $bc9227963e5f4dff$export$6ed414b8d8bead88.isInitialized();
         if (!isInit || !API) {
             console.warn(`Unable to set value for ${elem}: service not initialized`);
@@ -597,7 +630,7 @@ const $bc9227963e5f4dff$export$6ed414b8d8bead88 = {
         ];
     },
     getValue: (elem)=>{
-        console.log(`API.GetValue for ${elem}`);
+        console.debug(`API.GetValue for ${elem}`);
         const [isInit, API] = $bc9227963e5f4dff$export$6ed414b8d8bead88.isInitialized();
         if (!isInit || !API) {
             console.warn(`Unable to set value for ${elem}: service not initialized`);
@@ -607,8 +640,18 @@ const $bc9227963e5f4dff$export$6ed414b8d8bead88 = {
             ];
         }
         const getRes = API.LMSGetValue(elem);
-        console.log("get Res");
-        console.log(getRes);
+        // Unlike in SCORM 2004v3, failing to retrieve a value from the LMS does not cause an error: it just returns an empty string and continues. Below has been added to keep 1.2 consistent with 2004, but for now I don't think we should treat this as an error
+        // if (getRes === '' || getRes === null || getRes === undefined) {
+        //   const apiError = {
+        //     id: '403',
+        //     message: `Data Model Element Not Initialized`,
+        //     stack: `The ${elem} field has not been set for this SCO.`,
+        //   };
+        //   const errorEvent = new CustomEvent('scormError', {
+        //     detail: apiError,
+        //   });
+        //   document.dispatchEvent(errorEvent);
+        // }
         if (getRes === "") {
             console.error(`API failed to get value for: ${elem}`);
             $bc9227963e5f4dff$export$6ed414b8d8bead88.getError(true);

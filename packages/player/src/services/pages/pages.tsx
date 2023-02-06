@@ -81,7 +81,6 @@ const updateCourseProgress = (project, id) => {
   const currentLessonIndex = currentLesson?.index;
   const totalLessons = lessonsArray.length;
 
-  // @ts-ignore
   let percentageCompleted;
 
   if (currentLessonIndex) {
@@ -89,6 +88,9 @@ const updateCourseProgress = (project, id) => {
   }
 
   Scrowl.runtime?.updateProgress(percentageCompleted);
+  if (window['API_1484_11']) {
+    window['API_1484_11'].SetValue('cmi.progress_measure', percentageCompleted);
+  }
 };
 
 const finishCourse = () => {
@@ -96,6 +98,16 @@ const finishCourse = () => {
 
   if (Scrowl.runtime) {
     Scrowl.runtime.finish();
+  }
+
+  if (window['API_1484_11']) {
+    window['API_1484_11'].SetValue('cmi.score.raw', 90);
+    window['API_1484_11'].SetValue('cmi.score.min', 70);
+    window['API_1484_11'].SetValue('cmi.score.max', 100);
+    window['API_1484_11'].SetValue('cmi.score.scaled', 90 / 100);
+    window['API_1484_11'].SetValue('cmi.success_status', 'passed');
+    window['API_1484_11'].SetValue('cmi.completion_status', 'completed');
+    window['API_1484_11'].SetValue('cmi.progress_measure', 1);
   }
 };
 

@@ -9030,6 +9030,11 @@ schema-utils@^4.0.0:
     ajv-formats "^2.1.1"
     ajv-keywords "^5.0.0"
 
+scorm-again@^1.7.1:
+  version "1.7.1"
+  resolved "https://registry.yarnpkg.com/scorm-again/-/scorm-again-1.7.1.tgz#25eddf162cabc94ff2be3757e7ae9aa520d7186c"
+  integrity sha512-sBmjowUsyVsPHHRGtF86o8xrLLtnQOu6a7JG2S4a2sppoMVzcZIfWn/axveYwsoYFabFsHnmdU9lOTxxEh7gNA==
+
 scrollmagic@^2.0.8:
   version "2.0.8"
   resolved "https://registry.yarnpkg.com/scrollmagic/-/scrollmagic-2.0.8.tgz#e0d7aff804c393c022fdc0c566f1edce3b4e9ed7"
