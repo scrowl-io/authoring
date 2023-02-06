@@ -74,13 +74,11 @@ export const Template = ({
     }
 
     if (Scrowl && Scrowl.runtime && Scrowl.runtime.API !== null) {
-      const [totalTimeError, totalTime] = Scrowl.runtime.getTotalTime();
+      const [courseStartError, suspendData] = Scrowl.runtime.getSuspendData();
 
-      if (
-        !totalTimeError &&
-        totalTime !== '0000:00:00.0' &&
-        totalTime !== 'PT0H0M0S'
-      ) {
+      const parsedData = JSON.parse(suspendData);
+
+      if (!courseStartError && parsedData.courseStarted === true) {
         setScroll(true);
       }
     }
@@ -349,6 +347,9 @@ export const Template = ({
 
   useEffect(() => {
     const handleStart = (ev) => {
+      if (Scrowl.runtime) {
+        Scrowl.runtime.setCourseStart();
+      }
       setScroll(true);
       const domSlideParents = document.querySelectorAll('.inner-content');
       const domSlides = Array.from(domSlideParents).map((parent) => {

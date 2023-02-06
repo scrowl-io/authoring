@@ -168,28 +168,44 @@ export const service: RUNTIME_SERVICE = {
       return [true, {}];
     }
   },
-  getTotalTime: () => {
-    console.debug(`API.GetTotalTime`);
+  getSuspendData: () => {
+    console.debug(`API.GetSuspendData`);
 
     const [isInit, API] = service.isInitialized();
 
     if (!isInit || !API) {
-      console.warn(`Unable to get progress: service not initialized`);
+      console.warn(`Unable to get suspend data: service not initialized`);
       return [true, {}];
     }
-
     try {
-      const [error, progress] = service.getValue('cmi.total_time');
+      const [error, suspendData] = service.getValue('cmi.suspend_data');
 
-      if (error || !progress) {
+      if (error || !suspendData) {
         return [true, {}];
       }
 
-      return [false, progress];
+      return [false, suspendData];
     } catch (e) {
       console.error(e);
       return [true, {}];
     }
+  },
+  setCourseStart: () => {
+    console.debug(`API.SetCourseStart`);
+
+    const [isInit, API] = service.isInitialized();
+
+    if (!isInit || !API) {
+      console.warn(`Unable to update suspend data: service not initialized`);
+      return [true, {}];
+    }
+    service.setValue(
+      'cmi.suspend_data',
+      JSON.stringify({ courseStarted: true })
+    );
+    service.commit();
+
+    return [false];
   },
   getProgress: () => {
     console.debug(`API.GetProgress`);

@@ -182,25 +182,25 @@ const $29add62a37af587e$export$6ed414b8d8bead88 = {
             ];
         }
     },
-    getTotalTime: ()=>{
-        console.debug(`API.GetTotalTime`);
+    getSuspendData: ()=>{
+        console.debug(`API.GetSuspendData`);
         const [isInit, API] = $29add62a37af587e$export$6ed414b8d8bead88.isInitialized();
         if (!isInit || !API) {
-            console.warn(`Unable to get progress: service not initialized`);
+            console.warn(`Unable to get suspend data: service not initialized`);
             return [
                 true,
                 {}
             ];
         }
         try {
-            const [error, progress] = $29add62a37af587e$export$6ed414b8d8bead88.getValue("cmi.total_time");
-            if (error || !progress) return [
+            const [error, suspendData] = $29add62a37af587e$export$6ed414b8d8bead88.getValue("cmi.suspend_data");
+            if (error || !suspendData) return [
                 true,
                 {}
             ];
             return [
                 false,
-                progress
+                suspendData
             ];
         } catch (e) {
             console.error(e);
@@ -209,6 +209,24 @@ const $29add62a37af587e$export$6ed414b8d8bead88 = {
                 {}
             ];
         }
+    },
+    setCourseStart: ()=>{
+        console.debug(`API.SetCourseStart`);
+        const [isInit, API] = $29add62a37af587e$export$6ed414b8d8bead88.isInitialized();
+        if (!isInit || !API) {
+            console.warn(`Unable to update suspend data: service not initialized`);
+            return [
+                true,
+                {}
+            ];
+        }
+        $29add62a37af587e$export$6ed414b8d8bead88.setValue("cmi.suspend_data", JSON.stringify({
+            courseStarted: true
+        }));
+        $29add62a37af587e$export$6ed414b8d8bead88.commit();
+        return [
+            false
+        ];
     },
     getProgress: ()=>{
         console.debug(`API.GetProgress`);
@@ -532,25 +550,43 @@ const $bc9227963e5f4dff$export$6ed414b8d8bead88 = {
             ];
         }
     },
-    getTotalTime: ()=>{
-        console.debug(`API.GetTotalTime`);
+    setCourseStart: ()=>{
+        console.debug(`API.SetCourseStart`);
         const [isInit, API] = $bc9227963e5f4dff$export$6ed414b8d8bead88.isInitialized();
         if (!isInit || !API) {
-            console.warn(`Unable to get progress: service not initialized`);
+            console.warn(`Unable to set suspend data: service not initialized`);
+            return [
+                true,
+                {}
+            ];
+        }
+        $bc9227963e5f4dff$export$6ed414b8d8bead88.setValue("cmi.suspend_data", JSON.stringify({
+            courseStarted: true
+        }));
+        $bc9227963e5f4dff$export$6ed414b8d8bead88.commit();
+        return [
+            false
+        ];
+    },
+    getSuspendData: ()=>{
+        console.debug(`API.GetSuspendData`);
+        const [isInit, API] = $bc9227963e5f4dff$export$6ed414b8d8bead88.isInitialized();
+        if (!isInit || !API) {
+            console.warn(`Unable to get suspend data: service not initialized`);
             return [
                 true,
                 {}
             ];
         }
         try {
-            const [error, progress] = $bc9227963e5f4dff$export$6ed414b8d8bead88.getValue("cmi.core.total_time");
-            if (error || !progress) return [
+            const [error, suspendData] = $bc9227963e5f4dff$export$6ed414b8d8bead88.getValue("cmi.suspend_data");
+            if (error || !suspendData) return [
                 true,
                 {}
             ];
             return [
                 false,
-                progress
+                suspendData
             ];
         } catch (e) {
             console.error(e);
