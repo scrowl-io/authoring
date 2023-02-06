@@ -184,6 +184,29 @@ export const service: RUNTIME_SERVICE = {
       return [true, {}];
     }
   },
+  getTotalTime: () => {
+    console.debug(`API.GetTotalTime`);
+
+    const [isInit, API] = service.isInitialized();
+
+    if (!isInit || !API) {
+      console.warn(`Unable to get progress: service not initialized`);
+      return [true, {}];
+    }
+
+    try {
+      const [error, progress] = service.getValue('cmi.core.total_time');
+
+      if (error || !progress) {
+        return [true, {}];
+      }
+
+      return [false, progress];
+    } catch (e) {
+      console.error(e);
+      return [true, {}];
+    }
+  },
   getProgress: () => {
     console.debug(`API.GetProgress`);
 
@@ -265,7 +288,7 @@ export const service: RUNTIME_SERVICE = {
     if (lessonStatus === 'unknown' || lessonStatus === 'not attempted') {
       service.setValue('cmi.core.lesson_status', 'incomplete');
       service.setValue('cmi.suspend_data', 0);
-      
+
       const startLocation = {
         cur: {
           m: 0,

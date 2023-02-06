@@ -166,6 +166,34 @@ const $704b14303ded74fd$export$6ed414b8d8bead88 = {
             ];
         }
     },
+    getTotalTime: ()=>{
+        console.debug(`API.GetTotalTime`);
+        const [isInit, API] = $704b14303ded74fd$export$6ed414b8d8bead88.isInitialized();
+        if (!isInit || !API) {
+            console.warn(`Unable to get progress: service not initialized`);
+            return [
+                true,
+                {}
+            ];
+        }
+        try {
+            const [error, progress] = $704b14303ded74fd$export$6ed414b8d8bead88.getValue("cmi.total_time");
+            if (error || !progress) return [
+                true,
+                {}
+            ];
+            return [
+                false,
+                progress
+            ];
+        } catch (e) {
+            console.error(e);
+            return [
+                true,
+                {}
+            ];
+        }
+    },
     getProgress: ()=>{
         console.debug(`API.GetProgress`);
         const [isInit, API] = $704b14303ded74fd$export$6ed414b8d8bead88.isInitialized();
@@ -479,6 +507,34 @@ const $0f0d20ec2fcb698f$export$6ed414b8d8bead88 = {
             return [
                 false,
                 JSON.parse(location)
+            ];
+        } catch (e) {
+            console.error(e);
+            return [
+                true,
+                {}
+            ];
+        }
+    },
+    getTotalTime: ()=>{
+        console.debug(`API.GetTotalTime`);
+        const [isInit, API] = $0f0d20ec2fcb698f$export$6ed414b8d8bead88.isInitialized();
+        if (!isInit || !API) {
+            console.warn(`Unable to get progress: service not initialized`);
+            return [
+                true,
+                {}
+            ];
+        }
+        try {
+            const [error, progress] = $0f0d20ec2fcb698f$export$6ed414b8d8bead88.getValue("cmi.core.total_time");
+            if (error || !progress) return [
+                true,
+                {}
+            ];
+            return [
+                false,
+                progress
             ];
         } catch (e) {
             console.error(e);

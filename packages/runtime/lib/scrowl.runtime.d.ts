@@ -85,6 +85,7 @@ export type RUNTIME_SERVICE = {
     getError: (printError?: boolean) => RUNTIME_SERVICE_RESULT;
     getProgress: () => [error: boolean, progress: any];
     getLocation: () => [error: boolean, location: any];
+    getTotalTime: () => [error: boolean, totalTime: {}];
     save?: () => RUNTIME_SERVICE_RESULT;
     stop?: () => RUNTIME_SERVICE_RESULT;
     setValue: (elem: CMIElement, val: CMIElementValue) => [error: boolean];

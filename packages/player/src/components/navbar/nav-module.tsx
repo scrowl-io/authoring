@@ -12,8 +12,8 @@ export const NavModule = ({ pageId, config, mIdx }) => {
 
   let moduleSlides: Array<string> = [];
 
-  config.lessons.forEach((_lesson, i) => {
-    const slide = `module-${mIdx}--lesson-${i}`;
+  config.lessons.forEach((lesson, _i) => {
+    const slide = `module-${mIdx}--lesson-${lesson.lesson.id}`;
     moduleSlides.push(slide);
   });
 
@@ -43,7 +43,7 @@ export const NavModule = ({ pageId, config, mIdx }) => {
       <Collapse in={isOpen}>
         <ul className={css.lessonList}>
           {config.lessons.map((lesson, lIdx) => {
-            const id = `module-${mIdx}--lesson-${lIdx}`;
+            const id = `module-${mIdx}--lesson-${lesson.lesson.id}`;
             const url = `/${id}`;
             const lessonName = lesson.lesson.name;
 

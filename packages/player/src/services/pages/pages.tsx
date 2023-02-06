@@ -123,7 +123,7 @@ export const create = (
 
   project.outlineConfig.forEach((module, mIdx) => {
     module.lessons.forEach((page, lIdx) => {
-      const id = `module-${mIdx}--lesson-${lIdx}`;
+      const id = `module-${mIdx}--lesson-${page.lesson.id}`;
       const url = `/${id}`;
 
       let nextLessonUrl;
@@ -134,7 +134,7 @@ export const create = (
         lIdx < module.lessons.length - 1 ||
         mIdx < project.outlineConfig.length - 1
       ) {
-        nextLessonId = `module-${mIdx}--lesson-${lIdx + 1}`;
+        nextLessonId = `module-${mIdx}--lesson-${page.lesson.id + 1}`;
         nextLessonUrl = `/${nextLessonId}`;
         nextLessonText = `Continue to the next lesson`;
       }
@@ -143,7 +143,7 @@ export const create = (
         lIdx === module.lessons.length - 1 &&
         mIdx <= project.outlineConfig.length - 1
       ) {
-        nextLessonId = `module-${mIdx + 1}--lesson-0`;
+        nextLessonId = `module-${mIdx + 1}--lesson-${page.lesson.id + 1}`;
         nextLessonUrl = `/${nextLessonId}`;
         nextLessonText = `Continue to the first Lesson of Module ${mIdx + 1}`;
       }
