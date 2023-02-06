@@ -212,13 +212,14 @@ export const createScormEntry = (
   { scorm, meta, ...project }: ProjectData,
   source: string,
   dest: string,
-  templates: TemplateList
+  templates: TemplateList,
+  fileOverride?: string
 ) => {
   // create project files [html, js] and add them to publish folder
   return new Promise<rq.ApiResult>((resolve) => {
     const entryHtmlSrc = fs.joinPath(
       Templates.TEMPLATE_PATHS.project,
-      'scorm.html.hbs'
+      fileOverride || 'scorm.html.hbs'
     );
     const entryHtmlDest = fs.joinPath(dest, 'index.html');
     const entryJsSrc = fs.joinPath(

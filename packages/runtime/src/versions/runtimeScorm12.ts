@@ -98,6 +98,10 @@ export const service: RUNTIME_SERVICE = {
 
     if (printError) {
       console.error(`Error:\n${JSON.stringify(apiError, null, 2)}`);
+      const errorEvent = new CustomEvent('scormError', {
+        detail: apiError,
+      });
+      document.dispatchEvent(errorEvent);
     }
 
     return {
@@ -142,7 +146,6 @@ export const service: RUNTIME_SERVICE = {
   },
   updateLocation: (location, slideId) => {
     console.debug(`API.UpdateLocation`);
-    console.debug(location);
 
     const [isInit, API] = service.isInitialized();
 
@@ -261,13 +264,29 @@ export const service: RUNTIME_SERVICE = {
 
     if (lessonStatus === 'unknown' || lessonStatus === 'not attempted') {
       service.setValue('cmi.core.lesson_status', 'incomplete');
+      const startLocation = {
+        cur: {
+          m: 0,
+          l: 0,
+          s: 0,
+        },
+        max: {
+          m: 0,
+          l: 0,
+          s: 0,
+        },
+      };
+      service.setValue(
+        'cmi.core.lesson_location',
+        JSON.stringify(startLocation)
+      );
     } else {
       service.setValue(
         'cmi.core.lesson_status',
         service.getValue('cmi.core.lesson_status')[1]
       );
       service.setValue(
-        'cmi.progress_measure',
+        'cmi.suspend_data',
         service.getValue('cmi.suspend_data')[1]
       );
     }
@@ -329,6 +348,21 @@ export const service: RUNTIME_SERVICE = {
     }
 
     const getRes = API.LMSGetValue(elem);
+
+    // Unlike in SCORM 2004v3, failing to retrieve a value from the LMS does not cause an error: it just returns an empty string and continues. Below has been added to keep 1.2 consistent with 2004, but for now I don't think we should treat this as an error
+
+    // if (getRes === '' || getRes === null || getRes === undefined) {
+    //   const apiError = {
+    //     id: '403',
+    //     message: `Data Model Element Not Initialized`,
+    //     stack: `The ${elem} field has not been set for this SCO.`,
+    //   };
+
+    //   const errorEvent = new CustomEvent('scormError', {
+    //     detail: apiError,
+    //   });
+    //   document.dispatchEvent(errorEvent);
+    // }
 
     if (getRes === '') {
       console.error(`API failed to get value for: ${elem}`);

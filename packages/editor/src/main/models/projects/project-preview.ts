@@ -3,7 +3,12 @@ import { ProjectData, ProjectFile } from './projects.types';
 import { rq, fs, log, mu } from '../../services';
 import { lt, obj } from '../../utils';
 
-export const createPreviewSource = (project: ProjectData, meta: ProjectFile, source: string, dest: string) => {
+export const createPreviewSource = (
+  project: ProjectData,
+  meta: ProjectFile,
+  source: string,
+  dest: string
+) => {
   return new Promise<rq.ApiResult>((resolve) => {
     createScormSource(project, meta, source, dest).then((sourceRes) => {
       if (sourceRes.error) {
@@ -11,30 +16,39 @@ export const createPreviewSource = (project: ProjectData, meta: ProjectFile, sou
         resolve(sourceRes);
         return;
       }
-      
+
       const templates = sourceRes.data.templates;
 
-      createScormEntry(project, source, dest, templates).then((entryRes) => {
-        if (entryRes.error) {
-          log.error(entryRes);
-          resolve(entryRes);
-          return;
-        }
+      const previewFile = 'preview.html.hbs';
 
-        const cacheBreaker = new Date().valueOf();
-        
-        resolve({
-          error: false,
-          data: {
-            url: `${rq.previewServerUrl}/index.html?ver=${cacheBreaker}`
+      createScormEntry(project, source, dest, templates, previewFile).then(
+        (entryRes) => {
+          if (entryRes.error) {
+            log.error(entryRes);
+            resolve(entryRes);
+            return;
           }
-        });
-      })
+
+          const cacheBreaker = new Date().valueOf();
+          resolve({
+            error: false,
+            data: {
+              url: `${rq.previewServerUrl}/index.html?ver=${cacheBreaker}`,
+            },
+          });
+        }
+      );
     });
   });
 };
 
-export const preview = (project: ProjectData, meta: ProjectFile, source: string, type: mu.PreviewTypes, id?: number) => {
+export const preview = (
+  project: ProjectData,
+  meta: ProjectFile,
+  source: string,
+  type: mu.PreviewTypes,
+  id?: number
+) => {
   return new Promise<rq.ApiResult>((resolve) => {
     const previewDest = fs.APP_PATHS.preview;
     let previewData: ProjectData | undefined = undefined;
@@ -48,13 +62,14 @@ export const preview = (project: ProjectData, meta: ProjectFile, source: string,
         source,
         type,
         id,
-      }
+      },
     };
 
     switch (type) {
       case 'slide':
         if (!project.slides || !project.slides.length) {
-          previewError.message = 'Unable to create preview: project has no slides';
+          previewError.message =
+            'Unable to create preview: project has no slides';
           log.error(previewError);
           resolve(previewError);
           return;
@@ -92,7 +107,8 @@ export const preview = (project: ProjectData, meta: ProjectFile, source: string,
         break;
       case 'lesson':
         if (!project.lessons || !project.lessons.length) {
-          previewError.message = 'Unable to create preview: project has no lessons';
+          previewError.message =
+            'Unable to create preview: project has no lessons';
           log.error(previewError);
           resolve(previewError);
           return;
@@ -130,7 +146,8 @@ export const preview = (project: ProjectData, meta: ProjectFile, source: string,
         break;
       case 'module':
         if (!project.modules || !project.modules.length) {
-          previewError.message = 'Unable to create preview: project has no modules';
+          previewError.message =
+            'Unable to create preview: project has no modules';
           log.error(previewError);
           resolve(previewError);
           return;
