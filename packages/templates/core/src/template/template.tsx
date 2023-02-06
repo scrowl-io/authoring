@@ -74,9 +74,13 @@ export const Template = ({
     }
 
     if (Scrowl && Scrowl.runtime && Scrowl.runtime.API !== null) {
-      const [locationError, location] = Scrowl.runtime.getLocation();
+      const [totalTimeError, totalTime] = Scrowl.runtime.getTotalTime();
 
-      if (!locationError && Object.keys(location).length > 0) {
+      if (
+        !totalTimeError &&
+        totalTime !== '0000:00:00.0' &&
+        totalTime !== 'PT0H0M0S'
+      ) {
         setScroll(true);
       }
     }
