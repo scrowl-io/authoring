@@ -128,12 +128,12 @@ export const Root = ({
         cur: {
           m: number;
           l: number;
-          s?: number;
+          s: number;
         };
         max: {
-          m?: number;
-          l?: number;
-          s?: number;
+          m: number;
+          l: number;
+          s: number;
         };
       };
 

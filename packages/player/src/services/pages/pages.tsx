@@ -18,6 +18,69 @@ const Page = ({ slides, templates, slideId, ...props }: PageProps) => {
   const Scrowl = window['Scrowl'];
   const controller = new Scrowl.core.scroll.Controller();
 
+  const targets = slides?.map((slide) => {
+    return `module-${slide.moduleId}--lesson-${slide.lessonId}--slide-${slide.id}-${slide.template.meta.filename}`;
+  });
+
+  let currentSlide;
+  let currentIndex;
+
+  const handleArrowKeys = (ev) => {
+    let matchingId;
+
+    if (targets && currentSlide !== 'owlui-last') {
+      matchingId = targets.find((t) => {
+        return t === currentSlide;
+      });
+    }
+
+    if (matchingId) {
+      currentIndex = targets?.indexOf(matchingId);
+    } else {
+      currentIndex = targets.length;
+    }
+
+    let targetIndex;
+    let targetElement;
+
+    if (ev.key === 'ArrowLeft') {
+      targetIndex = targets[currentIndex - 1];
+      targetElement = document.querySelector(`#${targetIndex}`);
+      setTimeout(() => {
+        targetElement?.scrollIntoView(false);
+      }, 0);
+    } else if (ev.key === 'ArrowRight') {
+      if (currentIndex + 1 === targets.length) {
+        targetElement = document.querySelector('.owlui-last');
+        setTimeout(() => {
+          targetElement?.scrollIntoView(true);
+        }, 0);
+        currentSlide = 'owlui-last';
+      } else {
+        targetIndex = targets[currentIndex + 1];
+        targetElement = document.querySelector(`#${targetIndex}`);
+        setTimeout(() => {
+          targetElement?.scrollIntoView();
+        }, 0);
+      }
+    }
+  };
+
+  useEffect(() => {
+    const handleSlideEvent = (ev) => {
+      currentSlide = ev.detail.currentTarget.id;
+    };
+    document.addEventListener('slide.enter', handleSlideEvent);
+  }, [slides]);
+
+  useEffect(() => {
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+        handleArrowKeys(e);
+      }
+    });
+  }, []);
+
   useEffect(() => {
     if (slideId && slideId?.length > 0) {
       document.querySelector(`#${slideId}`)?.scrollIntoView();
@@ -155,7 +218,7 @@ export const create = (
         Element: () => {
           return (
             <>
-              <NavBar pageId={id} project={project} />
+              <NavBar slides={page.slides} pageId={id} project={project} />
               <div className="owlui-lesson">
                 <Page
                   id={id}

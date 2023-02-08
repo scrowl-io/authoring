@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+// @ts-ignore
+import React, { useEffect, useState } from 'react';
 import {
   ThemeProvider,
   Navbar,
@@ -15,7 +16,7 @@ import { NavGlossaryItem } from './nav-glossary-item';
 
 const css = utils.css.removeMapPrefix(_css);
 
-export const NavBar = ({ pageId, project }) => {
+export const NavBar = ({ pageId, project, slides }) => {
   const Scrowl = window['Scrowl'];
   const [tabKey, setTabKey] = useState('outline');
   const themePrefixes: CssMapProps = {};
@@ -31,6 +32,68 @@ export const NavBar = ({ pageId, project }) => {
   themePrefixes['offcanvas'] = `owlui-offcanvas`;
   themePrefixes['offcanvas-body'] = `owlui-offcanvas-body`;
   themePrefixes['container'] = `owlui-container`;
+
+  let currentSlide;
+  let currentIndex;
+
+  const OutlineFooter = () => {
+    const targets = slides?.map((slide) => {
+      return `module-${slide.moduleId}--lesson-${slide.lessonId}--slide-${slide.id}-${slide.template.meta.filename}`;
+    });
+
+    const scrollSlide = (ev) => {
+      let matchingId;
+      if (targets && currentSlide !== 'owlui-last') {
+        matchingId = targets.find((t) => {
+          return t === currentSlide;
+        });
+      } else {
+        currentIndex = targets.length;
+      }
+
+      if (matchingId) {
+        currentIndex = targets?.indexOf(matchingId);
+      }
+
+      let targetIndex;
+      let targetElement;
+
+      switch (ev.target.innerText) {
+        case 'Next Slide':
+          if (currentIndex + 1 === targets.length) {
+            targetElement = document.querySelector('.owlui-last');
+            targetElement?.scrollIntoView();
+            currentSlide = 'owlui-last';
+          } else {
+            targetIndex = targets[currentIndex + 1];
+            targetElement = document.querySelector(`#${targetIndex}`);
+            targetElement?.scrollIntoView();
+          }
+          break;
+        case 'Previous Slide':
+          targetIndex = targets[currentIndex - 1];
+          targetElement = document.querySelector(`#${targetIndex}`);
+          targetElement?.scrollIntoView(false);
+          break;
+      }
+    };
+
+    return (
+      <div className={css.outlineFooter}>
+        <div className={css.buttonContainer}>
+          <button onClick={scrollSlide}>Previous Slide</button>
+          <button onClick={scrollSlide}>Next Slide</button>
+        </div>
+      </div>
+    );
+  };
+
+  useEffect(() => {
+    const handleSlideEvent = (ev) => {
+      currentSlide = ev.detail.currentTarget.id;
+    };
+    document.addEventListener('slide.enter', handleSlideEvent);
+  }, []);
 
   return (
     <ThemeProvider prefixes={themePrefixes}>
@@ -52,7 +115,7 @@ export const NavBar = ({ pageId, project }) => {
               onSelect={(tab) => setTabKey(tab)}
             >
               <Tab eventKey="outline" key="outline" title="Outline">
-                <Offcanvas.Body>
+                <Offcanvas.Body className={css.outlineOffcanvas}>
                   <div className={css.titleContainer}>
                     <h3>{project.name}</h3>
                     <h4 className={css.outlineSubtitle}>Subtitle Here</h4>
@@ -76,6 +139,7 @@ export const NavBar = ({ pageId, project }) => {
                       );
                     })}
                 </Offcanvas.Body>
+                <OutlineFooter />
               </Tab>
               <Tab eventKey="resources" key="resources" title="Resources">
                 <Offcanvas.Body>

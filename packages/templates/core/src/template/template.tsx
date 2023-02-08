@@ -367,63 +367,11 @@ export const Template = ({
     document.addEventListener('startCourse', handleStart);
   }, []);
 
-  const nextSlide = (ev) => {
-    if (scroll) {
-      const slideContent = ev.target.parentElement.parentElement.firstChild.id;
-
-      const targets = slides?.map((slide) => {
-        return `module-${slide.moduleId}--lesson-${slide.lessonId}--slide-${slide.id}-${slide.template.meta.filename}`;
-      });
-
-      const matchingId = targets?.find((t) => {
-        return t === slideContent;
-      });
-
-      let currentIndex;
-      if (matchingId) {
-        currentIndex = targets?.indexOf(matchingId);
-      }
-
-      let targetIndex;
-      let targetElement;
-
-      if (targets) {
-        switch (ev.target.innerText) {
-          case 'Next':
-            if (currentIndex + 1 === targets.length) {
-              targetElement = document.querySelector('.owlui-last');
-            } else {
-              targetIndex = targets[currentIndex + 1];
-              console.log(targetIndex);
-              targetElement = document.querySelector(`#${targetIndex}`);
-            }
-            targetElement?.scrollIntoView();
-            break;
-          case 'Previous':
-            targetIndex = targets[currentIndex - 1];
-            targetElement = document.querySelector(`#${targetIndex}`);
-            targetElement?.scrollIntoView(false);
-            break;
-        }
-      }
-    }
-  };
-
   return (
     <div ref={slideRef} className={classes} {...props}>
       <div ref={triggerRef} className="scene-trigger"></div>
       <div ref={sceneRef} className="inner-content">
         {children}
-        {slideRef.current &&
-          slideRef.current.className &&
-          !slideRef.current.className.includes('template-lesson-intro') &&
-          !slideRef.current.className.includes('owlui-last') && (
-            // @ts-ignore
-            <div className={css.buttonContainer}>
-              <button onClick={nextSlide}>Previous</button>
-              <button onClick={nextSlide}>Next</button>
-            </div>
-          )}
       </div>
     </div>
   );

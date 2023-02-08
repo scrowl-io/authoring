@@ -22,124 +22,156 @@
   }
 }
 
-.title-container {
-  margin-bottom: 2em;
+.tab-content {
+  overflow: scroll;
+  margin-bottom: 4em;
 
-  h3 {
-    font-weight: 700;
+  .outline-offcanvas {
+    padding: 0;
   }
 
-  .outline-subtitle {
-    font-weight: 300;
-    font-size: 1.2em;
-  }
+  .title-container {
+    padding: 1rem;
 
-  .outline-duration {
-    margin-top: 1em;
-    display: flex;
-    align-items: center;
-
-    span {
-      color: #72727e;
-      margin-right: 0.25rem;
-      font-size: 1em;
-    }
-
-    h5 {
-      font-size: 1em;
-      font-weight: 200;
-      color: #72727e;
-      margin: 0;
-    }
-  }
-}
-
-.module-lessons {
-  margin-left: 0.25rem;
-
-  .module-button {
-    display: flex;
-    align-items: center;
-
-    h5 {
-      color: black;
-      margin: 0;
-    }
-
-    .icon {
-      font-size: 1.5rem;
-      color: black;
-      margin-right: 0.25em;
-      transition: transform 0.2s;
-
-      &-expanded {
-        font-size: 1.5rem;
-        margin-right: 0.25em;
-        transform: rotate(90deg);
-        transition: transform 0.2s;
-      }
-    }
-
-    &:hover {
-      cursor: pointer;
-      background-color: #f9f9f9;
-    }
-  }
-
-  .lesson-list {
-    margin-left: 0.5rem;
-    margin-top: 0.5rem;
-    list-style: none;
-
-    a {
-      text-decoration: none;
-    }
-
-    li:hover {
-      background-color: #f9f9f9;
-      cursor: pointer;
-    }
-
-    .lesson-button {
-      background-color: transparent;
-      border: none;
-      display: flex;
-      align-items: center;
-      margin-bottom: 0.25rem;
-
-      .lesson-icon {
-        color: black;
-        margin-right: 0.25rem;
-        transform: rotate(-90deg);
-
-        &-active {
-          color: #007aba;
-          margin-right: 0.25rem;
-          transform: rotate(-90deg);
-        }
-      }
-
-      .lesson-link {
-        text-decoration: none;
-        color: black;
-
-        &-active {
-          text-decoration: none;
-          color: #007aba;
-        }
-      }
-    }
-  }
-}
-
-.nav-glossary {
-  .glossary-item {
-    &-term {
+    h3 {
       font-weight: 700;
     }
 
-    &-definition {
-      font-weight: 400;
+    .outline-subtitle {
+      font-weight: 300;
+      font-size: 1.2em;
+    }
+
+    .outline-duration {
+      margin-top: 1em;
+      display: flex;
+      align-items: center;
+
+      span {
+        color: #72727e;
+        margin-right: 0.25rem;
+        font-size: 1em;
+      }
+
+      h5 {
+        font-size: 1em;
+        font-weight: 200;
+        color: #72727e;
+        margin: 0;
+      }
+    }
+  }
+
+  .module-lessons {
+    margin-left: 1rem;
+
+    .module-button {
+      display: flex;
+      align-items: center;
+
+      h5 {
+        color: black;
+        margin: 0;
+      }
+
+      .icon {
+        font-size: 1.5rem;
+        color: black;
+        margin-right: 0.25em;
+        transition: transform 0.2s;
+
+        &-expanded {
+          font-size: 1.5rem;
+          margin-right: 0.25em;
+          transform: rotate(90deg);
+          transition: transform 0.2s;
+        }
+      }
+
+      &:hover {
+        cursor: pointer;
+        background-color: #f9f9f9;
+      }
+    }
+
+    .lesson-list {
+      margin-left: 0.5rem;
+      margin-top: 0.5rem;
+      list-style: none;
+
+      a {
+        text-decoration: none;
+      }
+
+      li:hover {
+        background-color: #f9f9f9;
+        cursor: pointer;
+      }
+
+      .lesson-button {
+        background-color: transparent;
+        border: none;
+        display: flex;
+        align-items: center;
+        margin-bottom: 0.25rem;
+
+        .lesson-icon {
+          color: black;
+          margin-right: 0.25rem;
+          transform: rotate(-90deg);
+
+          &-active {
+            color: #007aba;
+            margin-right: 0.25rem;
+            transform: rotate(-90deg);
+          }
+        }
+
+        .lesson-link {
+          text-decoration: none;
+          color: black;
+
+          &-active {
+            text-decoration: none;
+            color: #007aba;
+          }
+        }
+      }
+    }
+  }
+
+  .outline-footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 1em;
+    background-color: #ffffff;
+
+    .button-container {
+      width: 100%;
+      display: flex;
+      justify-content: space-evenly;
+
+      button {
+        width: 10em;
+        border-radius: 10px;
+        padding: 0.5em 1em;
+        background-color: #007aba;
+        border: none;
+        color: #ffffff;
+      }
+    }
+  }
+
+  .nav-glossary {
+    .glossary-item {
+      &-term {
+        font-weight: 700;
+      }
+
+      &-definition {
+        font-weight: 400;
+      }
     }
   }
 }

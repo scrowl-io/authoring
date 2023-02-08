@@ -103,9 +103,12 @@ export const create = () => {
 
       createSlide('Slide 5.1', 2, 5, 11, 'twoColumn'),
       createSlide('Slide 5.2', 2, 5, 12, 'twoColumn'),
+      createSlide('Slide 5.3', 2, 5, 13, 'lessonIntro'),
+      createSlide('Slide 5.4', 2, 5, 14, 'twoColumn'),
+      createSlide('Slide 5.6', 2, 5, 15, 'twoColumn'),
 
-      createSlide('Slide 6.1', 2, 6, 13, 'twoColumn'),
-      createSlide('Slide 6.2', 2, 6, 14, 'twoColumn'),
+      createSlide('Slide 6.1', 2, 6, 16, 'twoColumn'),
+      createSlide('Slide 6.2', 2, 6, 17, 'twoColumn'),
     ],
     glossary: [
       {
