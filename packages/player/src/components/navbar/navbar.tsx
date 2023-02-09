@@ -106,7 +106,7 @@ export const NavBar = ({ pageId, project, slides }) => {
         currentSlide: currentSlide,
       };
 
-      const currentSlideEvent = new CustomEvent('CurrentSlideUpdate', {
+      const currentSlideEvent = new CustomEvent('CurrentSlideNavUpdate', {
         detail: currentSlideObj,
       });
       document.dispatchEvent(currentSlideEvent);
@@ -126,16 +126,40 @@ export const NavBar = ({ pageId, project, slides }) => {
     const handleSlideEvent = (ev) => {
       currentSlide = ev.detail.currentTarget.id;
     };
-    document.addEventListener('slide.enter', handleSlideEvent);
-  }, []);
-
-  useEffect(() => {
     const handleUpdateSlideEvent = (ev) => {
-      currentIndex = ev.detail.currentIndex;
       currentSlide = ev.detail.currentSlide;
     };
-    document.addEventListener('CurrentSlideUpdate', handleUpdateSlideEvent);
-  });
+    document.addEventListener('CurrentSlidePageUpdate', handleUpdateSlideEvent);
+    document.addEventListener('slide.enter', handleSlideEvent);
+
+    let options = {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.8,
+    };
+
+    let introObserver = new IntersectionObserver(() => {
+      currentSlide = 'module-0--lesson-0--slide-0-lesson-intro';
+    }, options);
+
+    let finalSlideObserver = new IntersectionObserver(() => {
+      currentSlide = 'owlui-last';
+    }, options);
+
+    let introSlide = document.querySelector(
+      '#module-0--lesson-0--slide-0-lesson-intro'
+    );
+
+    let lastSlide = document.querySelector('.owlui-last');
+
+    if (introSlide) {
+      introObserver.observe(introSlide);
+    }
+    if (lastSlide) {
+      finalSlideObserver.observe(lastSlide);
+    }
+  }, []);
+
 
   return (
     <ThemeProvider prefixes={themePrefixes}>

@@ -46,47 +46,50 @@ const Page = ({ slides, templates, slideId, ...props }: PageProps) => {
       matchingId = targets.find((t) => {
         return t === currentSlide;
       });
+    } else {
+      currentIndex = targets.length;
     }
 
     if (matchingId) {
       currentIndex = targets?.indexOf(matchingId);
-    } else if (currentSlide === 'owlui-last') {
-      currentIndex = targets.length;
     }
 
     let targetIndex;
     let targetElement;
 
-    if (ev.key === 'ArrowLeft') {
-      if (currentIndex === 1) {
-        targetIndex = targets[0];
-        targetElement = document.querySelector(`#${targetIndex}`);
-        currentIndex = 0;
-        currentSlide = `module-${slides[0].moduleId}--lesson-${slides[0].lessonId}--slide-${slides[0].id}-${slides[0].template.meta.filename}`;
-        setTimeout(() => {
-          targetElement?.scrollIntoView(false);
-        }, 0);
-      } else {
-        targetIndex = targets[currentIndex - 1];
-        targetElement = document.querySelector(`#${targetIndex}`);
-        setTimeout(() => {
-          targetElement?.scrollIntoView(false);
-        }, 0);
-      }
-    } else if (ev.key === 'ArrowRight') {
-      if (currentIndex + 1 === targets.length) {
-        targetElement = document.querySelector('.owlui-last');
-        setTimeout(() => {
-          targetElement?.scrollIntoView(true);
-        }, 0);
-        currentSlide = 'owlui-last';
-      } else {
-        targetIndex = targets[currentIndex + 1];
-        targetElement = document.querySelector(`#${targetIndex}`);
-        setTimeout(() => {
-          targetElement?.scrollIntoView(true);
-        }, 0);
-      }
+    switch (ev.key) {
+      case 'ArrowLeft':
+        if (currentIndex === 1) {
+          targetIndex = targets[0];
+          targetElement = document.querySelector(`#${targetIndex}`);
+          currentIndex = 0;
+          currentSlide = `module-${slides[0].moduleId}--lesson-${slides[0].lessonId}--slide-${slides[0].id}-${slides[0].template.meta.filename}`;
+          setTimeout(() => {
+            targetElement?.scrollIntoView(false);
+          }, 0);
+        } else {
+          targetIndex = targets[currentIndex - 1];
+          targetElement = document.querySelector(`#${targetIndex}`);
+          setTimeout(() => {
+            targetElement?.scrollIntoView(false);
+          }, 0);
+        }
+        break;
+      case 'ArrowRight':
+        if (currentIndex + 1 === targets.length) {
+          targetElement = document.querySelector('.owlui-last');
+          setTimeout(() => {
+            targetElement?.scrollIntoView(true);
+          }, 0);
+          currentSlide = 'owlui-last';
+        } else {
+          targetIndex = targets[currentIndex + 1];
+          targetElement = document.querySelector(`#${targetIndex}`);
+          setTimeout(() => {
+            targetElement?.scrollIntoView(true);
+          }, 0);
+        }
+        break;
     }
 
     const currentSlideObj = {
@@ -94,7 +97,7 @@ const Page = ({ slides, templates, slideId, ...props }: PageProps) => {
       currentSlide: currentSlide,
     };
 
-    const currentSlideEvent = new CustomEvent('CurrentSlideUpdate', {
+    const currentSlideEvent = new CustomEvent('CurrentSlidePageUpdate', {
       detail: currentSlideObj,
     });
     document.dispatchEvent(currentSlideEvent);
@@ -104,15 +107,45 @@ const Page = ({ slides, templates, slideId, ...props }: PageProps) => {
     const handleSlideEvent = (ev) => {
       currentSlide = ev.detail.currentTarget.id;
     };
-    document.addEventListener('slide.enter', handleSlideEvent);
-  }, [slides]);
+    const handleUpdateSlideEvent = (ev) => {
+      currentSlide = ev.detail.currentSlide;
+    };
 
-  useEffect(() => {
     window.addEventListener('keydown', (e) => {
       if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
         handleArrowKeys(e);
       }
     });
+
+    document.addEventListener('CurrentSlideNavUpdate', handleUpdateSlideEvent);
+    document.addEventListener('slide.enter', handleSlideEvent);
+
+    let options = {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.8,
+    };
+
+    let introObserver = new IntersectionObserver(() => {
+      currentSlide = 'module-0--lesson-0--slide-0-lesson-intro';
+    }, options);
+
+    let finalSlideObserver = new IntersectionObserver(() => {
+      currentSlide = 'owlui-last';
+    }, options);
+
+    let introSlide = document.querySelector(
+      '#module-0--lesson-0--slide-0-lesson-intro'
+    );
+
+    let lastSlide = document.querySelector('.owlui-last');
+
+    if (introSlide) {
+      introObserver.observe(introSlide);
+    }
+    if (lastSlide) {
+      finalSlideObserver.observe(lastSlide);
+    }
   }, []);
 
   useEffect(() => {
@@ -122,14 +155,6 @@ const Page = ({ slides, templates, slideId, ...props }: PageProps) => {
       window.scrollTo({ top: 0 });
     }
   }, [slides]);
-
-  useEffect(() => {
-    const handleUpdateSlideEvent = (ev) => {
-      currentIndex = ev.detail.currentIndex;
-      currentSlide = ev.detail.currentSlide;
-    };
-    document.addEventListener('CurrentSlideUpdate', handleUpdateSlideEvent);
-  });
 
   useEffect(() => {
     return () => {
