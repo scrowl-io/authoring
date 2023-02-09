@@ -19,7 +19,7 @@ const Page = ({ slides, templates, slideId, ...props }: PageProps) => {
   const controller = new Scrowl.core.scroll.Controller();
 
   let currentSlide = `module-${slides[0].moduleId}--lesson-${slides[0].lessonId}--slide-${slides[0].id}-${slides[0].template.meta.filename}`;
-  let currentIndex;
+  let currentIndex = 0;
 
   const targets = slides?.map((slide) => {
     return `module-${slide.moduleId}--lesson-${slide.lessonId}--slide-${slide.id}-${slide.template.meta.filename}`;
@@ -70,10 +70,20 @@ const Page = ({ slides, templates, slideId, ...props }: PageProps) => {
         targetIndex = targets[currentIndex + 1];
         targetElement = document.querySelector(`#${targetIndex}`);
         setTimeout(() => {
-          targetElement?.scrollIntoView();
+          targetElement?.scrollIntoView(true);
         }, 0);
       }
     }
+
+    const currentSlideObj = {
+      currentIndex: currentIndex,
+      currentSlide: currentSlide,
+    };
+
+    const currentSlideEvent = new CustomEvent('CurrentSlideUpdate', {
+      detail: currentSlideObj,
+    });
+    document.dispatchEvent(currentSlideEvent);
   };
 
   useEffect(() => {
@@ -98,6 +108,14 @@ const Page = ({ slides, templates, slideId, ...props }: PageProps) => {
       window.scrollTo({ top: 0 });
     }
   }, [slides]);
+
+  useEffect(() => {
+    const handleUpdateSlideEvent = (ev) => {
+      currentIndex = ev.detail.currentIndex;
+      currentSlide = ev.detail.currentSlide;
+    };
+    document.addEventListener('CurrentSlideUpdate', handleUpdateSlideEvent);
+  });
 
   useEffect(() => {
     return () => {

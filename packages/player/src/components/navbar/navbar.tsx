@@ -34,7 +34,7 @@ export const NavBar = ({ pageId, project, slides }) => {
   themePrefixes['container'] = `owlui-container`;
 
   let currentSlide = `module-${slides[0].moduleId}--lesson-${slides[0].lessonId}--slide-${slides[0].id}-${slides[0].template.meta.filename}`;
-  let currentIndex;
+  let currentIndex = 0;
 
   const OutlineFooter = () => {
     const targets = slides?.map((slide) => {
@@ -86,6 +86,16 @@ export const NavBar = ({ pageId, project, slides }) => {
           }
           break;
       }
+
+      const currentSlideObj = {
+        currentIndex: currentIndex,
+        currentSlide: currentSlide,
+      };
+
+      const currentSlideEvent = new CustomEvent('CurrentSlideUpdate', {
+        detail: currentSlideObj,
+      });
+      document.dispatchEvent(currentSlideEvent);
     };
 
     return (
@@ -104,6 +114,14 @@ export const NavBar = ({ pageId, project, slides }) => {
     };
     document.addEventListener('slide.enter', handleSlideEvent);
   }, []);
+
+  useEffect(() => {
+    const handleUpdateSlideEvent = (ev) => {
+      currentIndex = ev.detail.currentIndex;
+      currentSlide = ev.detail.currentSlide;
+    };
+    document.addEventListener('CurrentSlideUpdate', handleUpdateSlideEvent);
+  });
 
   return (
     <ThemeProvider prefixes={themePrefixes}>
