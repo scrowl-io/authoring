@@ -103,7 +103,7 @@ export const LessonIntro = ({ id, schema, ...props }: LessonIntroProps) => {
     <Scrowl.core.Template
       id={`slide-${contentId}`}
       className={classes}
-      notScene={false}
+      notScene={true}
       style={{ overflow: 'hidden' }}
       {...props}
     >

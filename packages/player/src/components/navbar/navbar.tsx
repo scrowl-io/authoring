@@ -33,7 +33,7 @@ export const NavBar = ({ pageId, project, slides }) => {
   themePrefixes['offcanvas-body'] = `owlui-offcanvas-body`;
   themePrefixes['container'] = `owlui-container`;
 
-  let currentSlide;
+  let currentSlide = `module-${slides[0].moduleId}--lesson-${slides[0].lessonId}--slide-${slides[0].id}-${slides[0].template.meta.filename}`;
   let currentIndex;
 
   const OutlineFooter = () => {
@@ -59,6 +59,21 @@ export const NavBar = ({ pageId, project, slides }) => {
       let targetElement;
 
       switch (ev.target.innerText) {
+        case 'Previous Slide':
+          if (currentIndex === 1) {
+            targetIndex = targets[0];
+            targetElement = document.querySelector(`#${targetIndex}`);
+            currentIndex = 0;
+            currentSlide = `module-${slides[0].moduleId}--lesson-${slides[0].lessonId}--slide-${slides[0].id}-${slides[0].template.meta.filename}`;
+            setTimeout(() => {
+              targetElement?.scrollIntoView(false);
+            }, 0);
+          } else {
+            targetIndex = targets[currentIndex - 1];
+            targetElement = document.querySelector(`#${targetIndex}`);
+            targetElement?.scrollIntoView(false);
+          }
+          break;
         case 'Next Slide':
           if (currentIndex + 1 === targets.length) {
             targetElement = document.querySelector('.owlui-last');
@@ -69,11 +84,6 @@ export const NavBar = ({ pageId, project, slides }) => {
             targetElement = document.querySelector(`#${targetIndex}`);
             targetElement?.scrollIntoView();
           }
-          break;
-        case 'Previous Slide':
-          targetIndex = targets[currentIndex - 1];
-          targetElement = document.querySelector(`#${targetIndex}`);
-          targetElement?.scrollIntoView(false);
           break;
       }
     };

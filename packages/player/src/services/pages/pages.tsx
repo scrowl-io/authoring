@@ -18,12 +18,12 @@ const Page = ({ slides, templates, slideId, ...props }: PageProps) => {
   const Scrowl = window['Scrowl'];
   const controller = new Scrowl.core.scroll.Controller();
 
+  let currentSlide = `module-${slides[0].moduleId}--lesson-${slides[0].lessonId}--slide-${slides[0].id}-${slides[0].template.meta.filename}`;
+  let currentIndex;
+
   const targets = slides?.map((slide) => {
     return `module-${slide.moduleId}--lesson-${slide.lessonId}--slide-${slide.id}-${slide.template.meta.filename}`;
   });
-
-  let currentSlide;
-  let currentIndex;
 
   const handleArrowKeys = (ev) => {
     let matchingId;
@@ -36,7 +36,7 @@ const Page = ({ slides, templates, slideId, ...props }: PageProps) => {
 
     if (matchingId) {
       currentIndex = targets?.indexOf(matchingId);
-    } else {
+    } else if (currentSlide === 'owlui-last') {
       currentIndex = targets.length;
     }
 
@@ -44,11 +44,21 @@ const Page = ({ slides, templates, slideId, ...props }: PageProps) => {
     let targetElement;
 
     if (ev.key === 'ArrowLeft') {
-      targetIndex = targets[currentIndex - 1];
-      targetElement = document.querySelector(`#${targetIndex}`);
-      setTimeout(() => {
-        targetElement?.scrollIntoView(false);
-      }, 0);
+      if (currentIndex === 1) {
+        targetIndex = targets[0];
+        targetElement = document.querySelector(`#${targetIndex}`);
+        currentIndex = 0;
+        currentSlide = `module-${slides[0].moduleId}--lesson-${slides[0].lessonId}--slide-${slides[0].id}-${slides[0].template.meta.filename}`;
+        setTimeout(() => {
+          targetElement?.scrollIntoView(false);
+        }, 0);
+      } else {
+        targetIndex = targets[currentIndex - 1];
+        targetElement = document.querySelector(`#${targetIndex}`);
+        setTimeout(() => {
+          targetElement?.scrollIntoView(false);
+        }, 0);
+      }
     } else if (ev.key === 'ArrowRight') {
       if (currentIndex + 1 === targets.length) {
         targetElement = document.querySelector('.owlui-last');
