@@ -26,6 +26,20 @@ const Page = ({ slides, templates, slideId, ...props }: PageProps) => {
   });
 
   const handleArrowKeys = (ev) => {
+    if (Scrowl && Scrowl.runtime) {
+      if (Scrowl.runtime.API !== null) {
+        const [error, suspendData] = Scrowl.runtime.getSuspendData();
+        if (suspendData === '{}') {
+          return;
+        } else {
+          const parsedData = JSON.parse(suspendData);
+          if (error || !parsedData.courseStarted) {
+            return;
+          }
+        }
+      }
+    }
+
     let matchingId;
 
     if (targets && currentSlide !== 'owlui-last') {
