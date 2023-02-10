@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useLayoutEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { PageDefinition, PageProps } from './pages.types';
 import {
@@ -29,6 +29,7 @@ const Page = ({ slides, templates, slideId, ...props }: PageProps) => {
     if (Scrowl && Scrowl.runtime) {
       if (Scrowl.runtime.API !== null) {
         const [error, suspendData] = Scrowl.runtime.getSuspendData();
+        console.log('suspend', suspendData);
         if (suspendData === '{}') {
           return;
         } else {
@@ -126,33 +127,40 @@ const Page = ({ slides, templates, slideId, ...props }: PageProps) => {
       threshold: 0.8,
     };
 
-    let introObserver = new IntersectionObserver(() => {
-      currentSlide = 'module-0--lesson-0--slide-0-lesson-intro';
-    }, options);
-
     let finalSlideObserver = new IntersectionObserver(() => {
       currentSlide = 'owlui-last';
     }, options);
 
-    let introSlide = document.querySelector(
-      '#module-0--lesson-0--slide-0-lesson-intro'
-    );
-
     let lastSlide = document.querySelector('.owlui-last');
 
-    if (introSlide) {
-      introObserver.observe(introSlide);
-    }
     if (lastSlide) {
       finalSlideObserver.observe(lastSlide);
     }
-  }, []);
 
-  useEffect(() => {
+    let targetObservers = {};
+
+    targets.forEach((target, i) => {
+      targetObservers[i] = new IntersectionObserver(() => {
+        currentSlide = target;
+        console.log(currentSlide);
+      }, options);
+    });
+
+    console.log(targetObservers);
+
+    //@ts-ignore
+    Object.entries(targetObservers).forEach((entry) => {
+      entry[1].observe(document.querySelector(`#${targets[entry[0]]}`));
+    });
+  }, [slides]);
+
+  useLayoutEffect(() => {
     if (slideId && slideId?.length > 0) {
       document.querySelector(`#${slideId}`)?.scrollIntoView();
     } else {
       window.scrollTo({ top: 0 });
+
+      currentSlide = `module-${slides[0].moduleId}--lesson-${slides[0].lessonId}--slide-${slides[0].id}-${slides[0].template.meta.filename}`;
     }
   }, [slides]);
 
