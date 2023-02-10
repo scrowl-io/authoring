@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { PageDefinition, PageProps } from './pages.types';
 import {
@@ -29,7 +29,6 @@ const Page = ({ slides, templates, slideId, ...props }: PageProps) => {
     if (Scrowl && Scrowl.runtime) {
       if (Scrowl.runtime.API !== null) {
         const [error, suspendData] = Scrowl.runtime.getSuspendData();
-        console.log('suspend', suspendData);
         if (suspendData === '{}') {
           return;
         } else {
@@ -127,40 +126,42 @@ const Page = ({ slides, templates, slideId, ...props }: PageProps) => {
       threshold: 0.8,
     };
 
-    let finalSlideObserver = new IntersectionObserver(() => {
-      currentSlide = 'owlui-last';
+    const slidesObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting === true) {
+          currentSlide = entry.target.id;
+        }
+      });
+    });
+
+    const finalSlideObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting === true) {
+          currentSlide = 'owlui-last';
+        }
+      });
     }, options);
 
     let lastSlide = document.querySelector('.owlui-last');
-
     if (lastSlide) {
       finalSlideObserver.observe(lastSlide);
     }
 
-    let targetObservers = {};
-
-    targets.forEach((target, i) => {
-      targetObservers[i] = new IntersectionObserver(() => {
-        currentSlide = target;
-        console.log(currentSlide);
-      }, options);
+    const targetElements = targets.map((target) => {
+      return document.querySelector(`#${target}`);
     });
-
-    console.log(targetObservers);
-
-    //@ts-ignore
-    Object.entries(targetObservers).forEach((entry) => {
-      entry[1].observe(document.querySelector(`#${targets[entry[0]]}`));
+    targetElements.forEach((element) => {
+      if (element) {
+        slidesObserver.observe(element);
+      }
     });
   }, [slides]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (slideId && slideId?.length > 0) {
       document.querySelector(`#${slideId}`)?.scrollIntoView();
     } else {
       window.scrollTo({ top: 0 });
-
-      currentSlide = `module-${slides[0].moduleId}--lesson-${slides[0].lessonId}--slide-${slides[0].id}-${slides[0].template.meta.filename}`;
     }
   }, [slides]);
 
