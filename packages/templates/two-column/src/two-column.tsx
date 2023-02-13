@@ -52,7 +52,7 @@ export const TwoColumn = ({ id, schema, ...props }: TwoColumnProps) => {
   let columnClasses = 'column-wrapper';
   const editMode = props.editMode ? true : false;
   const focusElement = editMode ? props.focusElement : null;
-  const contentId = `${id}-block-text`;
+  const contentId = `${id}-two-column`;
   const options = schema.content.options;
   const alignment = options.content.alignment.value;
   const numberOfColumns = options.content.numberOfColumns.value;

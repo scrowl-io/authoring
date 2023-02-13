@@ -18,6 +18,145 @@ const Page = ({ slides, templates, slideId, ...props }: PageProps) => {
   const Scrowl = window['Scrowl'];
   const controller = new Scrowl.core.scroll.Controller();
 
+  let currentSlide = `module-${slides[0].moduleId}--lesson-${slides[0].lessonId}--slide-${slides[0].id}-${slides[0].template.meta.filename}`;
+  let currentIndex = 0;
+
+  const targets = slides?.map((slide) => {
+    return `module-${slide.moduleId}--lesson-${slide.lessonId}--slide-${slide.id}-${slide.template.meta.filename}`;
+  });
+
+  const handleArrowKeys = (ev) => {
+    if (Scrowl && Scrowl.runtime) {
+      if (Scrowl.runtime.API !== null) {
+        const [error, suspendData] = Scrowl.runtime.getSuspendData();
+        if (suspendData === '{}') {
+          return;
+        } else {
+          const parsedData = JSON.parse(suspendData);
+          if (error || !parsedData.courseStarted) {
+            return;
+          }
+        }
+      }
+    }
+
+    let matchingId;
+
+    if (targets && currentSlide !== 'owlui-last') {
+      matchingId = targets.find((t) => {
+        return t === currentSlide;
+      });
+    } else {
+      currentIndex = targets.length;
+    }
+
+    if (matchingId) {
+      currentIndex = targets?.indexOf(matchingId);
+    }
+
+    let targetIndex;
+    let targetElement;
+
+    switch (ev.key) {
+      case 'ArrowLeft':
+        if (currentIndex === 1) {
+          targetIndex = targets[0];
+          targetElement = document.querySelector(`#${targetIndex}`);
+          currentIndex = 0;
+          currentSlide = `module-${slides[0].moduleId}--lesson-${slides[0].lessonId}--slide-${slides[0].id}-${slides[0].template.meta.filename}`;
+          setTimeout(() => {
+            targetElement?.scrollIntoView(false);
+          }, 0);
+        } else {
+          targetIndex = targets[currentIndex - 1];
+          targetElement = document.querySelector(`#${targetIndex}`);
+          setTimeout(() => {
+            targetElement?.scrollIntoView(false);
+          }, 0);
+        }
+        break;
+      case 'ArrowRight':
+        if (currentIndex + 1 === targets.length) {
+          targetElement = document.querySelector('.owlui-last');
+          setTimeout(() => {
+            targetElement?.scrollIntoView(true);
+          }, 0);
+          currentSlide = 'owlui-last';
+        } else {
+          targetIndex = targets[currentIndex + 1];
+          targetElement = document.querySelector(`#${targetIndex}`);
+          setTimeout(() => {
+            targetElement?.scrollIntoView(true);
+          }, 0);
+        }
+        break;
+    }
+
+    const currentSlideObj = {
+      currentIndex: currentIndex,
+      currentSlide: currentSlide,
+    };
+
+    const currentSlideEvent = new CustomEvent('CurrentSlidePageUpdate', {
+      detail: currentSlideObj,
+    });
+    document.dispatchEvent(currentSlideEvent);
+  };
+
+  useEffect(() => {
+    const handleSlideEvent = (ev) => {
+      currentSlide = ev.detail.currentTarget.id;
+    };
+    const handleUpdateSlideEvent = (ev) => {
+      currentSlide = ev.detail.currentSlide;
+    };
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+        handleArrowKeys(e);
+      }
+    });
+
+    document.addEventListener('CurrentSlideNavUpdate', handleUpdateSlideEvent);
+    document.addEventListener('slide.enter', handleSlideEvent);
+
+    let options = {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.8,
+    };
+
+    const slidesObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting === true) {
+          currentSlide = entry.target.id;
+        }
+      });
+    });
+
+    const finalSlideObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting === true) {
+          currentSlide = 'owlui-last';
+        }
+      });
+    }, options);
+
+    let lastSlide = document.querySelector('.owlui-last');
+    if (lastSlide) {
+      finalSlideObserver.observe(lastSlide);
+    }
+
+    const targetElements = targets.map((target) => {
+      return document.querySelector(`#${target}`);
+    });
+    targetElements.forEach((element) => {
+      if (element) {
+        slidesObserver.observe(element);
+      }
+    });
+  }, [slides]);
+
   useEffect(() => {
     if (slideId && slideId?.length > 0) {
       document.querySelector(`#${slideId}`)?.scrollIntoView();
@@ -35,7 +174,7 @@ const Page = ({ slides, templates, slideId, ...props }: PageProps) => {
   return (
     <>
       {slides.map((slide, idx) => {
-        const id = `${props.id}--slide-${idx}`;
+        const id = `${props.id}--slide-${slide.id}`;
         const component = slide.template.meta.component;
 
         if (!templates.hasOwnProperty(component)) {
@@ -50,6 +189,7 @@ const Page = ({ slides, templates, slideId, ...props }: PageProps) => {
             id={id}
             schema={slide.template}
             controller={controller}
+            slides={slides}
           />
         );
       })}
@@ -122,7 +262,7 @@ export const create = (
 
   project.outlineConfig.forEach((module, mIdx) => {
     module.lessons.forEach((page, lIdx) => {
-      const id = `module-${mIdx}--lesson-${lIdx}`;
+      const id = `module-${mIdx}--lesson-${page.lesson.id}`;
       const url = `/${id}`;
 
       let nextLessonUrl;
@@ -133,7 +273,7 @@ export const create = (
         lIdx < module.lessons.length - 1 ||
         mIdx < project.outlineConfig.length - 1
       ) {
-        nextLessonId = `module-${mIdx}--lesson-${lIdx + 1}`;
+        nextLessonId = `module-${mIdx}--lesson-${page.lesson.id + 1}`;
         nextLessonUrl = `/${nextLessonId}`;
         nextLessonText = `Continue to the next lesson`;
       }
@@ -142,7 +282,7 @@ export const create = (
         lIdx === module.lessons.length - 1 &&
         mIdx <= project.outlineConfig.length - 1
       ) {
-        nextLessonId = `module-${mIdx + 1}--lesson-0`;
+        nextLessonId = `module-${mIdx + 1}--lesson-${page.lesson.id + 1}`;
         nextLessonUrl = `/${nextLessonId}`;
         nextLessonText = `Continue to the first Lesson of Module ${mIdx + 1}`;
       }
@@ -154,7 +294,7 @@ export const create = (
         Element: () => {
           return (
             <>
-              <NavBar pageId={id} project={project} />
+              <NavBar slides={page.slides} pageId={id} project={project} />
               <div className="owlui-lesson">
                 <Page
                   id={id}

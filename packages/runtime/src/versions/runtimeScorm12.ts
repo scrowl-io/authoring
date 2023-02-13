@@ -184,6 +184,46 @@ export const service: RUNTIME_SERVICE = {
       return [true, {}];
     }
   },
+  setCourseStart: () => {
+    console.debug(`API.SetCourseStart`);
+
+    const [isInit, API] = service.isInitialized();
+
+    if (!isInit || !API) {
+      console.warn(`Unable to set suspend data: service not initialized`);
+      return [true, {}];
+    }
+    service.setValue(
+      'cmi.suspend_data',
+      JSON.stringify({ courseStarted: true })
+    );
+    service.commit();
+
+    return [false];
+  },
+  getSuspendData: () => {
+    console.debug(`API.GetSuspendData`);
+
+    const [isInit, API] = service.isInitialized();
+
+    if (!isInit || !API) {
+      console.warn(`Unable to get suspend data: service not initialized`);
+      return [true, {}];
+    }
+
+    try {
+      const [error, suspendData] = service.getValue('cmi.suspend_data');
+
+      if (error || !suspendData) {
+        return [true, {}];
+      }
+
+      return [false, suspendData];
+    } catch (e) {
+      console.error(e);
+      return [true, {}];
+    }
+  },
   getProgress: () => {
     console.debug(`API.GetProgress`);
 
@@ -264,6 +304,8 @@ export const service: RUNTIME_SERVICE = {
 
     if (lessonStatus === 'unknown' || lessonStatus === 'not attempted') {
       service.setValue('cmi.core.lesson_status', 'incomplete');
+      service.setValue('cmi.suspend_data', 0);
+
       const startLocation = {
         cur: {
           m: 0,

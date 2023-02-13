@@ -128,12 +128,12 @@ export const Root = ({
         cur: {
           m: number;
           l: number;
-          s?: number;
+          s: number;
         };
         max: {
-          m?: number;
-          l?: number;
-          s?: number;
+          m: number;
+          l: number;
+          s: number;
         };
       };
 
@@ -228,7 +228,7 @@ export const Root = ({
 
   useEffect(() => {
     if (Scrowl.runtime && Scrowl.runtime !== null) {
-      if (Scrowl.runtime?.API === null) {
+      if (Scrowl.runtime.API === null) {
         const errorObject = {
           id: '600',
           message: 'Unable to connect to API',

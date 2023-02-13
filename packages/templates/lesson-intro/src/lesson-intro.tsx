@@ -1,4 +1,5 @@
-import React, { useRef } from 'react';
+// @ts-ignore
+import React, { useRef, useState } from 'react';
 import './_index.scss';
 import { LessonIntroProps } from './lesson-intro.types';
 
@@ -7,7 +8,7 @@ export const LessonIntro = ({ id, schema, ...props }: LessonIntroProps) => {
   let classes = 'template-lesson-intro';
   const editMode = props.editMode ? true : false;
   const focusElement = editMode ? props.focusElement : null;
-  const contentId = `${id}-template-lesson-intro-intro`;
+  const contentId = `${id}-lesson-intro`;
   const title = schema.content.title.value;
   let titleClasses = 'template-lesson-intro-title can-focus';
   const subtitle = schema.content.subtitle.value;
@@ -77,12 +78,15 @@ export const LessonIntro = ({ id, schema, ...props }: LessonIntroProps) => {
     }
   };
 
-  const handleFocusStartLabel = () => {
+  const handleFocusStartLabel = (ev) => {
     if (editMode) {
       Scrowl.core.host.sendMessage({
         type: 'focus',
         field: 'startLabel',
       });
+    } else {
+      const startEvent = new CustomEvent('startCourse', { detail: ev });
+      document.dispatchEvent(startEvent);
     }
   };
 
@@ -100,6 +104,7 @@ export const LessonIntro = ({ id, schema, ...props }: LessonIntroProps) => {
       id={`slide-${contentId}`}
       className={classes}
       notScene={true}
+      style={{ overflow: 'hidden' }}
       {...props}
     >
       <div id={contentId} className="content">

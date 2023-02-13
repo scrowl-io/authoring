@@ -5,6 +5,7 @@ import { TemplateProps } from './template.types';
 
 export const Template = ({
   id,
+  slides,
   className,
   controller,
   onEnter,
@@ -30,6 +31,15 @@ export const Template = ({
     height: window.innerHeight,
     width: window.innerWidth,
   });
+  const [scroll, setScroll] = useState(false);
+
+  const Scrowl = window['Scrowl'];
+
+  if (!scroll) {
+    document.body.style.overflow = 'hidden';
+  } else {
+    document.body.style.overflow = 'scroll';
+  }
 
   if (className) {
     classes += ` ${className}`;
@@ -58,6 +68,20 @@ export const Template = ({
   useEffect(() => {
     let sceneTrigger: Scene;
     let scene: Scene;
+
+    if (!Scrowl || !Scrowl.runtime || Scrowl.runtime.API === null) {
+      setScroll(true);
+    }
+
+    if (Scrowl && Scrowl.runtime && Scrowl.runtime.API !== null) {
+      const [courseStartError, suspendData] = Scrowl.runtime.getSuspendData();
+
+      const parsedData = JSON.parse(suspendData);
+
+      if (!courseStartError && parsedData.courseStarted === true) {
+        setScroll(true);
+      }
+    }
 
     const createScene = () => {
       if (isNotScene) {
@@ -320,6 +344,28 @@ export const Template = ({
       }
     };
   }, [windowSize, duration, isReady.current, triggerRef.current]);
+
+  useEffect(() => {
+    const handleStart = (ev) => {
+      if (Scrowl.runtime) {
+        Scrowl.runtime.setCourseStart();
+      }
+      setScroll(true);
+      const domSlideParents = document.querySelectorAll('.inner-content');
+      const domSlides = Array.from(domSlideParents).map((parent) => {
+        return parent.firstElementChild?.id;
+      });
+
+      const slideContent = ev.detail.target.parentElement.parentElement.id;
+
+      const index = domSlides.indexOf(slideContent);
+      const targetIndex = domSlides[index + 1];
+      const nextTarget = document.querySelector(`#${targetIndex}`);
+
+      nextTarget?.scrollIntoView();
+    };
+    document.addEventListener('startCourse', handleStart);
+  }, []);
 
   return (
     <div ref={slideRef} className={classes} {...props}>

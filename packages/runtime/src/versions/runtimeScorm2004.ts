@@ -168,6 +168,45 @@ export const service: RUNTIME_SERVICE = {
       return [true, {}];
     }
   },
+  getSuspendData: () => {
+    console.debug(`API.GetSuspendData`);
+
+    const [isInit, API] = service.isInitialized();
+
+    if (!isInit || !API) {
+      console.warn(`Unable to get suspend data: service not initialized`);
+      return [true, {}];
+    }
+    try {
+      const [error, suspendData] = service.getValue('cmi.suspend_data');
+
+      if (error || !suspendData) {
+        return [true, {}];
+      }
+
+      return [false, suspendData];
+    } catch (e) {
+      console.error(e);
+      return [true, {}];
+    }
+  },
+  setCourseStart: () => {
+    console.debug(`API.SetCourseStart`);
+
+    const [isInit, API] = service.isInitialized();
+
+    if (!isInit || !API) {
+      console.warn(`Unable to update suspend data: service not initialized`);
+      return [true, {}];
+    }
+    service.setValue(
+      'cmi.suspend_data',
+      JSON.stringify({ courseStarted: true })
+    );
+    service.commit();
+
+    return [false];
+  },
   getProgress: () => {
     console.debug(`API.GetProgress`);
 
@@ -250,6 +289,7 @@ export const service: RUNTIME_SERVICE = {
       service.setValue('cmi.completion_status', 'incomplete');
       service.setValue('cmi.success_status', 'unknown');
       service.setValue('cmi.suspend_data', '{}');
+      service.setValue('cmi.progress_measure', 0);
       const startLocation = {
         cur: {
           m: 0,

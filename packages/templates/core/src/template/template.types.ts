@@ -50,6 +50,14 @@ export interface TemplateEventLeave extends LeaveEvent {
   scene: SceneStats;
 };
 
+export type ProjectSlide = {
+  name: string;
+  moduleId: number;
+  lessonId: number;
+  id: number;
+  template: any;
+};
+
 export interface TemplateCommons {
   controller: Controller;
   pins?: Array<string>;
@@ -63,6 +71,7 @@ export interface TemplateCommons {
   onProgress?: (ev: TemplateEventProgress) => void;
   onEnd?: (ev: TemplateEventEnd) => void;
   onLeave?: (ev: TemplateEventLeave) => void;
+  slides?: ProjectSlide[];
 }
 
 export type TemplateProps = TemplateCommons & React.AllHTMLAttributes<HTMLDivElement>;

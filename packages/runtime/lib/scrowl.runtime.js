@@ -182,6 +182,52 @@ const $29add62a37af587e$export$6ed414b8d8bead88 = {
             ];
         }
     },
+    getSuspendData: ()=>{
+        console.debug(`API.GetSuspendData`);
+        const [isInit, API] = $29add62a37af587e$export$6ed414b8d8bead88.isInitialized();
+        if (!isInit || !API) {
+            console.warn(`Unable to get suspend data: service not initialized`);
+            return [
+                true,
+                {}
+            ];
+        }
+        try {
+            const [error, suspendData] = $29add62a37af587e$export$6ed414b8d8bead88.getValue("cmi.suspend_data");
+            if (error || !suspendData) return [
+                true,
+                {}
+            ];
+            return [
+                false,
+                suspendData
+            ];
+        } catch (e) {
+            console.error(e);
+            return [
+                true,
+                {}
+            ];
+        }
+    },
+    setCourseStart: ()=>{
+        console.debug(`API.SetCourseStart`);
+        const [isInit, API] = $29add62a37af587e$export$6ed414b8d8bead88.isInitialized();
+        if (!isInit || !API) {
+            console.warn(`Unable to update suspend data: service not initialized`);
+            return [
+                true,
+                {}
+            ];
+        }
+        $29add62a37af587e$export$6ed414b8d8bead88.setValue("cmi.suspend_data", JSON.stringify({
+            courseStarted: true
+        }));
+        $29add62a37af587e$export$6ed414b8d8bead88.commit();
+        return [
+            false
+        ];
+    },
     getProgress: ()=>{
         console.debug(`API.GetProgress`);
         const [isInit, API] = $29add62a37af587e$export$6ed414b8d8bead88.isInitialized();
@@ -251,6 +297,7 @@ const $29add62a37af587e$export$6ed414b8d8bead88 = {
             $29add62a37af587e$export$6ed414b8d8bead88.setValue("cmi.completion_status", "incomplete");
             $29add62a37af587e$export$6ed414b8d8bead88.setValue("cmi.success_status", "unknown");
             $29add62a37af587e$export$6ed414b8d8bead88.setValue("cmi.suspend_data", "{}");
+            $29add62a37af587e$export$6ed414b8d8bead88.setValue("cmi.progress_measure", 0);
             const startLocation = {
                 cur: {
                     m: 0,
@@ -503,6 +550,52 @@ const $bc9227963e5f4dff$export$6ed414b8d8bead88 = {
             ];
         }
     },
+    setCourseStart: ()=>{
+        console.debug(`API.SetCourseStart`);
+        const [isInit, API] = $bc9227963e5f4dff$export$6ed414b8d8bead88.isInitialized();
+        if (!isInit || !API) {
+            console.warn(`Unable to set suspend data: service not initialized`);
+            return [
+                true,
+                {}
+            ];
+        }
+        $bc9227963e5f4dff$export$6ed414b8d8bead88.setValue("cmi.suspend_data", JSON.stringify({
+            courseStarted: true
+        }));
+        $bc9227963e5f4dff$export$6ed414b8d8bead88.commit();
+        return [
+            false
+        ];
+    },
+    getSuspendData: ()=>{
+        console.debug(`API.GetSuspendData`);
+        const [isInit, API] = $bc9227963e5f4dff$export$6ed414b8d8bead88.isInitialized();
+        if (!isInit || !API) {
+            console.warn(`Unable to get suspend data: service not initialized`);
+            return [
+                true,
+                {}
+            ];
+        }
+        try {
+            const [error, suspendData] = $bc9227963e5f4dff$export$6ed414b8d8bead88.getValue("cmi.suspend_data");
+            if (error || !suspendData) return [
+                true,
+                {}
+            ];
+            return [
+                false,
+                suspendData
+            ];
+        } catch (e) {
+            console.error(e);
+            return [
+                true,
+                {}
+            ];
+        }
+    },
     getProgress: ()=>{
         console.debug(`API.GetProgress`);
         const [isInit, API] = $bc9227963e5f4dff$export$6ed414b8d8bead88.isInitialized();
@@ -570,6 +663,7 @@ const $bc9227963e5f4dff$export$6ed414b8d8bead88 = {
         ];
         if (lessonStatus === "unknown" || lessonStatus === "not attempted") {
             $bc9227963e5f4dff$export$6ed414b8d8bead88.setValue("cmi.core.lesson_status", "incomplete");
+            $bc9227963e5f4dff$export$6ed414b8d8bead88.setValue("cmi.suspend_data", 0);
             const startLocation = {
                 cur: {
                     m: 0,
