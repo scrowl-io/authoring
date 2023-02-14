@@ -3,11 +3,15 @@
   https://scorm.com/scorm-explained/technical-scorm/run-time/run-time-reference/
 */
 import { RUNTIME_SERVICE } from '../runtime.types';
+const TinCan = window['TinCan'];
 
+// @ts-ignore
 export const service: RUNTIME_SERVICE = {
   version: '2004v3',
   init: false,
   finished: false,
+  //@ts-ignore
+  tincan: null,
   _time: {
     startTime: undefined,
     getSessionTime: () => {
@@ -128,6 +132,53 @@ export const service: RUNTIME_SERVICE = {
     service.init = true;
     return [service.init, service.API];
   },
+  //@ts-ignore
+  updateLocationXAPI: (location, slideId, courseName) => {
+    console.debug(`API.UpdateLocationXAPI`);
+
+    //@ts-ignore
+    console.log('service.tincan', service.tincan);
+    var advanceSlideExperience = new TinCan.Statement({
+      actor: {
+        mbox: 'mailto:sean@osg.ca',
+      },
+      verb: {
+        id: 'http://adlnet.gov/expapi/verbs/experienced',
+      },
+      target: {
+        id: `https://osg.ca/api/v1/activities/courses/${courseName}/advance-slide-${slideId}`,
+        definition: {
+          name: { 'en-US': `Advance Slide: ${slideId}` },
+        },
+      },
+    });
+
+    // @ts-ignore
+    service.tincan.saveStatement(advanceSlideExperience, {
+      callback: function (err, xhr) {
+        if (err !== null) {
+          if (xhr !== null) {
+            console.log(
+              'Failed to save statement: ' +
+                xhr.responseText +
+                ' (' +
+                xhr.status +
+                ')'
+            );
+            // TODO: do something with error, didn't save statement
+            return;
+          }
+
+          console.log('Failed to save statement: ' + err);
+          // TODO: do something with error, didn't save statement
+          return;
+        }
+
+        console.log('Statement saved');
+        // TOOO: do something with success (possibly ignore)
+      },
+    });
+  },
   updateLocation: (location, slideId) => {
     console.debug(`API.UpdateLocation`);
 
@@ -225,6 +276,93 @@ export const service: RUNTIME_SERVICE = {
 
     return [false];
   },
+  // @ts-ignore
+  startXAPI: (courseName) => {
+    console.debug('start XAPI');
+    if (TinCan) {
+      try {
+        // @ts-ignore
+        service.tincan = new TinCan.LRS({
+          endpoint: 'https://cloud.scorm.com/lrs/P9AQQNBMYJ/sandbox/',
+          username: 'sean@osg.ca',
+          password: 'Ds3@M4qh7iY98cy',
+          allowFail: false,
+        });
+      } catch (ex) {
+        console.log('Failed to setup LRS object: ', ex);
+        // TODO: do something with error, can't communicate with LRS
+      }
+
+      const statements = [];
+      var launchExperience = new TinCan.Statement({
+        actor: {
+          mbox: 'mailto:sean@osg.ca',
+        },
+        verb: {
+          id: 'http://adlnet.gov/expapi/verbs/experienced',
+        },
+        target: {
+          id: `https://osg.ca/api/v1/activities/courses/${courseName}`,
+          definition: {
+            name: { 'en-US': 'Launch Course' },
+          },
+        },
+      });
+
+      var intializeCourse = new TinCan.Statement({
+        actor: {
+          mbox: 'mailto:sean@osg.ca',
+        },
+        verb: {
+          id: 'http://adlnet.gov/expapi/verbs/initialized',
+          display: {
+            und: 'initialized',
+          },
+        },
+        target: {
+          id: `https://osg.ca/api/v1/activities/courses/${courseName}/`,
+          definition: {
+            name: { 'en-US': `LMS Course: ${courseName}` },
+          },
+        },
+      });
+
+      // @ts-ignore
+      statements.push(launchExperience);
+      // @ts-ignore
+      statements.push(intializeCourse);
+
+      statements.forEach((statement) => {
+        // @ts-ignore
+        service.tincan.saveStatement(statement, {
+          callback: function (err, xhr) {
+            if (err !== null) {
+              if (xhr !== null) {
+                console.log(
+                  'Failed to save statement: ' +
+                    xhr.responseText +
+                    ' (' +
+                    xhr.status +
+                    ')'
+                );
+                // TODO: do something with error, didn't save statement
+                return;
+              }
+
+              console.log('Failed to save statement: ' + err);
+              // TODO: do something with error, didn't save statement
+              return;
+            }
+
+            console.log('Statement saved');
+            // TOOO: do something with success (possibly ignore)
+          },
+        });
+        //@ts-ignore
+        console.log(service.tincan);
+      });
+    }
+  },
   start: (api) => {
     console.debug(`API.Start 2004v3`);
 
@@ -312,6 +450,60 @@ export const service: RUNTIME_SERVICE = {
     API.Terminate('');
 
     return [false];
+  },
+  finishXAPI: (courseName) => {
+    console.debug(`API.FinishXAPI`);
+
+    //@ts-ignore
+    console.log('service.tincan', service.tincan);
+    const completedCourseStatement = new TinCan.Statement({
+      actor: {
+        mbox: 'mailto:sean@osg.ca',
+      },
+      verb: {
+        id: 'http://adlnet.gov/expapi/verbs/completed',
+        display: { 'en-US': 'completed' },
+      },
+      target: {
+        id: `https://osg.ca/api/v1/activities/courses/${courseName}`,
+        definition: {
+          name: { 'en-US': courseName },
+        },
+      },
+      result: {
+        completion: true,
+        success: true,
+        score: {
+          scaled: 0.9,
+        },
+      },
+    });
+
+    // @ts-ignore
+    service.tincan.saveStatement(completedCourseStatement, {
+      callback: function (err, xhr) {
+        if (err !== null) {
+          if (xhr !== null) {
+            console.log(
+              'Failed to save statement: ' +
+                xhr.responseText +
+                ' (' +
+                xhr.status +
+                ')'
+            );
+            // TODO: do something with error, didn't save statement
+            return;
+          }
+
+          console.log('Failed to save statement: ' + err);
+          // TODO: do something with error, didn't save statement
+          return;
+        }
+
+        console.log('Statement saved');
+        // TOOO: do something with success (possibly ignore)
+      },
+    });
   },
   setValue: (elem, val) => {
     console.debug(`API.SetValue for ${elem} to ${val}`);

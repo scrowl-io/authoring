@@ -93,10 +93,15 @@ const updateCourseProgress = (project, id) => {
   }
 };
 
-const finishCourse = () => {
+const finishCourse = (courseName) => {
   const Scrowl = window['Scrowl'];
+  const TinCan = window['TinCan'];
 
   if (Scrowl.runtime) {
+    if (TinCan) {
+      // @ts-ignore
+      Scrowl.runtime.finishXAPI(courseName);
+    }
     Scrowl.runtime.finish();
   }
 
@@ -179,7 +184,9 @@ export const create = (
                         {nextLessonText}
                       </Link>
                     ) : (
-                      <Scrowl.ui.Button onClick={finishCourse}>
+                      <Scrowl.ui.Button
+                        onClick={() => finishCourse(project.name)}
+                      >
                         Finish Course
                       </Scrowl.ui.Button>
                     )}

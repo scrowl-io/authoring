@@ -215,6 +215,9 @@ export const createScormEntry = (
   templates: TemplateList,
   fileOverride?: string
 ) => {
+  if (!scorm.name || scorm.name === '') {
+    scorm.name = meta.name;
+  }
   // create project files [html, js] and add them to publish folder
   return new Promise<rq.ApiResult>((resolve) => {
     const entryHtmlSrc = fs.joinPath(
@@ -329,7 +332,7 @@ export const createScormPackage = (
         zip: true,
         date: today,
         version: projectVersion,
-        name: config.name,
+        name: config.name ? config.name : project.meta.name,
         description: config.description,
         author: config.authors,
         rights: '©Copyright ' + new Date().getFullYear(),

@@ -21,6 +21,8 @@ export const Root = ({
   ...props
 }: PlayerRootProps) => {
   const Scrowl = window['Scrowl'];
+  const TinCan = window['TinCan'];
+
   let apiPreference;
 
   const [showPanel, _setShowPanel] = useState(true);
@@ -66,6 +68,11 @@ export const Root = ({
     }
   }
 
+  if (TinCan && Scrowl.runtime) {
+    // @ts-ignore
+    Scrowl.runtime.startXAPI(scorm.name);
+  }
+
   if (!templateList || !Object.keys(templateList).length) {
     return <ErrorComponent msg="Templates missing" />;
   }
@@ -87,7 +94,7 @@ export const Root = ({
   const modules = project.modules;
   const resources = project.resources;
   const glossary = project.glossary;
-  const name = project.name;
+  const name = scorm.name;
 
   let moduleIdx;
   let lessonIdx;
@@ -171,6 +178,8 @@ export const Root = ({
         !previousLocation[1].max ||
         previousLocation[1].max === undefined
       ) {
+        // @ts-ignore
+        Scrowl.runtime.updateLocationXAPI(locationObj, id, name);
         Scrowl.runtime?.updateLocation(locationObj, id);
         if (window['API_1484_11'] !== undefined) {
           window['API_1484_11'].SetValue(
@@ -190,7 +199,8 @@ export const Root = ({
             locationObj.max.l = locationObj.cur.l;
           }
         }
-
+        // @ts-ignore
+        Scrowl.runtime.updateLocationXAPI(locationObj, id, name);
         Scrowl.runtime?.updateLocation(locationObj, id);
       }
     };

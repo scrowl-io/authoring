@@ -4,6 +4,7 @@
 */
 import { RUNTIME_SERVICE } from '../runtime.types';
 
+//@ts-ignore
 export const service: RUNTIME_SERVICE = {
   version: '1.2',
   init: false,

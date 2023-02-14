@@ -29,10 +29,13 @@ $parcel$defineInteropFlag($b3d1e3300d945f09$exports);
 
 $parcel$export($b3d1e3300d945f09$exports, "service", () => $b3d1e3300d945f09$export$6ed414b8d8bead88);
 $parcel$export($b3d1e3300d945f09$exports, "default", () => $b3d1e3300d945f09$export$2e2bcd8739ae039);
+const $29add62a37af587e$var$TinCan = window["TinCan"];
 const $29add62a37af587e$export$6ed414b8d8bead88 = {
     version: "2004v3",
     init: false,
     finished: false,
+    //@ts-ignore
+    tincan: null,
     _time: {
         startTime: undefined,
         getSessionTime: ()=>{
@@ -135,6 +138,45 @@ const $29add62a37af587e$export$6ed414b8d8bead88 = {
             $29add62a37af587e$export$6ed414b8d8bead88.API
         ];
     },
+    //@ts-ignore
+    updateLocationXAPI: (location, slideId, courseName)=>{
+        console.debug(`API.UpdateLocationXAPI`);
+        //@ts-ignore
+        console.log("service.tincan", $29add62a37af587e$export$6ed414b8d8bead88.tincan);
+        var advanceSlideExperience = new $29add62a37af587e$var$TinCan.Statement({
+            actor: {
+                mbox: "mailto:sean@osg.ca"
+            },
+            verb: {
+                id: "http://adlnet.gov/expapi/verbs/experienced"
+            },
+            target: {
+                id: `https://osg.ca/api/v1/activities/courses/${courseName}/advance-slide-${slideId}`,
+                definition: {
+                    name: {
+                        "en-US": `Advance Slide: ${slideId}`
+                    }
+                }
+            }
+        });
+        // @ts-ignore
+        $29add62a37af587e$export$6ed414b8d8bead88.tincan.saveStatement(advanceSlideExperience, {
+            callback: function(err, xhr) {
+                if (err !== null) {
+                    if (xhr !== null) {
+                        console.log("Failed to save statement: " + xhr.responseText + " (" + xhr.status + ")");
+                        // TODO: do something with error, didn't save statement
+                        return;
+                    }
+                    console.log("Failed to save statement: " + err);
+                    // TODO: do something with error, didn't save statement
+                    return;
+                }
+                console.log("Statement saved");
+            // TOOO: do something with success (possibly ignore)
+            }
+        });
+    },
     updateLocation: (location, slideId)=>{
         console.debug(`API.UpdateLocation`);
         const [isInit, API] = $29add62a37af587e$export$6ed414b8d8bead88.isInitialized();
@@ -234,6 +276,85 @@ const $29add62a37af587e$export$6ed414b8d8bead88 = {
             false
         ];
     },
+    // @ts-ignore
+    startXAPI: (courseName)=>{
+        console.debug("start XAPI");
+        if ($29add62a37af587e$var$TinCan) {
+            try {
+                // @ts-ignore
+                $29add62a37af587e$export$6ed414b8d8bead88.tincan = new $29add62a37af587e$var$TinCan.LRS({
+                    endpoint: "https://cloud.scorm.com/lrs/P9AQQNBMYJ/sandbox/",
+                    username: "sean@osg.ca",
+                    password: "Ds3@M4qh7iY98cy",
+                    allowFail: false
+                });
+            } catch (ex) {
+                console.log("Failed to setup LRS object: ", ex);
+            // TODO: do something with error, can't communicate with LRS
+            }
+            const statements = [];
+            var launchExperience = new $29add62a37af587e$var$TinCan.Statement({
+                actor: {
+                    mbox: "mailto:sean@osg.ca"
+                },
+                verb: {
+                    id: "http://adlnet.gov/expapi/verbs/experienced"
+                },
+                target: {
+                    id: `https://osg.ca/api/v1/activities/courses/${courseName}`,
+                    definition: {
+                        name: {
+                            "en-US": "Launch Course"
+                        }
+                    }
+                }
+            });
+            var intializeCourse = new $29add62a37af587e$var$TinCan.Statement({
+                actor: {
+                    mbox: "mailto:sean@osg.ca"
+                },
+                verb: {
+                    id: "http://adlnet.gov/expapi/verbs/initialized",
+                    display: {
+                        und: "initialized"
+                    }
+                },
+                target: {
+                    id: `https://osg.ca/api/v1/activities/courses/${courseName}/`,
+                    definition: {
+                        name: {
+                            "en-US": `LMS Course: ${courseName}`
+                        }
+                    }
+                }
+            });
+            // @ts-ignore
+            statements.push(launchExperience);
+            // @ts-ignore
+            statements.push(intializeCourse);
+            statements.forEach((statement)=>{
+                // @ts-ignore
+                $29add62a37af587e$export$6ed414b8d8bead88.tincan.saveStatement(statement, {
+                    callback: function(err, xhr) {
+                        if (err !== null) {
+                            if (xhr !== null) {
+                                console.log("Failed to save statement: " + xhr.responseText + " (" + xhr.status + ")");
+                                // TODO: do something with error, didn't save statement
+                                return;
+                            }
+                            console.log("Failed to save statement: " + err);
+                            // TODO: do something with error, didn't save statement
+                            return;
+                        }
+                        console.log("Statement saved");
+                    // TOOO: do something with success (possibly ignore)
+                    }
+                });
+                //@ts-ignore
+                console.log($29add62a37af587e$export$6ed414b8d8bead88.tincan);
+            });
+        }
+    },
     start: (api)=>{
         console.debug(`API.Start 2004v3`);
         $29add62a37af587e$export$6ed414b8d8bead88.API = api;
@@ -303,6 +424,54 @@ const $29add62a37af587e$export$6ed414b8d8bead88 = {
         return [
             false
         ];
+    },
+    finishXAPI: (courseName)=>{
+        console.debug(`API.FinishXAPI`);
+        //@ts-ignore
+        console.log("service.tincan", $29add62a37af587e$export$6ed414b8d8bead88.tincan);
+        const completedCourseStatement = new $29add62a37af587e$var$TinCan.Statement({
+            actor: {
+                mbox: "mailto:sean@osg.ca"
+            },
+            verb: {
+                id: "http://adlnet.gov/expapi/verbs/completed",
+                display: {
+                    "en-US": "completed"
+                }
+            },
+            target: {
+                id: `https://osg.ca/api/v1/activities/courses/${courseName}`,
+                definition: {
+                    name: {
+                        "en-US": courseName
+                    }
+                }
+            },
+            result: {
+                completion: true,
+                success: true,
+                score: {
+                    scaled: 0.9
+                }
+            }
+        });
+        // @ts-ignore
+        $29add62a37af587e$export$6ed414b8d8bead88.tincan.saveStatement(completedCourseStatement, {
+            callback: function(err, xhr) {
+                if (err !== null) {
+                    if (xhr !== null) {
+                        console.log("Failed to save statement: " + xhr.responseText + " (" + xhr.status + ")");
+                        // TODO: do something with error, didn't save statement
+                        return;
+                    }
+                    console.log("Failed to save statement: " + err);
+                    // TODO: do something with error, didn't save statement
+                    return;
+                }
+                console.log("Statement saved");
+            // TOOO: do something with success (possibly ignore)
+            }
+        });
     },
     setValue: (elem, val)=>{
         console.debug(`API.SetValue for ${elem} to ${val}`);

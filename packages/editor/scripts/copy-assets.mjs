@@ -25,6 +25,10 @@ const config = {
     dest: './src/main/assets/project/scorm-again.min.js',
     includePaths: ['../../'],
   },
+  'node_modules/tincanjs/build/tincan-min.js': {
+    dest: './src/main/assets/project/tincan-min.js',
+    includePaths: ['../../'],
+  },
   'node_modules/@scrowl/ui/dist': {
     dest: './src/main/assets/project',
     includePaths: ['../../'],
