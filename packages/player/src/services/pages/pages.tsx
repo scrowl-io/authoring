@@ -62,6 +62,8 @@ const updateCourseProgress = (project, id) => {
 
   let lessonsArray: { index: number; targetId: string; lesson: any }[] = [];
   let counter = 1;
+  let moduleCompleted = false;
+  let completedModule = '';
   project.outlineConfig.forEach((module, mIdx) => {
     module.lessons.forEach((lesson, lIdx) => {
       const lessonObj = {
@@ -78,6 +80,21 @@ const updateCourseProgress = (project, id) => {
     return lesson.targetId === id;
   });
 
+  project.outlineConfig.forEach((module, mIdx) => {
+    module.lessons.forEach((_lesson, lIdx) => {
+      if (
+        lIdx === module.lessons.length - 1 &&
+        mIdx <= project.outlineConfig.length - 1
+      ) {
+        if (currentLesson?.targetId === `module-${mIdx}--lesson-${lIdx}`) {
+          moduleCompleted = true;
+          completedModule = `module-${mIdx}`;
+          return;
+        }
+      }
+    });
+  });
+
   const currentLessonIndex = currentLesson?.index;
   const totalLessons = lessonsArray.length;
 
@@ -87,20 +104,27 @@ const updateCourseProgress = (project, id) => {
     percentageCompleted = currentLessonIndex / totalLessons;
   }
 
+  // @ts-ignore
+  Scrowl.runtime?.updateProgressXAPI(
+    project,
+    id,
+    moduleCompleted,
+    completedModule
+  );
   Scrowl.runtime?.updateProgress(percentageCompleted);
   if (window['API_1484_11']) {
     window['API_1484_11'].SetValue('cmi.progress_measure', percentageCompleted);
   }
 };
 
-const finishCourse = (courseName) => {
+const finishCourse = (project, moduleIndex) => {
   const Scrowl = window['Scrowl'];
   const TinCan = window['TinCan'];
 
   if (Scrowl.runtime) {
     if (TinCan) {
       // @ts-ignore
-      Scrowl.runtime.finishXAPI(courseName);
+      Scrowl.runtime.finishXAPI(project, moduleIndex);
     }
     Scrowl.runtime.finish();
   }
@@ -185,7 +209,7 @@ export const create = (
                       </Link>
                     ) : (
                       <Scrowl.ui.Button
-                        onClick={() => finishCourse(project.name)}
+                        onClick={() => finishCourse(project, mIdx)}
                       >
                         Finish Course
                       </Scrowl.ui.Button>

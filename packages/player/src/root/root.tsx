@@ -94,7 +94,10 @@ export const Root = ({
   const modules = project.modules;
   const resources = project.resources;
   const glossary = project.glossary;
-  const name = scorm.name;
+  let name;
+  if (scorm && scorm.name) {
+    name = scorm.name ? scorm.name : '';
+  }
 
   let moduleIdx;
   let lessonIdx;
@@ -179,7 +182,7 @@ export const Root = ({
         previousLocation[1].max === undefined
       ) {
         // @ts-ignore
-        Scrowl.runtime.updateLocationXAPI(locationObj, id, name);
+        Scrowl.runtime?.updateLocationXAPI(locationObj, id, name);
         Scrowl.runtime?.updateLocation(locationObj, id);
         if (window['API_1484_11'] !== undefined) {
           window['API_1484_11'].SetValue(
@@ -200,7 +203,8 @@ export const Root = ({
           }
         }
         // @ts-ignore
-        Scrowl.runtime.updateLocationXAPI(locationObj, id, name);
+
+        Scrowl.runtime?.updateLocationXAPI(locationObj, id, name);
         Scrowl.runtime?.updateLocation(locationObj, id);
       }
     };

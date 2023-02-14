@@ -141,8 +141,6 @@ const $29add62a37af587e$export$6ed414b8d8bead88 = {
     //@ts-ignore
     updateLocationXAPI: (location, slideId, courseName)=>{
         console.debug(`API.UpdateLocationXAPI`);
-        //@ts-ignore
-        console.log("service.tincan", $29add62a37af587e$export$6ed414b8d8bead88.tincan);
         var advanceSlideExperience = new $29add62a37af587e$var$TinCan.Statement({
             actor: {
                 mbox: "mailto:sean@osg.ca"
@@ -151,10 +149,10 @@ const $29add62a37af587e$export$6ed414b8d8bead88 = {
                 id: "http://adlnet.gov/expapi/verbs/experienced"
             },
             target: {
-                id: `https://osg.ca/api/v1/activities/courses/${courseName}/advance-slide-${slideId}`,
+                id: `https://osg.ca/api/v1/activities/courses/${courseName}/update-slide-${slideId}`,
                 definition: {
                     name: {
-                        "en-US": `Advance Slide: ${slideId}`
+                        "en-US": `Update Slide: ${slideId}`
                     }
                 }
             }
@@ -252,6 +250,68 @@ const $29add62a37af587e$export$6ed414b8d8bead88 = {
             ];
         }
     },
+    updateProgressXAPI: (project, lessonId, moduleCompleted, completedModule)=>{
+        console.debug(`API.UpdateProgressXAPI`);
+        let statements = [];
+        let completedModuleExperience;
+        var completedLessonExperience = new $29add62a37af587e$var$TinCan.Statement({
+            actor: {
+                mbox: "mailto:sean@osg.ca"
+            },
+            verb: {
+                id: "http://adlnet.gov/expapi/verbs/completed"
+            },
+            target: {
+                id: `https://osg.ca/api/v1/activities/courses/${project.name}/completed-${lessonId}`,
+                definition: {
+                    name: {
+                        "en-US": `Completed Lesson: ${lessonId}`
+                    }
+                }
+            }
+        });
+        // @ts-ignore
+        statements.push(completedLessonExperience);
+        if (moduleCompleted) {
+            completedModuleExperience = new $29add62a37af587e$var$TinCan.Statement({
+                actor: {
+                    mbox: "mailto:sean@osg.ca"
+                },
+                verb: {
+                    id: "http://adlnet.gov/expapi/verbs/completed"
+                },
+                target: {
+                    id: `https://osg.ca/api/v1/activities/courses/${project.name}/completed-${completedModule}`,
+                    definition: {
+                        name: {
+                            "en-US": `Completed Module: ${completedModule}`
+                        }
+                    }
+                }
+            });
+            // @ts-ignore
+            statements.push(completedModuleExperience);
+        }
+        statements.forEach((statement)=>{
+            // @ts-ignore
+            $29add62a37af587e$export$6ed414b8d8bead88.tincan.saveStatement(statement, {
+                callback: function(err, xhr) {
+                    if (err !== null) {
+                        if (xhr !== null) {
+                            console.log("Failed to save statement: " + xhr.responseText + " (" + xhr.status + ")");
+                            // TODO: do something with error, didn't save statement
+                            return;
+                        }
+                        console.log("Failed to save statement: " + err);
+                        // TODO: do something with error, didn't save statement
+                        return;
+                    }
+                    console.log("Statement saved");
+                // TOOO: do something with success (possibly ignore)
+                }
+            });
+        });
+    },
     updateProgress: (progressPercentage)=>{
         console.debug(`API.UpdateProgress`);
         const [isInit, API] = $29add62a37af587e$export$6ed414b8d8bead88.isInitialized();
@@ -293,22 +353,20 @@ const $29add62a37af587e$export$6ed414b8d8bead88 = {
             // TODO: do something with error, can't communicate with LRS
             }
             const statements = [];
-            var launchExperience = new $29add62a37af587e$var$TinCan.Statement({
-                actor: {
-                    mbox: "mailto:sean@osg.ca"
-                },
-                verb: {
-                    id: "http://adlnet.gov/expapi/verbs/experienced"
-                },
-                target: {
-                    id: `https://osg.ca/api/v1/activities/courses/${courseName}`,
-                    definition: {
-                        name: {
-                            "en-US": "Launch Course"
-                        }
-                    }
-                }
-            });
+            // var launchExperience = new TinCan.Statement({
+            //   actor: {
+            //     mbox: 'mailto:sean@osg.ca',
+            //   },
+            //   verb: {
+            //     id: 'http://adlnet.gov/expapi/verbs/experienced',
+            //   },
+            //   target: {
+            //     id: `https://osg.ca/api/v1/activities/courses/${courseName}`,
+            //     definition: {
+            //       name: { 'en-US': 'Launch Course' },
+            //     },
+            //   },
+            // });
             var intializeCourse = new $29add62a37af587e$var$TinCan.Statement({
                 actor: {
                     mbox: "mailto:sean@osg.ca"
@@ -329,7 +387,7 @@ const $29add62a37af587e$export$6ed414b8d8bead88 = {
                 }
             });
             // @ts-ignore
-            statements.push(launchExperience);
+            // statements.push(launchExperience);
             // @ts-ignore
             statements.push(intializeCourse);
             statements.forEach((statement)=>{
@@ -350,8 +408,6 @@ const $29add62a37af587e$export$6ed414b8d8bead88 = {
                     // TOOO: do something with success (possibly ignore)
                     }
                 });
-                //@ts-ignore
-                console.log($29add62a37af587e$export$6ed414b8d8bead88.tincan);
             });
         }
     },
@@ -425,8 +481,25 @@ const $29add62a37af587e$export$6ed414b8d8bead88 = {
             false
         ];
     },
-    finishXAPI: (courseName)=>{
+    finishXAPI: (project, moduleIndex)=>{
         console.debug(`API.FinishXAPI`);
+        let statements = [];
+        const completedModuleExperience = new $29add62a37af587e$var$TinCan.Statement({
+            actor: {
+                mbox: "mailto:sean@osg.ca"
+            },
+            verb: {
+                id: "http://adlnet.gov/expapi/verbs/completed"
+            },
+            target: {
+                id: `https://osg.ca/api/v1/activities/courses/${project.name}/completed-module-${moduleIndex}`,
+                definition: {
+                    name: {
+                        "en-US": `Completed Module: module-${moduleIndex}`
+                    }
+                }
+            }
+        });
         //@ts-ignore
         console.log("service.tincan", $29add62a37af587e$export$6ed414b8d8bead88.tincan);
         const completedCourseStatement = new $29add62a37af587e$var$TinCan.Statement({
@@ -440,10 +513,10 @@ const $29add62a37af587e$export$6ed414b8d8bead88 = {
                 }
             },
             target: {
-                id: `https://osg.ca/api/v1/activities/courses/${courseName}`,
+                id: `https://osg.ca/api/v1/activities/courses/${project.name}`,
                 definition: {
                     name: {
-                        "en-US": courseName
+                        "en-US": project.name
                     }
                 }
             },
@@ -456,21 +529,27 @@ const $29add62a37af587e$export$6ed414b8d8bead88 = {
             }
         });
         // @ts-ignore
-        $29add62a37af587e$export$6ed414b8d8bead88.tincan.saveStatement(completedCourseStatement, {
-            callback: function(err, xhr) {
-                if (err !== null) {
-                    if (xhr !== null) {
-                        console.log("Failed to save statement: " + xhr.responseText + " (" + xhr.status + ")");
+        statements.push(completedCourseStatement);
+        // @ts-ignore
+        statements.push(completedModuleExperience);
+        statements.forEach((statement)=>{
+            //@ts-ignore
+            $29add62a37af587e$export$6ed414b8d8bead88.tincan.saveStatement(statement, {
+                callback: function(err, xhr) {
+                    if (err !== null) {
+                        if (xhr !== null) {
+                            console.log("Failed to save statement: " + xhr.responseText + " (" + xhr.status + ")");
+                            // TODO: do something with error, didn't save statement
+                            return;
+                        }
+                        console.log("Failed to save statement: " + err);
                         // TODO: do something with error, didn't save statement
                         return;
                     }
-                    console.log("Failed to save statement: " + err);
-                    // TODO: do something with error, didn't save statement
-                    return;
+                    console.log("Statement saved");
+                // TOOO: do something with success (possibly ignore)
                 }
-                console.log("Statement saved");
-            // TOOO: do something with success (possibly ignore)
-            }
+            });
         });
     },
     setValue: (elem, val)=>{
