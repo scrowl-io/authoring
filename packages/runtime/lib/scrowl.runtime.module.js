@@ -13,6 +13,13 @@ $parcel$defineInteropFlag($defce2f29876acb7$exports);
 
 $parcel$export($defce2f29876acb7$exports, "service", () => $defce2f29876acb7$export$6ed414b8d8bead88);
 $parcel$export($defce2f29876acb7$exports, "default", () => $defce2f29876acb7$export$2e2bcd8739ae039);
+const $cefd77ae0ca42fc5$export$93a0b81c2b28266f = {
+    ENDPOINT: "https://cloud.scorm.com/lrs/P9AQQNBMYJ/sandbox",
+    AUTH_USER: "nI9YC1Jcy2bR5HLGFU8",
+    AUTH_PASSWORD: "GuBkhtMVy0essGGJgtA"
+};
+
+
 const $704b14303ded74fd$var$TinCan = window["TinCan"];
 const $704b14303ded74fd$export$6ed414b8d8bead88 = {
     version: "2004v3",
@@ -127,7 +134,8 @@ const $704b14303ded74fd$export$6ed414b8d8bead88 = {
         console.debug(`API.UpdateLocationXAPI`);
         var advanceSlideExperience = new $704b14303ded74fd$var$TinCan.Statement({
             actor: {
-                mbox: "mailto:sean@osg.ca"
+                name: $704b14303ded74fd$export$6ed414b8d8bead88.API ? $704b14303ded74fd$export$6ed414b8d8bead88.API.LearnerName : "",
+                mbox: `mailto:${$704b14303ded74fd$export$6ed414b8d8bead88.API ? $704b14303ded74fd$export$6ed414b8d8bead88.API.LearnerId : ""}`
             },
             verb: {
                 id: "http://adlnet.gov/expapi/verbs/experienced"
@@ -240,7 +248,8 @@ const $704b14303ded74fd$export$6ed414b8d8bead88 = {
         let completedModuleExperience;
         var completedLessonExperience = new $704b14303ded74fd$var$TinCan.Statement({
             actor: {
-                mbox: "mailto:sean@osg.ca"
+                name: $704b14303ded74fd$export$6ed414b8d8bead88.API ? $704b14303ded74fd$export$6ed414b8d8bead88.API.LearnerName : "",
+                mbox: `mailto:${$704b14303ded74fd$export$6ed414b8d8bead88.API ? $704b14303ded74fd$export$6ed414b8d8bead88.API.LearnerId : ""}`
             },
             verb: {
                 id: "http://adlnet.gov/expapi/verbs/completed"
@@ -259,7 +268,8 @@ const $704b14303ded74fd$export$6ed414b8d8bead88 = {
         if (moduleCompleted) {
             completedModuleExperience = new $704b14303ded74fd$var$TinCan.Statement({
                 actor: {
-                    mbox: "mailto:sean@osg.ca"
+                    name: $704b14303ded74fd$export$6ed414b8d8bead88.API ? $704b14303ded74fd$export$6ed414b8d8bead88.API.LearnerName : "",
+                    mbox: `mailto:${$704b14303ded74fd$export$6ed414b8d8bead88.API ? $704b14303ded74fd$export$6ed414b8d8bead88.API.LearnerId : ""}`
                 },
                 verb: {
                     id: "http://adlnet.gov/expapi/verbs/completed"
@@ -327,9 +337,9 @@ const $704b14303ded74fd$export$6ed414b8d8bead88 = {
             try {
                 // @ts-ignore
                 $704b14303ded74fd$export$6ed414b8d8bead88.tincan = new $704b14303ded74fd$var$TinCan.LRS({
-                    endpoint: "https://cloud.scorm.com/lrs/P9AQQNBMYJ/sandbox/",
-                    username: "sean@osg.ca",
-                    password: "Ds3@M4qh7iY98cy",
+                    endpoint: (0, $cefd77ae0ca42fc5$export$93a0b81c2b28266f).ENDPOINT,
+                    username: (0, $cefd77ae0ca42fc5$export$93a0b81c2b28266f).AUTH_USER,
+                    password: (0, $cefd77ae0ca42fc5$export$93a0b81c2b28266f).AUTH_PASSWORD,
                     allowFail: false
                 });
             } catch (ex) {
@@ -337,23 +347,10 @@ const $704b14303ded74fd$export$6ed414b8d8bead88 = {
             // TODO: do something with error, can't communicate with LRS
             }
             const statements = [];
-            // var launchExperience = new TinCan.Statement({
-            //   actor: {
-            //     mbox: 'mailto:sean@osg.ca',
-            //   },
-            //   verb: {
-            //     id: 'http://adlnet.gov/expapi/verbs/experienced',
-            //   },
-            //   target: {
-            //     id: `https://osg.ca/api/v1/activities/courses/${courseName}`,
-            //     definition: {
-            //       name: { 'en-US': 'Launch Course' },
-            //     },
-            //   },
-            // });
             var intializeCourse = new $704b14303ded74fd$var$TinCan.Statement({
                 actor: {
-                    mbox: "mailto:sean@osg.ca"
+                    name: $704b14303ded74fd$export$6ed414b8d8bead88.API ? $704b14303ded74fd$export$6ed414b8d8bead88.API.LearnerName : "",
+                    mbox: `mailto:${$704b14303ded74fd$export$6ed414b8d8bead88.API ? $704b14303ded74fd$export$6ed414b8d8bead88.API.LearnerId : ""}`
                 },
                 verb: {
                     id: "http://adlnet.gov/expapi/verbs/initialized",
@@ -470,7 +467,8 @@ const $704b14303ded74fd$export$6ed414b8d8bead88 = {
         let statements = [];
         const completedModuleExperience = new $704b14303ded74fd$var$TinCan.Statement({
             actor: {
-                mbox: "mailto:sean@osg.ca"
+                name: $704b14303ded74fd$export$6ed414b8d8bead88.API ? $704b14303ded74fd$export$6ed414b8d8bead88.API.LearnerName : "",
+                mbox: `mailto:${$704b14303ded74fd$export$6ed414b8d8bead88.API ? $704b14303ded74fd$export$6ed414b8d8bead88.API.LearnerId : ""}`
             },
             verb: {
                 id: "http://adlnet.gov/expapi/verbs/completed"
@@ -488,7 +486,8 @@ const $704b14303ded74fd$export$6ed414b8d8bead88 = {
         console.log("service.tincan", $704b14303ded74fd$export$6ed414b8d8bead88.tincan);
         const completedCourseStatement = new $704b14303ded74fd$var$TinCan.Statement({
             actor: {
-                mbox: "mailto:sean@osg.ca"
+                name: $704b14303ded74fd$export$6ed414b8d8bead88.API ? $704b14303ded74fd$export$6ed414b8d8bead88.API.LearnerName : "",
+                mbox: `mailto:${$704b14303ded74fd$export$6ed414b8d8bead88.API ? $704b14303ded74fd$export$6ed414b8d8bead88.API.LearnerId : ""}`
             },
             verb: {
                 id: "http://adlnet.gov/expapi/verbs/completed",

@@ -19,6 +19,8 @@ export type SCORM_API = {
     LMSGetValue: (element: CMIElement) => string;
     LMSInitialize: (msg?: string) => SCORM_STATUS_UPDATE;
     LMSSetValue: (element: CMIElement, value: string | number) => string;
+    LearnerId: string;
+    LearnerName: string;
     SetValue: (element: CMIElement, value: string | number) => string;
     Terminate: (msg?: string) => SCORM_STATUS_UPDATE;
     apolloClient: {

@@ -21,7 +21,6 @@ export const Root = ({
   ...props
 }: PlayerRootProps) => {
   const Scrowl = window['Scrowl'];
-  const TinCan = window['TinCan'];
 
   let apiPreference;
 
@@ -68,7 +67,7 @@ export const Root = ({
     }
   }
 
-  if (TinCan && Scrowl.runtime) {
+  if (Scrowl.runtime && Scrowl.runtime.version === '2004v3') {
     // @ts-ignore
     Scrowl.runtime.startXAPI(scorm.name);
   }
@@ -181,8 +180,11 @@ export const Root = ({
         !previousLocation[1].max ||
         previousLocation[1].max === undefined
       ) {
-        // @ts-ignore
-        Scrowl.runtime?.updateLocationXAPI(locationObj, id, name);
+        if (Scrowl.runtime && Scrowl.runtime.version === '2004v3') {
+          // @ts-ignore
+          Scrowl.runtime?.updateLocationXAPI(locationObj, id, name);
+        }
+
         Scrowl.runtime?.updateLocation(locationObj, id);
         if (window['API_1484_11'] !== undefined) {
           window['API_1484_11'].SetValue(
@@ -202,9 +204,10 @@ export const Root = ({
             locationObj.max.l = locationObj.cur.l;
           }
         }
-        // @ts-ignore
-
-        Scrowl.runtime?.updateLocationXAPI(locationObj, id, name);
+        if (Scrowl.runtime && Scrowl.runtime.version === '2004v3') {
+          // @ts-ignore
+          Scrowl.runtime?.updateLocationXAPI(locationObj, id, name);
+        }
         Scrowl.runtime?.updateLocation(locationObj, id);
       }
     };

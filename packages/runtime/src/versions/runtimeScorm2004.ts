@@ -4,6 +4,7 @@
 */
 import { RUNTIME_SERVICE } from '../runtime.types';
 const TinCan = window['TinCan'];
+import { xAPIConfig } from './globalVars';
 
 // @ts-ignore
 export const service: RUNTIME_SERVICE = {
@@ -138,7 +139,8 @@ export const service: RUNTIME_SERVICE = {
 
     var advanceSlideExperience = new TinCan.Statement({
       actor: {
-        mbox: 'mailto:sean@osg.ca',
+        name: service.API ? service.API.LearnerName : '',
+        mbox: `mailto:${service.API ? service.API.LearnerId : ''}`,
       },
       verb: {
         id: 'http://adlnet.gov/expapi/verbs/experienced',
@@ -248,7 +250,8 @@ export const service: RUNTIME_SERVICE = {
 
     var completedLessonExperience = new TinCan.Statement({
       actor: {
-        mbox: 'mailto:sean@osg.ca',
+        name: service.API ? service.API.LearnerName : '',
+        mbox: `mailto:${service.API ? service.API.LearnerId : ''}`,
       },
       verb: {
         id: 'http://adlnet.gov/expapi/verbs/completed',
@@ -267,7 +270,8 @@ export const service: RUNTIME_SERVICE = {
     if (moduleCompleted) {
       completedModuleExperience = new TinCan.Statement({
         actor: {
-          mbox: 'mailto:sean@osg.ca',
+          name: service.API ? service.API.LearnerName : '',
+          mbox: `mailto:${service.API ? service.API.LearnerId : ''}`,
         },
         verb: {
           id: 'http://adlnet.gov/expapi/verbs/completed',
@@ -352,9 +356,9 @@ export const service: RUNTIME_SERVICE = {
       try {
         // @ts-ignore
         service.tincan = new TinCan.LRS({
-          endpoint: 'https://cloud.scorm.com/lrs/P9AQQNBMYJ/sandbox/',
-          username: 'sean@osg.ca',
-          password: 'Ds3@M4qh7iY98cy',
+          endpoint: xAPIConfig.ENDPOINT,
+          username: xAPIConfig.AUTH_USER,
+          password: xAPIConfig.AUTH_PASSWORD,
           allowFail: false,
         });
       } catch (ex) {
@@ -363,24 +367,11 @@ export const service: RUNTIME_SERVICE = {
       }
 
       const statements = [];
-      // var launchExperience = new TinCan.Statement({
-      //   actor: {
-      //     mbox: 'mailto:sean@osg.ca',
-      //   },
-      //   verb: {
-      //     id: 'http://adlnet.gov/expapi/verbs/experienced',
-      //   },
-      //   target: {
-      //     id: `https://osg.ca/api/v1/activities/courses/${courseName}`,
-      //     definition: {
-      //       name: { 'en-US': 'Launch Course' },
-      //     },
-      //   },
-      // });
 
       var intializeCourse = new TinCan.Statement({
         actor: {
-          mbox: 'mailto:sean@osg.ca',
+          name: service.API ? service.API.LearnerName : '',
+          mbox: `mailto:${service.API ? service.API.LearnerId : ''}`,
         },
         verb: {
           id: 'http://adlnet.gov/expapi/verbs/initialized',
@@ -525,7 +516,8 @@ export const service: RUNTIME_SERVICE = {
 
     const completedModuleExperience = new TinCan.Statement({
       actor: {
-        mbox: 'mailto:sean@osg.ca',
+        name: service.API ? service.API.LearnerName : '',
+        mbox: `mailto:${service.API ? service.API.LearnerId : ''}`,
       },
       verb: {
         id: 'http://adlnet.gov/expapi/verbs/completed',
@@ -542,7 +534,8 @@ export const service: RUNTIME_SERVICE = {
     console.log('service.tincan', service.tincan);
     const completedCourseStatement = new TinCan.Statement({
       actor: {
-        mbox: 'mailto:sean@osg.ca',
+        name: service.API ? service.API.LearnerName : '',
+        mbox: `mailto:${service.API ? service.API.LearnerId : ''}`,
       },
       verb: {
         id: 'http://adlnet.gov/expapi/verbs/completed',

@@ -104,13 +104,16 @@ const updateCourseProgress = (project, id) => {
     percentageCompleted = currentLessonIndex / totalLessons;
   }
 
-  // @ts-ignore
-  Scrowl.runtime?.updateProgressXAPI(
-    project,
-    id,
-    moduleCompleted,
-    completedModule
-  );
+  if (Scrowl.runtime && Scrowl.runtime.version === '2004v3') {
+    // @ts-ignore
+    Scrowl.runtime.updateProgressXAPI(
+      project,
+      id,
+      moduleCompleted,
+      completedModule
+    );
+  }
+
   Scrowl.runtime?.updateProgress(percentageCompleted);
   if (window['API_1484_11']) {
     window['API_1484_11'].SetValue('cmi.progress_measure', percentageCompleted);
@@ -119,10 +122,9 @@ const updateCourseProgress = (project, id) => {
 
 const finishCourse = (project, moduleIndex) => {
   const Scrowl = window['Scrowl'];
-  const TinCan = window['TinCan'];
 
   if (Scrowl.runtime) {
-    if (TinCan) {
+    if (Scrowl.runtime.version === '2004v3') {
       // @ts-ignore
       Scrowl.runtime.finishXAPI(project, moduleIndex);
     }
