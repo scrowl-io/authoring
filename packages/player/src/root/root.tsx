@@ -31,6 +31,9 @@ export const Root = ({
       case '2004 3rd Edition':
         apiPreference = '2004v3';
         break;
+      case 'xAPI':
+        apiPreference = 'xAPI';
+        break;
       case '1.2':
       default:
         apiPreference = '1.2';
@@ -59,17 +62,12 @@ export const Root = ({
     window['API_1484_11'].Initialize();
   }
 
-  if (Scrowl.runtime) {
-    const [isStarted] = Scrowl.runtime.start(apiPreference);
+  if (Scrowl.runtime && scorm.name) {
+    const [isStarted] = Scrowl.runtime.start(apiPreference, scorm.name);
 
     if (!isStarted) {
       console.error('unable to start runtime');
     }
-  }
-
-  if (Scrowl.runtime && Scrowl.runtime.version === '2004v3') {
-    // @ts-ignore
-    Scrowl.runtime.startXAPI(scorm.name);
   }
 
   if (!templateList || !Object.keys(templateList).length) {
@@ -180,11 +178,6 @@ export const Root = ({
         !previousLocation[1].max ||
         previousLocation[1].max === undefined
       ) {
-        if (Scrowl.runtime && Scrowl.runtime.version === '2004v3') {
-          // @ts-ignore
-          Scrowl.runtime?.updateLocationXAPI(locationObj, id, name);
-        }
-
         Scrowl.runtime?.updateLocation(locationObj, id);
         if (window['API_1484_11'] !== undefined) {
           window['API_1484_11'].SetValue(
@@ -203,10 +196,6 @@ export const Root = ({
           if (locationObj.cur.m >= previousLocation?.[1].max.m) {
             locationObj.max.l = locationObj.cur.l;
           }
-        }
-        if (Scrowl.runtime && Scrowl.runtime.version === '2004v3') {
-          // @ts-ignore
-          Scrowl.runtime?.updateLocationXAPI(locationObj, id, name);
         }
         Scrowl.runtime?.updateLocation(locationObj, id);
       }

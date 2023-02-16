@@ -5,6 +5,7 @@
 import { RUNTIME_SERVICE_WRAPPER } from './runtime.types';
 import { service as service2004 } from '../src/versions/runtimeScorm2004';
 import { service as service12 } from '../src/versions/runtimeScorm12';
+import { service as servicexAPI } from '../src/versions/runtimeXAPI';
 
 export const service: RUNTIME_SERVICE_WRAPPER = {
   API: null,
@@ -35,7 +36,7 @@ export const service: RUNTIME_SERVICE_WRAPPER = {
     return win[v];
   },
   // @ts-ignore
-  start: (apiPreference) => {
+  start: (apiPreference, courseName) => {
     let API;
 
     switch (apiPreference) {
@@ -43,6 +44,11 @@ export const service: RUNTIME_SERVICE_WRAPPER = {
         API = service._scanApi(window, 'API_1484_11');
         service.version = apiPreference;
         Object.assign(service, service2004);
+        break;
+      case servicexAPI.version:
+        API = service._scanApi(window, 'API_1484_11');
+        service.version = apiPreference;
+        Object.assign(service, servicexAPI);
         break;
       case service12.version:
       default:
@@ -59,8 +65,7 @@ export const service: RUNTIME_SERVICE_WRAPPER = {
 
     service.API = API;
 
-    // @ts-ignore
-    service.start(API);
+    service.start(API, courseName);
 
     return [true];
   },

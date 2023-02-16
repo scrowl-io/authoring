@@ -4,7 +4,6 @@
 */
 import { RUNTIME_SERVICE } from '../runtime.types';
 
-//@ts-ignore
 export const service: RUNTIME_SERVICE = {
   version: '1.2',
   init: false,
@@ -75,6 +74,7 @@ export const service: RUNTIME_SERVICE = {
     },
   },
   API: null,
+  courseName: '',
   getError: (printError) => {
     printError =
       printError === undefined || printError === null ? true : printError;
@@ -136,7 +136,6 @@ export const service: RUNTIME_SERVICE = {
       return [service.init, false];
     }
 
-    // @ts-ignore
     if (service.API.Initialized === 'false') {
       console.error('API failed to initialize');
       return [service.init, false];
@@ -208,7 +207,8 @@ export const service: RUNTIME_SERVICE = {
       return [true, {}];
     }
   },
-  updateProgress: (progressPercentage) => {
+  updateProgress: (project, progressPercentage) => {
+    console.log(project);
     console.debug(`API.UpdateProgress`);
 
     const [isInit, API] = service.isInitialized();
@@ -221,8 +221,6 @@ export const service: RUNTIME_SERVICE = {
     const [progressError, previousProgress] =
       service.getValue('cmi.suspend_data');
 
-    // error 403 = Data Model Element Value Not Initialized (first time setting progress)
-    // @ts-ignore
     if (progressError && previousProgress.data.id === '403') {
       service.setValue('cmi.suspend_data', progressPercentage);
       service.commit();
@@ -300,8 +298,9 @@ export const service: RUNTIME_SERVICE = {
 
     return [false];
   },
-  finish: () => {
+  finish: (moduleIndex) => {
     console.debug(`API.Finish`);
+    console.log(moduleIndex);
 
     const [isInit, API] = service.isInitialized();
 

@@ -3,16 +3,11 @@
   https://scorm.com/scorm-explained/technical-scorm/run-time/run-time-reference/
 */
 import { RUNTIME_SERVICE } from '../runtime.types';
-const TinCan = window['TinCan'];
-import { xAPIConfig } from './globalVars';
 
-// @ts-ignore
 export const service: RUNTIME_SERVICE = {
   version: '2004v3',
   init: false,
   finished: false,
-  //@ts-ignore
-  tincan: null,
   _time: {
     startTime: undefined,
     getSessionTime: () => {
@@ -58,6 +53,7 @@ export const service: RUNTIME_SERVICE = {
     },
   },
   API: null,
+  courseName: '',
   getError: (printError) => {
     printError =
       printError === undefined || printError === null ? true : printError;
@@ -124,7 +120,6 @@ export const service: RUNTIME_SERVICE = {
       return [service.init, false];
     }
 
-    // @ts-ignore
     if (service.API.Initialized === 'false') {
       console.error('API failed to initialize');
       return [service.init, false];
@@ -132,52 +127,6 @@ export const service: RUNTIME_SERVICE = {
 
     service.init = true;
     return [service.init, service.API];
-  },
-  //@ts-ignore
-  updateLocationXAPI: (location, slideId, courseName) => {
-    console.debug(`API.UpdateLocationXAPI`);
-
-    var advanceSlideExperience = new TinCan.Statement({
-      actor: {
-        name: service.API ? service.API.LearnerName : '',
-        mbox: `mailto:${service.API ? service.API.LearnerId : ''}`,
-      },
-      verb: {
-        id: 'http://adlnet.gov/expapi/verbs/experienced',
-      },
-      target: {
-        id: `https://osg.ca/api/v1/activities/courses/${courseName}/update-slide-${slideId}`,
-        definition: {
-          name: { 'en-US': `Update Slide: ${slideId}` },
-        },
-      },
-    });
-
-    // @ts-ignore
-    service.tincan.saveStatement(advanceSlideExperience, {
-      callback: function (err, xhr) {
-        if (err !== null) {
-          if (xhr !== null) {
-            console.log(
-              'Failed to save statement: ' +
-                xhr.responseText +
-                ' (' +
-                xhr.status +
-                ')'
-            );
-            // TODO: do something with error, didn't save statement
-            return;
-          }
-
-          console.log('Failed to save statement: ' + err);
-          // TODO: do something with error, didn't save statement
-          return;
-        }
-
-        console.log('Statement saved');
-        // TOOO: do something with success (possibly ignore)
-      },
-    });
   },
   updateLocation: (location, slideId) => {
     console.debug(`API.UpdateLocation`);
@@ -242,80 +191,8 @@ export const service: RUNTIME_SERVICE = {
       return [true, {}];
     }
   },
-  updateProgressXAPI: (project, lessonId, moduleCompleted, completedModule) => {
-    console.debug(`API.UpdateProgressXAPI`);
-
-    let statements = [];
-    let completedModuleExperience;
-
-    var completedLessonExperience = new TinCan.Statement({
-      actor: {
-        name: service.API ? service.API.LearnerName : '',
-        mbox: `mailto:${service.API ? service.API.LearnerId : ''}`,
-      },
-      verb: {
-        id: 'http://adlnet.gov/expapi/verbs/completed',
-      },
-      target: {
-        id: `https://osg.ca/api/v1/activities/courses/${project.name}/completed-${lessonId}`,
-        definition: {
-          name: { 'en-US': `Completed Lesson: ${lessonId}` },
-        },
-      },
-    });
-
-    // @ts-ignore
-    statements.push(completedLessonExperience);
-
-    if (moduleCompleted) {
-      completedModuleExperience = new TinCan.Statement({
-        actor: {
-          name: service.API ? service.API.LearnerName : '',
-          mbox: `mailto:${service.API ? service.API.LearnerId : ''}`,
-        },
-        verb: {
-          id: 'http://adlnet.gov/expapi/verbs/completed',
-        },
-        target: {
-          id: `https://osg.ca/api/v1/activities/courses/${project.name}/completed-${completedModule}`,
-          definition: {
-            name: { 'en-US': `Completed Module: ${completedModule}` },
-          },
-        },
-      });
-      // @ts-ignore
-      statements.push(completedModuleExperience);
-    }
-
-    statements.forEach((statement) => {
-      // @ts-ignore
-      service.tincan.saveStatement(statement, {
-        callback: function (err, xhr) {
-          if (err !== null) {
-            if (xhr !== null) {
-              console.log(
-                'Failed to save statement: ' +
-                  xhr.responseText +
-                  ' (' +
-                  xhr.status +
-                  ')'
-              );
-              // TODO: do something with error, didn't save statement
-              return;
-            }
-
-            console.log('Failed to save statement: ' + err);
-            // TODO: do something with error, didn't save statement
-            return;
-          }
-
-          console.log('Statement saved');
-          // TOOO: do something with success (possibly ignore)
-        },
-      });
-    });
-  },
-  updateProgress: (progressPercentage) => {
+  updateProgress: (project, progressPercentage) => {
+    console.log(project);
     console.debug(`API.UpdateProgress`);
 
     const [isInit, API] = service.isInitialized();
@@ -329,8 +206,6 @@ export const service: RUNTIME_SERVICE = {
       'cmi.progress_measure'
     );
 
-    // error 403 = Data Model Element Value Not Initialized (first time setting progress)
-    // @ts-ignore
     if (progressError && previousProgress.data.id === '403') {
       service.setValue('cmi.progress_measure', progressPercentage);
       service.commit();
@@ -349,82 +224,11 @@ export const service: RUNTIME_SERVICE = {
 
     return [false];
   },
-  // @ts-ignore
-  startXAPI: (courseName) => {
-    console.debug('start XAPI');
-    if (TinCan) {
-      try {
-        // @ts-ignore
-        service.tincan = new TinCan.LRS({
-          endpoint: xAPIConfig.ENDPOINT,
-          username: xAPIConfig.AUTH_USER,
-          password: xAPIConfig.AUTH_PASSWORD,
-          allowFail: false,
-        });
-      } catch (ex) {
-        console.log('Failed to setup LRS object: ', ex);
-        // TODO: do something with error, can't communicate with LRS
-      }
-
-      const statements = [];
-
-      var intializeCourse = new TinCan.Statement({
-        actor: {
-          name: service.API ? service.API.LearnerName : '',
-          mbox: `mailto:${service.API ? service.API.LearnerId : ''}`,
-        },
-        verb: {
-          id: 'http://adlnet.gov/expapi/verbs/initialized',
-          display: {
-            und: 'initialized',
-          },
-        },
-        target: {
-          id: `https://osg.ca/api/v1/activities/courses/${courseName}/`,
-          definition: {
-            name: { 'en-US': `LMS Course: ${courseName}` },
-          },
-        },
-      });
-
-      // @ts-ignore
-      // statements.push(launchExperience);
-      // @ts-ignore
-      statements.push(intializeCourse);
-
-      statements.forEach((statement) => {
-        // @ts-ignore
-        service.tincan.saveStatement(statement, {
-          callback: function (err, xhr) {
-            if (err !== null) {
-              if (xhr !== null) {
-                console.log(
-                  'Failed to save statement: ' +
-                    xhr.responseText +
-                    ' (' +
-                    xhr.status +
-                    ')'
-                );
-                // TODO: do something with error, didn't save statement
-                return;
-              }
-
-              console.log('Failed to save statement: ' + err);
-              // TODO: do something with error, didn't save statement
-              return;
-            }
-
-            console.log('Statement saved');
-            // TOOO: do something with success (possibly ignore)
-          },
-        });
-      });
-    }
-  },
-  start: (api) => {
+  start: (api, courseName) => {
     console.debug(`API.Start 2004v3`);
 
     service.API = api;
+    service.courseName = courseName;
     service._time.startTime = new Date();
     service.API?.Initialize('');
 
@@ -487,8 +291,9 @@ export const service: RUNTIME_SERVICE = {
 
     return [false];
   },
-  finish: () => {
+  finish: (moduleIndex) => {
     console.debug(`API.Finish`);
+    console.log(moduleIndex);
 
     const [isInit, API] = service.isInitialized();
 
@@ -508,86 +313,6 @@ export const service: RUNTIME_SERVICE = {
     API.Terminate('');
 
     return [false];
-  },
-  finishXAPI: (project, moduleIndex) => {
-    console.debug(`API.FinishXAPI`);
-
-    let statements = [];
-
-    const completedModuleExperience = new TinCan.Statement({
-      actor: {
-        name: service.API ? service.API.LearnerName : '',
-        mbox: `mailto:${service.API ? service.API.LearnerId : ''}`,
-      },
-      verb: {
-        id: 'http://adlnet.gov/expapi/verbs/completed',
-      },
-      target: {
-        id: `https://osg.ca/api/v1/activities/courses/${project.name}/completed-module-${moduleIndex}`,
-        definition: {
-          name: { 'en-US': `Completed Module: module-${moduleIndex}` },
-        },
-      },
-    });
-
-    //@ts-ignore
-    console.log('service.tincan', service.tincan);
-    const completedCourseStatement = new TinCan.Statement({
-      actor: {
-        name: service.API ? service.API.LearnerName : '',
-        mbox: `mailto:${service.API ? service.API.LearnerId : ''}`,
-      },
-      verb: {
-        id: 'http://adlnet.gov/expapi/verbs/completed',
-        display: { 'en-US': 'completed' },
-      },
-      target: {
-        id: `https://osg.ca/api/v1/activities/courses/${project.name}`,
-        definition: {
-          name: { 'en-US': project.name },
-        },
-      },
-      result: {
-        completion: true,
-        success: true,
-        score: {
-          scaled: 0.9,
-        },
-      },
-    });
-
-    // @ts-ignore
-    statements.push(completedCourseStatement);
-    // @ts-ignore
-    statements.push(completedModuleExperience);
-
-    statements.forEach((statement) => {
-      //@ts-ignore
-      service.tincan.saveStatement(statement, {
-        callback: function (err, xhr) {
-          if (err !== null) {
-            if (xhr !== null) {
-              console.log(
-                'Failed to save statement: ' +
-                  xhr.responseText +
-                  ' (' +
-                  xhr.status +
-                  ')'
-              );
-              // TODO: do something with error, didn't save statement
-              return;
-            }
-
-            console.log('Failed to save statement: ' + err);
-            // TODO: do something with error, didn't save statement
-            return;
-          }
-
-          console.log('Statement saved');
-          // TOOO: do something with success (possibly ignore)
-        },
-      });
-    });
   },
   setValue: (elem, val) => {
     console.debug(`API.SetValue for ${elem} to ${val}`);

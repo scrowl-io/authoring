@@ -85,7 +85,7 @@ export type ProjectMeta = {
 
 export type ProjectScorm = {
   name: string;
-  outputFormat: '1.2' | '2004 3rd Edition' | '2004.4';
+  outputFormat: '1.2' | '2004 3rd Edition' | '2004.4' | 'xAPI';
   optimizeMedia: 'low' | 'recommended' | 'high' | 'original';
   version?: string;
   description?: string;

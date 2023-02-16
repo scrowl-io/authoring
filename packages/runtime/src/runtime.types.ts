@@ -12,6 +12,7 @@ export type SCORM_API = {
   GetLastError: () => CMIErrorCode;
   GetValue: (element: CMIElement) => string;
   Initialize: (msg?: string) => SCORM_STATUS_UPDATE;
+  Initialized: string;
   LMSCommit: (msg?: string) => SCORM_STATUS_UPDATE;
   LMSFinish: (msg?: string) => SCORM_STATUS_UPDATE;
   LMSGetDiagnostic: (errorCode: CMIErrorCode) => string;
@@ -70,19 +71,21 @@ export type RUNTIME_SERVICE_RESULT = {
 };
 
 export type RUNTIME_WRAPPER = {
-  version: '1.2' | '2004v4' | '2004v3' | null;
+  version: '1.2' | '2004v4' | '2004v3' | 'xAPI' | null;
   API: SCORM_API | null;
   _scanApi: (win: Window, v: string) => SCORM_API;
   start: (
-    apiPreference: '1.2' | '2004v4' | '2004v3' | null
+    apiPreference: '1.2' | '2004v4' | '2004v3' | 'xAPI' | null,
+    courseName: string
   ) => [error: boolean];
 };
 
 export type RUNTIME_SERVICE = {
-  version: '1.2' | '2004v4' | '2004v3' | null;
+  version: '1.2' | '2004v4' | '2004v3' | 'xAPI' | null;
   API?: SCORM_API | null;
   init: boolean;
   finished: boolean;
+  courseName: string;
   _time: {
     startTime: undefined | Date;
     end: undefined | Date;
@@ -94,9 +97,15 @@ export type RUNTIME_SERVICE = {
   isInitialized: () =>
     | [error: true, API: SCORM_API]
     | [error: false, API: false];
-  start: (api: any) => [error: boolean];
+  start: (api: any, courseName: string) => [error: boolean];
   updateLocation: (location: any, slideId: string) => [error: boolean];
-  updateProgress: (progressPercentage: number) => [error: boolean];
+  updateProgress: (
+    project: any,
+    progressPercentage: number,
+    id: string,
+    moduleCompleted: any,
+    completedModule: any
+  ) => [error: boolean];
   isAvailable?: () => RUNTIME_SERVICE_API_RESULT;
   getError: (printError?: boolean) => RUNTIME_SERVICE_RESULT;
   getProgress: () => [error: boolean, progress: any];
@@ -104,9 +113,9 @@ export type RUNTIME_SERVICE = {
   save?: () => RUNTIME_SERVICE_RESULT;
   stop?: () => RUNTIME_SERVICE_RESULT;
   setValue: (elem: CMIElement, val: CMIElementValue) => [error: boolean];
-  getValue: (elem: CMIElement) => [error: boolean, value: string];
+  getValue: (elem: CMIElement) => [error: boolean, value: string | any];
   updateStatus?: (status: SCORM_STATUS_LESSON) => RUNTIME_SERVICE_RESULT;
-  finish: () => [error: boolean];
+  finish: (moduleIndex: any) => [error: boolean];
 };
 
 export type RUNTIME_SERVICE_WRAPPER = Partial<RUNTIME_SERVICE> &

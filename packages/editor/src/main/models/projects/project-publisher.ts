@@ -322,7 +322,10 @@ export const createScormPackage = (
     const packagerOpts = {
       source: src,
       title: project.meta.name,
-      version: config.outputFormat,
+      version:
+        config.outputFormat === 'xAPI'
+          ? '2004 3rd Edition'
+          : config.outputFormat,
       language: config.language,
       startingPage: 'content/index.html',
       organization: config.organization,

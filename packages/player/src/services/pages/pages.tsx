@@ -104,31 +104,23 @@ const updateCourseProgress = (project, id) => {
     percentageCompleted = currentLessonIndex / totalLessons;
   }
 
-  if (Scrowl.runtime && Scrowl.runtime.version === '2004v3') {
-    // @ts-ignore
-    Scrowl.runtime.updateProgressXAPI(
-      project,
-      id,
-      moduleCompleted,
-      completedModule
-    );
-  }
-
-  Scrowl.runtime?.updateProgress(percentageCompleted);
+  Scrowl.runtime?.updateProgress(
+    project,
+    percentageCompleted,
+    id,
+    moduleCompleted,
+    completedModule
+  );
   if (window['API_1484_11']) {
     window['API_1484_11'].SetValue('cmi.progress_measure', percentageCompleted);
   }
 };
 
-const finishCourse = (project, moduleIndex) => {
+const finishCourse = (moduleIndex) => {
   const Scrowl = window['Scrowl'];
 
   if (Scrowl.runtime) {
-    if (Scrowl.runtime.version === '2004v3') {
-      // @ts-ignore
-      Scrowl.runtime.finishXAPI(project, moduleIndex);
-    }
-    Scrowl.runtime.finish();
+    Scrowl.runtime.finish(moduleIndex);
   }
 
   if (window['API_1484_11']) {
@@ -210,9 +202,7 @@ export const create = (
                         {nextLessonText}
                       </Link>
                     ) : (
-                      <Scrowl.ui.Button
-                        onClick={() => finishCourse(project, mIdx)}
-                      >
+                      <Scrowl.ui.Button onClick={() => finishCourse(mIdx)}>
                         Finish Course
                       </Scrowl.ui.Button>
                     )}
