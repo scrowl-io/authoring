@@ -32,14 +32,25 @@ export const NavModule = ({ pageId, config, mIdx }) => {
 
   return (
     <div>
-      <span className={css.moduleButton} onClick={handleToggleOpen}>
+      <div className={css.moduleButton} onClick={handleToggleOpen}>
         <Scrowl.ui.Icon
           icon="chevron_right"
           display="outlined"
-          className={isOpen ? 'icon-expanded' : 'icon'}
+          className={isOpen ? css.iconExpanded : css.icon}
         />
-        <h5>{config.module.name}</h5>
-      </span>
+        <h5
+          className={
+            // @ts-ignore
+            moduleSlides.includes(pageId)
+              ? css.moduleNameActive
+              : isOpen
+              ? css.moduleNameExpanded
+              : css.moduleName
+          }
+        >
+          {config.module.name}
+        </h5>
+      </div>
       <Collapse in={isOpen}>
         <ul className={css.lessonList}>
           {config.lessons.map((lesson, lIdx) => {
@@ -60,7 +71,7 @@ export const NavModule = ({ pageId, config, mIdx }) => {
                           : css.lessonIcon
                       }
                     />
-                    <span
+                    <p
                       className={`${
                         id === currentSlide
                           ? css.lessonLinkActive
@@ -68,12 +79,13 @@ export const NavModule = ({ pageId, config, mIdx }) => {
                       }`}
                     >
                       {lessonName}
-                    </span>
+                    </p>
                   </span>
                 </Link>
               </li>
             );
           })}
+          {isOpen ? <hr /> : ''}
         </ul>
       </Collapse>
     </div>

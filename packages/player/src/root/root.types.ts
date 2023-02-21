@@ -60,6 +60,7 @@ export type ProjectResource = {
 
 export type ProjectData = {
   name?: string;
+  subtitle?: string;
   modules?: Array<ProjectModule>;
   lessons?: Array<ProjectLesson>;
   slides?: Array<ProjectSlide>;

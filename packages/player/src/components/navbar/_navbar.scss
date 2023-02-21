@@ -5,20 +5,24 @@
 .tabs-container {
   display: flex;
   flex-direction: row !important;
+  padding-top: 10px;
+  padding-bottom: 10px;
 
   li {
-    padding: 1em;
+    padding-right: 0.5em;
 
     button {
       border: none !important;
-      font-weight: 500;
+      font-size: 14px;
+      font-weight: 300 !important;
     }
   }
 
   .nav-item .active {
     text-decoration: underline;
+    text-underline-offset: 5px;
     color: #007aba !important;
-    font-weight: 700;
+    font-weight: 500 !important;
   }
 }
 
@@ -34,16 +38,18 @@
     padding: 1rem;
 
     h3 {
-      font-weight: 700;
+      font-weight: 600;
+      font-size: 17px;
+      margin-bottom: 2.5px;
     }
 
     .outline-subtitle {
-      font-weight: 300;
-      font-size: 1.2em;
+      font-weight: 400;
+      font-size: 14px;
+      margin-bottom: 2.5px;
     }
 
     .outline-duration {
-      margin-top: 1em;
       display: flex;
       align-items: center;
 
@@ -54,8 +60,8 @@
       }
 
       h5 {
-        font-size: 1em;
-        font-weight: 200;
+        font-size: 12px;
+        font-weight: 300;
         color: #72727e;
         margin: 0;
       }
@@ -63,6 +69,7 @@
   }
 
   .module-lessons {
+    margin-bottom: 1.5em;
     margin-left: 1rem;
 
     .module-button {
@@ -70,19 +77,28 @@
       align-items: center;
 
       h5 {
-        color: black;
         margin: 0;
+        font-size: 15px;
+        font-weight: 400;
+        color: #1d1d1f;
+      }
+
+      // .module-name-expanded {
+      // margin-top issue
+      // }
+
+      .module-name-active {
+        font-weight: 600;
       }
 
       .icon {
-        font-size: 1.5rem;
+        font-size: 16px;
         color: black;
-        margin-right: 0.25em;
+        margin-right: 10px !important;
         transition: transform 0.2s;
 
         &-expanded {
-          font-size: 1.5rem;
-          margin-right: 0.25em;
+          margin-right: 6.8px !important;
           transform: rotate(90deg);
           transition: transform 0.2s;
         }
@@ -95,9 +111,14 @@
     }
 
     .lesson-list {
-      margin-left: 0.5rem;
-      margin-top: 0.5rem;
+      margin-top: 1em;
       list-style: none;
+
+      hr {
+        width: 95%;
+        margin-left: -1em;
+        margin-top: 1.5em;
+      }
 
       a {
         text-decoration: none;
@@ -112,28 +133,36 @@
         background-color: transparent;
         border: none;
         display: flex;
-        align-items: center;
-        margin-bottom: 0.25rem;
+        align-items: flex-start;
+        margin-bottom: 0.5rem;
+        font-size: 14px;
 
         .lesson-icon {
           color: black;
+          margin-top: 0.1rem;
           margin-right: 0.25rem;
           transform: rotate(-90deg);
 
           &-active {
             color: #007aba;
+            margin-top: 0.1em;
             margin-right: 0.25rem;
             transform: rotate(-90deg);
           }
         }
 
         .lesson-link {
+          margin-bottom: 0 !important;
           text-decoration: none;
           color: black;
+          line-height: 1.4;
+          width: 85%;
 
           &-active {
+            margin-bottom: 0 !important;
             text-decoration: none;
             color: #007aba;
+            line-height: 1.4;
           }
         }
       }

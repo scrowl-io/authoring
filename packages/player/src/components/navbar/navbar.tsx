@@ -163,7 +163,7 @@ export const NavBar = ({ pageId, project, slides }) => {
 
   return (
     <ThemeProvider prefixes={themePrefixes}>
-      <Navbar key="1" expand={false} className="mb-3">
+      <Navbar key="1" expand={false} expanded={true} className="mb-3">
         <Container fluid>
           <Navbar.Toggle
             className={css.navButton}
@@ -184,7 +184,7 @@ export const NavBar = ({ pageId, project, slides }) => {
                 <Offcanvas.Body className={css.outlineOffcanvas}>
                   <div className={css.titleContainer}>
                     <h3>{project.name}</h3>
-                    <h4 className={css.outlineSubtitle}>Subtitle Here</h4>
+                    <h4 className={css.outlineSubtitle}>{project.subtitle}</h4>
                     <span className={css.outlineDuration}>
                       <Scrowl.ui.Icon icon="schedule" display="outlined" />
                       <h5>60 min</h5>
@@ -200,7 +200,6 @@ export const NavBar = ({ pageId, project, slides }) => {
                             mIdx={mIdx}
                             key={mIdx}
                           />
-                          <hr />
                         </div>
                       );
                     })}

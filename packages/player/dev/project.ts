@@ -33,46 +33,47 @@ const createSlide = (
 
 export const create = () => {
   const data: ProjectData = {
-    name: 'Welcome to Scrowl!!',
+    name: 'Sexual Harrassment Prevention Training',
+    subtitle: 'Promote a Safe Workplace',
     modules: [
       {
         id: 0,
-        name: 'Module 1',
+        name: 'An Introduction to Harrassment & Discrimination',
       },
       {
         id: 1,
-        name: 'Module 2',
+        name: 'Sexual Harrassment',
       },
       {
         id: 2,
-        name: 'Module 3',
+        name: 'Additional Training For Supervisors',
       },
     ],
     lessons: [
       {
         moduleId: 0,
         id: 0,
-        name: 'Lesson 1',
+        name: 'What is Sexual Harrassment?',
       },
       {
         moduleId: 0,
         id: 1,
-        name: 'Lesson 2',
+        name: 'Building a Respectful Workplace',
       },
       {
         moduleId: 0,
         id: 2,
-        name: 'Lesson 3',
+        name: "What to Do If You're Being Sexually Harrassed at Work",
       },
       {
         moduleId: 1,
         id: 3,
-        name: 'Lesson 4',
+        name: 'Bystander Intervention',
       },
       {
         moduleId: 1,
         id: 4,
-        name: 'Lesson 5',
+        name: 'Next Steps',
       },
       {
         moduleId: 2,
