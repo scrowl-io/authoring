@@ -30,17 +30,14 @@
   overflow: scroll;
   margin-bottom: 4em;
 
-  .outline-offcanvas {
-    padding: 0;
-  }
-
   .title-container {
-    padding: 1rem;
+    padding-top: 0.5rem;
+    padding-bottom: 1rem;
 
     h3 {
       font-weight: 600;
       font-size: 17px;
-      margin-bottom: 2.5px;
+      margin-bottom: 0;
     }
 
     .outline-subtitle {
@@ -70,7 +67,6 @@
 
   .module-lessons {
     margin-bottom: 1.5em;
-    margin-left: 1rem;
 
     .module-button {
       display: flex;
@@ -113,6 +109,7 @@
     .lesson-list {
       margin-top: 1em;
       list-style: none;
+      padding-left: 1.5em;
 
       hr {
         width: 95%;
@@ -200,6 +197,19 @@
 
       &-definition {
         font-weight: 400;
+      }
+    }
+  }
+
+  .resource-title {
+    padding-bottom: 1rem;
+  }
+
+  .nav-resources {
+    .resource-container {
+      .resource-name,
+      .resource-description {
+        font-size: 14px;
       }
     }
   }

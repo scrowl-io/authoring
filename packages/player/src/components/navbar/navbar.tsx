@@ -163,7 +163,7 @@ export const NavBar = ({ pageId, project, slides }) => {
 
   return (
     <ThemeProvider prefixes={themePrefixes}>
-      <Navbar key="1" expand={false} expanded={true} className="mb-3">
+      <Navbar key="1" expand={false} className="mb-3">
         <Container fluid>
           <Navbar.Toggle
             className={css.navButton}
@@ -209,11 +209,11 @@ export const NavBar = ({ pageId, project, slides }) => {
               <Tab eventKey="resources" key="resources" title="Resources">
                 <Offcanvas.Body>
                   <div className={css.titleContainer}>
-                    <h3>Additional Resources</h3>
+                    <h3 className={css.resourceTitle}>Additional Resources</h3>
                     {project.resources &&
                       project.resources.map((resource, idx) => {
                         return (
-                          <div key={idx}>
+                          <div className={css.navResources} key={idx}>
                             <NavResource resource={resource} />
                             <hr />
                           </div>

@@ -129,15 +129,21 @@ export const create = () => {
       {
         id: 0,
         filename: 'icon_1024.png',
-        title: 'mac icon',
-        description: 'this is the mac icon',
+        title: 'Mac icon',
+        description: 'This is a mac icon for use in project slides.',
       },
       {
         id: 1,
         filename:
           'OSG-Logo-with-Slogan-Horizontal-_Secondary-Color-Version.png',
         title: 'OSG Logo',
-        description: 'this is the OSG logo',
+        description: 'This is the OSG logo.',
+      },
+      {
+        id: 2,
+        filename: 'scrowl-notes.pdf',
+        title: 'Scrowl Notes',
+        description: 'Notes on next steps for Scrowl project.',
       },
     ],
   };
