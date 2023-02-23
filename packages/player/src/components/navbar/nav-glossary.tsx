@@ -1,11 +1,16 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import utils from '../../utils';
+import { SearchBar } from './search-bar';
 import * as _css from './_navbar.scss';
 
 const css = utils.css.removeMapPrefix(_css);
 
 export const NavGlossary = ({ glossary }) => {
-  const sortedGlossary = glossary.sort((a, b) => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [confirmedSearchTerm, setConfirmedSearchTerm] = useState('');
+  const [filteredTerms, setFilteredTerms] = useState(glossary);
+
+  const sortedGlossary = filteredTerms.sort((a, b) => {
     const textA = a.word.toUpperCase();
     const textB = b.word.toUpperCase();
     return textA < textB ? -1 : textA > textB ? 1 : 0;
@@ -48,7 +53,28 @@ export const NavGlossary = ({ glossary }) => {
     );
   }
 
-  return <div className={css.navGlossary}>{letters}</div>;
+  useEffect(() => {
+    if (confirmedSearchTerm) {
+      const result = glossary.filter((term) => {
+        return term.word
+          .toUpperCase()
+          .includes(confirmedSearchTerm.toUpperCase());
+      });
+      setFilteredTerms(result);
+    }
+  }, [confirmedSearchTerm]);
+
+  return (
+    <div>
+      <SearchBar
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        confirmedSearchTerm={confirmedSearchTerm}
+        setConfirmedSearchTerm={setConfirmedSearchTerm}
+      />
+      <div className={css.navGlossary}>{letters}</div>
+    </div>
+  );
 };
 
 export default {

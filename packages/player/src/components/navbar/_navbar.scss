@@ -238,4 +238,32 @@
       }
     }
   }
+
+  .search-bar {
+    display: flex;
+    align-items: center;
+    height: 40px;
+    background: #1d1d1f;
+    color: #72727e;
+    padding: 10px;
+    font-size: 16px;
+
+    .search-term {
+      display: inline-block;
+      font-size: 17px;
+      margin-left: 10px;
+
+      input {
+        width: calc(var(--sidebar-menu-width) - 70px);
+        background: #1d1d1f;
+        border: none;
+        outline: none;
+        color: #72727e;
+
+        &::placeholder {
+          color: #72727e;
+        }
+      }
+    }
+  }
 }
