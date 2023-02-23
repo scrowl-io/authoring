@@ -56,11 +56,16 @@ export const NavGlossary = ({ glossary }) => {
   useEffect(() => {
     if (confirmedSearchTerm) {
       const result = glossary.filter((term) => {
-        return term.word
-          .toUpperCase()
-          .includes(confirmedSearchTerm.toUpperCase());
+        return (
+          term.word.toUpperCase().includes(confirmedSearchTerm.toUpperCase()) ||
+          term.definition
+            .toUpperCase()
+            .includes(confirmedSearchTerm.toUpperCase())
+        );
       });
       setFilteredTerms(result);
+    } else {
+      setFilteredTerms(glossary);
     }
   }, [confirmedSearchTerm]);
 

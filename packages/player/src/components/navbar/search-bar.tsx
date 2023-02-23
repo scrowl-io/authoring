@@ -1,5 +1,5 @@
 // @ts-ignore
-import React, { useState, useRef, LegacyRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import utils from '../../utils';
 import * as _css from './_navbar.scss';
 
@@ -19,12 +19,13 @@ export const SearchBar = ({
     setSearchTerm(event.target.value);
   };
 
-  //@ts-ignore
   const handleKeyDown = (event) => {
     switch (event.code) {
       case 'Enter':
         doSearch();
         break;
+      case 'Escape':
+        clearSearch(event);
       default:
         break;
     }
@@ -34,28 +35,11 @@ export const SearchBar = ({
     setConfirmedSearchTerm(searchTerm);
   };
 
-  // const clearSearch = (focus) => {
-  //   setSearchTerm('');
-  //   setConfirmedSearchTerm('');
-
-  //   // onSearch('');
-
-  //   if (focus === true) {
-  //     requestAnimationFrame(() => {
-  //       if (inputRef && inputRef.current) {
-  //         const ref =
-  //           inputRef.current as unknown as LegacyRef<HTMLInputElement>;
-  //         // @ts-ignore
-  //         ref.focus();
-  //       }
-  //     });
-  //   } else {
-  //     requestAnimationFrame(() => {
-  //       //@ts-ignore
-  //       inputRef.current.blur();
-  //     });
-  //   }
-  // };
+  const clearSearch = (e) => {
+    e.preventDefault();
+    setSearchTerm('');
+    setConfirmedSearchTerm('');
+  };
 
   useEffect(() => {
     document.addEventListener('keydown', handleKeyDown);
@@ -68,7 +52,6 @@ export const SearchBar = ({
         <input
           type="text"
           placeholder="Search glossary..."
-          // ref={inputRef as unknown as LegacyRef<HTMLInputElement>}
           value={searchTerm}
           onChange={handleChange}
         />
@@ -76,16 +59,14 @@ export const SearchBar = ({
 
       {confirmedSearchTerm !== '' ? (
         <button
-          className="clear"
+          className={css.clear}
           onClick={(e) => {
-            //@ts-ignore
-            e.target.blur();
-            // clearSearch(true);
+            clearSearch(e);
           }}
           aria-label="Clear Search"
           title="Clear Search"
         >
-          <i className="fal fa-times"></i>
+          <Scrowl.ui.Icon icon="close" display="outlined" />
         </button>
       ) : null}
     </div>
