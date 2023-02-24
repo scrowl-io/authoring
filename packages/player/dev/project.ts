@@ -4,12 +4,14 @@ import { BlockTextSchema } from '@scrowl/template-block-text/schema';
 import { LessonIntroSchema } from '@scrowl/template-lesson-intro/schema';
 import { SimpleTextSchema } from '@scrowl/template-simple-text/schema';
 import { TwoColumnSchema } from '@scrowl/template-two-column/schema';
+import { SimpleVideoSchema } from '@scrowl/template-simple-video/schema';
 
 const TEMPLATES = {
   blockText: JSON.stringify(BlockTextSchema),
   lessonIntro: JSON.stringify(LessonIntroSchema),
   simpleText: JSON.stringify(SimpleTextSchema),
   twoColumn: JSON.stringify(TwoColumnSchema),
+  simpleVideo: JSON.stringify(SimpleVideoSchema),
 };
 
 const createSlide = (

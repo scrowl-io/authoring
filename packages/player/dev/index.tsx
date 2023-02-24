@@ -5,6 +5,7 @@ import { core } from '@scrowl/template-core';
 import { BlockText } from '@scrowl/template-block-text';
 import { LessonIntro } from '@scrowl/template-lesson-intro';
 import { SimpleText } from '@scrowl/template-simple-text';
+import { SimpleVideo } from '@scrowl/template-simple-video';
 import { TwoColumn } from '@scrowl/template-two-column';
 import './_index.scss';
 import { player } from '../src';
@@ -24,6 +25,7 @@ const App = () => {
     LessonIntro: LessonIntro,
     SimpleText: SimpleText,
     TwoColumn: TwoColumn,
+    SimpleVideo: SimpleVideo,
   };
 
   return <player.Root project={project} templateList={templateList} />;

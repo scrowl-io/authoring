@@ -1,6 +1,11 @@
 {
-  "name": "@scrowl/player",
-  "version": "0.0.94",
+  "name": "@scrowl/template-simple-video",
+  "version": "1.0.93",
+  "meta": {
+    "label": "Simple Video",
+    "component": "SimpleVideo",
+    "filename": "simple-video"
+  },
   "description": "",
   "license": "MIT",
   "keywords": [],
@@ -10,32 +15,37 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/scrowl-io/authoring.git",
-    "directory": "packages/player"
+    "directory": "packages/template/simple-video"
   },
   "bugs": {
     "url": "https://github.com/scrowl-io/scrowl/issues"
   },
-  "homepage": "https://github.com/scrowl-io/authoring/packages/player#readme",
+  "homepage": "https://github.com/scrowl-io/authoring/packages/template/simple-video#readme",
   "scripts": {
     "clean": "rimraf ../../../.parcel-cache",
     "prestart": "yarn run clean && rimraf dev/dist",
     "start": "cd dev && parcel serve --no-cache --open",
-    "prebuild": "yarn run clean && rimraf dist && rimraf lib",
+    "prebuild": "yarn run clean && rimraf dist",
     "build": "parcel build --no-cache",
-    "postbuild": "webpack --config webpack.config.js --stats-error-details"
+    "build:schema": "cd schema && parcel build --no-cache",
+    "postbuild": "webpack --config webpack.config.js && yarn run build:schema"
   },
   "source": "./src/index.ts",
-  "main": "./lib/scrowl.player.js",
-  "module": "./lib/scrowl.player.module.js",
-  "types": "./lib/scrowl.player.d.ts",
+  "main": "./lib/scrowl.template-simple-video.js",
+  "module": "./lib/scrowl.template-simple-video.module.js",
+  "types": "./lib/scrowl.template-simple-video.d.ts",
   "exports": {
     ".": {
-      "require": "./lib/scrowl.player.js",
-      "import": "./lib/scrowl.player.module.js",
-      "default": "./lib/scrowl.player.js"
+      "require": "./lib/scrowl.template-simple-video.js",
+      "import": "./lib/scrowl.template-simple-video.module.js",
+      "default": "./lib/scrowl.template-simple-video.js"
     },
-    "./src": "./src/index.ts",
-    "./web": "./dist/scrowl.player.js"
+    "./web": "./dist/scrowl.template-simple-video.js",
+    "./schema": {
+      "require": "./lib/schema.js",
+      "import": "./lib/schema.module.js",
+      "default": "./lib/schema.js"
+    }
   },
   "eslintConfig": {
     "extends": "@scrowl/config"
@@ -48,7 +58,7 @@
     "LICENSE",
     "README.md",
     "dist/",
-    "lib/",
+    "src/",
     "package.json"
   ],
   "devDependencies": {
@@ -60,12 +70,6 @@
     "@parcel/transformer-typescript-types": "2.7.0",
     "@parcel/validator-typescript": "2.7.0",
     "@scrowl/config": "^0.0.94",
-    "@scrowl/postcss-prefixer": "^0.0.34",
-    "@scrowl/template-block-text": "^1.0.93",
-    "@scrowl/template-lesson-intro": "^1.0.93",
-    "@scrowl/template-simple-text": "^1.0.93",
-    "@scrowl/template-two-column": "^1.0.93",
-    "@scrowl/template-simple-video": "^1.0.93",
     "@types/react": "^18.0.21",
     "@types/react-dom": "^18.0.6",
     "eslint": "^8.25.0",
@@ -78,15 +82,12 @@
     "process": "^0.11.10",
     "rimraf": "^3.0.2",
     "stylelint": "^14.13.0",
-    "typescript": "4.7.4"
+    "typescript": "4.7.4",
+    "webpack-merge": "^5.8.0"
   },
   "dependencies": {
     "@scrowl/template-core": "^1.0.93",
     "@scrowl/ui": "^0.0.34",
-    "bootstrap": "^5.2.2",
-    "react": "^18.2.0",
-    "react-bootstrap": "^2.5.0",
-    "react-dom": "^18.2.0",
-    "react-router-dom": "^6.4.2"
+    "react": "^18.2.0"
   }
 }

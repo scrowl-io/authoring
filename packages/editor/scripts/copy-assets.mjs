@@ -78,6 +78,13 @@ const config = {
       overwrite: true,
     },
   },
+  'node_modules/@scrowl/template-simple-video/dist': {
+    dest: './src/main/assets/templates/simple-video',
+    includePaths: ['../../'],
+    options: {
+      overwrite: true,
+    },
+  },
 };
 
 const findPath = (source, includePaths) => {
