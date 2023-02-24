@@ -12,7 +12,7 @@ import utils, { CssMapProps } from '../../utils';
 import * as _css from './_navbar.scss';
 import { NavModule } from './nav-module';
 import { NavResource } from './nav-resource';
-import { NavGlossaryItem } from './nav-glossary-item';
+import { NavGlossary } from './nav-glossary';
 
 const css = utils.css.removeMapPrefix(_css);
 
@@ -30,7 +30,7 @@ export const NavBar = ({ pageId, project, slides }) => {
   themePrefixes['tab-pane'] = `owlui-tab-pane`;
   themePrefixes['tab-content'] = `owlui-tab-content`;
   themePrefixes['offcanvas'] = `owlui-offcanvas`;
-  themePrefixes['offcanvas-body'] = `owlui-offcanvas-body`;
+  // themePrefixes['offcanvas-body'] = `owlui-offcanvas-body`;
   themePrefixes['container'] = `owlui-container`;
 
   let currentSlide = `module-${slides[0].moduleId}--lesson-${slides[0].lessonId}--slide-${slides[0].id}-${slides[0].template.meta.filename}`;
@@ -160,7 +160,6 @@ export const NavBar = ({ pageId, project, slides }) => {
     }
   }, []);
 
-
   return (
     <ThemeProvider prefixes={themePrefixes}>
       <Navbar key="1" expand={false} className="mb-3">
@@ -184,7 +183,7 @@ export const NavBar = ({ pageId, project, slides }) => {
                 <Offcanvas.Body className={css.outlineOffcanvas}>
                   <div className={css.titleContainer}>
                     <h3>{project.name}</h3>
-                    <h4 className={css.outlineSubtitle}>Subtitle Here</h4>
+                    <h4 className={css.outlineSubtitle}>{project.subtitle}</h4>
                     <span className={css.outlineDuration}>
                       <Scrowl.ui.Icon icon="schedule" display="outlined" />
                       <h5>60 min</h5>
@@ -200,21 +199,20 @@ export const NavBar = ({ pageId, project, slides }) => {
                             mIdx={mIdx}
                             key={mIdx}
                           />
-                          <hr />
                         </div>
                       );
                     })}
+                  <OutlineFooter />
                 </Offcanvas.Body>
-                <OutlineFooter />
               </Tab>
               <Tab eventKey="resources" key="resources" title="Resources">
-                <Offcanvas.Body>
+                <Offcanvas.Body className={css.outlineOffcanvas}>
                   <div className={css.titleContainer}>
-                    <h3>Additional Resources</h3>
+                    <h3 className={css.resourceTitle}>Additional Resources</h3>
                     {project.resources &&
                       project.resources.map((resource, idx) => {
                         return (
-                          <div key={idx}>
+                          <div className={css.navResources} key={idx}>
                             <NavResource resource={resource} />
                             <hr />
                           </div>
@@ -225,17 +223,10 @@ export const NavBar = ({ pageId, project, slides }) => {
               </Tab>
               <Tab eventKey="glossary" key="glossary" title="Glossary">
                 <Offcanvas.Body>
-                  <div className={css.titleContainer}>
-                    <h3>Glossary</h3>
-                    {project.glossary &&
-                      project.glossary.map((item, idx) => {
-                        return (
-                          <div className={css.navGlossary} key={idx}>
-                            <NavGlossaryItem glossaryItem={item} />
-                            <hr />
-                          </div>
-                        );
-                      })}
+                  <div>
+                    {project.glossary && (
+                      <NavGlossary glossary={project.glossary} />
+                    )}
                   </div>
                 </Offcanvas.Body>
               </Tab>

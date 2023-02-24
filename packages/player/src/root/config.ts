@@ -11,7 +11,8 @@ export const create = (
   modules: Array<ProjectModule>,
   resources,
   glossary,
-  name
+  name,
+  subtitle
 ) => {
   const rootConfig: Array<PlayerRootConfig> = [];
 
@@ -76,6 +77,7 @@ export const create = (
 
   const projectConfig = {
     name: name,
+    subtitle: subtitle,
     outlineConfig: rootConfig,
     resources: resources,
     glossary: glossary,

@@ -89,6 +89,7 @@ export const Root = ({
   const resources = project.resources;
   const glossary = project.glossary;
   const name = project.name;
+  const subtitle = project.subtitle;
 
   let moduleIdx;
   let lessonIdx;
@@ -116,7 +117,8 @@ export const Root = ({
     modules,
     resources,
     glossary,
-    name
+    name,
+    subtitle
   );
   const pages = Pages.create(config, templateList, slideId);
 
