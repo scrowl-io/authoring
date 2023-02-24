@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import utils from '../../utils';
 import { SearchBar } from './search-bar';
 import * as _css from './_navbar.scss';
+import Keywords from 'react-keywords';
 
 const css = utils.css.removeMapPrefix(_css);
 
@@ -11,8 +12,8 @@ export const NavGlossary = ({ glossary }) => {
   const [filteredTerms, setFilteredTerms] = useState(glossary);
 
   const sortedGlossary = filteredTerms.sort((a, b) => {
-    const textA = a.word.toUpperCase();
-    const textB = b.word.toUpperCase();
+    const textA = a.word.toLowerCase();
+    const textB = b.word.toLowerCase();
     return textA < textB ? -1 : textA > textB ? 1 : 0;
   });
 
@@ -39,8 +40,14 @@ export const NavGlossary = ({ glossary }) => {
     for (let word in dictTermList) {
       terms.push(
         <div className={css.glossaryTerm} key={word}>
-          <div className={css.word}>{word}</div>
-          <div className={css.definition}>{dictTermList[word]}</div>
+          <div className={css.word}>
+            <Keywords value={confirmedSearchTerm}>{word}</Keywords>
+          </div>
+          <div className={css.definition}>
+            <Keywords value={confirmedSearchTerm}>
+              {dictTermList[word]}
+            </Keywords>
+          </div>
         </div>
       );
     }
@@ -53,17 +60,22 @@ export const NavGlossary = ({ glossary }) => {
     );
   }
 
+  const highlighter = useCallback(() => {
+    const result = glossary.filter((term) => {
+      return (
+        term.word.toLowerCase().includes(confirmedSearchTerm.toLowerCase()) ||
+        term.definition
+          .toLowerCase()
+          .includes(confirmedSearchTerm.toLowerCase())
+      );
+    });
+
+    setFilteredTerms(result);
+  }, [confirmedSearchTerm]);
+
   useEffect(() => {
     if (confirmedSearchTerm) {
-      const result = glossary.filter((term) => {
-        return (
-          term.word.toUpperCase().includes(confirmedSearchTerm.toUpperCase()) ||
-          term.definition
-            .toUpperCase()
-            .includes(confirmedSearchTerm.toUpperCase())
-        );
-      });
-      setFilteredTerms(result);
+      highlighter();
     } else {
       setFilteredTerms(glossary);
     }

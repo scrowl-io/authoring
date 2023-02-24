@@ -168,6 +168,7 @@
   .outline-footer {
     position: absolute;
     bottom: 0;
+    left: 0;
     width: 100%;
     padding: 1em;
     background-color: #ffffff;
@@ -219,6 +220,12 @@
 
     .glossary-term:first-of-type {
       margin-top: 0.5em;
+    }
+
+    mark {
+      background-color: pink;
+      color: inherit;
+      padding: 0;
     }
   }
 

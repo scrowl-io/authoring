@@ -1,9 +1,7 @@
-// @ts-ignore
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import utils from '../../utils';
 import * as _css from './_navbar.scss';
 
-// @ts-ignore
 const css = utils.css.removeMapPrefix(_css);
 
 export const SearchBar = ({
@@ -15,7 +13,6 @@ export const SearchBar = ({
   const Scrowl = window['Scrowl'];
 
   const handleChange = (event) => {
-    event.preventDefault();
     setSearchTerm(event.target.value);
   };
 
@@ -26,6 +23,7 @@ export const SearchBar = ({
         break;
       case 'Escape':
         clearSearch(event);
+        break;
       default:
         break;
     }
@@ -36,9 +34,15 @@ export const SearchBar = ({
   };
 
   const clearSearch = (e) => {
-    e.preventDefault();
-    setSearchTerm('');
-    setConfirmedSearchTerm('');
+    if (
+      e.target.classList[0] === 'input' ||
+      e.target.classList[0] === 'owlui-clear'
+    ) {
+      e.preventDefault();
+      e.target.blur();
+      setSearchTerm('');
+      setConfirmedSearchTerm('');
+    }
   };
 
   useEffect(() => {
