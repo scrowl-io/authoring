@@ -1,4 +1,4 @@
-import { SimpleVideo, SimpleVideoSchema, TwoColumnSchemaProps } from '../src';
+import { SimpleVideo, SimpleVideoSchema, SimpleVideoSchemaProps } from '../src';
 
 window.SimpleVideo = SimpleVideo;
-window.SimpleVideoSchema = SimpleVideoSchema as TwoColumnSchemaProps;
+window.SimpleVideoSchema = SimpleVideoSchema as SimpleVideoSchemaProps;

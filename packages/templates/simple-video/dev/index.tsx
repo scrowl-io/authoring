@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { core } from '@scrowl/template-core';
 import { ui } from '@scrowl/ui';
 import './_index.scss';
-import { SimpleVideo, SimpleVideoSchema, TwoColumnSchemaProps } from '../src';
+import { SimpleVideo, SimpleVideoSchema, SimpleVideoSchemaProps } from '../src';
 
 const container = document.getElementById('scrowl-player') as HTMLElement;
 const root = createRoot(container);
@@ -15,7 +15,7 @@ window['Scrowl'] = Scrowl;
 
 const App = () => {
   const controller = new Scrowl.core.scroll.Controller();
-  const schema = SimpleVideoSchema as TwoColumnSchemaProps;
+  const schema = SimpleVideoSchema as SimpleVideoSchemaProps;
 
   return (
     <div id="lesson-wrapper">

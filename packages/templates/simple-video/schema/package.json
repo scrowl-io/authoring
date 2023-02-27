@@ -1,5 +1,5 @@
 {
-  "name": "@scrowl/template-two-column-schema",
+  "name": "@scrowl/template-simple-video-schema",
   "version": "1.0.0",
   "description": "",
   "license": "MIT",
@@ -10,12 +10,12 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/scrowl-io/authoring.git",
-    "directory": "packages/template/two-column"
+    "directory": "packages/template/simple-video"
   },
   "bugs": {
     "url": "https://github.com/scrowl-io/scrowl/issues"
   },
-  "homepage": "https://github.com/scrowl-io/authoring/packages/template/two-column#readme",
+  "homepage": "https://github.com/scrowl-io/authoring/packages/template/simple-video#readme",
   "source": "./index.ts",
   "main": "../lib/schema.js",
   "module": "../lib/schema.module.js",

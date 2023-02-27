@@ -4,39 +4,48 @@ import {
   TemplateCommons,
   InputTextboxProps,
   InputFieldsetProps,
-  InputCheckboxProps,
-  InputRadioProps,
   InputSelectProps,
+  InputCheckboxProps,
+  InputAssetProps,
 } from '@scrowl/template-core';
 
-export interface TwoColumnContentOptions extends InputFieldsetProps {
+export type {
+  TemplateSchemaMeta,
+  TemplateCommons,
+  InputTextboxProps,
+  InputFieldsetProps,
+  InputSelectProps,
+  InputCheckboxProps,
+  InputAssetProps,
+};
+
+export interface BlockTextContentBgImage extends InputFieldsetProps {
   content: {
-    numberOfColumns: InputRadioProps;
-    stackOnMobile: InputCheckboxProps;
-    alignment: InputSelectProps;
+    alt: InputTextboxProps;
+    url: InputAssetProps;
+    bg: InputCheckboxProps;
   };
 }
 
-export interface TwoColumnContentColumnProps extends InputFieldsetProps {
+export interface BlockTextContentOptions extends InputFieldsetProps {
   content: {
-    heading: InputTextboxProps;
-    body: InputTextboxProps;
-  }
+    alignment: InputSelectProps;
+    showProgress: InputCheckboxProps;
+  };
 }
 
-export type TwoColumnSchemaProps = {
+export type SimpleVideoSchemaProps = {
   meta: TemplateSchemaMeta;
   content: {
-    options: TwoColumnContentOptions;
-    firstColumn: TwoColumnContentColumnProps;
-    secondColumn: TwoColumnContentColumnProps;
-    thirdColumn: TwoColumnContentColumnProps;
+    text: InputTextboxProps;
+    bgImage: BlockTextContentBgImage;
+    options: BlockTextContentOptions;
   };
 };
 
-export interface TwoColumnCommons extends TemplateCommons {
-  schema: TwoColumnSchemaProps;
-}
+export interface BlockTextCommons extends TemplateCommons {
+  schema: SimpleVideoSchemaProps;
+};
 
-export type TwoColumnProps = TwoColumnCommons &
+export type SimpleVideoProps = BlockTextCommons &
   React.AllHTMLAttributes<HTMLDivElement>;

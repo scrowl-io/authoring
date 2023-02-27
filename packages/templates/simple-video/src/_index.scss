@@ -1,72 +1,76 @@
-.template-two-columns {
+.template-block-text {
   position: relative;
 
-  .column-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  .row.right {
+    flex-direction: row-reverse;
+  }
 
-    &.left {
-      text-align: left;
-    }
+  .text__container {
+    margin: 0 1.5rem;
 
-    &.right {
-      text-align: right;
-    }
+    .progress {
+      &-indictor {
+        width: 100%;
+      }
 
-    &.center {
-      text-align: center;
-    }
-
-    &.justify {
-      text-align: justify;
-    }
-
-    .column {
-      margin: 0 1.5rem;
+      &-bar {
+        width: 0%;
+        border: none;
+        height: 0.4rem;
+        background: var(--bs-body-color);
+        padding: 0;
+        margin: 1rem 0 2rem 0;
+      }
     }
   }
 
-  @media only screen and (max-width: 700px) {
-    .stacked-view-narrow,
-    .stacked-view-wide {
-      flex-direction: column;
+  .overlay {
+    background-color: rgba(0, 0, 0, 0.1);
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 5;
+  }
+
+  .img {
+    &__wrapper {
+      position: absolute;
+
+      &.as-bg {
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 100vw;
+        z-index: 0;
+      }
+
+      &.as-side {
+        right: 2rem;
+        top: 2rem;
+        border: 1px solid #fff;
+        height: calc(100vh - 4rem);
+        width: 50vw;
+        display: flex;
+        justify-content: center;
+
+        &.right {
+          left: 2rem;
+          right: initial;
+        }
+      }
+
+      img {
+        width: calc(90% - 10px - 4rem);
+      }
     }
 
-    .stacked-view-single {
-      width: 50%;
-    }
-
-    .first-column,
-    .second-column,
-    .third-column {
+    &__container {
+      height: 100%;
       width: 100%;
-      margin: 0;
-    }
-
-    h2 {
-      margin-top: 1em;
-    }
-
-    @media only screen and (min-width: 701px) {
-      .first-column,
-      .second-column,
-      .third-column {
-        width: 50%;
-        margin: 1em;
-      }
-    }
-
-    p {
-      color: var(--bs-body-color);
-      padding: 0;
-      margin: 0;
-      margin: min(3vw, 20px) 0;
-
-      &.header {
-        font-size: min(3.5vw, 26px);
-        font-weight: 600;
-      }
+      background-size: cover;
+      background-position: 50% 50%;
     }
   }
 
