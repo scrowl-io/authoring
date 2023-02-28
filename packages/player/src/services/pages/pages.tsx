@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { PageDefinition, PageProps } from './pages.types';
 import {
@@ -17,6 +17,7 @@ const css = utils.css.removeMapPrefix(_css);
 const Page = ({ slides, templates, slideId, ...props }: PageProps) => {
   const Scrowl = window['Scrowl'];
   const controller = new Scrowl.core.scroll.Controller();
+  const [hasStarted, setHastStarted] = useState(false);
 
   let currentSlide = `module-${slides[0].moduleId}--lesson-${slides[0].lessonId}--slide-${slides[0].id}-${slides[0].template.meta.filename}`;
   let currentIndex = 0;
@@ -171,30 +172,54 @@ const Page = ({ slides, templates, slideId, ...props }: PageProps) => {
     };
   });
 
-  return (
-    <>
-      {slides.map((slide, idx) => {
-        const id = `${props.id}--slide-${slide.id}`;
-        const component = slide.template.meta.component;
+  useEffect(() => {
+    const handleCourseStart = (_ev) => {
+      setHastStarted(true);
+    };
 
-        if (!templates.hasOwnProperty(component)) {
-          return <Error msg={`Unabled to find template: ${component}`} />;
-        }
+    document.addEventListener('startCourse', handleCourseStart);
+  }, []);
 
-        const Template = templates[component] as TemplateComponent;
+  if (!hasStarted) {
+    const id = `${props.id}--slide-${slides[0].id}`;
+    const component = slides[0].template.meta.component;
+    const Template = templates[component] as TemplateComponent;
 
-        return (
-          <Template
-            key={idx}
-            id={id}
-            schema={slide.template}
-            controller={controller}
-            slides={slides}
-          />
-        );
-      })}
-    </>
-  );
+    return (
+      <Template
+        key={1}
+        id={id}
+        schema={slides[0].template}
+        controller={controller}
+        slides={slides[0]}
+      />
+    );
+  } else {
+    return (
+      <>
+        {slides.map((slide, idx) => {
+          const id = `${props.id}--slide-${slide.id}`;
+          const component = slide.template.meta.component;
+
+          if (!templates.hasOwnProperty(component)) {
+            return <Error msg={`Unabled to find template: ${component}`} />;
+          }
+
+          const Template = templates[component] as TemplateComponent;
+
+          return (
+            <Template
+              key={idx}
+              id={id}
+              schema={slide.template}
+              controller={controller}
+              slides={slides}
+            />
+          );
+        })}
+      </>
+    );
+  }
 };
 
 const updateCourseProgress = (project, id) => {
@@ -302,6 +327,7 @@ export const create = (
                   templates={templateList}
                   slideId={slideId}
                 />
+
                 <Scrowl.core.Template
                   className="owlui-last"
                   id={`slide-end-${id}`}

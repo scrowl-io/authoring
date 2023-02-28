@@ -85,8 +85,8 @@ export const LessonIntro = ({ id, schema, ...props }: LessonIntroProps) => {
         field: 'startLabel',
       });
     } else {
-      const startEvent = new CustomEvent('startCourse', { detail: ev });
-      document.dispatchEvent(startEvent);
+      const startCourse = new CustomEvent('startCourse', { detail: ev });
+      document.dispatchEvent(startCourse);
     }
   };
 

@@ -109,7 +109,7 @@ export const create = () => {
         1,
         'simpleVideo',
         true,
-        './5-Second_Timer.mp4'
+        './5_Second_Timer.mp4'
       ),
       createSlide('Slide 1.3', 0, 0, 2, 'simpleText'),
       createSlide('Slide 1.4', 0, 0, 3, 'blockText', true, './icon_1024.png'),

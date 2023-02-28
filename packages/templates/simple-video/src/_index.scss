@@ -38,18 +38,18 @@
     &__wrapper {
       // position: absolute;
 
-      &.as-side {
-        right: 2rem;
-        top: 2rem;
-        border: 1px solid #fff;
-        display: flex;
-        justify-content: center;
+      // &.as-side {
+      //   right: 2rem;
+      //   top: 2rem;
+      //   border: 1px solid #fff;
+      //   display: flex;
+      //   justify-content: center;
 
-        &.right {
-          left: 2rem;
-          right: initial;
-        }
-      }
+      //   &.right {
+      //     left: 2rem;
+      //     right: initial;
+      //   }
+      // }
 
       video {
         // width: calc(90% - 10px - 4rem);

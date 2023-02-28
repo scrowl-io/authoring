@@ -361,18 +361,20 @@ export const Template = ({
         Scrowl.runtime.setCourseStart();
       }
       setScroll(true);
-      const domSlideParents = document.querySelectorAll('.inner-content');
-      const domSlides = Array.from(domSlideParents).map((parent) => {
-        return parent.firstElementChild?.id;
-      });
+      setTimeout(() => {
+        const domSlideParents = document.querySelectorAll('.inner-content');
+        const domSlides = Array.from(domSlideParents).map((parent) => {
+          return parent.firstElementChild?.id;
+        });
 
-      const slideContent = ev.detail.target.parentElement.parentElement.id;
+        const slideContent = ev.detail.target.parentElement.parentElement.id;
 
-      const index = domSlides.indexOf(slideContent);
-      const targetIndex = domSlides[index + 1];
-      const nextTarget = document.querySelector(`#${targetIndex}`);
+        const index = domSlides.indexOf(slideContent);
+        const targetIndex = domSlides[index + 1];
+        const nextTarget = document.querySelector(`#${targetIndex}`);
 
-      nextTarget?.scrollIntoView();
+        nextTarget?.scrollIntoView();
+      }, 100);
     };
     document.addEventListener('startCourse', handleStart);
   }, []);
@@ -380,7 +382,6 @@ export const Template = ({
   useEffect(() => {
     const handleVideoSlideEnter = (_ev) => {
       console.log('inside core handler');
-      setScroll(true);
     };
     document.addEventListener('videoEnded', handleVideoSlideEnter);
   }, []);
