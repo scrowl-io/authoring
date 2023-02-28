@@ -1,4 +1,4 @@
-.template-block-text {
+.template-simple-video {
   position: relative;
 
   .row.right {
@@ -34,24 +34,14 @@
     z-index: 5;
   }
 
-  .img {
+  .video {
     &__wrapper {
-      position: absolute;
-
-      &.as-bg {
-        top: 0;
-        left: 0;
-        height: 100vh;
-        width: 100vw;
-        z-index: 0;
-      }
+      // position: absolute;
 
       &.as-side {
         right: 2rem;
         top: 2rem;
         border: 1px solid #fff;
-        height: calc(100vh - 4rem);
-        width: 50vw;
         display: flex;
         justify-content: center;
 
@@ -61,14 +51,14 @@
         }
       }
 
-      img {
-        width: calc(90% - 10px - 4rem);
+      video {
+        // width: calc(90% - 10px - 4rem);
       }
     }
 
     &__container {
       height: 100%;
-      width: 100%;
+      width: 100% !important;
       background-size: cover;
       background-position: 50% 50%;
     }

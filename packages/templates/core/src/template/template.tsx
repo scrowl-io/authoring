@@ -31,6 +31,7 @@ export const Template = ({
     height: window.innerHeight,
     width: window.innerWidth,
   });
+  // @ts-ignore
   const [scroll, setScroll] = useState(false);
 
   const Scrowl = window['Scrowl'];
@@ -179,6 +180,15 @@ export const Template = ({
           } else {
             sceneRef.current.style.top = `${stats.rect.y}px`;
           }
+        }
+
+        if (
+          stats.progress > 0 &&
+          // @ts-ignore
+          sceneRef.current?.firstChild.id.includes('video')
+        ) {
+          console.log('not again');
+          // setScroll(false);
         }
 
         if (onProgress) {
@@ -365,6 +375,14 @@ export const Template = ({
       nextTarget?.scrollIntoView();
     };
     document.addEventListener('startCourse', handleStart);
+  }, []);
+
+  useEffect(() => {
+    const handleVideoSlideEnter = (_ev) => {
+      console.log('inside core handler');
+      setScroll(true);
+    };
+    document.addEventListener('videoEnded', handleVideoSlideEnter);
   }, []);
 
   return (

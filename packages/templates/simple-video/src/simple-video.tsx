@@ -4,11 +4,11 @@ import { SimpleVideoProps } from './simple-video.types';
 
 export const SimpleVideo = ({ id, schema, ...props }: SimpleVideoProps) => {
   const Scrowl = window['Scrowl'];
-  let classes = 'template-block-text';
+  let classes = 'template-simple-video';
   const Markdown = Scrowl.core.Markdown;
   const editMode = props.editMode ? true : false;
   const focusElement = editMode ? props.focusElement : null;
-  const contentId = `${id}-block-text`;
+  const contentId = `${id}-simple-video`;
   const text = schema.content.text.value;
   const textFocusCss = focusElement === 'text' && 'has-focus';
   const bg = schema.content.bgImage.content.bg.value;
@@ -27,8 +27,8 @@ export const SimpleVideo = ({ id, schema, ...props }: SimpleVideoProps) => {
   const [progressBarStyles, setProgressBarStyles] = useState({
     width: showProgressBar ? '0%' : '100%',
   });
-
-  console.log('schema: ', schema);
+  // @ts-ignore
+  const [videoEnded, setVideoEnded] = useState(false);
 
   if (showProgressBar) {
     classes += ' show-progress';
@@ -63,18 +63,18 @@ export const SimpleVideo = ({ id, schema, ...props }: SimpleVideoProps) => {
     }
   };
 
-  const handleSlideEnd = () => {
-    slideProgress.current = 100;
+  // const handleSlideEnd = () => {
+  //   slideProgress.current = 100;
 
-    if (!showProgressRef.current) {
-      return;
-    }
+  //   if (!showProgressRef.current) {
+  //     return;
+  //   }
 
-    setProgressBarStyles({
-      ...progressBarStyles,
-      width: `100%`,
-    });
-  };
+  //   setProgressBarStyles({
+  //     ...progressBarStyles,
+  //     width: `100%`,
+  //   });
+  // };
 
   useEffect(() => {
     showProgressRef.current = showProgressBar;
@@ -84,16 +84,21 @@ export const SimpleVideo = ({ id, schema, ...props }: SimpleVideoProps) => {
     });
   }, [showProgressBar]);
 
+  const handleVideoEnd = (ev) => {
+    const videoEnded = new CustomEvent('videoEnded', { detail: ev });
+    document.dispatchEvent(videoEnded);
+  };
+
   return (
     <Scrowl.core.Template
       id={`slide-${contentId}`}
       className={classes}
       onProgress={handleSlideProgress}
-      onEnd={handleSlideEnd}
+      // onEnd={handleSlideEnd}
       {...props}
     >
       <div id={contentId} className="owlui-container">
-        <div className={`owlui-row owlui-row-cols-2 ${alignmentCss}`}>
+        <div className={`owlui-row ${alignmentCss}`}>
           {bg && <div className="owlui-col overlay" />}
 
           <div className={`owlui-col text__wrapper`}>
@@ -110,28 +115,29 @@ export const SimpleVideo = ({ id, schema, ...props }: SimpleVideoProps) => {
             </div>
           </div>
         </div>
-      </div>
-      {(bgUrl || editMode) && (
-        <div
-          ref={bgRef}
-          className={`img__wrapper ${alignmentCss} can-focus ${bgFocusCss} ${
-            bg ? 'as-bg' : 'as-side'
-          }`}
-          onMouseDown={handleFocusBg}
-        >
-          <video
-            controls
-            className="img__container"
-            aria-label={bgLabel}
-            style={bgStyles}
+        {(bgUrl || editMode) && (
+          <div
+            ref={bgRef}
+            className={`video__wrapper ${alignmentCss} can-focus ${bgFocusCss} ${
+              bg ? 'as-bg' : 'as-side'
+            }`}
+            onMouseDown={handleFocusBg}
           >
-            <source src={bgUrl} />
-          </video>
-        </div>
-      )}
+            <video
+              controls
+              onEnded={handleVideoEnd}
+              className="video__container"
+              aria-label={bgLabel}
+              style={bgStyles}
+            >
+              <source src={bgUrl} />
+            </video>
+          </div>
+        )}
+      </div>
     </Scrowl.core.Template>
   );
-};
+};;
 
 export default {
   SimpleVideo,

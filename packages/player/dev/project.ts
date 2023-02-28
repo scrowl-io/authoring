@@ -30,9 +30,9 @@ const createSlide = (
       case 'block-text':
         template.content.bgImage.content.url.value = mediaUrl;
         break;
-      // case 'simple-video':
-      //   template.content.bgImage.content.url.value = mediaUrl;
-      //   break;
+      case 'simple-video':
+        template.content.bgImage.content.url.value = mediaUrl;
+        break;
     }
   }
 
@@ -109,18 +109,10 @@ export const create = () => {
         1,
         'simpleVideo',
         true,
-        './assets/test.mp4'
+        './5-Second_Timer.mp4'
       ),
       createSlide('Slide 1.3', 0, 0, 2, 'simpleText'),
-      createSlide(
-        'Slide 1.4',
-        0,
-        0,
-        3,
-        'blockText',
-        true,
-        'https://osg.ca/wp-content/uploads/2019/01/OSG-Logo-with-Slogan-Horizontal-_Secondary-Color-Version.png'
-      ),
+      createSlide('Slide 1.4', 0, 0, 3, 'blockText', true, './icon_1024.png'),
 
       createSlide('Slide 2.1', 0, 1, 4, 'twoColumn'),
       createSlide('Slide 2.2', 0, 1, 5, 'simpleText'),
