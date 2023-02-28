@@ -10,14 +10,40 @@ import {
 import utils from '../../utils';
 import * as _css from '../../root/_root.scss';
 import { Error } from '../../components';
+// @ts-ignore
 import { NavBar } from '../../components/navbar';
 
 const css = utils.css.removeMapPrefix(_css);
 
 const Page = ({ slides, templates, slideId, ...props }: PageProps) => {
   const Scrowl = window['Scrowl'];
+  const [hasStartedCourse, setHasStartedCourse] = useState(true);
+
+  if (
+    Scrowl &&
+    Scrowl.runtime &&
+    Scrowl.runtime.API !== null &&
+    hasStartedCourse !== false
+  ) {
+    const [_courseStartError, suspendData] = Scrowl.runtime.getSuspendData();
+
+    const parsedData = JSON.parse(suspendData);
+
+    console.log('parsed Data:', parsedData);
+
+    if (
+      // @ts-ignore
+      !Object.entries(parsedData).length > 0 ||
+      (parsedData &&
+        parsedData.courseStarted &&
+        parsedData.courseStarted !== true)
+    ) {
+      setHasStartedCourse(false);
+    }
+  }
+
   const controller = new Scrowl.core.scroll.Controller();
-  const [hasStarted, setHastStarted] = useState(false);
+
 
   let currentSlide = `module-${slides[0].moduleId}--lesson-${slides[0].lessonId}--slide-${slides[0].id}-${slides[0].template.meta.filename}`;
   let currentIndex = 0;
@@ -174,13 +200,13 @@ const Page = ({ slides, templates, slideId, ...props }: PageProps) => {
 
   useEffect(() => {
     const handleCourseStart = (_ev) => {
-      setHastStarted(true);
+      setHasStartedCourse(true);
     };
 
     document.addEventListener('startCourse', handleCourseStart);
   }, []);
 
-  if (!hasStarted) {
+  if (!hasStartedCourse) {
     const id = `${props.id}--slide-${slides[0].id}`;
     const component = slides[0].template.meta.component;
     const Template = templates[component] as TemplateComponent;
