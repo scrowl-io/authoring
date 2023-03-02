@@ -1,6 +1,6 @@
 import { CORE_PROPS } from '@scrowl/template-core';
 import { UI_PROPS } from '@scrowl/ui';
-import { TwoColumnProps, TwoColumnSchemaProps } from '../src';
+import { SimpleVideoProps, SimpleVideoSchemaProps } from '../src';
 
 declare global {
   interface Window {
@@ -8,7 +8,7 @@ declare global {
       core: CORE_PROPS;
       ui: UI_PROPS;
     };
-    SimpleVideo: (props: TwoColumnProps) => JSX.Element;
-    SimpleVideoSchema: TwoColumnSchemaProps;
+    SimpleVideo: (props: SimpleVideoProps) => JSX.Element;
+    SimpleVideoSchema: SimpleVideoSchemaProps;
   }
 }

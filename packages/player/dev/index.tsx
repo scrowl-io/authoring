@@ -27,7 +27,7 @@ const App = () => {
     TwoColumn: TwoColumn,
     SimpleVideo: SimpleVideo,
   };
-
+  // @ts-ignore
   return <player.Root project={project} templateList={templateList} />;
 };
 

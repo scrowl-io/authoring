@@ -109,10 +109,11 @@ export const create = () => {
         1,
         'simpleVideo',
         true,
-        './5_Second_Timer.mp4'
+        './5-Second_Timer.mp4'
       ),
+      // createSlide('Slide 1.2', 0, 0, 1, 'simpleText'),
       createSlide('Slide 1.3', 0, 0, 2, 'simpleText'),
-      createSlide('Slide 1.4', 0, 0, 3, 'blockText', true, './icon_1024.png'),
+      createSlide('Slide 1.4', 0, 0, 3, 'blockText', true, './osg-logo.png'),
 
       createSlide('Slide 2.1', 0, 1, 4, 'twoColumn'),
       createSlide('Slide 2.2', 0, 1, 5, 'simpleText'),

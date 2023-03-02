@@ -63,18 +63,18 @@ export const SimpleVideo = ({ id, schema, ...props }: SimpleVideoProps) => {
     }
   };
 
-  // const handleSlideEnd = () => {
-  //   slideProgress.current = 100;
+  const handleSlideEnd = () => {
+    slideProgress.current = 100;
 
-  //   if (!showProgressRef.current) {
-  //     return;
-  //   }
+    if (!showProgressRef.current) {
+      return;
+    }
 
-  //   setProgressBarStyles({
-  //     ...progressBarStyles,
-  //     width: `100%`,
-  //   });
-  // };
+    setProgressBarStyles({
+      ...progressBarStyles,
+      width: `100%`,
+    });
+  };
 
   useEffect(() => {
     showProgressRef.current = showProgressBar;
@@ -94,7 +94,7 @@ export const SimpleVideo = ({ id, schema, ...props }: SimpleVideoProps) => {
       id={`slide-${contentId}`}
       className={classes}
       onProgress={handleSlideProgress}
-      // onEnd={handleSlideEnd}
+      onEnd={handleSlideEnd}
       {...props}
     >
       <div id={contentId} className="owlui-container">
@@ -137,7 +137,7 @@ export const SimpleVideo = ({ id, schema, ...props }: SimpleVideoProps) => {
       </div>
     </Scrowl.core.Template>
   );
-};;
+};
 
 export default {
   SimpleVideo,

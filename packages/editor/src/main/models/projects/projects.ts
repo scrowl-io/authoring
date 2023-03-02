@@ -971,11 +971,20 @@ export const open = (ev: rq.RequestEvent, project: ProjectMeta) => {
         return;
       }
 
-      resolve({
-        error: false,
-        data: {
-          project: JSON.parse(res.data.contents),
-        },
+      const pathName = fs.joinPath(fs.getDirname(project.filename), 'assets');
+
+      fs.copy(pathName, fs.APP_PATHS.uploads).then((copyRes) => {
+        if (copyRes.error) {
+          resolve(copyRes);
+          return;
+        }
+
+        resolve({
+          error: false,
+          data: {
+            project: JSON.parse(res.data.contents),
+          },
+        });
       });
     });
   });

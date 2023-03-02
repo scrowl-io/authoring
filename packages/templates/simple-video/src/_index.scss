@@ -36,29 +36,14 @@
 
   .video {
     &__wrapper {
+      display: flex;
+      justify-content: center;
       // position: absolute;
-
-      // &.as-side {
-      //   right: 2rem;
-      //   top: 2rem;
-      //   border: 1px solid #fff;
-      //   display: flex;
-      //   justify-content: center;
-
-      //   &.right {
-      //     left: 2rem;
-      //     right: initial;
-      //   }
-      // }
-
-      video {
-        // width: calc(90% - 10px - 4rem);
-      }
     }
 
     &__container {
       height: 100%;
-      width: 100% !important;
+      width: 70% !important;
       background-size: cover;
       background-position: 50% 50%;
     }
