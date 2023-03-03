@@ -77,22 +77,22 @@ const Page = ({ slides, templates, slideId, ...props }: PageProps) => {
       currentIndex = targets?.indexOf(matchingId);
     }
 
-    let targetIndex;
+    let targetID;
     let targetElement;
 
     switch (ev.key) {
       case 'ArrowLeft':
         if (currentIndex === 1) {
-          targetIndex = targets[0];
-          targetElement = document.querySelector(`#${targetIndex}`);
+          targetID = targets[0];
+          targetElement = document.querySelector(`#${targetID}`);
           currentIndex = 0;
           currentSlide = `module-${slides[0].moduleId}--lesson-${slides[0].lessonId}--slide-${slides[0].id}-${slides[0].template.meta.filename}`;
           setTimeout(() => {
             targetElement?.scrollIntoView(false);
           }, 0);
         } else {
-          targetIndex = targets[currentIndex - 1];
-          targetElement = document.querySelector(`#${targetIndex}`);
+          targetID = targets[currentIndex - 1];
+          targetElement = document.querySelector(`#${targetID}`);
           setTimeout(() => {
             targetElement?.scrollIntoView(false);
           }, 0);
@@ -106,8 +106,14 @@ const Page = ({ slides, templates, slideId, ...props }: PageProps) => {
           }, 0);
           currentSlide = 'owlui-last';
         } else {
-          targetIndex = targets[currentIndex + 1];
-          targetElement = document.querySelector(`#${targetIndex}`);
+          targetID = targets[currentIndex + 1];
+          targetElement = document.querySelector(`#${targetID}`);
+
+          console.log('current slide: ', currentSlide);
+          console.log('current index: ', currentIndex);
+          console.log('target element: ', targetElement);
+          console.log('target ID: ', targetID);
+
           setTimeout(() => {
             targetElement?.scrollIntoView(true);
           }, 0);
@@ -128,7 +134,7 @@ const Page = ({ slides, templates, slideId, ...props }: PageProps) => {
 
   useEffect(() => {
     const handleSlideEvent = (ev) => {
-      currentSlide = ev.detail.currentTarget.id;
+      currentSlide = ev.detail.currentTarget.firstChild.id;
     };
     const handleUpdateSlideEvent = (ev) => {
       currentSlide = ev.detail.currentSlide;

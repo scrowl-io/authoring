@@ -390,10 +390,7 @@ export const Template = ({
     <div ref={slideRef} className={classes} {...props}>
       <div ref={triggerRef} className="scene-trigger"></div>
       <div ref={sceneRef} className="inner-content">
-        <LazyLoad offset={200}>
-          {/* @ts-ignore */}
-          {children}
-        </LazyLoad>
+        <LazyLoad offset={1500}>{children}</LazyLoad>
       </div>
     </div>
   );
