@@ -1,6 +1,7 @@
 import React, { useCallback, useRef } from 'react';
 import './_index.scss';
 import { SimpleTextProps } from './simple-text.types';
+import LazyLoad from 'react-lazyload';
 
 export const SimpleText = ({ id, schema, ...props }: SimpleTextProps) => {
   const Scrowl = window['Scrowl'];
@@ -23,6 +24,7 @@ export const SimpleText = ({ id, schema, ...props }: SimpleTextProps) => {
   const bgLabel = schema.content.bgImage.content.alt.value || '';
   const bgFocusCss = focusElement === 'bgImage.url' && 'has-focus';
   const bgRef = useRef<HTMLDivElement>(null);
+  //@ts-ignore
   const bgStyles = {
     backgroundImage: `url("${bgUrl}")`,
   };
@@ -130,11 +132,14 @@ export const SimpleText = ({ id, schema, ...props }: SimpleTextProps) => {
             className={`img__wrapper ${alignmentCss} can-focus ${bgFocusCss} as-bg`}
             onMouseDown={handleFocusBg}
           >
-            <img
-              className="img__container"
-              aria-label={bgLabel}
-              style={bgStyles}
-            />
+            <LazyLoad>
+              <img
+                className="img__container"
+                aria-label={bgLabel}
+                src={bgUrl}
+                // style={bgStyles}
+              />
+            </LazyLoad>
           </div>
         )}
         <div className="owlui-row owlui-row-cols-1">

@@ -34,6 +34,11 @@
     z-index: 5;
   }
 
+  .lazyload-wrapper {
+    display: flex;
+    justify-content: center;
+  }
+
   .video {
     &__wrapper {
       display: flex;

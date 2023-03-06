@@ -17,6 +17,7 @@ export const BlockText = ({ id, schema, ...props }: BlockTextProps) => {
   const bgLabel = schema.content.bgImage.content.alt.value || '';
   const bgFocusCss = focusElement === 'bgImage.url' && 'has-focus';
   const bgRef = useRef<HTMLDivElement>(null);
+  // @ts-ignore
   const bgStyles = {
     backgroundImage: `url("${bgUrl}")`,
   };
@@ -122,7 +123,8 @@ export const BlockText = ({ id, schema, ...props }: BlockTextProps) => {
             <img
               className="img__container"
               aria-label={bgLabel}
-              style={bgStyles}
+              // style={bgStyles}
+              src={bgUrl}
             />
           </LazyLoad>
         </div>

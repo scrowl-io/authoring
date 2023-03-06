@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './_index.scss';
 import { SimpleVideoProps } from './simple-video.types';
+import LazyLoad from 'react-lazyload';
 
 export const SimpleVideo = ({ id, schema, ...props }: SimpleVideoProps) => {
   const Scrowl = window['Scrowl'];
@@ -16,9 +17,6 @@ export const SimpleVideo = ({ id, schema, ...props }: SimpleVideoProps) => {
   const bgLabel = schema.content.bgImage.content.alt.value || '';
   const bgFocusCss = focusElement === 'bgImage.url' && 'has-focus';
   const bgRef = useRef<HTMLDivElement>(null);
-  const bgStyles = {
-    backgroundImage: `url("${bgUrl}")`,
-  };
   const alignment = schema.content.options.content.alignment.value;
   const alignmentCss = alignment === 'right' ? 'right' : 'left';
   const showProgressBar = schema.content.options.content.showProgress.value;
@@ -123,15 +121,16 @@ export const SimpleVideo = ({ id, schema, ...props }: SimpleVideoProps) => {
             }`}
             onMouseDown={handleFocusBg}
           >
-            <video
-              controls
-              onEnded={handleVideoEnd}
-              className="video__container"
-              aria-label={bgLabel}
-              style={bgStyles}
-            >
-              <source src={bgUrl} />
-            </video>
+            <LazyLoad>
+              <video
+                controls
+                onEnded={handleVideoEnd}
+                className="video__container"
+                aria-label={bgLabel}
+              >
+                <source src={bgUrl} />
+              </video>
+            </LazyLoad>
           </div>
         )}
       </div>
