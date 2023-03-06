@@ -134,7 +134,7 @@ const Page = ({ slides, templates, slideId, ...props }: PageProps) => {
 
   useEffect(() => {
     const handleSlideEvent = (ev) => {
-      currentSlide = ev.detail.currentTarget.firstChild.id;
+      currentSlide = ev.detail.currentTarget.id;
     };
     const handleUpdateSlideEvent = (ev) => {
       currentSlide = ev.detail.currentSlide;

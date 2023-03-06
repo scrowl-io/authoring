@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import magic, { Scene } from 'scrollmagic';
 import * as css from './_template.scss';
 import { TemplateProps } from './template.types';
-import LazyLoad from 'react-lazyload';
+// import LazyLoad from 'react-lazyload';
 
 export const Template = ({
   id,
@@ -390,7 +390,9 @@ export const Template = ({
     <div ref={slideRef} className={classes} {...props}>
       <div ref={triggerRef} className="scene-trigger"></div>
       <div ref={sceneRef} className="inner-content">
-        <LazyLoad offset={1500}>{children}</LazyLoad>
+        {/* <LazyLoad offset={1500}> */}
+        {children}
+        {/* </LazyLoad> */}
       </div>
     </div>
   );

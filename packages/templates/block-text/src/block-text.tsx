@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './_index.scss';
 import { BlockTextProps } from './block-text.types';
+import LazyLoad from 'react-lazyload';
 
 export const BlockText = ({ id, schema, ...props }: BlockTextProps) => {
   const Scrowl = window['Scrowl'];
@@ -117,11 +118,13 @@ export const BlockText = ({ id, schema, ...props }: BlockTextProps) => {
           }`}
           onMouseDown={handleFocusBg}
         >
-          <img
-            className="img__container"
-            aria-label={bgLabel}
-            style={bgStyles}
-          />
+          <LazyLoad>
+            <img
+              className="img__container"
+              aria-label={bgLabel}
+              style={bgStyles}
+            />
+          </LazyLoad>
         </div>
       )}
     </Scrowl.core.Template>
