@@ -1,0 +1,72 @@
+.ScrollHint {
+  width: 100%;
+  bottom: 80px;
+  position: fixed;
+  font-weight: 400;
+  z-index: 50000;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.5s, bottom 0.5s;
+
+  &.visible {
+    opacity: 1;
+    bottom: 60px;
+  }
+
+  .hint-text {
+    opacity: 0;
+    text-align: center;
+    transition: opacity 0.5s;
+
+    span {
+      background: #ffffffab;
+      padding: 2px 7px;
+      border-radius: 5px;
+    }
+
+    &.visible {
+      opacity: 1;
+    }
+  }
+
+  .icon-scroll,
+  .icon-scroll::before {
+    position: absolute;
+    left: 50%;
+  }
+
+  .icon-scroll {
+    width: 22px;
+    height: 38px;
+    margin-left: -11px;
+    margin-top: 12px;
+    border-radius: 15px;
+    box-shadow: 0 0 0 2px #ffffffdd;
+    border: 1px solid black;
+    background: #ffffffab;
+  }
+
+  .icon-scroll::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: black;
+    margin-left: -3px;
+    top: 5px;
+    border-radius: 3px;
+    animation-duration: 1.5s;
+    animation-iteration-count: infinite;
+    animation-name: scroll;
+  }
+
+  @keyframes scroll {
+    0% {
+      opacity: 1;
+    }
+
+    100% {
+      opacity: 0;
+      transform: translateY(350%);
+    }
+  }
+}

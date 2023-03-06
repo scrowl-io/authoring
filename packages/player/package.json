@@ -1,6 +1,6 @@
 {
   "name": "@scrowl/player",
-  "version": "0.0.94",
+  "version": "0.0.96",
   "description": "",
   "license": "MIT",
   "keywords": [],
@@ -59,13 +59,13 @@
     "@parcel/transformer-sass": "2.7.0",
     "@parcel/transformer-typescript-types": "2.7.0",
     "@parcel/validator-typescript": "2.7.0",
-    "@scrowl/config": "^0.0.94",
-    "@scrowl/postcss-prefixer": "^0.0.34",
-    "@scrowl/template-block-text": "^1.0.93",
-    "@scrowl/template-lesson-intro": "^1.0.93",
-    "@scrowl/template-simple-text": "^1.0.93",
-    "@scrowl/template-simple-video": "^1.0.93",
-    "@scrowl/template-two-column": "^1.0.93",
+    "@scrowl/config": "^0.0.96",
+    "@scrowl/postcss-prefixer": "^0.0.36",
+    "@scrowl/template-block-text": "^1.0.95",
+    "@scrowl/template-lesson-intro": "^1.0.95",
+    "@scrowl/template-simple-text": "^1.0.95",
+    "@scrowl/template-simple-video": "^1.0.95",
+    "@scrowl/template-two-column": "^1.0.95",
     "@types/react": "^18.0.21",
     "@types/react-dom": "^18.0.6",
     "eslint": "^8.25.0",
@@ -81,12 +81,13 @@
     "typescript": "4.7.4"
   },
   "dependencies": {
-    "@scrowl/template-core": "^1.0.93",
-    "@scrowl/ui": "^0.0.34",
+    "@scrowl/template-core": "^1.0.95",
+    "@scrowl/ui": "^0.0.36",
     "bootstrap": "^5.2.2",
     "react": "^18.2.0",
     "react-bootstrap": "^2.5.0",
     "react-dom": "^18.2.0",
+    "react-keywords": "^0.0.5",
     "react-router-dom": "^6.4.2"
   }
 }

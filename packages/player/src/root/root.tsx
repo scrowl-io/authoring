@@ -13,6 +13,7 @@ import { ErrorModal } from '../components/modal';
 import { Preview as PreviewPanel } from '../components/preview';
 import { Pages } from '../services';
 import { formatResponse } from '../utils/formatResponse';
+import { ScrollHint } from '../components/scrollHint';
 
 export const Root = ({
   project,
@@ -88,6 +89,7 @@ export const Root = ({
   const resources = project.resources;
   const glossary = project.glossary;
   const name = project.name;
+  const subtitle = project.subtitle;
 
   let moduleIdx;
   let lessonIdx;
@@ -115,7 +117,8 @@ export const Root = ({
     modules,
     resources,
     glossary,
-    name
+    name,
+    subtitle
   );
   const pages = Pages.create(config, templateList, slideId);
 
@@ -279,6 +282,7 @@ export const Root = ({
       <div id="scrowl-player" {...props}>
         <main className="owlui-lesson-wrapper">
           <ErrorModal />
+          <ScrollHint />
           {window['API_1484_11'] !== undefined && showPanel ? (
             <PreviewPanel />
           ) : null}
