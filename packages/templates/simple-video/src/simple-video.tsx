@@ -121,7 +121,7 @@ export const SimpleVideo = ({ id, schema, ...props }: SimpleVideoProps) => {
             }`}
             onMouseDown={handleFocusBg}
           >
-            <LazyLoad>
+            <LazyLoad offset={250}>
               <video
                 controls
                 onEnded={handleVideoEnd}

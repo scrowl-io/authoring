@@ -3,7 +3,7 @@ import './_index.scss';
 import { SimpleTextProps } from './simple-text.types';
 import LazyLoad from 'react-lazyload';
 
-export const SimpleText = ({ id, schema, ...props }: SimpleTextProps) => {
+const SimpleText = ({ id, schema, ...props }: SimpleTextProps) => {
   const Scrowl = window['Scrowl'];
   let classes = `template-simple-text`;
   const Markdown = Scrowl.core.Markdown;
@@ -162,6 +162,4 @@ export const SimpleText = ({ id, schema, ...props }: SimpleTextProps) => {
   );
 };
 
-export default {
-  SimpleText,
-};
+export { SimpleText as default };
