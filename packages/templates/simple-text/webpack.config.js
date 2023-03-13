@@ -31,16 +31,6 @@ module.exports = merge(common, {
     libraryTarget: 'umd',
     filename: '[name].js',
     path: path.resolve(__dirname, 'dist'),
-    asyncChunks: true,
-    chunkFilename: (pathData) => {
-      if (pathData.chunk.files.length) {
-        return `${templateName}.chunk.js`;
-      }
-
-      return `${templateName}.js`;
-    },
-  },
-  optimization: {
-    chunkIds: 'named',
+    chunkFilename: 'scrowl.[name].component.js',
   },
 });

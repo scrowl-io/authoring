@@ -3,7 +3,7 @@ import './_index.scss';
 import { SimpleVideoProps } from './simple-video.types';
 import LazyLoad from 'react-lazyload';
 
-export const SimpleVideo = ({ id, schema, ...props }: SimpleVideoProps) => {
+const SimpleVideo = ({ id, schema, ...props }: SimpleVideoProps) => {
   const Scrowl = window['Scrowl'];
   let classes = 'template-simple-video';
   const Markdown = Scrowl.core.Markdown;
@@ -138,6 +138,4 @@ export const SimpleVideo = ({ id, schema, ...props }: SimpleVideoProps) => {
   );
 };
 
-export default {
-  SimpleVideo,
-};
+export { SimpleVideo as default };

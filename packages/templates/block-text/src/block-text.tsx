@@ -3,7 +3,7 @@ import './_index.scss';
 import { BlockTextProps } from './block-text.types';
 import LazyLoad from 'react-lazyload';
 
-export const BlockText = ({ id, schema, ...props }: BlockTextProps) => {
+const BlockText = ({ id, schema, ...props }: BlockTextProps) => {
   const Scrowl = window['Scrowl'];
   let classes = 'template-block-text';
   const Markdown = Scrowl.core.Markdown;
@@ -133,6 +133,4 @@ export const BlockText = ({ id, schema, ...props }: BlockTextProps) => {
   );
 };
 
-export default {
-  BlockText,
-};
+export { BlockText as default };

@@ -46,7 +46,7 @@ const Column = ({ field, className, heading, body, isEdit, focusElement }) => {
   );
 };
 
-export const TwoColumn = ({ id, schema, ...props }: TwoColumnProps) => {
+const TwoColumn = ({ id, schema, ...props }: TwoColumnProps) => {
   const Scrowl = window['Scrowl'];
   let classes = `template-two-columns`;
   let columnClasses = 'column-wrapper';
@@ -121,6 +121,4 @@ export const TwoColumn = ({ id, schema, ...props }: TwoColumnProps) => {
   );
 };
 
-export default {
-  TwoColumn,
-};
+export { TwoColumn as default };

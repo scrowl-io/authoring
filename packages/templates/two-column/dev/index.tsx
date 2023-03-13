@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { createRoot } from 'react-dom/client';
 import { core } from '@scrowl/template-core';
 import { ui } from '@scrowl/ui';
 import './_index.scss';
-import { TwoColumn, TwoColumnSchema, TwoColumnSchemaProps } from '../src';
+import { TwoColumnSchema, TwoColumnSchemaProps } from '../src';
+const TwoColumn = React.lazy(() => import('../src/two-column'));
 
 const container = document.getElementById('scrowl-player') as HTMLElement;
 const root = createRoot(container);
@@ -20,12 +21,14 @@ const App = () => {
   return (
     <div id="lesson-wrapper">
       <div className="lesson">
-        <TwoColumn
-          editMode={true}
-          id="template-two-columns"
-          controller={controller}
-          schema={schema}
-        />
+        <Suspense fallback={<div>Loading...</div>}>
+          <TwoColumn
+            editMode={true}
+            id="template-two-columns"
+            controller={controller}
+            schema={schema}
+          />
+        </Suspense>
       </div>
     </div>
   );
