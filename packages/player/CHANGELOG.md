@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.0.97 (2023-03-14)
+
+**Note:** Version bump only for package @scrowl/player
+
+
+
+
+
 ## 0.0.96 (2023-02-24)
 
 **Note:** Version bump only for package @scrowl/player
