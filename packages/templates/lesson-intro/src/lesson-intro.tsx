@@ -3,7 +3,7 @@ import React, { useRef, useState } from 'react';
 import './_index.scss';
 import { LessonIntroProps } from './lesson-intro.types';
 
-export const LessonIntro = ({ id, schema, ...props }: LessonIntroProps) => {
+const LessonIntro = ({ id, schema, ...props }: LessonIntroProps) => {
   const Scrowl = window['Scrowl'];
   let classes = 'template-lesson-intro';
   const editMode = props.editMode ? true : false;
@@ -85,8 +85,8 @@ export const LessonIntro = ({ id, schema, ...props }: LessonIntroProps) => {
         field: 'startLabel',
       });
     } else {
-      const startEvent = new CustomEvent('startCourse', { detail: ev });
-      document.dispatchEvent(startEvent);
+      const startCourse = new CustomEvent('startCourse', { detail: ev });
+      document.dispatchEvent(startCourse);
     }
   };
 
@@ -143,6 +143,4 @@ export const LessonIntro = ({ id, schema, ...props }: LessonIntroProps) => {
   );
 };
 
-export default {
-  LessonIntro,
-};
+export { LessonIntro as default };

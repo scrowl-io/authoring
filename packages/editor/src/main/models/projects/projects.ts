@@ -971,11 +971,37 @@ export const open = (ev: rq.RequestEvent, project: ProjectMeta) => {
         return;
       }
 
-      resolve({
-        error: false,
-        data: {
-          project: JSON.parse(res.data.contents),
-        },
+      const pathName = fs.joinPath(fs.getDirname(project.filename), 'assets');
+
+      fs.fileExists(pathName).then((existsRes) => {
+        if (existsRes.error) {
+          resolve(existsRes);
+          return;
+        }
+
+        if (!existsRes.data.exists) {
+          resolve({
+            error: false,
+            data: {
+              project: JSON.parse(res.data.contents),
+            },
+          });
+          return;
+        } else {
+          fs.copy(pathName, fs.APP_PATHS.uploads).then((copyRes) => {
+            if (copyRes.error) {
+              resolve(copyRes);
+              return;
+            }
+
+            resolve({
+              error: false,
+              data: {
+                project: JSON.parse(res.data.contents),
+              },
+            });
+          });
+        }
       });
     });
   });

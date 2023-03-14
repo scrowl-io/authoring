@@ -129,7 +129,9 @@ export const load = (ev: rq.RequestEvent, template: TemplateSchema) => {
           };
 
           const copyUploads = () => {
-            fs.copy(fs.APP_PATHS.uploads, TEMPLATE_PATHS.workingAssets, { overwrite: false }).then((assetCopyRes) => {
+            fs.copy(fs.APP_PATHS.uploads, TEMPLATE_PATHS.workingAssets, {
+              overwrite: false,
+            }).then((assetCopyRes) => {
               if (assetCopyRes.error) {
                 log.error(assetCopyRes);
                 resolve(assetCopyRes);
@@ -138,9 +140,11 @@ export const load = (ev: rq.RequestEvent, template: TemplateSchema) => {
 
               loadDone();
             });
-          }
-  
-          fs.copy(templatePath, TEMPLATE_PATHS.working, { overwrite: false }).then((tempCopyRes) => {
+          };
+
+          fs.copy(templatePath, TEMPLATE_PATHS.working, {
+            overwrite: false,
+          }).then((tempCopyRes) => {
             if (tempCopyRes.error) {
               log.error(tempCopyRes);
               resolve(tempCopyRes);

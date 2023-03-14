@@ -162,6 +162,7 @@
     "@scrowl/template-core": "^1.0.95",
     "@scrowl/template-lesson-intro": "^1.0.95",
     "@scrowl/template-simple-text": "^1.0.95",
+    "@scrowl/template-simple-video": "^1.0.95",
     "@scrowl/template-two-column": "^1.0.95",
     "@scrowl/ui": "^0.0.36",
     "adm-zip": "^0.5.9",

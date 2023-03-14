@@ -4,12 +4,14 @@ import { BlockTextSchema } from '@scrowl/template-block-text/schema';
 import { LessonIntroSchema } from '@scrowl/template-lesson-intro/schema';
 import { SimpleTextSchema } from '@scrowl/template-simple-text/schema';
 import { TwoColumnSchema } from '@scrowl/template-two-column/schema';
+import { SimpleVideoSchema } from '@scrowl/template-simple-video/schema';
 
 const TEMPLATES = {
   blockText: JSON.stringify(BlockTextSchema),
   lessonIntro: JSON.stringify(LessonIntroSchema),
   simpleText: JSON.stringify(SimpleTextSchema),
   twoColumn: JSON.stringify(TwoColumnSchema),
+  simpleVideo: JSON.stringify(SimpleVideoSchema),
 };
 
 const createSlide = (
@@ -17,9 +19,22 @@ const createSlide = (
   mId: number,
   lId: number,
   id: number,
-  type: keyof typeof TEMPLATES
+  type: keyof typeof TEMPLATES,
+  media?: boolean,
+  mediaUrl?: string
 ) => {
   const template: TemplateSchema = JSON.parse(TEMPLATES[type]);
+
+  if (media && mediaUrl) {
+    switch (template.meta.filename) {
+      case 'block-text':
+        template.content.bgImage.content.url.value = mediaUrl;
+        break;
+      case 'simple-video':
+        template.content.bgImage.content.url.value = mediaUrl;
+        break;
+    }
+  }
 
   return {
     name,
@@ -88,9 +103,18 @@ export const create = () => {
     ],
     slides: [
       createSlide('Slide 1.1', 0, 0, 0, 'lessonIntro'),
-      createSlide('Slide 1.2', 0, 0, 1, 'blockText'),
+      createSlide(
+        'Slide 1.2',
+        0,
+        0,
+        1,
+        'simpleVideo',
+        true,
+        './5-Second_Timer.mp4'
+      ),
+      // createSlide('Slide 1.2', 0, 0, 1, 'simpleText'),
       createSlide('Slide 1.3', 0, 0, 2, 'simpleText'),
-      createSlide('Slide 1.4', 0, 0, 3, 'twoColumn'),
+      createSlide('Slide 1.4', 0, 0, 3, 'blockText', true, './osg-logo.png'),
 
       createSlide('Slide 2.1', 0, 1, 4, 'twoColumn'),
       createSlide('Slide 2.2', 0, 1, 5, 'simpleText'),

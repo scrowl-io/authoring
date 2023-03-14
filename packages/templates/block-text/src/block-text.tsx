@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './_index.scss';
 import { BlockTextProps } from './block-text.types';
+import LazyLoad from 'react-lazyload';
 
-export const BlockText = ({ id, schema, ...props }: BlockTextProps) => {
+const BlockText = ({ id, schema, ...props }: BlockTextProps) => {
   const Scrowl = window['Scrowl'];
   let classes = 'template-block-text';
   const Markdown = Scrowl.core.Markdown;
@@ -16,6 +17,7 @@ export const BlockText = ({ id, schema, ...props }: BlockTextProps) => {
   const bgLabel = schema.content.bgImage.content.alt.value || '';
   const bgFocusCss = focusElement === 'bgImage.url' && 'has-focus';
   const bgRef = useRef<HTMLDivElement>(null);
+  // @ts-ignore
   const bgStyles = {
     backgroundImage: `url("${bgUrl}")`,
   };
@@ -117,17 +119,18 @@ export const BlockText = ({ id, schema, ...props }: BlockTextProps) => {
           }`}
           onMouseDown={handleFocusBg}
         >
-          <img
-            className="img__container"
-            aria-label={bgLabel}
-            style={bgStyles}
-          />
+          <LazyLoad>
+            <img
+              className="img__container"
+              aria-label={bgLabel}
+              // style={bgStyles}
+              src={bgUrl}
+            />
+          </LazyLoad>
         </div>
       )}
     </Scrowl.core.Template>
   );
 };
 
-export default {
-  BlockText,
-};
+export { BlockText as default };
