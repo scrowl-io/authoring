@@ -1,17 +1,9 @@
 import React, { useState, useEffect } from 'react';
-
 import { PageProps } from './pages.types';
-import {
-  // @ts-ignore
-  PlayerRootConfig,
-  // @ts-ignore
-  PlayerTemplateList,
-  TemplateComponent,
-} from '../../root/root.types';
-import * as _css from '../../root/_root.scss';
+import { TemplateComponent } from '../../root/root.types';
 import { Error } from '../../components';
 
-const Page = ({ slides, templates, slideId, ...props }: PageProps) => {
+export const Page = ({ slides, templates, slideId, ...props }: PageProps) => {
   const Scrowl = window['Scrowl'];
   const [hasStartedCourse, setHasStartedCourse] = useState(true);
 
@@ -242,4 +234,6 @@ const Page = ({ slides, templates, slideId, ...props }: PageProps) => {
   }
 };
 
-export { Page as default };
+export default {
+  Page,
+};
