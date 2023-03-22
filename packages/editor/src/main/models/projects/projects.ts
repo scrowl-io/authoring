@@ -296,7 +296,35 @@ export const upload = (ev: rq.RequestEvent, req: UploadReq) => {
     }
 
     const uploadComplete = (result) => {
+      if (result.error) {
+        resolve(result);
+        return;
+      }
+
+      const infoRes = getProjectInfo(req.meta);
+
+      if (infoRes.error) {
+        resolve(infoRes);
+        return;
+      }
+
+      let info: ProjectFile;
+
+      info = infoRes.data.info;
+
+      if (info && info.assets) {
+        info.assets = info.assets.concat(result.data);
+      }
+
       resolve(result);
+      fs.fileWrite(infoRes.data.fileName, info).then((writeFileRes) => {
+        if (writeFileRes.error) {
+          log.error(writeFileRes);
+          resolve(writeFileRes);
+          return;
+        }
+        resolve(result);
+      });
     };
 
     const config: OpenDialogOptions = {
@@ -971,6 +999,13 @@ export const open = (ev: rq.RequestEvent, project: ProjectMeta) => {
         return;
       }
 
+      const infoRes = getProjectInfo(project);
+
+      if (infoRes.error || !infoRes.data.info) {
+        resolve(infoRes);
+        return;
+      }
+
       const pathName = fs.joinPath(fs.getDirname(project.filename), 'assets');
 
       fs.fileExists(pathName).then((existsRes) => {
@@ -998,6 +1033,7 @@ export const open = (ev: rq.RequestEvent, project: ProjectMeta) => {
               error: false,
               data: {
                 project: JSON.parse(res.data.contents),
+                file: infoRes.data.info,
               },
             });
           });
