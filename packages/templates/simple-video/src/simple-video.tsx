@@ -31,16 +31,21 @@ const SimpleVideo = ({ id, schema, ...props }: SimpleVideoProps) => {
   let videoEmbedUrl;
 
   if (videoWebUrl) {
-    if (videoWebUrl.includes('youtube')) {
+    if (videoWebUrl.includes('youtube.com')) {
       videoEmbedUrl = videoWebUrl.replace('watch?v=', 'embed/');
     }
-    if (videoWebUrl.includes('vimeo')) {
+    if (videoWebUrl.includes('vimeo.com')) {
       videoEmbedUrl = videoWebUrl
         .replace('vimeo', 'player.vimeo')
         .replace('com', 'com/video');
     }
-    if (videoWebUrl.includes('dailymotion')) {
+    if (videoWebUrl.includes('dailymotion.com')) {
       videoEmbedUrl = videoWebUrl.replace('com', 'com/embed');
+    }
+    if (videoWebUrl.includes('ted.com/talks')) {
+      videoEmbedUrl = videoWebUrl
+        .replace('ted', 'embed.ted')
+        .replace('www.', '');
     }
   }
 
