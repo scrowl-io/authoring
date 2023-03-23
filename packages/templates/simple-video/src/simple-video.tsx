@@ -32,7 +32,6 @@ const SimpleVideo = ({ id, schema, ...props }: SimpleVideoProps) => {
 
   if (videoWebUrl) {
     if (videoWebUrl.includes('youtube')) {
-      console.log('yep');
       videoEmbedUrl = videoWebUrl.replace('watch?v=', 'embed/');
     }
     if (videoWebUrl.includes('vimeo')) {

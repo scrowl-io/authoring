@@ -40,6 +40,22 @@ export const FormBuilder = ({
       {fields.map((field, idx) => {
         const fieldContent: InputProps = content[field];
 
+        let disableFlag;
+
+        if (
+          content &&
+          content.videoAsset &&
+          content.videoAsset.content.webUrl.value
+        ) {
+          disableFlag = 'assetUrl';
+        } else if (
+          content &&
+          content.videoAsset &&
+          content.videoAsset.content.assetUrl.value
+        ) {
+          disableFlag = 'webUrl';
+        }
+
         switch (fieldContent.type) {
           case 'Fieldset':
             return (
@@ -51,6 +67,7 @@ export const FormBuilder = ({
                 onValidate={onValidate}
                 onBlur={onBlur}
                 onFocus={onFocus}
+                disableFlag={disableFlag}
               />
             );
           default:
