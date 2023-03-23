@@ -19,11 +19,11 @@ export type {
   InputAssetProps,
 };
 
-export interface BlockTextContentBgImage extends InputFieldsetProps {
+export interface VideoAsset extends InputFieldsetProps {
   content: {
     alt: InputTextboxProps;
-    url: InputAssetProps;
-    bg: InputCheckboxProps;
+    assetUrl?: InputAssetProps;
+    webUrl?: InputTextboxProps;
   };
 }
 
@@ -38,7 +38,7 @@ export type SimpleVideoSchemaProps = {
   meta: TemplateSchemaMeta;
   content: {
     text: InputTextboxProps;
-    bgImage: BlockTextContentBgImage;
+    videoAsset: VideoAsset;
     options: BlockTextContentOptions;
   };
 };

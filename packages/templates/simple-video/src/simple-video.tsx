@@ -12,10 +12,10 @@ const SimpleVideo = ({ id, schema, ...props }: SimpleVideoProps) => {
   const contentId = `${id}-simple-video`;
   const text = schema.content.text.value;
   const textFocusCss = focusElement === 'text' && 'has-focus';
-  const bg = schema.content.bgImage.content.bg.value;
-  const bgUrl = schema.content.bgImage.content.url.value;
-  const bgLabel = schema.content.bgImage.content.alt.value || '';
-  const bgFocusCss = focusElement === 'bgImage.url' && 'has-focus';
+  const videoAssetUrl = schema.content.videoAsset.content.assetUrl?.value;
+  const videoWebUrl = schema.content.videoAsset.content.webUrl?.value;
+  const bgLabel = schema.content.videoAsset.content.alt.value || '';
+  const bgFocusCss = focusElement === 'videoAsset.url' && 'has-focus';
   const bgRef = useRef<HTMLDivElement>(null);
   const alignment = schema.content.options.content.alignment.value;
   const alignmentCss = alignment === 'right' ? 'right' : 'left';
@@ -27,6 +27,12 @@ const SimpleVideo = ({ id, schema, ...props }: SimpleVideoProps) => {
   });
   // @ts-ignore
   const [videoEnded, setVideoEnded] = useState(false);
+
+  let videoEmbedUrl;
+
+  if (videoWebUrl) {
+    videoEmbedUrl = videoWebUrl.replace('watch?v=', 'embed/');
+  }
 
   if (showProgressBar) {
     classes += ' show-progress';
@@ -97,8 +103,6 @@ const SimpleVideo = ({ id, schema, ...props }: SimpleVideoProps) => {
     >
       <div id={contentId} className="owlui-container">
         <div className={`owlui-row ${alignmentCss}`}>
-          {bg && <div className="owlui-col overlay" />}
-
           <div className={`owlui-col text__wrapper`}>
             <div className="text__container">
               <div className="progress-indictor">
@@ -113,24 +117,36 @@ const SimpleVideo = ({ id, schema, ...props }: SimpleVideoProps) => {
             </div>
           </div>
         </div>
-        {(bgUrl || editMode) && (
+
+        {(videoAssetUrl || videoWebUrl) && (
           <div
             ref={bgRef}
-            className={`video__wrapper ${alignmentCss} can-focus ${bgFocusCss} ${
-              bg ? 'as-bg' : 'as-side'
-            }`}
+            className={`video__wrapper ${alignmentCss} can-focus ${bgFocusCss} ${'as-side'}`}
             onMouseDown={handleFocusBg}
           >
-            <LazyLoad offset={250}>
-              <video
-                controls
-                onEnded={handleVideoEnd}
-                className="video__container"
-                aria-label={bgLabel}
-              >
-                <source src={bgUrl} />
-              </video>
-            </LazyLoad>
+            {videoWebUrl && !videoAssetUrl && (
+              <iframe
+                width="600"
+                height="337.50"
+                src={videoEmbedUrl}
+                title="YouTube video player"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+              ></iframe>
+            )}
+
+            {videoAssetUrl && !videoWebUrl && (
+              <LazyLoad offset={250}>
+                <video
+                  controls
+                  onEnded={handleVideoEnd}
+                  className="video__container"
+                  aria-label={bgLabel}
+                >
+                  <source src={videoAssetUrl} />
+                </video>
+              </LazyLoad>
+            )}
           </div>
         )}
       </div>

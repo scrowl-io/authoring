@@ -12,7 +12,7 @@ export const SimpleVideoSchema: SimpleVideoSchemaProps = {
   content: {
     text: {
       type: 'Textbox',
-      label: 'Block Text',
+      label: 'Video Text',
       value:
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
       placeholder: 'Write content here...',
@@ -21,24 +21,25 @@ export const SimpleVideoSchema: SimpleVideoSchemaProps = {
       autoGrow: 10,
       allowLinebreaks: true,
     },
-    bgImage: {
+    videoAsset: {
       type: 'Fieldset',
-      label: 'Background Image',
+      label: 'Video',
       content: {
         alt: {
           type: 'Textbox',
           label: 'Alt Text',
           placeholder: 'Image alt text',
         },
-        url: {
+        assetUrl: {
           type: 'Asset',
           assetTypes: ['video'],
-          label: 'Image',
+          label: 'Video',
         },
-        bg: {
-          type: 'Checkbox',
-          label: 'Use as Background',
-          value: false,
+        webUrl: {
+          type: 'Textbox',
+          label: 'Embed URL',
+          placeholder: 'Embed URL',
+          // value: 'https://www.youtube.com/watch?v=Z_ppk0iQnsA',
         },
       },
     },
