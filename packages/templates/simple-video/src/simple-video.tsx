@@ -31,7 +31,18 @@ const SimpleVideo = ({ id, schema, ...props }: SimpleVideoProps) => {
   let videoEmbedUrl;
 
   if (videoWebUrl) {
-    videoEmbedUrl = videoWebUrl.replace('watch?v=', 'embed/');
+    if (videoWebUrl.includes('youtube')) {
+      console.log('yep');
+      videoEmbedUrl = videoWebUrl.replace('watch?v=', 'embed/');
+    }
+    if (videoWebUrl.includes('vimeo')) {
+      videoEmbedUrl = videoWebUrl
+        .replace('vimeo', 'player.vimeo')
+        .replace('com', 'com/video');
+    }
+    if (videoWebUrl.includes('dailymotion')) {
+      videoEmbedUrl = videoWebUrl.replace('com', 'com/embed');
+    }
   }
 
   if (showProgressBar) {
@@ -129,8 +140,8 @@ const SimpleVideo = ({ id, schema, ...props }: SimpleVideoProps) => {
                 width="600"
                 height="337.50"
                 src={videoEmbedUrl}
-                title="YouTube video player"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                title="Video player"
+                allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 allowFullScreen
               ></iframe>
             )}

@@ -39,6 +39,8 @@ export const SimpleVideoSchema: SimpleVideoSchemaProps = {
           type: 'Textbox',
           label: 'Embed URL',
           placeholder: 'Embed URL',
+          // value: 'https://www.dailymotion.com/video/x873541',
+          // value: 'https://vimeo.com/253989945',
           // value: 'https://www.youtube.com/watch?v=Z_ppk0iQnsA',
         },
       },
