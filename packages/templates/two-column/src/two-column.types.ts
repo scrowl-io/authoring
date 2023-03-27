@@ -7,6 +7,7 @@ import {
   InputCheckboxProps,
   InputRadioProps,
   InputSelectProps,
+  TemplateControlOptions,
 } from '@scrowl/template-core';
 
 export interface TwoColumnContentOptions extends InputFieldsetProps {
@@ -32,6 +33,7 @@ export type TwoColumnSchemaProps = {
     secondColumn: TwoColumnContentColumnProps;
     thirdColumn: TwoColumnContentColumnProps;
   };
+  controlOptions: TemplateControlOptions;
 };
 
 export interface TwoColumnCommons extends TemplateCommons {

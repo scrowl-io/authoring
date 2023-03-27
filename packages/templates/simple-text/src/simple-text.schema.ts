@@ -6,7 +6,7 @@ export const SimpleTextSchema: SimpleTextSchemaProps = {
     label: 'Simple Text',
     component: 'SimpleText',
     filename: 'simple-text',
-    tags: ["text"],
+    tags: ['text'],
     icon: 'notes',
   },
   content: {
@@ -80,6 +80,13 @@ export const SimpleTextSchema: SimpleTextSchemaProps = {
           iconFromValue: true,
         },
       },
+    },
+  },
+  controlOptions: {
+    stopUserAdvancement: {
+      type: 'Checkbox',
+      label: 'Stop User Advancement',
+      value: false,
     },
   },
 };

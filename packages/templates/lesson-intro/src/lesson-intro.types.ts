@@ -6,6 +6,7 @@ import {
   InputFieldsetProps,
   InputAssetProps,
   InputCheckboxProps,
+  TemplateControlOptions,
 } from '@scrowl/template-core';
 
 export interface LessonIntroContentBgImage extends InputFieldsetProps {
@@ -25,6 +26,7 @@ export type LessonIntroSchemaProps = {
     startLabel: InputTextboxProps;
     bgImage: LessonIntroContentBgImage;
   };
+  controlOptions: TemplateControlOptions;
 };
 
 export interface LessonIntroCommons extends TemplateCommons {

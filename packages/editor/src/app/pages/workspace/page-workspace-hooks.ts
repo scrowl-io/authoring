@@ -151,7 +151,6 @@ export const useActiveTemplateContent = (prop?: string) => {
 export const useActiveTemplateControls = (prop?: string) => {
   return useSelector((data: stateManager.RootState) => {
     if (!prop) {
-      console.log('controls:', data.activeSlide.template.controlOptions);
       return data.activeSlide.template.controlOptions;
     }
 

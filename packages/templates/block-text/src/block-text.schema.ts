@@ -2,18 +2,19 @@ import { BlockTextSchemaProps } from './block-text.types';
 
 export const BlockTextSchema: BlockTextSchemaProps = {
   meta: {
-    version: "1.0.0",
-    label: "Text Block",
-    component: "BlockText",
-    filename: "block-text",
-    tags: ["text", "image"],
+    version: '1.0.0',
+    label: 'Text Block',
+    component: 'BlockText',
+    filename: 'block-text',
+    tags: ['text', 'image'],
     icon: 'vertical_split',
   },
   content: {
     text: {
       type: 'Textbox',
       label: 'Block Text',
-      value: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+      value:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
       placeholder: 'Write content here...',
       multiLine: true,
       lines: 10,
@@ -38,7 +39,7 @@ export const BlockTextSchema: BlockTextSchemaProps = {
           type: 'Checkbox',
           label: 'Use as Background',
           value: false,
-        }
+        },
       },
     },
     options: {
@@ -51,8 +52,16 @@ export const BlockTextSchema: BlockTextSchemaProps = {
           label: 'Alignment',
           value: 'left',
           options: [
-            { name: 'Align Left', value: 'left', icon: 'align_horizontal_left' },
-            { name: 'Align Right', value: 'right', icon: 'align_horizontal_right' },
+            {
+              name: 'Align Left',
+              value: 'left',
+              icon: 'align_horizontal_left',
+            },
+            {
+              name: 'Align Right',
+              value: 'right',
+              icon: 'align_horizontal_right',
+            },
           ],
           iconFromValue: true,
         },
@@ -62,6 +71,13 @@ export const BlockTextSchema: BlockTextSchemaProps = {
           value: true,
         },
       },
+    },
+  },
+  controlOptions: {
+    stopUserAdvancement: {
+      type: 'Checkbox',
+      label: 'Stop User Advancement',
+      value: false,
     },
   },
 };

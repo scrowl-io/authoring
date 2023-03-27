@@ -6,7 +6,8 @@ import {
   InputFieldsetProps,
   InputSelectProps,
   InputCheckboxProps,
-  InputAssetProps
+  InputAssetProps,
+  TemplateControlOptions,
 } from '@scrowl/template-core';
 
 export type {
@@ -16,8 +17,9 @@ export type {
   InputFieldsetProps,
   InputSelectProps,
   InputCheckboxProps,
-  InputAssetProps
-}
+  InputAssetProps,
+  TemplateControlOptions,
+};
 
 export interface BlockTextContentBgImage extends InputFieldsetProps {
   content: {
@@ -35,12 +37,13 @@ export interface BlockTextContentOptions extends InputFieldsetProps {
 }
 
 export type BlockTextSchemaProps = {
-  meta: TemplateSchemaMeta,
+  meta: TemplateSchemaMeta;
   content: {
     text: InputTextboxProps;
     bgImage: BlockTextContentBgImage;
     options: BlockTextContentOptions;
-  }
+  };
+  controlOptions: TemplateControlOptions;
 };
 
 export interface BlockTextCommons extends TemplateCommons {

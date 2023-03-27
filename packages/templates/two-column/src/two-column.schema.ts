@@ -150,6 +150,13 @@ export const TwoColumnSchema: TwoColumnSchemaProps = {
       },
     },
   },
+  controlOptions: {
+    stopUserAdvancement: {
+      type: 'Checkbox',
+      label: 'Stop User Advancement',
+      value: false,
+    },
+  },
 };
 
 export default {
