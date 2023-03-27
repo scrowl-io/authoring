@@ -7,6 +7,7 @@ import {
   InputSelectProps,
   InputCheckboxProps,
   InputAssetProps,
+  TemplateControlOptions,
 } from '@scrowl/template-core';
 
 export type {
@@ -17,6 +18,7 @@ export type {
   InputSelectProps,
   InputCheckboxProps,
   InputAssetProps,
+  TemplateControlOptions,
 };
 
 export interface VideoAsset extends InputFieldsetProps {
@@ -27,7 +29,7 @@ export interface VideoAsset extends InputFieldsetProps {
   };
 }
 
-export interface BlockTextContentOptions extends InputFieldsetProps {
+export interface SimpleVideoContentOptions extends InputFieldsetProps {
   content: {
     alignment: InputSelectProps;
     showProgress: InputCheckboxProps;
@@ -39,13 +41,14 @@ export type SimpleVideoSchemaProps = {
   content: {
     text: InputTextboxProps;
     videoAsset: VideoAsset;
-    options: BlockTextContentOptions;
+    options: SimpleVideoContentOptions;
   };
+  controlOptions: TemplateControlOptions;
 };
 
-export interface BlockTextCommons extends TemplateCommons {
+export interface SimpleVideoCommons extends TemplateCommons {
   schema: SimpleVideoSchemaProps;
-};
+}
 
-export type SimpleVideoProps = BlockTextCommons &
+export type SimpleVideoProps = SimpleVideoCommons &
   React.AllHTMLAttributes<HTMLDivElement>;

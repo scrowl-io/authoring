@@ -1,10 +1,14 @@
 import React from 'react';
 import { Controller, StartEvent, ProgressEvent, EndEvent, EnterEvent, LeaveEvent } from 'scrollmagic';
-import { InputProps } from '../core.types';
+import { InputProps, InputCheckboxProps } from '../core.types';
 
 export type TemplateSchemaContent = {
   [key: string]: InputProps;
 };
+
+export interface TemplateControlOptions {
+  stopUserAdvancement: InputCheckboxProps;
+}
 
 export type TemplateSchemaMeta = {
   label: string;
@@ -32,23 +36,23 @@ export type SceneStats = {
 
 export interface TemplateEventEnter extends EnterEvent {
   scene: SceneStats;
-};
+}
 
 export interface TemplateEventStart extends StartEvent {
   scene: SceneStats;
-};
+}
 
 export interface TemplateEventProgress extends ProgressEvent {
   scene: SceneStats;
-};
+}
 
 export interface TemplateEventEnd extends EndEvent {
   scene: SceneStats;
-};
+}
 
 export interface TemplateEventLeave extends LeaveEvent {
   scene: SceneStats;
-};
+}
 
 export type ProjectSlide = {
   name: string;

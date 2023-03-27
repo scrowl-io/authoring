@@ -31,7 +31,7 @@ const createSlide = (
         template.content.bgImage.content.url.value = mediaUrl;
         break;
       case 'simple-video':
-        template.content.bgImage.content.url.value = mediaUrl;
+        template.content.videoAsset.content.webUrl.value = mediaUrl;
         break;
     }
   }
@@ -110,7 +110,7 @@ export const create = () => {
         1,
         'simpleVideo',
         true,
-        './5-Second_Timer.mp4'
+        'https://www.youtube.com/watch?v=Z_ppk0iQnsA'
       ),
       // createSlide('Slide 1.2', 0, 0, 1, 'simpleText'),
       createSlide('Slide 1.3', 0, 0, 2, 'simpleText'),

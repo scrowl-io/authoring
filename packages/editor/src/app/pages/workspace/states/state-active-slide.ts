@@ -41,11 +41,20 @@ export const config: stateManager.StateConfig = {
       updateObj(state.template, action.payload);
     },
     setTemplateContent: (state, action) => {
-      let pointer = typeof action.payload.field === 'string' ? action.payload.field : action.payload.field.join('.content.');
+      let pointer =
+        typeof action.payload.field === 'string'
+          ? action.payload.field
+          : action.payload.field.join('.content.');
       const value = action.payload.value;
 
       pointer += action.payload.prop ? action.payload.prop : '.value';
       setObjField(state.template.content, pointer, value);
+    },
+    setTemplateControls: (state, action) => {
+      let pointer = action.payload.field;
+      const value = action.payload.value;
+      pointer += action.payload.prop ? action.payload.prop : '.value';
+      setObjField(state.template.controlOptions, pointer, value);
     },
   },
   extraReducers: {
@@ -67,7 +76,13 @@ export const config: stateManager.StateConfig = {
 
 export const slice = createSlice(config);
 
-export const { setData, resetData, setTemplate, setTemplateContent } = slice.actions;
+export const {
+  setData,
+  resetData,
+  setTemplate,
+  setTemplateContent,
+  setTemplateControls,
+} = slice.actions;
 
 export const reducer = slice.reducer;
 

@@ -7,7 +7,7 @@ export const SimpleVideoSchema: SimpleVideoSchemaProps = {
     component: 'SimpleVideo',
     filename: 'simple-video',
     icon: 'view_week',
-    tags: ['text', 'columns'],
+    tags: ['text', 'video'],
   },
   content: {
     text: {
@@ -48,6 +48,7 @@ export const SimpleVideoSchema: SimpleVideoSchemaProps = {
       },
     },
     options: {
+      // @ts-ignore
       type: 'Fieldset',
       label: 'Options',
       content: {
@@ -76,6 +77,13 @@ export const SimpleVideoSchema: SimpleVideoSchemaProps = {
           value: true,
         },
       },
+    },
+  },
+  controlOptions: {
+    stopUserAdvancement: {
+      type: 'Checkbox',
+      label: 'Stop User Advancement',
+      value: false,
     },
   },
 };

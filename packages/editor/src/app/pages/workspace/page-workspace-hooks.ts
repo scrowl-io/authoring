@@ -134,11 +134,35 @@ export const useActiveTemplateContent = (prop?: string) => {
     if (!prop) {
       return data.activeSlide.template.content;
     }
-    
+
     if (hasProp(data.activeSlide.template.content, prop)) {
       return data.activeSlide.template.content[prop];
     } else {
-      console.warn('active template elements does not have prop', prop, data.activeSlide.template.content);
+      console.warn(
+        'active template elements does not have prop',
+        prop,
+        data.activeSlide.template.content
+      );
+      return;
+    }
+  });
+};
+
+export const useActiveTemplateControls = (prop?: string) => {
+  return useSelector((data: stateManager.RootState) => {
+    if (!prop) {
+      console.log('controls:', data.activeSlide.template.controlOptions);
+      return data.activeSlide.template.controlOptions;
+    }
+
+    if (hasProp(data.activeSlide.template.controlOptions, prop)) {
+      return data.activeSlide.template.controlOptions[prop];
+    } else {
+      console.log(
+        'active template elements does not have prop',
+        prop,
+        data.activeSlide.template.controlOptions
+      );
       return;
     }
   });
@@ -151,6 +175,15 @@ export const setActiveTemplateContent = (data) => {
   }
 
   processor.dispatch(state.activeSlide.setTemplateContent(data));
+};
+
+export const setActiveTemplateControls = (data) => {
+  if (!processor.dispatch) {
+    console.warn('workspace processor not ready');
+    return;
+  }
+
+  processor.dispatch(state.activeSlide.setTemplateControls(data));
 };
 
 export const useTemplateBrowser = () => {
@@ -175,7 +208,8 @@ export const closeTemplateBrowser = () => {
     return;
   }
 
-  const fn = state.workspace.closeTemplateBrowser as ActionCreatorWithoutPayload;
+  const fn = state.workspace
+    .closeTemplateBrowser as ActionCreatorWithoutPayload;
   processor.dispatch(fn());
 };
 
@@ -220,7 +254,8 @@ export const closePromptProjectName = () => {
     return;
   }
 
-  const fn = state.workspace.closePromptProjectName as ActionCreatorWithoutPayload;
+  const fn = state.workspace
+    .closePromptProjectName as ActionCreatorWithoutPayload;
   processor.dispatch(fn());
 };
 
@@ -236,7 +271,8 @@ export const resetPromptProjectNamePostEvent = () => {
     return;
   }
 
-  const fn = state.workspace.resetPromptProjectNamePostEvent as ActionCreatorWithoutPayload;
+  const fn = state.workspace
+    .resetPromptProjectNamePostEvent as ActionCreatorWithoutPayload;
   processor.dispatch(fn());
 };
 
@@ -262,7 +298,8 @@ export const closePublishProgress = () => {
     return;
   }
 
-  const fn = state.workspace.closePublishProgress as ActionCreatorWithoutPayload;
+  const fn = state.workspace
+    .closePublishProgress as ActionCreatorWithoutPayload;
   processor.dispatch(fn());
 };
 
@@ -278,6 +315,8 @@ export default {
   setActiveTemplate,
   useActiveTemplateContent,
   setActiveTemplateContent,
+  useActiveTemplateControls,
+  setActiveTemplateControls,
   useContentFocus,
   setContentFocus,
   resetContentFocus,
