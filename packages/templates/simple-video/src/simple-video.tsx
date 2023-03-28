@@ -2,6 +2,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import './_index.scss';
 import { SimpleVideoProps } from './simple-video.types';
 import LazyLoad from 'react-lazyload';
+import YouTube from 'react-youtube';
+import Vimeo from 'react-vimeo';
+import Dailymotion from 'react-dailymotion';
 
 const SimpleVideo = ({ id, schema, ...props }: SimpleVideoProps) => {
   const Scrowl = window['Scrowl'];
@@ -27,25 +30,23 @@ const SimpleVideo = ({ id, schema, ...props }: SimpleVideoProps) => {
   });
   // @ts-ignore
   const [videoEnded, setVideoEnded] = useState(false);
+  // const [player, setPlayer] = useState(null);
+  const videoService = useRef('');
 
-  let videoEmbedUrl;
+  let videoId;
 
   if (videoWebUrl) {
     if (videoWebUrl.includes('youtube.com')) {
-      videoEmbedUrl = videoWebUrl.replace('watch?v=', 'embed/');
+      videoService.current = 'youtube';
+      videoId = videoWebUrl.replace('https://www.youtube.com/watch?v=', '');
     }
     if (videoWebUrl.includes('vimeo.com')) {
-      videoEmbedUrl = videoWebUrl
-        .replace('vimeo', 'player.vimeo')
-        .replace('com', 'com/video');
+      videoService.current = 'vimeo';
+      videoId = videoWebUrl.replace('https://vimeo.com/', '');
     }
     if (videoWebUrl.includes('dailymotion.com')) {
-      videoEmbedUrl = videoWebUrl.replace('com', 'com/embed');
-    }
-    if (videoWebUrl.includes('ted.com/talks')) {
-      videoEmbedUrl = videoWebUrl
-        .replace('ted', 'embed.ted')
-        .replace('www.', '');
+      videoService.current = 'dailymotion';
+      videoId = videoWebUrl.replace('https://www.dailymotion.com/video/', '');
     }
   }
 
@@ -106,6 +107,41 @@ const SimpleVideo = ({ id, schema, ...props }: SimpleVideoProps) => {
   const handleVideoEnd = (ev) => {
     const videoEnded = new CustomEvent('videoEnded', { detail: ev });
     document.dispatchEvent(videoEnded);
+    console.log('custom event', videoEnded);
+  };
+
+  const onEnd = (ev) => {
+    console.log('finished');
+    handleVideoEnd(ev);
+  };
+
+  // const onStateChange = (ev) => {
+  //   switch (ev.data) {
+  //     case 0:
+
+  //       handleVideoEnd();
+  //   }
+  //   console.log('changed', ev);
+  // };
+
+  const onPause = (ev) => {
+    console.log('PAUSED', ev);
+    if (videoService.current === 'vimeo') {
+      if (ev.data.duration === ev.data.seconds) {
+        console.log('finished');
+        handleVideoEnd(ev);
+      }
+    }
+  };
+
+  // @ts-ignore
+  const opts = {
+    height: '390',
+    width: '640',
+    playerVars: {
+      // https://developers.google.com/youtube/player_parameters
+      // autoplay: 1,
+    },
   };
 
   return (
@@ -140,14 +176,39 @@ const SimpleVideo = ({ id, schema, ...props }: SimpleVideoProps) => {
             onMouseDown={handleFocusBg}
           >
             {videoWebUrl && !videoAssetUrl && (
-              <iframe
-                width="600"
-                height="337.50"
-                src={videoEmbedUrl}
-                title="Video player"
-                allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowFullScreen
-              ></iframe>
+              <div>
+                {videoId && videoService.current === 'youtube' && (
+                  <YouTube videoId={videoId} onPause={onPause} onEnd={onEnd} />
+                )}
+                {videoId && videoService.current === 'dailymotion' && (
+                  <Dailymotion
+                    onEnd={onEnd}
+                    video={videoId}
+                    autoplay={false}
+                    showQueue={false}
+                    autoplayQueue={false}
+                  />
+                )}
+                {videoId && videoService.current === 'vimeo' && (
+                  <Vimeo
+                    className="vimeo-player"
+                    autoplay={true}
+                    videoId={videoId}
+                    onEnd={onEnd}
+                    paused
+                    loop={false}
+                    onPause={onPause}
+                  />
+                )}
+              </div>
+              // <iframe
+              //   width="600"
+              //   height="337.50"
+              //   src={videoEmbedUrl}
+              //   title="Video player"
+              //   allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              //   allowFullScreen
+              // ></iframe>
             )}
 
             {videoAssetUrl && !videoWebUrl && (

@@ -111,6 +111,8 @@ export const create = () => {
         'simpleVideo',
         true,
         'https://www.youtube.com/watch?v=Z_ppk0iQnsA'
+        // 'https://www.dailymotion.com/video/x75z2pn'
+        // 'https://vimeo.com/253989945'
       ),
       // createSlide('Slide 1.2', 0, 0, 1, 'simpleText'),
       createSlide('Slide 1.3', 0, 0, 2, 'simpleText'),

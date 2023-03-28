@@ -89,6 +89,9 @@
     "@scrowl/template-core": "^1.0.96",
     "@scrowl/ui": "^0.0.37",
     "react": "^18.2.0",
-    "react-lazyload": "^3.2.0"
+    "react-dailymotion": "^0.4.1",
+    "react-lazyload": "^3.2.0",
+    "react-vimeo": "^2.0.0",
+    "react-youtube": "^10.1.0"
   }
 }
