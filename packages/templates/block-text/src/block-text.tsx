@@ -23,6 +23,7 @@ const BlockText = ({ id, schema, ...props }: BlockTextProps) => {
   };
   const alignment = schema.content.options.content.alignment.value;
   const alignmentCss = alignment === 'right' ? 'right' : 'left';
+  const disableAnimations = schema.controlOptions.disableAnimations?.value;
   const showProgressBar = schema.content.options.content.showProgress.value;
   const showProgressRef = useRef(showProgressBar);
   const slideProgress = useRef(0);
@@ -33,6 +34,8 @@ const BlockText = ({ id, schema, ...props }: BlockTextProps) => {
   if (showProgressBar) {
     classes += ' show-progress';
   }
+
+  console.log('schema: ', schema);
 
   const handleFocusText = () => {
     if (editMode) {
@@ -90,6 +93,7 @@ const BlockText = ({ id, schema, ...props }: BlockTextProps) => {
       className={classes}
       onProgress={handleSlideProgress}
       onEnd={handleSlideEnd}
+      notScene={disableAnimations ? true : false}
       {...props}
     >
       <div id={contentId} className="owlui-container">

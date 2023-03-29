@@ -19,7 +19,10 @@ const SimpleText = ({ id, schema, ...props }: SimpleTextProps) => {
     opacity: '0',
   };
   const textAnimiationDuration = 120;
-  const animations = schema.content.animateLists.value;
+  const disableAnimations = schema.controlOptions.disableAnimations?.value;
+  const animations = disableAnimations
+    ? 'none'
+    : schema.content.animateLists.value;
   const bgUrl = schema.content.bgImage.content.url.value;
   const bgLabel = schema.content.bgImage.content.alt.value || '';
   const bgFocusCss = focusElement === 'bgImage.url' && 'has-focus';
@@ -31,6 +34,8 @@ const SimpleText = ({ id, schema, ...props }: SimpleTextProps) => {
   const alignment = schema.content.options.content.alignment.value;
   const alignmentCss = alignment;
 
+  console.log('animations: ', animations);
+
   switch (animations) {
     case 'none':
       textStyles.transform = 'translateX(0%)';
@@ -40,6 +45,9 @@ const SimpleText = ({ id, schema, ...props }: SimpleTextProps) => {
 
   const textRef = useCallback((node) => {
     const createAnimation = () => {
+      if (disableAnimations) {
+        return;
+      }
       if (!node || !node.childNodes) {
         return;
       }
@@ -123,6 +131,7 @@ const SimpleText = ({ id, schema, ...props }: SimpleTextProps) => {
       id={`slide-${contentId}`}
       className={classes}
       onProgress={handleSlideProgress}
+      notScene={disableAnimations ? true : false}
       {...props}
     >
       <div id={contentId} className="owlui-container">
@@ -160,6 +169,6 @@ const SimpleText = ({ id, schema, ...props }: SimpleTextProps) => {
       </div>
     </Scrowl.core.Template>
   );
-};
+};;;;
 
 export { SimpleText as default };

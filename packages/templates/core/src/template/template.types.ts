@@ -8,6 +8,7 @@ export type TemplateSchemaContent = {
 
 export interface TemplateControlOptions {
   stopUserAdvancement: InputCheckboxProps;
+  disableAnimations?: InputCheckboxProps;
 }
 
 export type TemplateSchemaMeta = {

@@ -156,6 +156,11 @@ export const TwoColumnSchema: TwoColumnSchemaProps = {
       label: 'Stop User Advancement',
       value: false,
     },
+    disableAnimations: {
+      type: 'Checkbox',
+      label: 'Disable Animations',
+      value: true,
+    },
   },
 };
 

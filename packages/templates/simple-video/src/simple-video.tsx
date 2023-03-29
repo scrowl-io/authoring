@@ -22,7 +22,10 @@ const SimpleVideo = ({ id, schema, ...props }: SimpleVideoProps) => {
   const bgRef = useRef<HTMLDivElement>(null);
   const alignment = schema.content.options.content.alignment.value;
   const alignmentCss = alignment === 'right' ? 'right' : 'left';
-  const showProgressBar = schema.content.options.content.showProgress.value;
+  const disableAnimations = schema.controlOptions.disableAnimations?.value;
+  const showProgressBar = disableAnimations
+    ? false
+    : schema.content.options.content.showProgress.value;
   const showProgressRef = useRef(showProgressBar);
   const slideProgress = useRef(0);
   const [progressBarStyles, setProgressBarStyles] = useState({
@@ -73,6 +76,9 @@ const SimpleVideo = ({ id, schema, ...props }: SimpleVideoProps) => {
   };
 
   const handleSlideProgress = (ev) => {
+    if (disableAnimations) {
+      return;
+    }
     slideProgress.current = ev.progress;
 
     if (showProgressRef.current) {
@@ -84,6 +90,9 @@ const SimpleVideo = ({ id, schema, ...props }: SimpleVideoProps) => {
   };
 
   const handleSlideEnd = () => {
+    if (disableAnimations) {
+      return;
+    }
     slideProgress.current = 100;
 
     if (!showProgressRef.current) {
@@ -150,6 +159,7 @@ const SimpleVideo = ({ id, schema, ...props }: SimpleVideoProps) => {
       className={classes}
       onProgress={handleSlideProgress}
       onEnd={handleSlideEnd}
+      notScene={disableAnimations ? true : false}
       {...props}
     >
       <div id={contentId} className="owlui-container">
