@@ -90,7 +90,7 @@ export const SimpleTextSchema: SimpleTextSchemaProps = {
     },
     disableAnimations: {
       type: 'Checkbox',
-      label: 'Stop User Advancement',
+      label: 'Disable Animations',
       value: true,
     },
   },

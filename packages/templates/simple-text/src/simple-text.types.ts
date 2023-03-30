@@ -6,8 +6,8 @@ import {
   InputFieldsetProps,
   InputSelectProps,
   InputAssetProps,
-  TemplateControlOptions,
 } from '@scrowl/template-core';
+import { TemplateSchema } from '@scrowl/template-core';
 
 export interface SimpleTextContentBgImage extends InputFieldsetProps {
   content: {
@@ -22,7 +22,7 @@ export interface SimpleTextContentOptions extends InputFieldsetProps {
   };
 }
 
-export type SimpleTextSchemaProps = {
+export interface SimpleTextSchemaProps extends TemplateSchema {
   meta: TemplateSchemaMeta;
   content: {
     text: InputTextboxProps;
@@ -30,7 +30,6 @@ export type SimpleTextSchemaProps = {
     options: SimpleTextContentOptions;
     animateLists?: any;
   };
-  controlOptions: TemplateControlOptions;
 };
 
 export interface SimpleTextCommons extends TemplateCommons {

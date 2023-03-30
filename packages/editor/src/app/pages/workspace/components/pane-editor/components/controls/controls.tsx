@@ -14,7 +14,7 @@ export const Controls = () => {
   const isDirty = useRef(false);
   const isUncommitted = useRef(false);
   const processCommit = useRef(false);
-  const templateContent = useActiveTemplateControls();
+  const templateControls = useActiveTemplateControls();
   const activeSlide = useActiveSlide();
 
   const handleContentUpdate = (field, value, prop?: string) => {
@@ -52,7 +52,7 @@ export const Controls = () => {
   return (
     <div className={css.contentForm}>
       <FormBuilder
-        content={templateContent}
+        content={templateControls}
         onChange={handleContentUpdate}
         onValidate={handleContentValidate}
         onFocus={handleContentFocus}

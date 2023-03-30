@@ -35,8 +35,6 @@ const BlockText = ({ id, schema, ...props }: BlockTextProps) => {
     classes += ' show-progress';
   }
 
-  console.log('schema: ', schema);
-
   const handleFocusText = () => {
     if (editMode) {
       Scrowl.core.host.sendMessage({

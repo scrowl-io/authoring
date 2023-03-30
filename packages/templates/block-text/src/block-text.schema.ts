@@ -43,6 +43,7 @@ export const BlockTextSchema: BlockTextSchemaProps = {
       },
     },
     options: {
+      //@ts-ignore
       type: 'Fieldset',
       label: 'Options',
       content: {

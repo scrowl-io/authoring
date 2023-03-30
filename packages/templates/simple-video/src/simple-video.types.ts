@@ -7,7 +7,7 @@ import {
   InputSelectProps,
   InputCheckboxProps,
   InputAssetProps,
-  TemplateControlOptions,
+  TemplateSchema,
 } from '@scrowl/template-core';
 
 export type {
@@ -18,7 +18,6 @@ export type {
   InputSelectProps,
   InputCheckboxProps,
   InputAssetProps,
-  TemplateControlOptions,
 };
 
 export interface VideoAsset extends InputFieldsetProps {
@@ -36,14 +35,13 @@ export interface SimpleVideoContentOptions extends InputFieldsetProps {
   };
 }
 
-export type SimpleVideoSchemaProps = {
+export interface SimpleVideoSchemaProps extends TemplateSchema {
   meta: TemplateSchemaMeta;
   content: {
     text: InputTextboxProps;
     videoAsset: VideoAsset;
     options: SimpleVideoContentOptions;
   };
-  controlOptions: TemplateControlOptions;
 };
 
 export interface SimpleVideoCommons extends TemplateCommons {

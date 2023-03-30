@@ -17,6 +17,7 @@ export const initialState = {
       version: '',
     },
     content: {},
+    controlOptions: {},
   },
   notes: '',
 };
@@ -51,7 +52,10 @@ export const config: stateManager.StateConfig = {
       setObjField(state.template.content, pointer, value);
     },
     setTemplateControls: (state, action) => {
-      let pointer = action.payload.field;
+      let pointer =
+        typeof action.payload.field === 'string'
+          ? action.payload.field
+          : action.payload.field.join('.controlOptions.');
       const value = action.payload.value;
       pointer += action.payload.prop ? action.payload.prop : '.value';
       setObjField(state.template.controlOptions, pointer, value);

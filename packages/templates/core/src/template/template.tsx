@@ -105,6 +105,8 @@ export const Template = ({
         duration,
       });
 
+      console.log('SCENE: ', scene);
+
       const reCalcStats = () => {
         if (!slideRef.current || !triggerRef.current || !sceneRef.current) {
           return;
@@ -353,7 +355,7 @@ export const Template = ({
         isReady.current = false;
       }
     };
-  }, [windowSize, duration, isReady.current, triggerRef.current]);
+  }, [windowSize, duration, isReady.current, triggerRef.current, isNotScene]);
 
   useEffect(() => {
     const handleStart = (ev) => {

@@ -34,8 +34,6 @@ const SimpleText = ({ id, schema, ...props }: SimpleTextProps) => {
   const alignment = schema.content.options.content.alignment.value;
   const alignmentCss = alignment;
 
-  console.log('animations: ', animations);
-
   switch (animations) {
     case 'none':
       textStyles.transform = 'translateX(0%)';
