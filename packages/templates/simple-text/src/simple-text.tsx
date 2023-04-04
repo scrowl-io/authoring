@@ -20,9 +20,7 @@ const SimpleText = ({ id, schema, ...props }: SimpleTextProps) => {
   };
   const textAnimiationDuration = 120;
   const disableAnimations = schema.controlOptions.disableAnimations?.value;
-  const animations = disableAnimations
-    ? 'none'
-    : schema.content.animateLists.value;
+  const animations = schema.content.animateLists.value;
   const bgUrl = schema.content.bgImage.content.url.value;
   const bgLabel = schema.content.bgImage.content.alt.value || '';
   const bgFocusCss = focusElement === 'bgImage.url' && 'has-focus';
@@ -34,60 +32,57 @@ const SimpleText = ({ id, schema, ...props }: SimpleTextProps) => {
   const alignment = schema.content.options.content.alignment.value;
   const alignmentCss = alignment;
 
-  switch (animations) {
-    case 'none':
-      textStyles.transform = 'translateX(0%)';
-      textStyles.opacity = '1';
-      break;
+  if (animations === 'none' || disableAnimations) {
+    textStyles.transform = 'translateX(0%)';
+    textStyles.opacity = '1';
   }
-
-  const textRef = useCallback((node) => {
-    const createAnimation = () => {
-      if (disableAnimations) {
-        return;
-      }
-      if (!node || !node.childNodes) {
-        return;
-      }
-
-      const initialTextStyles = Object.keys(textStyles);
-      const nodeList: Array<HTMLElement> = [];
-
-      node.childNodes.forEach((child) => {
-        const node = child as HTMLElement;
-
-        if (!node || !node.style) {
+  const textRef = useCallback(
+    (node) => {
+      const createAnimation = () => {
+        if (!node || !node.childNodes) {
           return;
         }
 
-        initialTextStyles.forEach((prop) => {
-          node.style[prop] = textStyles[prop];
+        const initialTextStyles = Object.keys(textStyles);
+        const nodeList: Array<HTMLElement> = [];
+
+        node.childNodes.forEach((child) => {
+          const node = child as HTMLElement;
+
+          if (!node || !node.style) {
+            return;
+          }
+
+          initialTextStyles.forEach((prop) => {
+            node.style[prop] = textStyles[prop];
+          });
+
+          nodeList.push(node);
         });
 
-        nodeList.push(node);
-      });
+        switch (animations) {
+          case 'all':
+            textAnimation.current = Anime({
+              targets: nodeList,
+              autoplay: false,
+              easing: 'easeInOutQuad',
+              opacity: '1',
+              translateX: '0',
+              duration: textAnimiationDuration,
+            });
+            break;
+          case 'none':
+            if (textAnimation) {
+              textAnimation.current.remove(nodeList);
+            }
+            break;
+        }
+      };
 
-      switch (animations) {
-        case 'all':
-          textAnimation.current = Anime({
-            targets: nodeList,
-            autoplay: false,
-            easing: 'easeInOutQuad',
-            opacity: '1',
-            translateX: '0',
-            duration: textAnimiationDuration,
-          });
-          break;
-        case 'none':
-          if (textAnimation) {
-            textAnimation.current.remove(nodeList);
-          }
-          break;
-      }
-    };
-
-    createAnimation();
-  }, []);
+      createAnimation();
+    },
+    [disableAnimations]
+  );
 
   const handleFocusText = () => {
     if (editMode) {
@@ -109,14 +104,9 @@ const SimpleText = ({ id, schema, ...props }: SimpleTextProps) => {
 
   const handleSlideProgress = (ev) => {
     const updateTextAnimation = () => {
-      if (animations === 'none') {
-        return;
-      }
-
       if (textAnimation.current && ev.scene.progress >= 0) {
         const seekValue =
           textAnimiationDuration * 2 * (ev.scene.progress / 100);
-
         textAnimation.current.seek(seekValue);
       }
     };
@@ -167,6 +157,6 @@ const SimpleText = ({ id, schema, ...props }: SimpleTextProps) => {
       </div>
     </Scrowl.core.Template>
   );
-};;;;
+};
 
 export { SimpleText as default };
