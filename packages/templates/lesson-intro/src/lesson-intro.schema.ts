@@ -75,6 +75,11 @@ export const LessonIntroSchema: LessonIntroSchemaProps = {
       label: 'Stop User Advancement',
       value: false,
     },
+    disableAnimations: {
+      type: 'Checkbox',
+      label: 'Disable Animations',
+      value: true,
+    },
   },
 };
 
