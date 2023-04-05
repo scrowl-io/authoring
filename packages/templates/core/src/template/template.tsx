@@ -373,7 +373,7 @@ export const Template = ({
         const nextTarget = document.querySelector(`#${targetIndex}`);
 
         nextTarget?.scrollIntoView();
-      }, 100);
+      }, 250);
     };
     document.addEventListener('startCourse', handleStart);
   }, []);

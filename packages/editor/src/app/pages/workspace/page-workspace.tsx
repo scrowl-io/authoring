@@ -34,6 +34,7 @@ export const openProject = (project: Projects.ProjectMeta) => {
     resetActiveSlide();
 
     setTimeout(() => {
+      Projects.setAssets(res.data.file.assets);
       Projects.setData(res.data.project);
     }, 1);
   });
