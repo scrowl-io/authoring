@@ -211,14 +211,6 @@ const SimpleVideo = ({ id, schema, ...props }: SimpleVideoProps) => {
                   />
                 )}
               </div>
-              // <iframe
-              //   width="600"
-              //   height="337.50"
-              //   src={videoEmbedUrl}
-              //   title="Video player"
-              //   allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              //   allowFullScreen
-              // ></iframe>
             )}
 
             {videoAssetUrl && !videoWebUrl && (
