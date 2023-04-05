@@ -7,12 +7,12 @@ export const SimpleVideoSchema: SimpleVideoSchemaProps = {
     component: 'SimpleVideo',
     filename: 'simple-video',
     icon: 'view_week',
-    tags: ['text', 'columns'],
+    tags: ['text', 'video'],
   },
   content: {
     text: {
       type: 'Textbox',
-      label: 'Block Text',
+      label: 'Video Text',
       value:
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
       placeholder: 'Write content here...',
@@ -21,28 +21,34 @@ export const SimpleVideoSchema: SimpleVideoSchemaProps = {
       autoGrow: 10,
       allowLinebreaks: true,
     },
-    bgImage: {
+    videoAsset: {
       type: 'Fieldset',
-      label: 'Background Image',
+      label: 'Video',
       content: {
         alt: {
           type: 'Textbox',
           label: 'Alt Text',
           placeholder: 'Image alt text',
         },
-        url: {
+        assetUrl: {
           type: 'Asset',
           assetTypes: ['video'],
-          label: 'Image',
+          label: 'Video',
         },
-        bg: {
-          type: 'Checkbox',
-          label: 'Use as Background',
-          value: false,
+        webUrl: {
+          type: 'Textbox',
+          label: 'Embed URL',
+          placeholder: 'Embed URL',
+          // value:
+          //   'https://www.ted.com/talks/pia_mancini_how_to_upgrade_democracy_for_the_internet_era',
+          // value: 'https://www.dailymotion.com/video/x873541',
+          // value: 'https://vimeo.com/253989945',
+          // value: 'https://www.youtube.com/watch?v=Z_ppk0iQnsA',
         },
       },
     },
     options: {
+      // @ts-ignore
       type: 'Fieldset',
       label: 'Options',
       content: {
@@ -71,6 +77,18 @@ export const SimpleVideoSchema: SimpleVideoSchemaProps = {
           value: true,
         },
       },
+    },
+  },
+  controlOptions: {
+    stopUserAdvancement: {
+      type: 'Checkbox',
+      label: 'Stop User Advancement',
+      value: false,
+    },
+    disableAnimations: {
+      type: 'Checkbox',
+      label: 'Disable Animations',
+      value: true,
     },
   },
 };

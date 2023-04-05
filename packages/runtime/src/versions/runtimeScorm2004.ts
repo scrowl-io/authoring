@@ -304,11 +304,6 @@ export const service: RUNTIME_SERVICE = {
       };
       service.setValue('cmi.location', JSON.stringify(startLocation));
     } else {
-      // service.setValue(
-      //   'cmi.score.scaled',
-      //   service.getValue('cmi.score.scaled')[1]
-      // );
-      // service.setValue('cmi.score.raw', service.getValue('cmi.score.raw')[1]);
       service.setValue(
         'cmi.success_status',
         service.getValue('cmi.success_status')[1]

@@ -24,7 +24,7 @@ const App = () => {
         <Suspense fallback={<div>Loading...</div>}>
           <SimpleVideo
             editMode={true}
-            id="template-two-columns"
+            id="template-simple-video"
             controller={controller}
             schema={schema}
           />

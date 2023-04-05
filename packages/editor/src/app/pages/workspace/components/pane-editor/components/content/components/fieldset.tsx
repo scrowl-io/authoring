@@ -15,6 +15,7 @@ export const Fieldset = ({
   onFocus,
   onBlur,
   content,
+  disableFlag,
   ...props
 }: InputFieldsetProps) => {
   const fields = Object.keys(content);
@@ -58,6 +59,7 @@ export const Fieldset = ({
               onValidate={handleFieldOnValidate}
               onBlur={handleFieldOnBlur}
               onFocus={handleFieldOnFocus}
+              disableFlag={disableFlag}
             />
           );
         })}

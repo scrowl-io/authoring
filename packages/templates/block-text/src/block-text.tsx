@@ -23,6 +23,7 @@ const BlockText = ({ id, schema, ...props }: BlockTextProps) => {
   };
   const alignment = schema.content.options.content.alignment.value;
   const alignmentCss = alignment === 'right' ? 'right' : 'left';
+  const disableAnimations = schema.controlOptions.disableAnimations?.value;
   const showProgressBar = schema.content.options.content.showProgress.value;
   const showProgressRef = useRef(showProgressBar);
   const slideProgress = useRef(0);
@@ -90,6 +91,7 @@ const BlockText = ({ id, schema, ...props }: BlockTextProps) => {
       className={classes}
       onProgress={handleSlideProgress}
       onEnd={handleSlideEnd}
+      notScene={disableAnimations ? true : false}
       {...props}
     >
       <div id={contentId} className="owlui-container">
@@ -120,12 +122,7 @@ const BlockText = ({ id, schema, ...props }: BlockTextProps) => {
           onMouseDown={handleFocusBg}
         >
           <LazyLoad>
-            <img
-              className="img__container"
-              aria-label={bgLabel}
-              // style={bgStyles}
-              src={bgUrl}
-            />
+            <img className="img__container" aria-label={bgLabel} src={bgUrl} />
           </LazyLoad>
         </div>
       )}

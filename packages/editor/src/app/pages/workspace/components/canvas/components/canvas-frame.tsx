@@ -18,6 +18,8 @@ export const CanvasFrame = () => {
   const prevslideId = useRef(-1);
   const prevSlideTemplate = useRef('');
   const prevContent = useRef(data.template.content);
+  const prevControlOptions = useRef(data.template.controlOptions);
+
   const frameRef = useRef<HTMLIFrameElement>(null);
   const isLoaded = Projects.useInteractions().isLoaded;
   const contentFocus = useContentFocus();
@@ -94,19 +96,22 @@ export const CanvasFrame = () => {
 
     if (!hasSlideChanged && !hasTemplateChanged) {
       const hasContentChanged = data.template.content !== prevContent.current;
+      const hasControlOptionsChanged =
+        data.template.controlOptions !== prevControlOptions.current;
 
-      if (hasContentChanged) {
+      if (hasContentChanged || hasControlOptionsChanged) {
         const channel = new MessageChannel();
 
         channel.port1.onmessage = handleFrameMessage;
 
         if (isConnected && frameRef.current) {
           frameRef.current.contentWindow?.postMessage(
-            { type: 'update', data: data.template.content },
+            { type: 'update', data: data.template },
             '*',
             [channel.port2]
           );
           prevContent.current = data.template.content;
+          prevControlOptions.current = data.template.controlOptions;
         }
       }
       return;
@@ -115,6 +120,7 @@ export const CanvasFrame = () => {
     prevslideId.current = slideId;
     prevSlideTemplate.current = slideTemplate;
     prevContent.current = data.template.content;
+    prevControlOptions.current = data.template.controlOptions;
     resetContentFocus();
     Templates.load(data.template).then(updateFrameUrl);
     return;

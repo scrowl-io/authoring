@@ -43,7 +43,13 @@
     &__wrapper {
       display: flex;
       justify-content: center;
-      // position: absolute;
+
+      .vimeo-player {
+        iframe {
+          width: 70vw;
+          height: 40vh;
+        }
+      }
     }
 
     &__container {

@@ -71,10 +71,16 @@ export const load = (ev: rq.RequestEvent, template: TemplateSchema) => {
           return src.indexOf('.hbs') === -1;
         },
       };
-      const templatePath = fs.joinPath(TEMPLATE_PATHS.templates, template.meta.filename);
+      const templatePath = fs.joinPath(
+        TEMPLATE_PATHS.templates,
+        template.meta.filename
+      );
       const canvasJsSrc = fs.joinPath(TEMPLATE_PATHS.project, 'canvas.js.hbs');
       const canvasJsDest = fs.joinPath(TEMPLATE_PATHS.working, 'index.js');
-      const canvasHtmlSrc = fs.joinPath(TEMPLATE_PATHS.project, 'canvas.html.hbs');;
+      const canvasHtmlSrc = fs.joinPath(
+        TEMPLATE_PATHS.project,
+        'canvas.html.hbs'
+      );
       const canvasHtmlDest = fs.joinPath(TEMPLATE_PATHS.working, 'index.html');
       const renderData = {
         canvasJs: `./index.js?ver=${cacheBreaker}`,
@@ -82,6 +88,7 @@ export const load = (ev: rq.RequestEvent, template: TemplateSchema) => {
         templateCss: `./scrowl.template-${template.meta.filename}.css?ver=${cacheBreaker}`,
         templateComponent: template.meta.component,
         templateContent: JSON.stringify(template.content),
+        templateControls: JSON.stringify(template.controlOptions),
       };
 
       fs.copy(TEMPLATE_PATHS.project, TEMPLATE_PATHS.working, projectCopyOpts).then((copyProjectFilesRes) => {

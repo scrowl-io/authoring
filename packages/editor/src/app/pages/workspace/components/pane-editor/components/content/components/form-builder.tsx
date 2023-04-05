@@ -29,7 +29,10 @@ export const FormBuilder = ({
   ...props
 }: FormBuilderProps) => {
   let classes = '';
-  const fields = Object.keys(content);
+  let fields;
+  if (content) {
+    fields = Object.keys(content);
+  }
 
   if (className) {
     classes += ` ${className}`;
@@ -37,37 +40,56 @@ export const FormBuilder = ({
 
   return (
     <form className={classes} {...props}>
-      {fields.map((field, idx) => {
-        const fieldContent: InputProps = content[field];
+      {fields
+        ? fields.map((field, idx) => {
+            const fieldContent: InputProps = content[field];
 
-        switch (fieldContent.type) {
-          case 'Fieldset':
-            return (
-              <InputFactory
-                key={idx}
-                field={field}
-                content={fieldContent}
-                onChange={onChange}
-                onValidate={onValidate}
-                onBlur={onBlur}
-                onFocus={onFocus}
-              />
-            );
-          default:
-            return (
-              <div key={idx} className="row mb-1">
-                <InputFactory
-                  field={field}
-                  content={fieldContent}
-                  onChange={onChange}
-                  onValidate={onValidate}
-                  onBlur={onBlur}
-                  onFocus={onFocus}
-                />
-              </div>
-            );
-        }
-      })}
+            let disableFlag;
+
+            if (
+              content &&
+              content.videoAsset &&
+              content.videoAsset.content.webUrl.value
+            ) {
+              disableFlag = 'assetUrl';
+            } else if (
+              content &&
+              content.videoAsset &&
+              content.videoAsset.content.assetUrl.value
+            ) {
+              disableFlag = 'webUrl';
+            }
+
+            switch (fieldContent.type) {
+              case 'Fieldset':
+                return (
+                  <InputFactory
+                    key={idx}
+                    field={field}
+                    content={fieldContent}
+                    onChange={onChange}
+                    onValidate={onValidate}
+                    onBlur={onBlur}
+                    onFocus={onFocus}
+                    disableFlag={disableFlag}
+                  />
+                );
+              default:
+                return (
+                  <div key={idx} className="row mb-1">
+                    <InputFactory
+                      field={field}
+                      content={fieldContent}
+                      onChange={onChange}
+                      onValidate={onValidate}
+                      onBlur={onBlur}
+                      onFocus={onFocus}
+                    />
+                  </div>
+                );
+            }
+          })
+        : null}
     </form>
   );
 };

@@ -68,7 +68,6 @@ export const Template = ({
   });
 
   useEffect(() => {
-    let sceneTrigger: Scene;
     let scene: Scene;
 
     if (!Scrowl || !Scrowl.runtime || Scrowl.runtime.API === null) {
@@ -347,13 +346,13 @@ export const Template = ({
     createScene();
 
     return () => {
-      if (sceneTrigger) {
-        sceneTrigger.destroy(true);
-        controller.removeScene(sceneTrigger);
+      if (scene) {
+        scene.destroy(true);
+        controller.removeScene(scene);
         isReady.current = false;
       }
     };
-  }, [windowSize, duration, isReady.current, triggerRef.current]);
+  }, [windowSize, duration, isReady.current, triggerRef.current, isNotScene]);
 
   useEffect(() => {
     const handleStart = (ev) => {
@@ -390,9 +389,7 @@ export const Template = ({
     <div ref={slideRef} className={classes} {...props}>
       <div ref={triggerRef} className="scene-trigger"></div>
       <div ref={sceneRef} className="inner-content">
-        {/* <LazyLoad offset={1500}> */}
         {children}
-        {/* </LazyLoad> */}
       </div>
     </div>
   );

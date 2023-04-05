@@ -3,27 +3,29 @@ import * as css from '../../_pane-editor.scss';
 import { Projects } from '../../../../../../models';
 import {
   useActiveSlide,
-  useActiveTemplateContent,
-  setActiveTemplateContent,
+  useActiveTemplateControls,
+  setActiveTemplateControls,
   setContentFocus,
   resetContentFocus,
 } from '../../../../page-workspace-hooks';
-import { FormBuilder } from './components';
+import { FormBuilder } from '../content/components';
 
-export const Content = () => {
+export const Controls = () => {
   const isDirty = useRef(false);
   const isUncommitted = useRef(false);
   const processCommit = useRef(false);
-  const templateContent = useActiveTemplateContent();
+  const templateControls = useActiveTemplateControls();
   const activeSlide = useActiveSlide();
 
   const handleContentUpdate = (field, value, prop?: string) => {
-    setActiveTemplateContent({ field, value, prop });
+    setActiveTemplateControls({ field, value, prop });
     isDirty.current = true;
     isUncommitted.current = true;
   };
 
-  const handleContentValidate = (field, value) => {};
+  const handleContentValidate = (field, value) => {
+    // placeholder
+  };
 
   const handleContentFocus = (field, value) => {
     const focusField = Array.isArray(field) ? field.join('.') : field;
@@ -50,7 +52,7 @@ export const Content = () => {
   return (
     <div className={css.contentForm}>
       <FormBuilder
-        content={templateContent}
+        content={templateControls}
         onChange={handleContentUpdate}
         onValidate={handleContentValidate}
         onFocus={handleContentFocus}
@@ -62,5 +64,5 @@ export const Content = () => {
 };
 
 export default {
-  Content,
+  Controls,
 };

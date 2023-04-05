@@ -10,13 +10,14 @@ class App extends React.Component {
       connected: false,
       focusElement: '',
       schema: {
-        content: {{{data.templateContent}}}
+        content: {{{data.templateContent}}},
+        controlOptions: {{{data.templateControls}}}
       }
     };
     this.onMessage = this.onMessage.bind(this);
   }
   setSchema = (data) => {
-    this.setState({ schema: { content: data } });
+    this.setState({ schema: { content: data.content, controlOptions: data.controlOptions } });
   }
   setConnection = (data) => {
     this.setState({ connected: data });

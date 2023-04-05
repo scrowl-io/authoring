@@ -2,6 +2,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import './_index.scss';
 import { SimpleVideoProps } from './simple-video.types';
 import LazyLoad from 'react-lazyload';
+import YouTube from 'react-youtube';
+import Vimeo from 'react-vimeo';
+import Dailymotion from 'react-dailymotion';
 
 const SimpleVideo = ({ id, schema, ...props }: SimpleVideoProps) => {
   const Scrowl = window['Scrowl'];
@@ -12,14 +15,17 @@ const SimpleVideo = ({ id, schema, ...props }: SimpleVideoProps) => {
   const contentId = `${id}-simple-video`;
   const text = schema.content.text.value;
   const textFocusCss = focusElement === 'text' && 'has-focus';
-  const bg = schema.content.bgImage.content.bg.value;
-  const bgUrl = schema.content.bgImage.content.url.value;
-  const bgLabel = schema.content.bgImage.content.alt.value || '';
-  const bgFocusCss = focusElement === 'bgImage.url' && 'has-focus';
+  const videoAssetUrl = schema.content.videoAsset.content.assetUrl?.value;
+  const videoWebUrl = schema.content.videoAsset.content.webUrl?.value;
+  const bgLabel = schema.content.videoAsset.content.alt.value || '';
+  const bgFocusCss = focusElement === 'videoAsset.url' && 'has-focus';
   const bgRef = useRef<HTMLDivElement>(null);
   const alignment = schema.content.options.content.alignment.value;
   const alignmentCss = alignment === 'right' ? 'right' : 'left';
-  const showProgressBar = schema.content.options.content.showProgress.value;
+  const disableAnimations = schema.controlOptions.disableAnimations?.value;
+  const showProgressBar = disableAnimations
+    ? false
+    : schema.content.options.content.showProgress.value;
   const showProgressRef = useRef(showProgressBar);
   const slideProgress = useRef(0);
   const [progressBarStyles, setProgressBarStyles] = useState({
@@ -27,6 +33,25 @@ const SimpleVideo = ({ id, schema, ...props }: SimpleVideoProps) => {
   });
   // @ts-ignore
   const [videoEnded, setVideoEnded] = useState(false);
+  // const [player, setPlayer] = useState(null);
+  const videoService = useRef('');
+
+  let videoId;
+
+  if (videoWebUrl) {
+    if (videoWebUrl.includes('youtube.com')) {
+      videoService.current = 'youtube';
+      videoId = videoWebUrl.replace('https://www.youtube.com/watch?v=', '');
+    }
+    if (videoWebUrl.includes('vimeo.com')) {
+      videoService.current = 'vimeo';
+      videoId = videoWebUrl.replace('https://vimeo.com/', '');
+    }
+    if (videoWebUrl.includes('dailymotion.com')) {
+      videoService.current = 'dailymotion';
+      videoId = videoWebUrl.replace('https://www.dailymotion.com/video/', '');
+    }
+  }
 
   if (showProgressBar) {
     classes += ' show-progress';
@@ -51,6 +76,9 @@ const SimpleVideo = ({ id, schema, ...props }: SimpleVideoProps) => {
   };
 
   const handleSlideProgress = (ev) => {
+    if (disableAnimations) {
+      return;
+    }
     slideProgress.current = ev.progress;
 
     if (showProgressRef.current) {
@@ -62,6 +90,9 @@ const SimpleVideo = ({ id, schema, ...props }: SimpleVideoProps) => {
   };
 
   const handleSlideEnd = () => {
+    if (disableAnimations) {
+      return;
+    }
     slideProgress.current = 100;
 
     if (!showProgressRef.current) {
@@ -85,6 +116,41 @@ const SimpleVideo = ({ id, schema, ...props }: SimpleVideoProps) => {
   const handleVideoEnd = (ev) => {
     const videoEnded = new CustomEvent('videoEnded', { detail: ev });
     document.dispatchEvent(videoEnded);
+    console.log('custom event', videoEnded);
+  };
+
+  const onEnd = (ev) => {
+    console.log('finished');
+    handleVideoEnd(ev);
+  };
+
+  // const onStateChange = (ev) => {
+  //   switch (ev.data) {
+  //     case 0:
+
+  //       handleVideoEnd();
+  //   }
+  //   console.log('changed', ev);
+  // };
+
+  const onPause = (ev) => {
+    console.log('PAUSED', ev);
+    if (videoService.current === 'vimeo') {
+      if (ev.data.duration === ev.data.seconds) {
+        console.log('finished');
+        handleVideoEnd(ev);
+      }
+    }
+  };
+
+  // @ts-ignore
+  const opts = {
+    height: '390',
+    width: '640',
+    playerVars: {
+      // https://developers.google.com/youtube/player_parameters
+      // autoplay: 1,
+    },
   };
 
   return (
@@ -93,12 +159,11 @@ const SimpleVideo = ({ id, schema, ...props }: SimpleVideoProps) => {
       className={classes}
       onProgress={handleSlideProgress}
       onEnd={handleSlideEnd}
+      notScene={disableAnimations ? true : false}
       {...props}
     >
       <div id={contentId} className="owlui-container">
         <div className={`owlui-row ${alignmentCss}`}>
-          {bg && <div className="owlui-col overlay" />}
-
           <div className={`owlui-col text__wrapper`}>
             <div className="text__container">
               <div className="progress-indictor">
@@ -113,24 +178,53 @@ const SimpleVideo = ({ id, schema, ...props }: SimpleVideoProps) => {
             </div>
           </div>
         </div>
-        {(bgUrl || editMode) && (
+
+        {(videoAssetUrl || videoWebUrl) && (
           <div
             ref={bgRef}
-            className={`video__wrapper ${alignmentCss} can-focus ${bgFocusCss} ${
-              bg ? 'as-bg' : 'as-side'
-            }`}
+            className={`video__wrapper ${alignmentCss} can-focus ${bgFocusCss} ${'as-side'}`}
             onMouseDown={handleFocusBg}
           >
-            <LazyLoad offset={250}>
-              <video
-                controls
-                onEnded={handleVideoEnd}
-                className="video__container"
-                aria-label={bgLabel}
-              >
-                <source src={bgUrl} />
-              </video>
-            </LazyLoad>
+            {videoWebUrl && !videoAssetUrl && (
+              <div>
+                {videoId && videoService.current === 'youtube' && (
+                  <YouTube videoId={videoId} onPause={onPause} onEnd={onEnd} />
+                )}
+                {videoId && videoService.current === 'dailymotion' && (
+                  <Dailymotion
+                    onEnd={onEnd}
+                    video={videoId}
+                    autoplay={false}
+                    showQueue={false}
+                    autoplayQueue={false}
+                  />
+                )}
+                {videoId && videoService.current === 'vimeo' && (
+                  <Vimeo
+                    className="vimeo-player"
+                    autoplay={true}
+                    videoId={videoId}
+                    onEnd={onEnd}
+                    paused
+                    loop={false}
+                    onPause={onPause}
+                  />
+                )}
+              </div>
+            )}
+
+            {videoAssetUrl && !videoWebUrl && (
+              <LazyLoad offset={250}>
+                <video
+                  controls
+                  onEnded={handleVideoEnd}
+                  className="video__container"
+                  aria-label={bgLabel}
+                >
+                  <source src={videoAssetUrl} />
+                </video>
+              </LazyLoad>
+            )}
           </div>
         )}
       </div>

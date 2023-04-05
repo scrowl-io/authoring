@@ -17,6 +17,7 @@ export const InputFactory = ({
   onValidate,
   onBlur,
   onFocus,
+  disableFlag,
 }: InputFactoryProps) => {
   switch (content.type) {
     case 'Asset':
@@ -28,6 +29,7 @@ export const InputFactory = ({
           onValidate={onValidate}
           onBlur={onBlur}
           onFocus={onFocus}
+          disabled={disableFlag === 'assetUrl' ? true : false}
         />
       );
     case 'Checkbox':
@@ -61,6 +63,7 @@ export const InputFactory = ({
           onValidate={onValidate}
           onBlur={onBlur}
           onFocus={onFocus}
+          disableFlag={disableFlag}
         />
       );
     case 'NumberSpinner':
@@ -94,6 +97,11 @@ export const InputFactory = ({
           onValidate={onValidate}
           onBlur={onBlur}
           onFocus={onFocus}
+          disabled={
+            disableFlag === 'webUrl' && content.label === 'Embed URL'
+              ? true
+              : false
+          }
         />
       );
     default:

@@ -36,9 +36,6 @@ export const make = () => {
   goodLuck.template.content.text.value = `# Good Luck & See You Later`;
   goodLuck.template.content.options.content.alignment.value = 'center';
 
-  // see you later
-  // beach bg
-
   project.slides.push(
     getStarted,
     loveDogs,

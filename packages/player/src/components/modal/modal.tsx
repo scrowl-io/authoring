@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, ThemeProvider } from 'react-bootstrap';
 import { ui } from '@scrowl/ui';
-// import { translateError } from '../../services/error-message';
 
 import * as _css from './_modal.scss';
 import utils, { CssMapProps } from '../../utils';
@@ -13,11 +12,6 @@ export const ErrorModal = () => {
   const [modalErrorId, setModalErrorId] = useState('');
   const [modalError, setModalError] = useState('');
   const [modalErrorStack, setModalErrorStack] = useState('');
-  // const [modalError, setModalError] = useState({
-  //   id: '',
-  //   message: '',
-  //   stack: '',
-  // });
 
   const themePrefixes: CssMapProps = {};
 
@@ -30,7 +24,6 @@ export const ErrorModal = () => {
   themePrefixes['modal-dialog'] = 'owlui-modal-dialog';
   themePrefixes['modal-body'] = 'owlui-modal-body';
   themePrefixes['modal-header'] = 'owlui-modal-header';
-  // themePrefixes['modal-footer'] = 'owlui-modal-footer';
   themePrefixes['modal-content'] = 'owlui-modal-content';
   themePrefixes['modal-title'] = 'owlui-modal-title';
 
@@ -95,7 +88,6 @@ export const ErrorModal = () => {
   if (showModal) {
     return (
       <ThemeProvider prefixes={themePrefixes}>
-        {/* <Modal className={css.modalContainer}> */}
         <div className={css.darkBackground} onClick={toggleModal} />
         <div className={css.modalContainer}>
           <Modal.Dialog className={css.modalDialog}>
@@ -117,8 +109,6 @@ export const ErrorModal = () => {
             </Modal.Footer>
           </Modal.Dialog>
         </div>
-
-        {/* </Modal> */}
       </ThemeProvider>
     );
   } else {
