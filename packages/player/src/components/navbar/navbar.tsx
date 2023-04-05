@@ -30,7 +30,6 @@ export const NavBar = ({ pageId, project, slides }) => {
   themePrefixes['tab-pane'] = `owlui-tab-pane`;
   themePrefixes['tab-content'] = `owlui-tab-content`;
   themePrefixes['offcanvas'] = `owlui-offcanvas`;
-  // themePrefixes['offcanvas-body'] = `owlui-offcanvas-body`;
   themePrefixes['container'] = `owlui-container`;
 
   let currentSlide = `module-${slides[0].moduleId}--lesson-${slides[0].lessonId}--slide-${slides[0].id}-${slides[0].template.meta.filename}`;

@@ -122,12 +122,7 @@ const BlockText = ({ id, schema, ...props }: BlockTextProps) => {
           onMouseDown={handleFocusBg}
         >
           <LazyLoad>
-            <img
-              className="img__container"
-              aria-label={bgLabel}
-              // style={bgStyles}
-              src={bgUrl}
-            />
+            <img className="img__container" aria-label={bgLabel} src={bgUrl} />
           </LazyLoad>
         </div>
       )}

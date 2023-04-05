@@ -5,7 +5,6 @@ export const formatResponse = (response: any) => {
     completion_threshold,
     credit,
     entry,
-    // exit,
     launch_data,
     learner_id,
     learner_name,
@@ -13,7 +12,6 @@ export const formatResponse = (response: any) => {
     mode,
     progress_measure,
     scaled_passing_score,
-    // session_time,
     success_status,
     suspend_data,
     time_limit_action,
@@ -31,7 +29,6 @@ export const formatResponse = (response: any) => {
   rest['completion_threshold'] = completion_threshold;
   rest['credit'] = credit;
   rest['entry'] = entry;
-  // rest['exit'] = exit;
   rest['launch_data'] = launch_data;
   rest['learner_id'] = learner_id;
   rest['learner_name'] = learner_name;
@@ -39,7 +36,6 @@ export const formatResponse = (response: any) => {
   rest['mode'] = mode;
   rest['progress_measure'] = progress_measure;
   rest['scaled_passing_score'] = scaled_passing_score;
-  // rest['session_time'] = session_time;
   rest['success_status'] = success_status;
   rest['suspend_data'] = suspend_data;
   rest['time_limit_action'] = time_limit_action;

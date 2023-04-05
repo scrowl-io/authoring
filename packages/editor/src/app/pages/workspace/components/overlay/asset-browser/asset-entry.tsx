@@ -15,7 +15,6 @@ export const AssetEntry = ({
   const projectMeta = Projects.useMeta();
   const [isEdit, setIsEdit] = useState(false);
   let fileSizeBytes = asset.size;
-  // const searchTerm = props.searchHighlight || '';
   const assetEntryMenu: Array<menu.ContextMenuItem> = [
     {
       label: 'Rename',

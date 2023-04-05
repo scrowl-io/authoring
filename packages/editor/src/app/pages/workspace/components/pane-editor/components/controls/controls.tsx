@@ -24,7 +24,7 @@ export const Controls = () => {
   };
 
   const handleContentValidate = (field, value) => {
-    // console.log('content validate', field, value);
+    // placeholder
   };
 
   const handleContentFocus = (field, value) => {

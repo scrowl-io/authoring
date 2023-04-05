@@ -23,9 +23,7 @@ export const Content = () => {
     isUncommitted.current = true;
   };
 
-  const handleContentValidate = (field, value) => {
-    // console.log('content validate', field, value);
-  };
+  const handleContentValidate = (field, value) => {};
 
   const handleContentFocus = (field, value) => {
     const focusField = Array.isArray(field) ? field.join('.') : field;

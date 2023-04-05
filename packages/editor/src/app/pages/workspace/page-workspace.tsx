@@ -117,8 +117,6 @@ export const Page = () => {
           console.error(res);
           return;
         }
-
-        // notification - project saved correctly
       });
     };
 
