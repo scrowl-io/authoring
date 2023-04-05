@@ -143,6 +143,16 @@ export const Page = ({ slides, templates, slideId, ...props }: PageProps) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting === true) {
           currentSlide = entry.target.id;
+
+          const currentSlideObj = {
+            currentIndex: currentIndex,
+            currentSlide: currentSlide,
+          };
+
+          const currentSlideEvent = new CustomEvent('CurrentSlidePageUpdate', {
+            detail: currentSlideObj,
+          });
+          document.dispatchEvent(currentSlideEvent);
         }
       });
     });
@@ -160,15 +170,20 @@ export const Page = ({ slides, templates, slideId, ...props }: PageProps) => {
       finalSlideObserver.observe(lastSlide);
     }
 
-    const targetElements = targets.map((target) => {
-      return document.querySelector(`#${target}`);
-    });
-    targetElements.forEach((element) => {
-      if (element) {
-        slidesObserver.observe(element);
-      }
-    });
-  }, [slides]);
+    let targetElements;
+
+    setTimeout(() => {
+      targetElements = targets.map((target) => {
+        return document.querySelector(`#${target}`);
+      });
+
+      targetElements.forEach((element) => {
+        if (element) {
+          slidesObserver.observe(element);
+        }
+      });
+    }, 500);
+  }, [slides, hasStartedCourse]);
 
   useEffect(() => {
     if (slideId && slideId?.length > 0) {
