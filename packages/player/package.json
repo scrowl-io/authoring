@@ -63,6 +63,7 @@
     "@scrowl/postcss-prefixer": "^0.0.40",
     "@scrowl/template-block-text": "^1.0.99",
     "@scrowl/template-lesson-intro": "^1.0.99",
+    "@scrowl/template-quiz": "^1.0.99",
     "@scrowl/template-simple-text": "^1.0.99",
     "@scrowl/template-simple-video": "^1.0.99",
     "@scrowl/template-two-column": "^1.0.99",
