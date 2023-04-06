@@ -3,19 +3,18 @@ import { QuizSchemaProps } from './quiz.types';
 export const QuizSchema: QuizSchemaProps = {
   meta: {
     version: '1.0.0',
-    label: 'Text Block',
-    component: 'BlockText',
-    filename: 'block-text',
+    label: 'Quiz',
+    component: 'Quiz',
+    filename: 'quiz',
     tags: ['text', 'image'],
     icon: 'vertical_split',
   },
   content: {
     text: {
       type: 'Textbox',
-      label: 'Block Text',
-      value:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-      placeholder: 'Write content here...',
+      label: 'Quiz',
+      value: 'Quiz content to follow.',
+      placeholder: 'Quiz content here...',
       multiLine: true,
       lines: 10,
       autoGrow: 10,

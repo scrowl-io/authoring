@@ -85,6 +85,13 @@ const config = {
       overwrite: true,
     },
   },
+  'node_modules/@scrowl/template-quiz/dist': {
+    dest: './src/main/assets/templates/quiz',
+    includePaths: ['../../'],
+    options: {
+      overwrite: true,
+    },
+  },
 };
 
 const findPath = (source, includePaths) => {

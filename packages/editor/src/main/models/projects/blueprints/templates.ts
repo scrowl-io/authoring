@@ -6,6 +6,7 @@ import {
   SimpleVideoSchema,
   SimpleVideoSchemaProps,
 } from '@scrowl/template-simple-video/schema';
+import { QuizSchema, QuizSchemaProps } from '@scrowl/template-quiz/schema';
 
 export const TEMPLATES = {
   blockText: JSON.stringify(BlockTextSchema),
@@ -13,6 +14,7 @@ export const TEMPLATES = {
   simpleText: JSON.stringify(SimpleTextSchema),
   twoColumn: JSON.stringify(TwoColumnSchema),
   simpleVideo: JSON.stringify(SimpleVideoSchema),
+  quiz: JSON.stringify(QuizSchema),
 };
 
 export type TemplateNames = keyof typeof TEMPLATES;
@@ -23,6 +25,7 @@ export type TemplateSchemas = {
   simpleText: SimpleTextSchemaProps;
   twoColumn: TwoColumnSchemaProps;
   simpleVideo: SimpleVideoSchemaProps;
+  quiz: QuizSchemaProps;
 };
 
 export const get = <T>(template: TemplateNames): T => {
