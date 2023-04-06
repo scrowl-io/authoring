@@ -1,0 +1,89 @@
+{
+  "name": "@scrowl/template-quiz",
+  "version": "1.0.99",
+  "description": "",
+  "license": "MIT",
+  "keywords": [],
+  "author": {
+    "name": "OSG"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/scrowl-io/authoring.git",
+    "directory": "packages/template/quiz"
+  },
+  "bugs": {
+    "url": "https://github.com/scrowl-io/scrowl/issues"
+  },
+  "homepage": "https://github.com/scrowl-io/authoring/packages/template/quiz#readme",
+  "scripts": {
+    "clean": "rimraf ../../../.parcel-cache",
+    "prestart": "yarn run clean && rimraf dev/dist",
+    "start": "cd dev && parcel serve --no-cache --open",
+    "prebuild": "yarn run clean && rimraf dist",
+    "build": "parcel build --no-cache",
+    "build:schema": "cd schema && parcel build --no-cache",
+    "postbuild": "webpack --config webpack.config.js && yarn run build:schema"
+  },
+  "source": "./src/index.ts",
+  "main": "./lib/scrowl.template-quiz.js",
+  "module": "./lib/scrowl.template-quiz.module.js",
+  "types": "./lib/scrowl.template-quiz.d.ts",
+  "exports": {
+    ".": {
+      "require": "./lib/scrowl.template-quiz.js",
+      "import": "./lib/scrowl.template-quiz.module.js",
+      "default": "./lib/scrowl.template-quiz.js"
+    },
+    "./web": "./dist/scrowl.template-quiz.js",
+    "./schema": {
+      "require": "./lib/schema.js",
+      "import": "./lib/schema.module.js",
+      "default": "./lib/schema.js"
+    }
+  },
+  "eslintConfig": {
+    "extends": "@scrowl/config"
+  },
+  "prettier": "@scrowl/config/prettier",
+  "stylelint": {
+    "extends": "@scrowl/config/stylelint"
+  },
+  "files": [
+    "LICENSE",
+    "README.md",
+    "dist/",
+    "src/",
+    "package.json"
+  ],
+  "devDependencies": {
+    "@parcel/core": "2.7.0",
+    "@parcel/packager-ts": "2.7.0",
+    "@parcel/reporter-dev-server": "2.7.0",
+    "@parcel/runtime-react-refresh": "2.7.0",
+    "@parcel/transformer-sass": "2.7.0",
+    "@parcel/transformer-typescript-types": "2.7.0",
+    "@parcel/validator-typescript": "2.7.0",
+    "@scrowl/config": "^0.0.100",
+    "@types/react": "^18.0.21",
+    "@types/react-dom": "^18.0.6",
+    "eslint": "^8.25.0",
+    "parcel": "2.7.0",
+    "postcss": "^8.4.17",
+    "postcss-import": "^14.1.0",
+    "postcss-modules": "^4.3.1",
+    "postcss-url": "^10.1.3",
+    "prettier": "^2.7.1",
+    "process": "^0.11.10",
+    "rimraf": "^3.0.2",
+    "stylelint": "^14.13.0",
+    "typescript": "4.7.4",
+    "webpack-merge": "^5.8.0"
+  },
+  "dependencies": {
+    "@scrowl/template-core": "^1.0.99",
+    "@scrowl/ui": "^0.0.40",
+    "react": "^18.2.0",
+    "react-lazyload": "^3.2.0"
+  }
+}

@@ -1,0 +1,18 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+#scrowl-player,
+#lesson-wrapper {
+  height: 100%;
+}
+
+.lesson {
+  overflow-y: auto;
+  overflow-x: hidden;
+  width: 100%;
+  height: 100%;
+  margin: auto;
+}

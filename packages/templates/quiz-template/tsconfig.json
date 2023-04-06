@@ -1,0 +1,20 @@
+{
+  "extends": "@scrowl/config/tsconfig",
+  "compilerOptions": {
+    "types": ["@scrowl/config/src/typings"],
+    "outDir": "dist",
+    "noEmit": false,
+    "declaration": false,
+    "declarationMap": false
+  },
+  "include": [
+    "./src/**/*.ts",
+    "./src/**/*.tsx",
+    "./types/*.d.ts",
+    "./web/**/*.ts",
+    "./web/**/*.tsx",
+    "./dev/**/*.ts",
+    "./dev/**/*.tsx"
+  ],
+  "exclude": ["./scripts/**/*.js"]
+}
