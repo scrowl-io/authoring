@@ -10,37 +10,48 @@ export const QuizSchema: QuizSchemaProps = {
     icon: 'vertical_split',
   },
   content: {
-    text: {
+    question: {
       type: 'Textbox',
       label: 'Quiz',
-      value: 'Quiz content to follow.',
+      value: 'What does AODA stand for?',
       placeholder: 'Quiz content here...',
       multiLine: true,
-      lines: 10,
-      autoGrow: 10,
+      lines: 2,
+      autoGrow: 2,
       allowLinebreaks: true,
     },
-    bgImage: {
-      type: 'Fieldset',
-      label: 'Background Image',
-      content: {
-        alt: {
-          type: 'Textbox',
-          label: 'Alt Text',
-          placeholder: 'Image alt text',
-        },
-        url: {
-          type: 'Asset',
-          assetTypes: ['image'],
-          label: 'Image',
-        },
-        bg: {
-          type: 'Checkbox',
-          label: 'Use as Background',
-          value: false,
-        },
+    answers: [
+      {
+        type: 'Textbox',
+        label: 'Answer 1',
+        value: 'Accessibility for Ontarians with Disabilities Act.',
+        placeholder: 'Answer 1',
+        multiLine: true,
+        lines: 2,
+        autoGrow: 2,
+        allowLinebreaks: true,
       },
-    },
+      {
+        type: 'Textbox',
+        label: 'Answer 2',
+        value: "Association for Ontario's Disabled Adults.",
+        placeholder: 'Answer 2',
+        multiLine: true,
+        lines: 2,
+        autoGrow: 2,
+        allowLinebreaks: true,
+      },
+      {
+        type: 'Textbox',
+        label: 'Answer 3',
+        value: 'Act for Ontarians with Disabilities and Afflictions.',
+        placeholder: 'Answer 3',
+        multiLine: true,
+        lines: 2,
+        autoGrow: 2,
+        allowLinebreaks: true,
+      },
+    ],
     options: {
       //@ts-ignore
       type: 'Fieldset',

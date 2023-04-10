@@ -1,26 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './_index.scss';
 import { QuizProps } from './quiz.types';
-import LazyLoad from 'react-lazyload';
 
 const Quiz = ({ id, schema, ...props }: QuizProps) => {
   const Scrowl = window['Scrowl'];
-  let classes = 'template-block-text';
+  let classes = 'template-quiz';
   const Markdown = Scrowl.core.Markdown;
   const editMode = props.editMode ? true : false;
   const focusElement = editMode ? props.focusElement : null;
-  const contentId = `${id}-block-text`;
-  const text = schema.content.text.value;
+  const contentId = `${id}-quiz`;
+  const question = schema.content.question.value;
+  const answers = schema.content.answers;
   const textFocusCss = focusElement === 'text' && 'has-focus';
-  const bg = schema.content.bgImage.content.bg.value;
-  const bgUrl = schema.content.bgImage.content.url.value;
-  const bgLabel = schema.content.bgImage.content.alt.value || '';
-  const bgFocusCss = focusElement === 'bgImage.url' && 'has-focus';
-  const bgRef = useRef<HTMLDivElement>(null);
-  // @ts-ignore
-  const bgStyles = {
-    backgroundImage: `url("${bgUrl}")`,
-  };
   const alignment = schema.content.options.content.alignment.value;
   const alignmentCss = alignment === 'right' ? 'right' : 'left';
   const disableAnimations = schema.controlOptions.disableAnimations?.value;
@@ -40,15 +31,6 @@ const Quiz = ({ id, schema, ...props }: QuizProps) => {
       Scrowl.core.host.sendMessage({
         type: 'focus',
         field: 'text',
-      });
-    }
-  };
-
-  const handleFocusBg = () => {
-    if (editMode) {
-      Scrowl.core.host.sendMessage({
-        type: 'focus',
-        field: 'bgImage.url',
       });
     }
   };
@@ -96,8 +78,6 @@ const Quiz = ({ id, schema, ...props }: QuizProps) => {
     >
       <div id={contentId} className="owlui-container">
         <div className={`owlui-row owlui-row-cols-2 ${alignmentCss}`}>
-          {bg && <div className="owlui-col overlay" />}
-
           <div className={`owlui-col text__wrapper`}>
             <div className="text__container">
               <div className="progress-indictor">
@@ -107,25 +87,19 @@ const Quiz = ({ id, schema, ...props }: QuizProps) => {
                 className={`text__value can-focus ${textFocusCss}`}
                 onMouseDown={handleFocusText}
               >
-                <Markdown>{text}</Markdown>
+                <Markdown>{question}</Markdown>
+                {answers.map((answer, idx) => {
+                  return (
+                    <div key={idx}>
+                      <p>{answer.value}</p>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </div>
         </div>
       </div>
-      {(bgUrl || editMode) && (
-        <div
-          ref={bgRef}
-          className={`img__wrapper ${alignmentCss} can-focus ${bgFocusCss} ${
-            bg ? 'as-bg' : 'as-side'
-          }`}
-          onMouseDown={handleFocusBg}
-        >
-          <LazyLoad>
-            <img className="img__container" aria-label={bgLabel} src={bgUrl} />
-          </LazyLoad>
-        </div>
-      )}
     </Scrowl.core.Template>
   );
 };

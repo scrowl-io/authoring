@@ -24,7 +24,7 @@ const App = () => {
         <Suspense fallback={<div>Loading...</div>}>
           <Quiz
             editMode={true}
-            id="template-block-text"
+            id="template-quiz"
             controller={controller}
             schema={schema}
           />

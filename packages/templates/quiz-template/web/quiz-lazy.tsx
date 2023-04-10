@@ -1,7 +1,7 @@
 import React, { Suspense, lazy } from 'react';
 
 const QuizLazy = lazy(
-  () => import(/* webpackChunkName: "template-block-text" */ '../src/quiz')
+  () => import(/* webpackChunkName: "template-quiz" */ '../src/quiz')
 );
 
 const Quiz = (props) => {

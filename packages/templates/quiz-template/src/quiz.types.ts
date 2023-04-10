@@ -22,14 +22,6 @@ export type {
   TemplateControlOptions,
 };
 
-export interface QuizImage extends InputFieldsetProps {
-  content: {
-    alt: InputTextboxProps;
-    url: InputAssetProps;
-    bg: InputCheckboxProps;
-  };
-}
-
 export interface QuizContentOptions extends InputFieldsetProps {
   content: {
     alignment: InputSelectProps;
@@ -40,8 +32,8 @@ export interface QuizContentOptions extends InputFieldsetProps {
 export interface QuizSchemaProps extends TemplateSchema {
   meta: TemplateSchemaMeta;
   content: {
-    text: InputTextboxProps;
-    bgImage: QuizImage;
+    question: InputTextboxProps;
+    answers: Array<InputTextboxProps>;
     options: QuizContentOptions;
   };
 }

@@ -126,4 +126,5 @@ export type InputProps =
   | InputNumberSpinnerProps
   | InputSelectProps
   | InputTextboxProps
+  | Array<InputTextboxProps>
   | InputFieldsetProps;
