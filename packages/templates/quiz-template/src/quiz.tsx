@@ -11,6 +11,10 @@ const Quiz = ({ id, schema, ...props }: QuizProps) => {
   const contentId = `${id}-quiz`;
   const question = schema.content.question.content.question.value;
   const answers = schema.content.answers.content;
+  const correctAnswer = schema.content.question.content.correctAnswer.value;
+  const correctAnswerText = answers.find((_obj, i) => {
+    return i === correctAnswer - 1;
+  });
   const textFocusCss = focusElement === 'text' && 'has-focus';
   const alignment = schema.content.options.content.alignment.value;
   const alignmentCss = alignment === 'right' ? 'right' : 'left';
@@ -21,6 +25,7 @@ const Quiz = ({ id, schema, ...props }: QuizProps) => {
   const [progressBarStyles, setProgressBarStyles] = useState({
     width: showProgressBar ? '0%' : '100%',
   });
+  const selectedAnswer = useRef(null);
 
   if (showProgressBar) {
     classes += ' show-progress';
@@ -34,8 +39,6 @@ const Quiz = ({ id, schema, ...props }: QuizProps) => {
       });
     }
   };
-
-  console.log('answers: ', answers);
 
   const handleSlideProgress = (ev) => {
     slideProgress.current = ev.progress;
@@ -59,6 +62,20 @@ const Quiz = ({ id, schema, ...props }: QuizProps) => {
       ...progressBarStyles,
       width: `100%`,
     });
+  };
+
+  const handleSelectAnswer = (ev) => {
+    selectedAnswer.current = ev.target.value;
+  };
+
+  const handleSubmit = (ev) => {
+    ev.preventDefault();
+
+    if (selectedAnswer.current === correctAnswerText.value) {
+      alert('CORRECT');
+    } else {
+      alert('INCORRECT');
+    }
   };
 
   useEffect(() => {
@@ -94,13 +111,25 @@ const Quiz = ({ id, schema, ...props }: QuizProps) => {
                 </h3>
 
                 <div className={`answers__container ${alignment}`}>
-                  {answers.map((answer, idx) => {
-                    return (
-                      <div className="answer" key={idx}>
-                        <p>{answer.value}</p>
-                      </div>
-                    );
-                  })}
+                  <form onSubmit={handleSubmit}>
+                    {answers.map((answer, idx) => {
+                      return (
+                        <div className="answer" key={idx}>
+                          <input
+                            type="radio"
+                            id={`answer-${idx}`}
+                            name={question}
+                            value={answer.value}
+                            onChange={handleSelectAnswer}
+                          />
+                          <label htmlFor={`answer-${idx}`}>
+                            {answer.value}
+                          </label>
+                        </div>
+                      );
+                    })}
+                    <input type="submit" value="Submit" />
+                  </form>
                 </div>
               </div>
             </div>
