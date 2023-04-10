@@ -19,6 +19,7 @@ export const InputFactory = ({
   onFocus,
   disableFlag,
 }: InputFactoryProps) => {
+  console.log('content: ', content);
   switch (content.type) {
     case 'Asset':
       return (

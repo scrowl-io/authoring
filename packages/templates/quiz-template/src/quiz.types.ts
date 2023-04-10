@@ -32,8 +32,8 @@ export interface QuizContentOptions extends InputFieldsetProps {
 export interface QuizSchemaProps extends TemplateSchema {
   meta: TemplateSchemaMeta;
   content: {
-    question: InputTextboxProps;
-    answers: Array<InputTextboxProps>;
+    question: any;
+    answers: any;
     options: QuizContentOptions;
   };
 }

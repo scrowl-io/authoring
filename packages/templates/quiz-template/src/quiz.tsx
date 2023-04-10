@@ -9,8 +9,8 @@ const Quiz = ({ id, schema, ...props }: QuizProps) => {
   const editMode = props.editMode ? true : false;
   const focusElement = editMode ? props.focusElement : null;
   const contentId = `${id}-quiz`;
-  const question = schema.content.question.value;
-  const answers = schema.content.answers;
+  const question = schema.content.question.content.question.value;
+  const answers = schema.content.answers.content;
   const textFocusCss = focusElement === 'text' && 'has-focus';
   const alignment = schema.content.options.content.alignment.value;
   const alignmentCss = alignment === 'right' ? 'right' : 'left';
@@ -34,6 +34,8 @@ const Quiz = ({ id, schema, ...props }: QuizProps) => {
       });
     }
   };
+
+  console.log('answers: ', answers);
 
   const handleSlideProgress = (ev) => {
     slideProgress.current = ev.progress;
