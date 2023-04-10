@@ -8,6 +8,20 @@
   .text__container {
     margin: 0 1.5rem;
 
+    .text__value {
+      .question__text {
+        text-align: center;
+      }
+
+      .answers__container {
+        padding-top: 1rem;
+
+        &.center {
+          text-align: center;
+        }
+      }
+    }
+
     .progress {
       &-indictor {
         width: 100%;

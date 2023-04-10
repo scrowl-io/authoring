@@ -79,7 +79,7 @@ const Quiz = ({ id, schema, ...props }: QuizProps) => {
       {...props}
     >
       <div id={contentId} className="owlui-container">
-        <div className={`owlui-row owlui-row-cols-2 ${alignmentCss}`}>
+        <div className={`owlui-row ${alignmentCss}`}>
           <div className={`owlui-col text__wrapper`}>
             <div className="text__container">
               <div className="progress-indictor">
@@ -89,14 +89,19 @@ const Quiz = ({ id, schema, ...props }: QuizProps) => {
                 className={`text__value can-focus ${textFocusCss}`}
                 onMouseDown={handleFocusText}
               >
-                <Markdown>{question}</Markdown>
-                {answers.map((answer, idx) => {
-                  return (
-                    <div key={idx}>
-                      <p>{answer.value}</p>
-                    </div>
-                  );
-                })}
+                <h3 className="question__text">
+                  <Markdown>{question}</Markdown>
+                </h3>
+
+                <div className={`answers__container ${alignment}`}>
+                  {answers.map((answer, idx) => {
+                    return (
+                      <div className="answer" key={idx}>
+                        <p>{answer.value}</p>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             </div>
           </div>

@@ -107,6 +107,7 @@ export const Radio = ({
   return (
     <div className={controlClasses} style={{ marginLeft: '5px' }}>
       <div className="form-radio">
+        {props.displayLabel && label}
         {options.map((radioOpt, idx) => {
           const id = `${field}-${radioOpt.value}`;
           const key = `${field}-${idx}`;

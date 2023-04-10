@@ -24,6 +24,29 @@ export const QuizSchema: QuizSchemaProps = {
           autoGrow: 2,
           allowLinebreaks: true,
         },
+        correctAnswer: {
+          type: 'Radio',
+          label: 'Correct Answer',
+          value: 1,
+          displayLabel: true,
+          options: [
+            {
+              label: 'Answer 1',
+              value: 1,
+              icon: 'crop_portrait',
+            },
+            {
+              label: 'Answer 2',
+              value: 2,
+              icon: 'crop_portrait',
+            },
+            {
+              label: 'Answer 3',
+              value: 3,
+              icon: 'crop_portrait',
+            },
+          ],
+        },
       },
     },
     answers: {
@@ -79,9 +102,9 @@ export const QuizSchema: QuizSchemaProps = {
               icon: 'align_horizontal_left',
             },
             {
-              name: 'Align Right',
-              value: 'right',
-              icon: 'align_horizontal_right',
+              name: 'Align Center',
+              value: 'center',
+              icon: 'align_horizontal_center',
             },
           ],
           iconFromValue: true,
