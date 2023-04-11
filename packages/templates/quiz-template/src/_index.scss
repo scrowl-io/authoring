@@ -9,17 +9,21 @@
     margin: 0 1.5rem;
 
     .text__value {
-      .question__text {
+      &.center {
         text-align: center;
       }
 
       .answers__container {
-        padding-top: 1rem;
+        margin-top: 1rem;
 
-        &.center {
-          text-align: center;
+        label {
+          margin-left: 1rem;
         }
       }
+    }
+
+    .submit-answer {
+      margin-top: 1rem;
     }
 
     .progress {

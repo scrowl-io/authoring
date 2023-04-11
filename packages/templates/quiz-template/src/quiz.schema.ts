@@ -94,7 +94,7 @@ export const QuizSchema: QuizSchemaProps = {
           type: 'Select',
           hint: 'BodyAlignment',
           label: 'Alignment',
-          value: 'left',
+          value: 'center',
           options: [
             {
               name: 'Align Left',

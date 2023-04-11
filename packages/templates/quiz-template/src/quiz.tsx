@@ -31,11 +31,11 @@ const Quiz = ({ id, schema, ...props }: QuizProps) => {
     classes += ' show-progress';
   }
 
-  const handleFocusText = () => {
+  const handleFocusQuestion = () => {
     if (editMode) {
       Scrowl.core.host.sendMessage({
         type: 'focus',
-        field: 'text',
+        field: 'question',
       });
     }
   };
@@ -103,14 +103,16 @@ const Quiz = ({ id, schema, ...props }: QuizProps) => {
                 <div className="progress-bar" style={progressBarStyles}></div>
               </div>
               <div
-                className={`text__value can-focus ${textFocusCss}`}
-                onMouseDown={handleFocusText}
+                className={`text__value can-focus ${textFocusCss} ${alignment}`}
               >
-                <h3 className="question__text">
+                <h3
+                  onMouseDown={handleFocusQuestion}
+                  className="question__text"
+                >
                   <Markdown>{question}</Markdown>
                 </h3>
 
-                <div className={`answers__container ${alignment}`}>
+                <div className={`answers__container`}>
                   <form onSubmit={handleSubmit}>
                     {answers.map((answer, idx) => {
                       return (
@@ -128,7 +130,11 @@ const Quiz = ({ id, schema, ...props }: QuizProps) => {
                         </div>
                       );
                     })}
-                    <input type="submit" value="Submit" />
+                    <input
+                      className="owlui-btn owlui-btn-primary submit-answer"
+                      type="submit"
+                      value="Submit"
+                    />
                   </form>
                 </div>
               </div>
