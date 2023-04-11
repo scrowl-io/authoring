@@ -11,6 +11,7 @@ const Quiz = ({ id, schema, ...props }: QuizProps) => {
   const contentId = `${id}-quiz`;
   const question = schema.content.question.content.question.value;
   const answers = schema.content.answers.content;
+  const numberOfAnswers = schema.content.question.content.numberOfAnswers.value;
   const correctAnswer = schema.content.question.content.correctAnswer
     .value as number;
   const correctAnswerText = answers.find((_obj, i: number) => {
@@ -121,20 +122,22 @@ const Quiz = ({ id, schema, ...props }: QuizProps) => {
                 <div className={`answers__container`}>
                   <form onSubmit={handleSubmit}>
                     {answers.map((answer, idx) => {
-                      return (
-                        <div className="answer" key={idx}>
-                          <input
-                            type="radio"
-                            id={`answer-${idx}`}
-                            name={question}
-                            value={answer.value}
-                            onChange={handleSelectAnswer}
-                          />
-                          <label htmlFor={`answer-${idx}`}>
-                            {answer.value}
-                          </label>
-                        </div>
-                      );
+                      if (numberOfAnswers && idx < numberOfAnswers) {
+                        return (
+                          <div className="answer" key={idx}>
+                            <input
+                              type="radio"
+                              id={`answer-${idx}`}
+                              name={question}
+                              value={answer.value}
+                              onChange={handleSelectAnswer}
+                            />
+                            <label htmlFor={`answer-${idx}`}>
+                              {answer.value}
+                            </label>
+                          </div>
+                        );
+                      }
                     })}
                     <input
                       className="owlui-btn owlui-btn-primary submit-answer"

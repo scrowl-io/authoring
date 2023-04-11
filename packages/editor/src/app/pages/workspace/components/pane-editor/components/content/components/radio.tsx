@@ -107,7 +107,9 @@ export const Radio = ({
   return (
     <div className={controlClasses} style={{ marginLeft: '5px' }}>
       <div className="form-radio">
-        {props.displayLabel && label}
+        {props.displayLabel && (
+          <legend className="col-form-label">{label}</legend>
+        )}
         {options.map((radioOpt, idx) => {
           const id = `${field}-${radioOpt.value}`;
           const key = `${field}-${idx}`;

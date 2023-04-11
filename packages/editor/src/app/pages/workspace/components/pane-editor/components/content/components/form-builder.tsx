@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { TemplateSchema } from '@scrowl/template-core';
 import { InputProps } from '../../../pane-editor.types';
 import { InputFactory } from './input-factory';
@@ -28,6 +28,14 @@ export const FormBuilder = ({
   onBlur,
   ...props
 }: FormBuilderProps) => {
+  const numberOfAnswers = useRef(null);
+  if (
+    content.question &&
+    content.question.content &&
+    content.question.content.numberOfAnswers
+  ) {
+    numberOfAnswers.current = content.question.content.numberOfAnswers.value;
+  }
   let classes = '';
   let fields;
   if (content) {
@@ -62,6 +70,40 @@ export const FormBuilder = ({
 
             switch (fieldContent.type) {
               case 'Fieldset':
+                if (fieldContent.label === 'Answers') {
+                  if (
+                    numberOfAnswers.current &&
+                    numberOfAnswers.current < fieldContent.content.length
+                  ) {
+                    let updatedContent = fieldContent.content.filter(
+                      (_answer, i) => {
+                        return (
+                          numberOfAnswers.current && i < numberOfAnswers.current
+                        );
+                      }
+                    );
+
+                    const newFieldContent = {
+                      type: 'Fieldset',
+                      label: 'Answers',
+                      content: updatedContent,
+                    };
+
+                    return (
+                      <InputFactory
+                        key={idx}
+                        field={field}
+                        content={newFieldContent}
+                        onChange={onChange}
+                        onValidate={onValidate}
+                        onBlur={onBlur}
+                        onFocus={onFocus}
+                        disableFlag={disableFlag}
+                      />
+                    );
+                  }
+                }
+
                 return (
                   <InputFactory
                     key={idx}

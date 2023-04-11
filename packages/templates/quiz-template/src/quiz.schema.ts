@@ -24,6 +24,31 @@ export const QuizSchema: QuizSchemaProps = {
           autoGrow: 2,
           allowLinebreaks: true,
         },
+        numberOfAnswers: {
+          type: 'Select',
+          hint: 'BodyAlignment',
+          label: 'Number of Answers',
+          value: '5',
+          options: [
+            {
+              name: '2',
+              value: '2',
+            },
+            {
+              name: '3',
+              value: '3',
+            },
+            {
+              name: '4',
+              value: '4',
+            },
+            {
+              name: '5',
+              value: '5',
+            },
+          ],
+          iconFromValue: false,
+        },
         correctAnswer: {
           type: 'Radio',
           label: 'Correct Answer',
@@ -33,17 +58,22 @@ export const QuizSchema: QuizSchemaProps = {
             {
               label: 'Answer 1',
               value: 1,
-              icon: 'crop_portrait',
             },
             {
               label: 'Answer 2',
               value: 2,
-              icon: 'crop_portrait',
             },
             {
               label: 'Answer 3',
               value: 3,
-              icon: 'crop_portrait',
+            },
+            {
+              label: 'Answer 4',
+              value: 4,
+            },
+            {
+              label: 'Answer 5',
+              value: 5,
             },
           ],
         },
@@ -78,6 +108,26 @@ export const QuizSchema: QuizSchemaProps = {
           label: 'Answer 3',
           value: 'Act for Ontarians with Disabilities and Afflictions.',
           placeholder: 'Answer 3',
+          multiLine: true,
+          lines: 2,
+          autoGrow: 2,
+          allowLinebreaks: true,
+        },
+        {
+          type: 'Textbox',
+          label: 'Answer 4',
+          value: "Assembly of Ontario's Disabled Adults.",
+          placeholder: 'Answer 4',
+          multiLine: true,
+          lines: 2,
+          autoGrow: 2,
+          allowLinebreaks: true,
+        },
+        {
+          type: 'Textbox',
+          label: 'Answer 5',
+          value: 'None of the above.',
+          placeholder: 'Answer 5',
           multiLine: true,
           lines: 2,
           autoGrow: 2,

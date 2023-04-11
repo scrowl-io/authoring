@@ -33,6 +33,7 @@ export interface QuizContentOptions extends InputFieldsetProps {
 export interface QuizQuestionProps extends InputFieldsetProps {
   content: {
     question: InputTextboxProps;
+    numberOfAnswers: InputSelectProps;
     correctAnswer: InputRadioProps;
   };
 }
