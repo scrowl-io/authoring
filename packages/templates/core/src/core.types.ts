@@ -80,15 +80,16 @@ export interface InputSelectProps extends BaseInputProps {
 export interface InputRadioProps extends BaseInputProps {
   type: 'Radio';
   value: string | number;
+  displayLabel?: boolean;
   options: Array<{
     label?: string;
     value: string | number;
     icon?: string;
     controller?: {
       fields: Array<string>;
-      effect: 'hide'
-    }
-  }>
+      effect: 'hide';
+    };
+  }>;
 }
 
 export interface InputTextboxProps extends BaseInputProps {
@@ -109,15 +110,18 @@ export interface InputTextboxProps extends BaseInputProps {
 
 export interface InputFieldsetProps extends BaseInputProps {
   type: 'Fieldset';
-  content: {
-    [key: string]:
-      | InputAssetProps
-      | InputCheckboxProps
-      | InputNumberSpinnerProps
-      | InputSelectProps
-      | InputTextboxProps
-      | InputRadioProps;
-  };
+  content:
+    | {
+        [key: string]:
+          | InputAssetProps
+          | InputCheckboxProps
+          | InputNumberSpinnerProps
+          | InputSelectProps
+          | InputTextboxProps
+          | Array<InputTextboxProps>
+          | InputRadioProps;
+      }
+    | Array<InputTextboxProps>;
 }
 
 export type InputProps =
@@ -126,5 +130,4 @@ export type InputProps =
   | InputNumberSpinnerProps
   | InputSelectProps
   | InputTextboxProps
-  | Array<InputTextboxProps>
   | InputFieldsetProps;

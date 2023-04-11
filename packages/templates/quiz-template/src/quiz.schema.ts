@@ -126,7 +126,7 @@ export const QuizSchema: QuizSchemaProps = {
     disableAnimations: {
       type: 'Checkbox',
       label: 'Disable Animations',
-      value: true,
+      value: false,
     },
   },
 };

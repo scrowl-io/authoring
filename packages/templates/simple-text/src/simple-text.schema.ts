@@ -91,7 +91,7 @@ export const SimpleTextSchema: SimpleTextSchemaProps = {
     disableAnimations: {
       type: 'Checkbox',
       label: 'Disable Animations',
-      value: true,
+      value: false,
     },
   },
 };

@@ -78,7 +78,7 @@ export const LessonIntroSchema: LessonIntroSchemaProps = {
     disableAnimations: {
       type: 'Checkbox',
       label: 'Disable Animations',
-      value: true,
+      value: false,
     },
   },
 };

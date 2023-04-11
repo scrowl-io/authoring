@@ -7,6 +7,7 @@ import {
   InputSelectProps,
   InputCheckboxProps,
   InputAssetProps,
+  InputRadioProps,
   TemplateControlOptions,
 } from '@scrowl/template-core';
 import { TemplateSchema } from '@scrowl/template-core';
@@ -29,11 +30,21 @@ export interface QuizContentOptions extends InputFieldsetProps {
   };
 }
 
+export interface QuizQuestionProps extends InputFieldsetProps {
+  content: {
+    question: InputTextboxProps;
+    correctAnswer: InputRadioProps;
+  };
+}
+export interface QuizAnswersProps extends InputFieldsetProps {
+  content: Array<InputTextboxProps>;
+}
+
 export interface QuizSchemaProps extends TemplateSchema {
   meta: TemplateSchemaMeta;
   content: {
-    question: any;
-    answers: any;
+    question: QuizQuestionProps;
+    answers: QuizAnswersProps;
     options: QuizContentOptions;
   };
 }

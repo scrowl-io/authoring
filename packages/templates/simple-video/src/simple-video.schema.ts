@@ -88,7 +88,7 @@ export const SimpleVideoSchema: SimpleVideoSchemaProps = {
     disableAnimations: {
       type: 'Checkbox',
       label: 'Disable Animations',
-      value: true,
+      value: false,
     },
   },
 };

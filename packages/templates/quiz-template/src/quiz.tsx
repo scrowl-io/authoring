@@ -11,10 +11,13 @@ const Quiz = ({ id, schema, ...props }: QuizProps) => {
   const contentId = `${id}-quiz`;
   const question = schema.content.question.content.question.value;
   const answers = schema.content.answers.content;
-  const correctAnswer = schema.content.question.content.correctAnswer.value;
-  const correctAnswerText = answers.find((_obj, i) => {
-    return i === correctAnswer - 1;
+  const correctAnswer = schema.content.question.content.correctAnswer
+    .value as number;
+  const correctAnswerText = answers.find((_obj, i: number) => {
+    const idx = correctAnswer - 1;
+    return i === idx;
   });
+
   const textFocusCss = focusElement === 'text' && 'has-focus';
   const alignment = schema.content.options.content.alignment.value;
   const alignmentCss = alignment === 'right' ? 'right' : 'left';
@@ -71,7 +74,10 @@ const Quiz = ({ id, schema, ...props }: QuizProps) => {
   const handleSubmit = (ev) => {
     ev.preventDefault();
 
-    if (selectedAnswer.current === correctAnswerText.value) {
+    if (
+      correctAnswerText &&
+      selectedAnswer.current === correctAnswerText.value
+    ) {
       alert('CORRECT');
     } else {
       alert('INCORRECT');

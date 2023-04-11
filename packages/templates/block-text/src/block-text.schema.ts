@@ -83,7 +83,7 @@ export const BlockTextSchema: BlockTextSchemaProps = {
     disableAnimations: {
       type: 'Checkbox',
       label: 'Disable Animations',
-      value: true,
+      value: false,
     },
   },
 };

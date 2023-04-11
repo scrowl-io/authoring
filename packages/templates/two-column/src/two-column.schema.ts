@@ -159,7 +159,7 @@ export const TwoColumnSchema: TwoColumnSchemaProps = {
     disableAnimations: {
       type: 'Checkbox',
       label: 'Disable Animations',
-      value: true,
+      value: false,
     },
   },
 };
