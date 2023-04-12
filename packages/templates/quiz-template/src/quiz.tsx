@@ -127,12 +127,12 @@ const Quiz = ({ id, schema, ...props }: QuizProps) => {
                           <div className="answer" key={idx}>
                             <input
                               type="radio"
-                              id={`answer-${idx}`}
+                              id={`${contentId}-answer-${idx}`}
                               name={question}
                               value={answer.value}
                               onChange={handleSelectAnswer}
                             />
-                            <label htmlFor={`answer-${idx}`}>
+                            <label htmlFor={`${contentId}-answer-${idx}`}>
                               {answer.value}
                             </label>
                           </div>
