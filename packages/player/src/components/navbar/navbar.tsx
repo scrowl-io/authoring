@@ -70,32 +70,82 @@ export const NavBar = ({ pageId, project, slides }) => {
 
       let targetIndex;
       let targetElement;
+      const html = document.documentElement;
 
       switch (ev.target.innerText) {
         case 'Previous Slide':
           if (currentIndex === 1) {
             targetIndex = targets[0];
             targetElement = document.querySelector(`#${targetIndex}`);
+            html.style.scrollBehavior = 'smooth';
+
             currentIndex = 0;
             currentSlide = `module-${slides[0].moduleId}--lesson-${slides[0].lessonId}--slide-${slides[0].id}-${slides[0].template.meta.filename}`;
             setTimeout(() => {
-              targetElement?.scrollIntoView(false);
+              targetElement?.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center',
+                inline: 'start',
+              });
             }, 0);
           } else {
             targetIndex = targets[currentIndex - 1];
             targetElement = document.querySelector(`#${targetIndex}`);
-            targetElement?.scrollIntoView(false);
+
+            if (
+              slides[currentIndex - 1].template.controlOptions.disableAnimations
+                .value === true
+            ) {
+              html.style.scrollBehavior = 'auto';
+              setTimeout(() => {
+                targetElement?.scrollIntoView({
+                  behavior: 'auto',
+                  block: 'center',
+                  inline: 'start',
+                });
+              }, 0);
+            } else {
+              html.style.scrollBehavior = 'smooth';
+              targetElement?.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center',
+                inline: 'start',
+              });
+            }
           }
           break;
         case 'Next Slide':
           if (currentIndex + 1 === targets.length) {
             targetElement = document.querySelector('.owlui-last');
-            targetElement?.scrollIntoView();
+            html.style.scrollBehavior = 'smooth';
+            targetElement?.scrollIntoView({
+              behavior: 'smooth',
+              block: 'center',
+              inline: 'start',
+            });
             currentSlide = 'owlui-last';
           } else {
             targetIndex = targets[currentIndex + 1];
             targetElement = document.querySelector(`#${targetIndex}`);
-            targetElement?.scrollIntoView();
+
+            if (
+              slides[currentIndex + 1].template.controlOptions.disableAnimations
+                .value === true
+            ) {
+              html.style.scrollBehavior = 'auto';
+              targetElement?.scrollIntoView({
+                behavior: 'auto',
+                block: 'center',
+                inline: 'start',
+              });
+            } else {
+              html.style.scrollBehavior = 'smooth';
+              targetElement?.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center',
+                inline: 'start',
+              });
+            }
           }
           break;
       }

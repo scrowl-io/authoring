@@ -372,7 +372,11 @@ export const Template = ({
         const targetIndex = domSlides[index + 1];
         const nextTarget = document.querySelector(`#${targetIndex}`);
 
-        nextTarget?.scrollIntoView();
+        nextTarget?.scrollIntoView({
+          behavior: 'auto',
+          block: 'center',
+          inline: 'start',
+        });
       }, 250);
     };
     document.addEventListener('startCourse', handleStart);

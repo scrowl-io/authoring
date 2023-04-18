@@ -68,39 +68,89 @@ export const Page = ({ slides, templates, slideId, ...props }: PageProps) => {
 
     let targetID;
     let targetElement;
+    const html = document.documentElement;
 
     switch (ev.key) {
       case 'ArrowLeft':
         if (currentIndex === 1) {
           targetID = targets[0];
           targetElement = document.querySelector(`#${targetID}`);
+          html.style.scrollBehavior = 'smooth';
           currentIndex = 0;
           currentSlide = `module-${slides[0].moduleId}--lesson-${slides[0].lessonId}--slide-${slides[0].id}-${slides[0].template.meta.filename}`;
           setTimeout(() => {
-            targetElement?.scrollIntoView(false);
+            targetElement?.scrollIntoView({
+              behavior: 'smooth',
+              block: 'center',
+              inline: 'start',
+            });
           }, 0);
         } else {
           targetID = targets[currentIndex - 1];
           targetElement = document.querySelector(`#${targetID}`);
-          setTimeout(() => {
-            targetElement?.scrollIntoView(false);
-          }, 0);
+
+          if (
+            slides[currentIndex - 1].template.controlOptions.disableAnimations
+              .value === true
+          ) {
+            html.style.scrollBehavior = 'auto';
+            setTimeout(() => {
+              targetElement?.scrollIntoView({
+                behavior: 'auto',
+                block: 'center',
+                inline: 'start',
+              });
+            }, 0);
+          } else {
+            html.style.scrollBehavior = 'smooth';
+            setTimeout(() => {
+              targetElement?.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center',
+                inline: 'start',
+              });
+            }, 0);
+          }
         }
         break;
       case 'ArrowRight':
         if (currentIndex + 1 === targets.length) {
           targetElement = document.querySelector('.owlui-last');
+          html.style.scrollBehavior = 'smooth';
           setTimeout(() => {
-            targetElement?.scrollIntoView(true);
+            targetElement?.scrollIntoView({
+              behavior: 'smooth',
+              block: 'center',
+              inline: 'start',
+            });
           }, 0);
           currentSlide = 'owlui-last';
         } else {
           targetID = targets[currentIndex + 1];
           targetElement = document.querySelector(`#${targetID}`);
 
-          setTimeout(() => {
-            targetElement?.scrollIntoView(true);
-          }, 0);
+          if (
+            slides[currentIndex + 1].template.controlOptions.disableAnimations
+              .value === true
+          ) {
+            html.style.scrollBehavior = 'auto';
+            setTimeout(() => {
+              targetElement?.scrollIntoView({
+                behavior: 'auto',
+                block: 'center',
+                inline: 'start',
+              });
+            }, 100);
+          } else {
+            html.style.scrollBehavior = 'smooth';
+            setTimeout(() => {
+              targetElement?.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center',
+                inline: 'start',
+              });
+            }, 0);
+          }
         }
         break;
     }
