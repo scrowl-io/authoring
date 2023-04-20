@@ -70,15 +70,15 @@ export const NavBar = ({ pageId, project, slides }) => {
 
       let targetIndex;
       let targetElement;
-      const html = document.documentElement;
 
       switch (ev.target.innerText) {
         case 'Previous Slide':
+          if (currentIndex === 0) {
+            return;
+          }
           if (currentIndex === 1) {
             targetIndex = targets[0];
             targetElement = document.querySelector(`#${targetIndex}`);
-            html.style.scrollBehavior = 'smooth';
-
             currentIndex = 0;
             currentSlide = `module-${slides[0].moduleId}--lesson-${slides[0].lessonId}--slide-${slides[0].id}-${slides[0].template.meta.filename}`;
             setTimeout(() => {
@@ -96,28 +96,31 @@ export const NavBar = ({ pageId, project, slides }) => {
               slides[currentIndex - 1].template.controlOptions.disableAnimations
                 .value === true
             ) {
-              html.style.scrollBehavior = 'auto';
               setTimeout(() => {
                 targetElement?.scrollIntoView({
-                  behavior: 'auto',
+                  behavior: 'smooth',
                   block: 'center',
                   inline: 'start',
                 });
               }, 0);
             } else {
-              html.style.scrollBehavior = 'smooth';
-              targetElement?.scrollIntoView({
-                behavior: 'smooth',
-                block: 'center',
-                inline: 'start',
-              });
+              setTimeout(() => {
+                targetElement?.scrollIntoView({
+                  behavior: 'smooth',
+                  block: 'center',
+                  inline: 'start',
+                });
+              }, 0);
             }
           }
           break;
         case 'Next Slide':
+          if (currentIndex === targets.length) {
+            return;
+          }
+
           if (currentIndex + 1 === targets.length) {
             targetElement = document.querySelector('.owlui-last');
-            html.style.scrollBehavior = 'smooth';
             targetElement?.scrollIntoView({
               behavior: 'smooth',
               block: 'center',
@@ -125,21 +128,47 @@ export const NavBar = ({ pageId, project, slides }) => {
             });
             currentSlide = 'owlui-last';
           } else {
+            if (
+              slides[currentIndex].template.controlOptions.stopUserAdvancement
+                .value === true
+            ) {
+              return;
+            }
+
             targetIndex = targets[currentIndex + 1];
             targetElement = document.querySelector(`#${targetIndex}`);
 
+            const currentSlideElement = document.querySelector(
+              `#${targets[currentIndex]}`
+            );
+
+            let scrollMagicPin;
+
+            if (
+              slides[currentIndex].template.controlOptions.disableAnimations
+                .value === false
+            ) {
+              scrollMagicPin =
+                currentSlideElement?.parentElement?.parentElement;
+            }
+
             if (
               slides[currentIndex + 1].template.controlOptions.disableAnimations
-                .value === true
+                .value === true &&
+              slides[currentIndex].template.controlOptions.disableAnimations
+                .value === false
             ) {
-              html.style.scrollBehavior = 'auto';
+              const pinHeight = scrollMagicPin.style.minHeight;
+              const adjustedMargin = Math.abs(parseInt(pinHeight) / 2) * -1;
+
+              scrollMagicPin.style.marginBottom = `${adjustedMargin.toString()}px`;
+
               targetElement?.scrollIntoView({
-                behavior: 'auto',
+                behavior: 'smooth',
                 block: 'center',
                 inline: 'start',
               });
             } else {
-              html.style.scrollBehavior = 'smooth';
               targetElement?.scrollIntoView({
                 behavior: 'smooth',
                 block: 'center',

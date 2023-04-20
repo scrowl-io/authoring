@@ -16,6 +16,8 @@ export const Template = ({
   onLeave,
   children,
   notScene,
+  // @ts-ignore
+  stopUserAdvancement,
   ...props
 }: TemplateProps) => {
   let classes = `${css.slide}`;
@@ -34,6 +36,8 @@ export const Template = ({
   });
   // @ts-ignore
   const [scroll, setScroll] = useState(false);
+  // @ts-ignore
+  const [userIsStopped, setUserIsStopped] = useState(stopUserAdvancement);
 
   const Scrowl = window['Scrowl'];
 
@@ -240,6 +244,10 @@ export const Template = ({
           onEnd(ev);
         }
 
+        if (userIsStopped) {
+          setScroll(false);
+        }
+
         if (sceneRef.current) {
           ev.currentTarget = sceneRef.current.firstChild;
           const sceneEvent = new CustomEvent('slide.end', { detail: ev });
@@ -384,9 +392,18 @@ export const Template = ({
 
   useEffect(() => {
     const handleVideoSlideEnter = (_ev) => {
-      console.log('inside core handler');
+      console.log('inside core video handler');
+      setUserIsStopped(false);
     };
     document.addEventListener('videoEnded', handleVideoSlideEnter);
+  }, []);
+
+  useEffect(() => {
+    const handleQuizCompleted = (_ev) => {
+      console.log('inside core quiz handler');
+      setUserIsStopped(false);
+    };
+    document.addEventListener('quizCompleted', handleQuizCompleted);
   }, []);
 
   return (

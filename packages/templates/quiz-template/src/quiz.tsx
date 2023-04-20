@@ -23,6 +23,7 @@ const Quiz = ({ id, schema, ...props }: QuizProps) => {
   const alignment = schema.content.options.content.alignment.value;
   const alignmentCss = alignment === 'right' ? 'right' : 'left';
   const disableAnimations = schema.controlOptions.disableAnimations?.value;
+  const stopUserAdvancement = schema.controlOptions.stopUserAdvancement.value;
   const showProgressBar = schema.content.options.content.showProgress.value;
   const showProgressRef = useRef(showProgressBar);
   const slideProgress = useRef(0);
@@ -80,6 +81,9 @@ const Quiz = ({ id, schema, ...props }: QuizProps) => {
       selectedAnswer.current === correctAnswerText.value
     ) {
       alert('CORRECT');
+      const quizCompleted = new CustomEvent('quizCompleted', { detail: ev });
+      document.dispatchEvent(quizCompleted);
+      console.log('custom event', quizCompleted);
     } else {
       alert('INCORRECT');
     }
@@ -100,6 +104,8 @@ const Quiz = ({ id, schema, ...props }: QuizProps) => {
       onProgress={handleSlideProgress}
       onEnd={handleSlideEnd}
       notScene={disableAnimations ? true : false}
+      // @ts-ignore
+      stopUserAdvancement={stopUserAdvancement}
       {...props}
     >
       <div id={contentId} className="owlui-container">

@@ -23,6 +23,7 @@ const SimpleVideo = ({ id, schema, ...props }: SimpleVideoProps) => {
   const alignment = schema.content.options.content.alignment.value;
   const alignmentCss = alignment === 'right' ? 'right' : 'left';
   const disableAnimations = schema.controlOptions.disableAnimations?.value;
+  const stopUserAdvancement = schema.controlOptions.stopUserAdvancement.value;
   const showProgressBar = disableAnimations
     ? false
     : schema.content.options.content.showProgress.value;
@@ -160,6 +161,8 @@ const SimpleVideo = ({ id, schema, ...props }: SimpleVideoProps) => {
       onProgress={handleSlideProgress}
       onEnd={handleSlideEnd}
       notScene={disableAnimations ? true : false}
+      // @ts-ignore
+      stopUserAdvancement={stopUserAdvancement}
       {...props}
     >
       <div id={contentId} className="owlui-container">

@@ -68,14 +68,15 @@ export const Page = ({ slides, templates, slideId, ...props }: PageProps) => {
 
     let targetID;
     let targetElement;
-    const html = document.documentElement;
 
     switch (ev.key) {
       case 'ArrowLeft':
+        if (currentIndex === 0) {
+          return;
+        }
         if (currentIndex === 1) {
           targetID = targets[0];
           targetElement = document.querySelector(`#${targetID}`);
-          html.style.scrollBehavior = 'smooth';
           currentIndex = 0;
           currentSlide = `module-${slides[0].moduleId}--lesson-${slides[0].lessonId}--slide-${slides[0].id}-${slides[0].template.meta.filename}`;
           setTimeout(() => {
@@ -93,16 +94,14 @@ export const Page = ({ slides, templates, slideId, ...props }: PageProps) => {
             slides[currentIndex - 1].template.controlOptions.disableAnimations
               .value === true
           ) {
-            html.style.scrollBehavior = 'auto';
             setTimeout(() => {
               targetElement?.scrollIntoView({
-                behavior: 'auto',
+                behavior: 'smooth',
                 block: 'center',
                 inline: 'start',
               });
             }, 0);
           } else {
-            html.style.scrollBehavior = 'smooth';
             setTimeout(() => {
               targetElement?.scrollIntoView({
                 behavior: 'smooth',
@@ -114,9 +113,11 @@ export const Page = ({ slides, templates, slideId, ...props }: PageProps) => {
         }
         break;
       case 'ArrowRight':
+        if (currentIndex === targets.length) {
+          return;
+        }
         if (currentIndex + 1 === targets.length) {
           targetElement = document.querySelector('.owlui-last');
-          html.style.scrollBehavior = 'smooth';
           setTimeout(() => {
             targetElement?.scrollIntoView({
               behavior: 'smooth',
@@ -129,20 +130,45 @@ export const Page = ({ slides, templates, slideId, ...props }: PageProps) => {
           targetID = targets[currentIndex + 1];
           targetElement = document.querySelector(`#${targetID}`);
 
+          const currentSlideElement = document.querySelector(
+            `#${targets[currentIndex]}`
+          );
+
+          let scrollMagicPin;
+
+          if (
+            slides[currentIndex].template.controlOptions.disableAnimations
+              .value === false
+          ) {
+            scrollMagicPin = currentSlideElement?.parentElement?.parentElement;
+          }
+
+          // if (
+          //   slides[currentIndex].template.controlOptions.stopUserAdvancement
+          //     .value === true
+          // ) {
+          //   return;
+          // }
+
           if (
             slides[currentIndex + 1].template.controlOptions.disableAnimations
-              .value === true
+              .value === true &&
+            slides[currentIndex].template.controlOptions.disableAnimations
+              .value === false
           ) {
-            html.style.scrollBehavior = 'auto';
+            const pinHeight = scrollMagicPin.style.minHeight;
+            const adjustedMargin = Math.abs(parseInt(pinHeight) / 2) * -1;
+
+            scrollMagicPin.style.marginBottom = `${adjustedMargin.toString()}px`;
+
             setTimeout(() => {
               targetElement?.scrollIntoView({
-                behavior: 'auto',
+                behavior: 'smooth',
                 block: 'center',
                 inline: 'start',
               });
-            }, 100);
+            }, 0);
           } else {
-            html.style.scrollBehavior = 'smooth';
             setTimeout(() => {
               targetElement?.scrollIntoView({
                 behavior: 'smooth',

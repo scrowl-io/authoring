@@ -17,6 +17,7 @@ const BlockText = ({ id, schema, ...props }: BlockTextProps) => {
   const bgLabel = schema.content.bgImage.content.alt.value || '';
   const bgFocusCss = focusElement === 'bgImage.url' && 'has-focus';
   const bgRef = useRef<HTMLDivElement>(null);
+  const stopUserAdvancement = schema.controlOptions.stopUserAdvancement.value;
   // @ts-ignore
   const bgStyles = {
     backgroundImage: `url("${bgUrl}")`,
@@ -92,6 +93,8 @@ const BlockText = ({ id, schema, ...props }: BlockTextProps) => {
       onProgress={handleSlideProgress}
       onEnd={handleSlideEnd}
       notScene={disableAnimations ? true : false}
+      // @ts-ignore
+      stopUserAdvancement={stopUserAdvancement}
       {...props}
     >
       <div id={contentId} className="owlui-container">
