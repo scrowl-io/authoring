@@ -3,17 +3,17 @@ import { LessonOutroSchemaProps } from './lesson-outro.types';
 export const LessonOutroSchema: LessonOutroSchemaProps = {
   meta: {
     version: '1.0.0',
-    label: 'Lesson Intro',
-    component: 'LessonIntro',
-    filename: 'lesson-intro',
-    tags: ['text', 'introduction'],
+    label: 'Lesson Outro',
+    component: 'LessonOutro',
+    filename: 'lesson-outro',
+    tags: ['text'],
     icon: 'article',
   },
   content: {
     title: {
       type: 'Textbox',
       label: 'Title',
-      value: 'Enter Your New Title',
+      value: 'Finished Quiz',
       placeholder: 'Title',
       multiLine: false,
       autoGrow: 10,
@@ -41,7 +41,7 @@ export const LessonOutroSchema: LessonOutroSchemaProps = {
     startLabel: {
       type: 'Textbox',
       label: 'Start Label',
-      value: 'START',
+      value: 'END',
       placeholder: 'Start Label',
       multiLine: false,
       autoGrow: 10,

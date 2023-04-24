@@ -4,6 +4,7 @@ import { ui } from '@scrowl/ui';
 import { core } from '@scrowl/template-core';
 import BlockText from '@scrowl/template-block-text/src/block-text';
 import LessonIntro from '@scrowl/template-lesson-intro/src/lesson-intro';
+import LessonOutro from '@scrowl/template-lesson-outro/src/lesson-outro';
 import Quiz from '@scrowl/template-quiz/src/quiz';
 import SimpleText from '@scrowl/template-simple-text/src/simple-text';
 import SimpleVideo from '@scrowl/template-simple-video/src/simple-video';
@@ -24,6 +25,7 @@ const App = () => {
   const templateList = {
     BlockText: BlockText,
     LessonIntro: LessonIntro,
+    LessonOutro: LessonOutro,
     Quiz: Quiz,
     SimpleText: SimpleText,
     TwoColumn: TwoColumn,

@@ -2,6 +2,7 @@ import React from 'react';
 import { TemplateSchema } from '@scrowl/template-core';
 import { BlockTextProps } from '@scrowl/template-block-text';
 import { LessonIntroProps } from '@scrowl/template-lesson-intro';
+import { LessonOutroProps } from '@scrowl/template-lesson-outro';
 import { SimpleTextProps } from '@scrowl/template-simple-text';
 import { TwoColumnProps } from '@scrowl/template-two-column';
 
@@ -9,9 +10,10 @@ export type {
   TemplateSchema,
   BlockTextProps,
   LessonIntroProps,
+  LessonOutroProps,
   SimpleTextProps,
-  TwoColumnProps
-}
+  TwoColumnProps,
+};
 
 export type TemplateElementProps = BlockTextProps | LessonIntroProps | SimpleTextProps | TwoColumnProps;
 

@@ -67,6 +67,7 @@
     "@scrowl/template-simple-text": "^1.0.99",
     "@scrowl/template-simple-video": "^1.0.99",
     "@scrowl/template-two-column": "^1.0.99",
+    "@scrowl/template-lesson-outro": "^1.0.99",
     "@types/react": "^18.0.21",
     "@types/react-dom": "^18.0.6",
     "eslint": "^8.25.0",

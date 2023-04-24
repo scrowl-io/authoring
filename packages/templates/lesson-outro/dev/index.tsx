@@ -24,7 +24,7 @@ const App = () => {
         <Suspense fallback={<div>Loading...</div>}>
           <LessonOutro
             editMode={true}
-            id="template-lesson-intro"
+            id="template-lesson-outro"
             controller={controller}
             schema={schema}
           />

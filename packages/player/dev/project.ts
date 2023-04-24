@@ -2,6 +2,7 @@ import { ProjectData } from '../src';
 import { TemplateSchema } from '@scrowl/template-core';
 import { BlockTextSchema } from '@scrowl/template-block-text/schema';
 import { LessonIntroSchema } from '@scrowl/template-lesson-intro/schema';
+import { LessonOutroSchema } from '@scrowl/template-lesson-outro/schema';
 import { SimpleTextSchema } from '@scrowl/template-simple-text/schema';
 import { TwoColumnSchema } from '@scrowl/template-two-column/schema';
 import { SimpleVideoSchema } from '@scrowl/template-simple-video/schema';
@@ -14,6 +15,7 @@ const TEMPLATES = {
   twoColumn: JSON.stringify(TwoColumnSchema),
   simpleVideo: JSON.stringify(SimpleVideoSchema),
   quiz: JSON.stringify(QuizSchema),
+  lessonOutro: JSON.stringify(LessonOutroSchema),
 };
 
 const createSlide = (
@@ -115,7 +117,7 @@ export const create = () => {
         'https://www.youtube.com/watch?v=Z_ppk0iQnsA'
       ),
       createSlide('Slide 1.3', 0, 0, 2, 'quiz'),
-      createSlide('Slide 1.4', 0, 0, 3, 'quiz'),
+      createSlide('Slide 1.4', 0, 0, 3, 'lessonOutro'),
 
       // createSlide('Slide 1.4', 0, 0, 3, 'blockText', true, './osg-logo.png'),
 
