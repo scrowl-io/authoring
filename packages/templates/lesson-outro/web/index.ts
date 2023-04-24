@@ -1,5 +1,5 @@
-import { LessonIntroSchema, LessonIntroSchemaProps } from '../src';
-import LessonIntro from './lesson-intro-lazy';
+import { LessonOutroSchema, LessonOutroSchemaProps } from '../src';
+import LessonOutro from './lesson-outro-lazy';
 
-window.LessonIntro = LessonIntro;
-window.LessonIntroSchema = LessonIntroSchema as LessonIntroSchemaProps;
+window.LessonOutro = LessonOutro;
+window.LessonOutroSchema = LessonOutroSchema as LessonOutroSchemaProps;

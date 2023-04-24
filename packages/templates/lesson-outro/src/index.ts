@@ -1,2 +1,2 @@
-export * from './lesson-intro.types';
-export * from './lesson-intro.schema';
+export * from './lesson-outro.types';
+export * from './lesson-outro.schema';

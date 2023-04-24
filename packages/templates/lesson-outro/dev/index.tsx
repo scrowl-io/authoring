@@ -3,8 +3,8 @@ import { createRoot } from 'react-dom/client';
 import { core } from '@scrowl/template-core';
 import { ui } from '@scrowl/ui';
 import './_index.scss';
-import { LessonIntroSchema, LessonIntroSchemaProps } from '../src';
-const LessonIntro = React.lazy(() => import('../src/lesson-intro'));
+import { LessonOutroSchema, LessonOutroSchemaProps } from '../src';
+const LessonOutro = React.lazy(() => import('../src/lesson-outro'));
 
 const container = document.getElementById('scrowl-player') as HTMLElement;
 const root = createRoot(container);
@@ -16,13 +16,13 @@ window['Scrowl'] = Scrowl;
 
 const App = () => {
   const controller = new Scrowl.core.scroll.Controller();
-  const schema = LessonIntroSchema as LessonIntroSchemaProps;
+  const schema = LessonOutroSchema as LessonOutroSchemaProps;
 
   return (
     <div id="lesson-wrapper">
       <div className="lesson">
         <Suspense fallback={<div>Loading...</div>}>
-          <LessonIntro
+          <LessonOutro
             editMode={true}
             id="template-lesson-intro"
             controller={controller}

@@ -9,7 +9,7 @@ import {
   TemplateSchema,
 } from '@scrowl/template-core';
 
-export interface LessonIntroContentBgImage extends InputFieldsetProps {
+export interface LessonOutroContentBgImage extends InputFieldsetProps {
   content: {
     alt: InputTextboxProps;
     url: InputAssetProps;
@@ -17,20 +17,20 @@ export interface LessonIntroContentBgImage extends InputFieldsetProps {
   };
 }
 
-export interface LessonIntroSchemaProps extends TemplateSchema {
+export interface LessonOutroSchemaProps extends TemplateSchema {
   meta: TemplateSchemaMeta;
   content: {
     title: InputTextboxProps;
     subtitle: InputTextboxProps;
     time: InputTextboxProps;
     startLabel: InputTextboxProps;
-    bgImage: LessonIntroContentBgImage;
+    bgImage: LessonOutroContentBgImage;
   };
-};
-
-export interface LessonIntroCommons extends TemplateCommons {
-  schema: LessonIntroSchemaProps;
 }
 
-export type LessonIntroProps = LessonIntroCommons &
+export interface LessonOutroCommons extends TemplateCommons {
+  schema: LessonOutroSchemaProps;
+}
+
+export type LessonOutroProps = LessonOutroCommons &
   React.AllHTMLAttributes<HTMLDivElement>;

@@ -1,22 +1,22 @@
 // @ts-ignore
 import React, { useRef, useState } from 'react';
 import './_index.scss';
-import { LessonIntroProps } from './lesson-intro.types';
+import { LessonOutroProps } from './lesson-outro.types';
 
-const LessonIntro = ({ id, schema, ...props }: LessonIntroProps) => {
+const LessonOutro = ({ id, schema, ...props }: LessonOutroProps) => {
   const Scrowl = window['Scrowl'];
-  let classes = 'template-lesson-intro';
+  let classes = 'template-lesson-outro';
   const editMode = props.editMode ? true : false;
   const focusElement = editMode ? props.focusElement : null;
-  const contentId = `${id}-lesson-intro`;
+  const contentId = `${id}-lesson-outro`;
   const title = schema.content.title.value;
-  let titleClasses = 'template-lesson-intro-title can-focus';
+  let titleClasses = 'template-lesson-outro-title can-focus';
   const subtitle = schema.content.subtitle.value;
-  let subtitleClasses = 'template-lesson-intro-subtitle can-focus';
+  let subtitleClasses = 'template-lesson-outro-subtitle can-focus';
   const time = schema.content.time.value;
-  let timeClasses = 'template-lesson-intro-time can-focus';
+  let timeClasses = 'template-lesson-outro-time can-focus';
   const startLabel = schema.content.startLabel.value;
-  let startLabelClasses = 'template-lesson-intro-start-button can-focus';
+  let startLabelClasses = 'template-lesson-outro-start-button can-focus';
   const bg = schema.content.bgImage.content.bg.value;
   const bgUrl = schema.content.bgImage.content.url.value;
   const bgLabel = schema.content.bgImage.content.alt.value || '';
@@ -143,4 +143,4 @@ const LessonIntro = ({ id, schema, ...props }: LessonIntroProps) => {
   );
 };
 
-export { LessonIntro as default };
+export { LessonOutro as default };

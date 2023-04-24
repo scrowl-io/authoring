@@ -1,14 +1,14 @@
 import { CORE_PROPS } from '@scrowl/template-core';
 import { UI_PROPS } from '@scrowl/ui';
-import { LessonIntroProps, LessonIntroSchemaProps } from '../src';
+import { LessonOutroProps, LessonOutroSchemaProps } from '../src';
 
 declare global {
   interface Window {
     Scrowl: {
       core: CORE_PROPS;
       ui: UI_PROPS;
-    },
-    LessonIntro: (props: LessonIntroProps) => JSX.Element;
-    LessonIntroSchema: LessonIntroSchemaProps;
+    };
+    LessonOutro: (props: LessonOutroProps) => JSX.Element;
+    LessonOutroSchema: LessonOutroSchemaProps;
   }
 }

@@ -1,6 +1,6 @@
-import { LessonIntroSchemaProps } from './lesson-intro.types';
+import { LessonOutroSchemaProps } from './lesson-outro.types';
 
-export const LessonIntroSchema: LessonIntroSchemaProps = {
+export const LessonOutroSchema: LessonOutroSchemaProps = {
   meta: {
     version: '1.0.0',
     label: 'Lesson Intro',
@@ -84,5 +84,5 @@ export const LessonIntroSchema: LessonIntroSchemaProps = {
 };
 
 export default {
-  LessonIntroSchema,
+  LessonOutroSchema,
 };

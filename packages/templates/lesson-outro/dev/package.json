@@ -1,5 +1,5 @@
 {
-  "name": "@scrowl/template-block-text-dev",
+  "name": "@scrowl/template-lesson-outro-dev",
   "version": "1.0.0",
   "description": "",
   "license": "MIT",
@@ -10,11 +10,11 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/scrowl-io/authoring.git",
-    "directory": "packages/template/block-text"
+    "directory": "packages/template/lesson-outro"
   },
   "bugs": {
     "url": "https://github.com/scrowl-io/scrowl/issues"
   },
-  "homepage": "https://github.com/scrowl-io/authoring/packages/template/block-text#readme",
+  "homepage": "https://github.com/scrowl-io/authoring/packages/template/lesson-outro#readme",
   "source": "./index.html"
 }
