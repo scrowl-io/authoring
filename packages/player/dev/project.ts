@@ -107,21 +107,22 @@ export const create = () => {
     ],
     slides: [
       createSlide('Slide 1.1', 0, 0, 0, 'lessonIntro'),
-      createSlide(
-        'Slide 1.2',
-        0,
-        0,
-        1,
-        'simpleVideo',
-        true,
-        'https://www.youtube.com/watch?v=Z_ppk0iQnsA'
-      ),
+      // createSlide(
+      //   'Slide 1.2',
+      //   0,
+      //   0,
+      //   1,
+      //   'simpleVideo',
+      //   true,
+      //   'https://www.youtube.com/watch?v=Z_ppk0iQnsA'
+      // ),
+      createSlide('Slide 1.2', 0, 0, 1, 'quiz'),
       createSlide('Slide 1.3', 0, 0, 2, 'quiz'),
-      createSlide('Slide 1.4', 0, 0, 3, 'lessonOutro'),
+      createSlide('Slide 1.4', 0, 0, 3, 'quiz'),
 
       // createSlide('Slide 1.4', 0, 0, 3, 'blockText', true, './osg-logo.png'),
 
-      createSlide('Slide 2.1', 0, 0, 4, 'twoColumn'),
+      createSlide('Slide 2.1', 0, 0, 4, 'lessonOutro'),
       createSlide('Slide 2.2', 0, 1, 5, 'simpleText'),
 
       createSlide('Slide 3.1', 0, 2, 6, 'twoColumn'),

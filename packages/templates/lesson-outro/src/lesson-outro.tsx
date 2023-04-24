@@ -25,6 +25,7 @@ const LessonOutro = ({ id, schema, ...props }: LessonOutroProps) => {
   const bgStyles = {
     backgroundImage: `url("${bgUrl}")`,
   };
+  const disableAnimations = schema.controlOptions.disableAnimations?.value;
 
   if (focusElement === 'title') {
     titleClasses += ' has-focus';
@@ -103,7 +104,7 @@ const LessonOutro = ({ id, schema, ...props }: LessonOutroProps) => {
     <Scrowl.core.Template
       id={`slide-${contentId}`}
       className={classes}
-      notScene={true}
+      notScene={disableAnimations ? true : false}
       style={{ overflow: 'hidden' }}
       {...props}
     >
