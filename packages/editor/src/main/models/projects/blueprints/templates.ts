@@ -1,7 +1,17 @@
 import { BlockTextSchema, BlockTextSchemaProps } from '@scrowl/template-block-text/schema';
 import { LessonIntroSchema, LessonIntroSchemaProps } from '@scrowl/template-lesson-intro/schema';
-import { SimpleTextSchema, SimpleTextSchemaProps } from '@scrowl/template-simple-text/schema';
-import { TwoColumnSchema, TwoColumnSchemaProps } from '@scrowl/template-two-column/schema';
+import {
+  LessonOutroSchema,
+  LessonOutroSchemaProps,
+} from '@scrowl/template-lesson-outro/schema';
+import {
+  SimpleTextSchema,
+  SimpleTextSchemaProps,
+} from '@scrowl/template-simple-text/schema';
+import {
+  TwoColumnSchema,
+  TwoColumnSchemaProps,
+} from '@scrowl/template-two-column/schema';
 import {
   SimpleVideoSchema,
   SimpleVideoSchemaProps,
@@ -11,6 +21,7 @@ import { QuizSchema, QuizSchemaProps } from '@scrowl/template-quiz/schema';
 export const TEMPLATES = {
   blockText: JSON.stringify(BlockTextSchema),
   lessonIntro: JSON.stringify(LessonIntroSchema),
+  lessonOutro: JSON.stringify(LessonOutroSchema),
   simpleText: JSON.stringify(SimpleTextSchema),
   twoColumn: JSON.stringify(TwoColumnSchema),
   simpleVideo: JSON.stringify(SimpleVideoSchema),
@@ -22,6 +33,7 @@ export type TemplateNames = keyof typeof TEMPLATES;
 export type TemplateSchemas = {
   blockText: BlockTextSchemaProps;
   lessonIntro: LessonIntroSchemaProps;
+  lessonOutro: LessonOutroSchemaProps;
   simpleText: SimpleTextSchemaProps;
   twoColumn: TwoColumnSchemaProps;
   simpleVideo: SimpleVideoSchemaProps;

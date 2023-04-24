@@ -64,6 +64,13 @@ const config = {
       overwrite: true,
     },
   },
+  'node_modules/@scrowl/template-lesson-outro/dist': {
+    dest: './src/main/assets/templates/lesson-outro',
+    includePaths: ['../../'],
+    options: {
+      overwrite: true,
+    },
+  },
   'node_modules/@scrowl/template-simple-text/dist': {
     dest: './src/main/assets/templates/simple-text',
     includePaths: ['../../'],
