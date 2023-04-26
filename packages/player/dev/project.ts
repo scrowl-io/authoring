@@ -59,63 +59,75 @@ export const create = () => {
         id: 0,
         name: 'An Introduction to Harrassment & Discrimination',
       },
-      {
-        id: 1,
-        name: 'Sexual Harrassment',
-      },
-      {
-        id: 2,
-        name: 'Additional Training For Supervisors',
-      },
+      // {
+      //   id: 1,
+      //   name: 'Sexual Harrassment',
+      // },
+      // {
+      //   id: 2,
+      //   name: 'Additional Training For Supervisors',
+      // },
     ],
     lessons: [
       {
         moduleId: 0,
         id: 0,
         name: 'What is Sexual Harrassment?',
+        attempts: [
+          {
+            started_at: '',
+            finished_at: '',
+            questions: [],
+          },
+        ],
       },
       {
         moduleId: 0,
         id: 1,
         name: 'Building a Respectful Workplace',
+        attempts: [
+          {
+            started_at: '',
+            finished_at: '',
+            questions: [],
+          },
+        ],
       },
       {
         moduleId: 0,
         id: 2,
         name: "What to Do If You're Being Sexually Harrassed at Work",
+        attempts: [
+          {
+            started_at: '',
+            finished_at: '',
+            questions: [],
+          },
+        ],
       },
-      {
-        moduleId: 1,
-        id: 3,
-        name: 'Bystander Intervention',
-      },
-      {
-        moduleId: 1,
-        id: 4,
-        name: 'Next Steps',
-      },
-      {
-        moduleId: 2,
-        id: 5,
-        name: 'Lesson 6',
-      },
-      {
-        moduleId: 2,
-        id: 6,
-        name: 'Lesson 7',
-      },
+      // {
+      //   moduleId: 1,
+      //   id: 3,
+      //   name: 'Bystander Intervention',
+      // },
+      // {
+      //   moduleId: 1,
+      //   id: 4,
+      //   name: 'Next Steps',
+      // },
+      // {
+      //   moduleId: 2,
+      //   id: 5,
+      //   name: 'Lesson 6',
+      // },
+      // {
+      //   moduleId: 2,
+      //   id: 6,
+      //   name: 'Lesson 7',
+      // },
     ],
     slides: [
       createSlide('Slide 1.1', 0, 0, 0, 'lessonIntro'),
-      // createSlide(
-      //   'Slide 1.2',
-      //   0,
-      //   0,
-      //   1,
-      //   'simpleVideo',
-      //   true,
-      //   'https://www.youtube.com/watch?v=Z_ppk0iQnsA'
-      // ),
       createSlide('Slide 1.2', 0, 0, 1, 'quiz'),
       createSlide('Slide 1.3', 0, 0, 2, 'quiz'),
       createSlide('Slide 1.4', 0, 0, 3, 'quiz'),
@@ -128,18 +140,18 @@ export const create = () => {
       createSlide('Slide 3.1', 0, 2, 6, 'twoColumn'),
       createSlide('Slide 3.2', 0, 2, 7, 'twoColumn'),
 
-      createSlide('Slide 4.1', 1, 3, 8, 'twoColumn'),
-      createSlide('Slide 4.2', 1, 4, 9, 'twoColumn'),
-      createSlide('Slide 4.3', 1, 4, 10, 'twoColumn'),
+      // createSlide('Slide 4.1', 1, 3, 8, 'twoColumn'),
+      // createSlide('Slide 4.2', 1, 4, 9, 'twoColumn'),
+      // createSlide('Slide 4.3', 1, 4, 10, 'twoColumn'),
 
-      createSlide('Slide 5.1', 2, 5, 11, 'twoColumn'),
-      createSlide('Slide 5.2', 2, 5, 12, 'twoColumn'),
-      createSlide('Slide 5.3', 2, 5, 13, 'lessonIntro'),
-      createSlide('Slide 5.4', 2, 5, 14, 'twoColumn'),
-      createSlide('Slide 5.6', 2, 5, 15, 'twoColumn'),
+      // createSlide('Slide 5.1', 2, 5, 11, 'twoColumn'),
+      // createSlide('Slide 5.2', 2, 5, 12, 'twoColumn'),
+      // createSlide('Slide 5.3', 2, 5, 13, 'lessonIntro'),
+      // createSlide('Slide 5.4', 2, 5, 14, 'twoColumn'),
+      // createSlide('Slide 5.6', 2, 5, 15, 'twoColumn'),
 
-      createSlide('Slide 6.1', 2, 6, 16, 'twoColumn'),
-      createSlide('Slide 6.2', 2, 6, 17, 'twoColumn'),
+      // createSlide('Slide 6.1', 2, 6, 16, 'twoColumn'),
+      // createSlide('Slide 6.2', 2, 6, 17, 'twoColumn'),
     ],
     glossary: [
       {

@@ -33,10 +33,25 @@ export type ProjectModule = {
   name: string;
 };
 
+export type LessonQuestion = {
+  id: string;
+  correct: boolean;
+  answer: string;
+  started_at?: string;
+  submitted_at?: string;
+};
+
+export type LessonAttempt = {
+  started_at?: string;
+  finished_at?: string;
+  questions: Array<LessonQuestion>;
+};
+
 export type ProjectLesson = {
   name: string;
   moduleId: number;
   id: number;
+  attempts: Array<LessonAttempt>;
 };
 
 export type ProjectSlide = {

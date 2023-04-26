@@ -3,7 +3,8 @@ import { PageProps } from './pages.types';
 import { TemplateComponent } from '../../root/root.types';
 import { Error } from '../../components';
 
-export const Page = ({ slides, templates, slideId, ...props }: PageProps) => {
+// @ts-ignore
+export const Page = ({ slides, templates, slideId, lesson, ...props }: PageProps) => {
   const Scrowl = window['Scrowl'];
   const [hasStartedCourse, setHasStartedCourse] = useState(true);
 
@@ -276,6 +277,28 @@ export const Page = ({ slides, templates, slideId, ...props }: PageProps) => {
   });
 
   useEffect(() => {
+    const handleSubmitQuizAnswer = (_ev) => {
+      lesson.attempts[0].questions.push({
+        id: _ev.detail.contentId,
+        question: _ev.detail.question,
+        correct: _ev.detail.correct,
+        answer: _ev.detail.answer,
+        started_at: new Date().toISOString().slice(0, 19).replace('T', ' '),
+        submitted_at: new Date().toISOString().slice(0, 19).replace('T', ' '),
+      });
+
+      const updateOutro = new CustomEvent('updateOutro', {
+        detail: {
+          questions: lesson.attempts[0].questions,
+        },
+      });
+      document.dispatchEvent(updateOutro);
+    };
+
+    document.addEventListener('quizCompleted', handleSubmitQuizAnswer);
+  }, []);
+
+  useEffect(() => {
     const handleCourseStart = (_ev) => {
       setHasStartedCourse(true);
     };
@@ -309,6 +332,19 @@ export const Page = ({ slides, templates, slideId, ...props }: PageProps) => {
           }
 
           const Template = templates[component] as TemplateComponent;
+
+          if (component === 'Quiz' || component === 'LessonOutro') {
+            return (
+              <Template
+                key={idx}
+                id={id}
+                schema={slide.template}
+                controller={controller}
+                slides={slides}
+                lesson={lesson}
+              />
+            );
+          }
 
           return (
             <Template

@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import './_index.scss';
 import { QuizProps } from './quiz.types';
 
-const Quiz = ({ id, schema, ...props }: QuizProps) => {
+// @ts-ignore
+const Quiz = ({ id, schema, lesson, ...props }: QuizProps) => {
   const Scrowl = window['Scrowl'];
   let classes = 'template-quiz';
   const Markdown = Scrowl.core.Markdown;
@@ -81,11 +82,27 @@ const Quiz = ({ id, schema, ...props }: QuizProps) => {
       selectedAnswer.current === correctAnswerText.value
     ) {
       alert('CORRECT');
-      const quizCompleted = new CustomEvent('quizCompleted', { detail: ev });
+      const quizCompleted = new CustomEvent('quizCompleted', {
+        detail: {
+          question: question,
+          answer: correctAnswerText.value,
+          contentId: contentId,
+          correct: true,
+        },
+      });
       document.dispatchEvent(quizCompleted);
-      console.log('custom event', quizCompleted);
+
     } else {
       alert('INCORRECT');
+      const quizCompleted = new CustomEvent('quizCompleted', {
+        detail: {
+          question: question,
+          answer: selectedAnswer.current,
+          contentId: contentId,
+          correct: false,
+        },
+      });
+      document.dispatchEvent(quizCompleted);
     }
   };
 

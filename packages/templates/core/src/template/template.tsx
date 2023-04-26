@@ -400,7 +400,6 @@ export const Template = ({
 
   useEffect(() => {
     const handleQuizCompleted = (_ev) => {
-      console.log('inside core quiz handler');
       setUserIsStopped(false);
     };
     document.addEventListener('quizCompleted', handleQuizCompleted);

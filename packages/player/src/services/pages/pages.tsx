@@ -114,6 +114,8 @@ export const create = (
                     slides={page.slides}
                     templates={templateList}
                     slideId={slideId}
+                    // @ts-ignore
+                    lesson={page.lesson}
                   />
                 </Suspense>
 

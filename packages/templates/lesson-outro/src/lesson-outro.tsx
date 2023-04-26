@@ -1,9 +1,9 @@
-// @ts-ignore
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './_index.scss';
 import { LessonOutroProps } from './lesson-outro.types';
 
-const LessonOutro = ({ id, schema, ...props }: LessonOutroProps) => {
+// @ts-ignore
+const LessonOutro = ({ id, schema, lesson, ...props }: LessonOutroProps) => {
   const Scrowl = window['Scrowl'];
   let classes = 'template-lesson-outro';
   const editMode = props.editMode ? true : false;
@@ -26,6 +26,10 @@ const LessonOutro = ({ id, schema, ...props }: LessonOutroProps) => {
     backgroundImage: `url("${bgUrl}")`,
   };
   const disableAnimations = schema.controlOptions.disableAnimations?.value;
+
+  const [lessonQuestions, setLessonQuestions] = useState(
+    lesson.attempts[0].questions
+  );
 
   if (focusElement === 'title') {
     titleClasses += ' has-focus';
@@ -100,6 +104,26 @@ const LessonOutro = ({ id, schema, ...props }: LessonOutroProps) => {
     }
   };
 
+  const getScore = () => {
+    const correctAnswers = lessonQuestions.filter((question) => {
+      return question.correct === true;
+    });
+    const score = correctAnswers.length / lessonQuestions.length;
+    return Math.ceil((score * 100) / 5) * 5;
+  };
+
+  useEffect(() => {
+    const handleUpdateOutro = (_ev) => {
+      console.log('inside outro handler: ', _ev);
+      setLessonQuestions([..._ev.detail.questions]);
+    };
+
+    document.addEventListener('updateOutro', handleUpdateOutro);
+  }, []);
+
+  console.log('lessonQuestions: ', lessonQuestions);
+
+  getScore();
   return (
     <Scrowl.core.Template
       id={`slide-${contentId}`}
@@ -123,6 +147,27 @@ const LessonOutro = ({ id, schema, ...props }: LessonOutroProps) => {
               <span className="template-lesson-outro-time-value">{time}</span>
             </span>
           )}
+          <h2>Score: {getScore()}%</h2>
+          <table className="questions-table">
+            <thead>
+              <tr>
+                <th>Question</th>
+                <th>Correct</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {lessonQuestions.map((question) => {
+                return (
+                  <tr>
+                    <td>{question.question}</td>
+                    {question.correct ? <td>Correct</td> : <td>Incorrect</td>}
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+
           <button
             className={startLabelClasses}
             onMouseDown={handleFocusStartLabel}
