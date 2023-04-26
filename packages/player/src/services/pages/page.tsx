@@ -1,12 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { PageProps } from './pages.types';
 import { TemplateComponent } from '../../root/root.types';
 import { Error } from '../../components';
 
-// @ts-ignore
-export const Page = ({ slides, templates, slideId, lesson, ...props }: PageProps) => {
+export const Page = ({
+  slides,
+  templates,
+  slideId,
+  lesson,
+  ...props
+}: PageProps) => {
   const Scrowl = window['Scrowl'];
   const [hasStartedCourse, setHasStartedCourse] = useState(true);
+  const attempt = useRef(0);
 
   if (
     Scrowl &&
@@ -28,6 +34,29 @@ export const Page = ({ slides, templates, slideId, lesson, ...props }: PageProps
       setHasStartedCourse(false);
     }
   }
+
+  const questions: Array<any> = [];
+
+  slides.forEach((slide) => {
+    if (slide.template.meta.component === 'Quiz') {
+      const question: any = {};
+      const answers: Array<string> = [];
+      //@ts-ignore
+      slide.template.content.answers.content.forEach((answer) => {
+        answers.push(answer.value);
+      });
+      question.id = `${props.id}--slide-${slide.id}-${slide.template.meta.filename}`;
+      question.correct = false;
+      question.question =
+        // @ts-ignore
+        slide.template.content.question.content.question.value;
+      question.answers = answers;
+
+      questions.push(question);
+    }
+  });
+
+  lesson.attempts[attempt.current].questions = questions;
 
   const controller = new Scrowl.core.scroll.Controller();
 
@@ -278,19 +307,8 @@ export const Page = ({ slides, templates, slideId, lesson, ...props }: PageProps
 
   useEffect(() => {
     const handleSubmitQuizAnswer = (_ev) => {
-      lesson.attempts[0].questions.push({
-        id: _ev.detail.contentId,
-        question: _ev.detail.question,
-        correct: _ev.detail.correct,
-        answer: _ev.detail.answer,
-        started_at: new Date().toISOString().slice(0, 19).replace('T', ' '),
-        submitted_at: new Date().toISOString().slice(0, 19).replace('T', ' '),
-      });
-
       const updateOutro = new CustomEvent('updateOutro', {
-        detail: {
-          questions: lesson.attempts[0].questions,
-        },
+        detail: _ev.detail,
       });
       document.dispatchEvent(updateOutro);
     };

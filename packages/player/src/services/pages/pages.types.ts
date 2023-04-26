@@ -5,6 +5,7 @@ export interface PageCommons {
   slides: Array<ProjectSlide>;
   templates: PlayerTemplateList;
   slideId?: string;
+  lesson: ProjectLesson;
 };
 
 export type PageProps = PageCommons & React.HTMLAttributes<HTMLDivElement>;

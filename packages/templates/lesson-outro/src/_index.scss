@@ -17,10 +17,18 @@
 
   .content {
     width: 100%;
-  }
 
-  .questions-table {
-    width: 70%;
+    .questions-table {
+      text-align: left;
+      width: 70%;
+    }
+
+    .results-container {
+      margin-top: 1em;
+      width: 70%;
+      display: flex;
+      justify-content: space-evenly;
+    }
   }
 
   &-title {

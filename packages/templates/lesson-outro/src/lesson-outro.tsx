@@ -11,12 +11,6 @@ const LessonOutro = ({ id, schema, lesson, ...props }: LessonOutroProps) => {
   const contentId = `${id}-lesson-outro`;
   const title = schema.content.title.value;
   let titleClasses = 'template-lesson-outro-title can-focus';
-  const subtitle = schema.content.subtitle.value;
-  let subtitleClasses = 'template-lesson-outro-subtitle can-focus';
-  const time = schema.content.time.value;
-  let timeClasses = 'template-lesson-outro-time can-focus';
-  const startLabel = schema.content.startLabel.value;
-  let startLabelClasses = 'template-lesson-outro-start-button can-focus';
   const bg = schema.content.bgImage.content.bg.value;
   const bgUrl = schema.content.bgImage.content.url.value;
   const bgLabel = schema.content.bgImage.content.alt.value || '';
@@ -26,10 +20,10 @@ const LessonOutro = ({ id, schema, lesson, ...props }: LessonOutroProps) => {
     backgroundImage: `url("${bgUrl}")`,
   };
   const disableAnimations = schema.controlOptions.disableAnimations?.value;
-
   const [lessonQuestions, setLessonQuestions] = useState(
     lesson.attempts[0].questions
   );
+  const threshold = 60;
 
   if (focusElement === 'title') {
     titleClasses += ' has-focus';
@@ -38,15 +32,6 @@ const LessonOutro = ({ id, schema, lesson, ...props }: LessonOutroProps) => {
   switch (focusElement) {
     case 'title':
       titleClasses += ' has-focus';
-      break;
-    case 'subtitle':
-      subtitleClasses += ' has-focus';
-      break;
-    case 'time':
-      timeClasses += ' has-focus';
-      break;
-    case 'startLabel':
-      startLabelClasses += ' has-focus';
       break;
     case 'bgImage.url':
       bgClasses += ' has-focus';
@@ -62,36 +47,6 @@ const LessonOutro = ({ id, schema, lesson, ...props }: LessonOutroProps) => {
         type: 'focus',
         field: 'title',
       });
-    }
-  };
-
-  const handleFocusSubtitle = () => {
-    if (editMode) {
-      Scrowl.core.host.sendMessage({
-        type: 'focus',
-        field: 'subtitle',
-      });
-    }
-  };
-
-  const handleFocusTime = () => {
-    if (editMode) {
-      Scrowl.core.host.sendMessage({
-        type: 'focus',
-        field: 'time',
-      });
-    }
-  };
-
-  const handleFocusStartLabel = (ev) => {
-    if (editMode) {
-      Scrowl.core.host.sendMessage({
-        type: 'focus',
-        field: 'startLabel',
-      });
-    } else {
-      const startCourse = new CustomEvent('startCourse', { detail: ev });
-      document.dispatchEvent(startCourse);
     }
   };
 
@@ -113,17 +68,23 @@ const LessonOutro = ({ id, schema, lesson, ...props }: LessonOutroProps) => {
   };
 
   useEffect(() => {
-    const handleUpdateOutro = (_ev) => {
-      console.log('inside outro handler: ', _ev);
-      setLessonQuestions([..._ev.detail.questions]);
+    const handleUpdateOutro = (ev) => {
+      const updatedQuestions = lessonQuestions;
+
+      lessonQuestions.forEach((question, _idx) => {
+        if (question.id === ev.detail.contentId) {
+          updatedQuestions[_idx] = ev.detail;
+        }
+
+        setLessonQuestions([...updatedQuestions]);
+      });
     };
 
     document.addEventListener('updateOutro', handleUpdateOutro);
   }, []);
 
-  console.log('lessonQuestions: ', lessonQuestions);
+  const score = getScore();
 
-  getScore();
   return (
     <Scrowl.core.Template
       id={`slide-${contentId}`}
@@ -134,20 +95,14 @@ const LessonOutro = ({ id, schema, lesson, ...props }: LessonOutroProps) => {
     >
       <div id={contentId} className="content">
         <header>
-          {bg && <div className="overlay" />}
           <h1 className={titleClasses} onMouseDown={handleFocusTitle}>
             {title}
           </h1>
-          <h2 className={subtitleClasses} onMouseDown={handleFocusSubtitle}>
-            {subtitle}
-          </h2>
-          {time && time.length > 0 && (
-            <span className={timeClasses} onMouseDown={handleFocusTime}>
-              <Scrowl.ui.Icon icon="schedule" display="outlined" />
-              <span className="template-lesson-outro-time-value">{time}</span>
-            </span>
-          )}
-          <h2>Score: {getScore()}%</h2>
+          <div className="results-container">
+            <h3>Score: {score}%</h3>
+            {score > threshold ? <h3>PASS</h3> : <h3>FAIL</h3>}
+          </div>
+
           <table className="questions-table">
             <thead>
               <tr>
@@ -157,9 +112,9 @@ const LessonOutro = ({ id, schema, lesson, ...props }: LessonOutroProps) => {
             </thead>
 
             <tbody>
-              {lessonQuestions.map((question) => {
+              {lessonQuestions.map((question, idx) => {
                 return (
-                  <tr>
+                  <tr key={idx}>
                     <td>{question.question}</td>
                     {question.correct ? <td>Correct</td> : <td>Incorrect</td>}
                   </tr>
@@ -167,13 +122,6 @@ const LessonOutro = ({ id, schema, lesson, ...props }: LessonOutroProps) => {
               })}
             </tbody>
           </table>
-
-          <button
-            className={startLabelClasses}
-            onMouseDown={handleFocusStartLabel}
-          >
-            {startLabel}
-          </button>
         </header>
         {(bgUrl || editMode) && (
           <div ref={bgRef} className={bgClasses} onMouseDown={handleFocusBg}>
