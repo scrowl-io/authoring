@@ -73,37 +73,16 @@ export const create = () => {
         moduleId: 0,
         id: 0,
         name: 'What is Sexual Harrassment?',
-        attempts: [
-          {
-            started_at: '',
-            finished_at: '',
-            questions: [],
-          },
-        ],
       },
       {
         moduleId: 0,
         id: 1,
         name: 'Building a Respectful Workplace',
-        attempts: [
-          {
-            started_at: '',
-            finished_at: '',
-            questions: [],
-          },
-        ],
       },
       {
         moduleId: 0,
         id: 2,
         name: "What to Do If You're Being Sexually Harrassed at Work",
-        attempts: [
-          {
-            started_at: '',
-            finished_at: '',
-            questions: [],
-          },
-        ],
       },
       // {
       //   moduleId: 1,

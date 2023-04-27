@@ -51,7 +51,7 @@ export type ProjectLesson = {
   name: string;
   moduleId: number;
   id: number;
-  attempts: Array<LessonAttempt>;
+  attempts?: Array<LessonAttempt>;
 };
 
 export type ProjectSlide = {

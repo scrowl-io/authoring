@@ -2,8 +2,15 @@ import React, { useEffect, useRef, useState } from 'react';
 import './_index.scss';
 import { LessonOutroProps } from './lesson-outro.types';
 
-// @ts-ignore
-const LessonOutro = ({ id, schema, lesson, ...props }: LessonOutroProps) => {
+const LessonOutro = ({
+  id,
+  schema,
+  // @ts-ignore
+  lesson,
+  // @ts-ignore
+  attempt,
+  ...props
+}: LessonOutroProps) => {
   const Scrowl = window['Scrowl'];
   let classes = 'template-lesson-outro';
   const editMode = props.editMode ? true : false;
@@ -21,7 +28,7 @@ const LessonOutro = ({ id, schema, lesson, ...props }: LessonOutroProps) => {
   };
   const disableAnimations = schema.controlOptions.disableAnimations?.value;
   const [lessonQuestions, setLessonQuestions] = useState(
-    lesson.attempts[0].questions
+    lesson.attempts[attempt.current].questions
   );
   const threshold = 60;
 
@@ -67,6 +74,17 @@ const LessonOutro = ({ id, schema, lesson, ...props }: LessonOutroProps) => {
     return Math.ceil((score * 100) / 5) * 5;
   };
 
+  let score = getScore();
+
+  const resetQuiz = (ev) => {
+    const resetQuiz = new CustomEvent('resetQuiz', {
+      detail: ev.detail,
+    });
+    document.dispatchEvent(resetQuiz);
+    setLessonQuestions([...lesson.attempts[attempt.current].questions]);
+    score = 0;
+  };
+
   useEffect(() => {
     const handleUpdateOutro = (ev) => {
       const updatedQuestions = lessonQuestions;
@@ -75,15 +93,12 @@ const LessonOutro = ({ id, schema, lesson, ...props }: LessonOutroProps) => {
         if (question.id === ev.detail.contentId) {
           updatedQuestions[_idx] = ev.detail;
         }
-
         setLessonQuestions([...updatedQuestions]);
       });
     };
 
     document.addEventListener('updateOutro', handleUpdateOutro);
-  }, []);
-
-  const score = getScore();
+  }, [lessonQuestions]);
 
   return (
     <Scrowl.core.Template
@@ -122,6 +137,10 @@ const LessonOutro = ({ id, schema, lesson, ...props }: LessonOutroProps) => {
               })}
             </tbody>
           </table>
+
+          {score < threshold && (
+            <button onClick={resetQuiz}>Retake Quiz</button>
+          )}
         </header>
         {(bgUrl || editMode) && (
           <div ref={bgRef} className={bgClasses} onMouseDown={handleFocusBg}>

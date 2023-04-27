@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { PageProps } from './pages.types';
-import { TemplateComponent } from '../../root/root.types';
+import { LessonAttempt, TemplateComponent } from '../../root/root.types';
 import { Error } from '../../components';
 
 export const Page = ({
@@ -35,6 +35,14 @@ export const Page = ({
     }
   }
 
+  const attempts: Array<LessonAttempt> = [
+    {
+      started_at: '',
+      finished_at: '',
+      questions: [],
+    },
+  ];
+
   const questions: Array<any> = [];
 
   slides.forEach((slide) => {
@@ -56,7 +64,9 @@ export const Page = ({
     }
   });
 
-  lesson.attempts[attempt.current].questions = questions;
+  attempts[attempt.current].questions = questions;
+
+  lesson.attempts = attempts;
 
   const controller = new Scrowl.core.scroll.Controller();
 
@@ -317,6 +327,43 @@ export const Page = ({
   }, []);
 
   useEffect(() => {
+    const handleResetQuiz = (_ev) => {
+      const newAttempt = { started_at: '', finished_at: '', questions: [] };
+      const resetQuestions: Array<any> = [];
+      slides.forEach((slide) => {
+        if (slide.template.meta.component === 'Quiz') {
+          const question: any = {};
+          const answers: Array<string> = [];
+          //@ts-ignore
+          slide.template.content.answers.content.forEach((answer) => {
+            answers.push(answer.value);
+          });
+          question.id = `${props.id}--slide-${slide.id}-${slide.template.meta.filename}`;
+          question.correct = false;
+          question.question =
+            // @ts-ignore
+            slide.template.content.question.content.question.value;
+          question.answers = answers;
+
+          resetQuestions.push(question);
+
+          // @ts-ignore
+          newAttempt.questions = resetQuestions;
+        }
+      });
+
+      var ele: any = document.querySelectorAll('input[type=radio]');
+      for (var i = 0; i < ele.length; i++) {
+        ele[i].checked = false;
+      }
+      lesson.attempts?.push(newAttempt);
+      attempt.current++;
+    };
+
+    document.addEventListener('resetQuiz', handleResetQuiz);
+  }, []);
+
+  useEffect(() => {
     const handleCourseStart = (_ev) => {
       setHasStartedCourse(true);
     };
@@ -360,6 +407,7 @@ export const Page = ({
                 controller={controller}
                 slides={slides}
                 lesson={lesson}
+                attempt={attempt}
               />
             );
           }
