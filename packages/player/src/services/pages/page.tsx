@@ -35,9 +35,15 @@ export const Page = ({
     }
   }
 
+  const timeStamp = new Date();
+  timeStamp.toLocaleString();
+  timeStamp.toLocaleDateString();
+  timeStamp.toLocaleTimeString();
+
   const attempts: Array<LessonAttempt> = [
     {
-      started_at: '',
+      //@ts-ignore
+      started_at: timeStamp,
       finished_at: '',
       questions: [],
     },
@@ -328,8 +334,26 @@ export const Page = ({
 
   useEffect(() => {
     const handleResetQuiz = (_ev) => {
-      const newAttempt = { started_at: '', finished_at: '', questions: [] };
+      //@ts-ignore
       const resetQuestions: Array<any> = [];
+      const timeStamp = new Date();
+      timeStamp.toLocaleString();
+      timeStamp.toLocaleDateString();
+      timeStamp.toLocaleTimeString();
+
+      //@ts-ignore
+      lesson.attempts[attempt.current].questions = _ev.detail;
+
+      const newAttempt = {
+        started_at: timeStamp,
+        finished_at: '',
+        questions: [],
+      };
+      if (lesson.attempts) {
+        //@ts-ignore
+        lesson.attempts[attempt.current].finished_at = timeStamp;
+      }
+
       slides.forEach((slide) => {
         if (slide.template.meta.component === 'Quiz') {
           const question: any = {};
@@ -356,6 +380,7 @@ export const Page = ({
       for (var i = 0; i < ele.length; i++) {
         ele[i].checked = false;
       }
+      //@ts-ignore
       lesson.attempts?.push(newAttempt);
       attempt.current++;
     };

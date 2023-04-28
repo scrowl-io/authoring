@@ -30,6 +30,7 @@ const LessonOutro = ({
   const [lessonQuestions, setLessonQuestions] = useState(
     lesson.attempts[attempt.current].questions
   );
+
   const threshold = 60;
 
   if (focusElement === 'title') {
@@ -76,9 +77,9 @@ const LessonOutro = ({
 
   let score = getScore();
 
-  const resetQuiz = (ev) => {
+  const resetQuiz = () => {
     const resetQuiz = new CustomEvent('resetQuiz', {
-      detail: ev.detail,
+      detail: lessonQuestions,
     });
     document.dispatchEvent(resetQuiz);
     setLessonQuestions([...lesson.attempts[attempt.current].questions]);
@@ -88,17 +89,16 @@ const LessonOutro = ({
   useEffect(() => {
     const handleUpdateOutro = (ev) => {
       const updatedQuestions = lessonQuestions;
-
-      lessonQuestions.forEach((question, _idx) => {
+      lessonQuestions.forEach((question, idx) => {
         if (question.id === ev.detail.contentId) {
-          updatedQuestions[_idx] = ev.detail;
+          updatedQuestions[idx] = ev.detail;
         }
         setLessonQuestions([...updatedQuestions]);
       });
     };
 
     document.addEventListener('updateOutro', handleUpdateOutro);
-  }, [lessonQuestions]);
+  }, [lesson.attempts[attempt.current].questions]);
 
   return (
     <Scrowl.core.Template
