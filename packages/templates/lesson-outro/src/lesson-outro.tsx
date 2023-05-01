@@ -5,9 +5,7 @@ import { LessonOutroProps } from './lesson-outro.types';
 const LessonOutro = ({
   id,
   schema,
-  // @ts-ignore
   lesson,
-  // @ts-ignore
   attempt,
   ...props
 }: LessonOutroProps) => {
@@ -27,9 +25,14 @@ const LessonOutro = ({
     backgroundImage: `url("${bgUrl}")`,
   };
   const disableAnimations = schema.controlOptions.disableAnimations?.value;
-  const [lessonQuestions, setLessonQuestions] = useState(
-    lesson.attempts[attempt.current].questions
-  );
+  let lessonQuestions;
+  let setLessonQuestions;
+  if (!editMode) {
+    [lessonQuestions, setLessonQuestions] = useState(
+      //@ts-ignore
+      lesson.attempts[attempt.current].questions
+    );
+  }
 
   const threshold = 60;
 
@@ -68,26 +71,40 @@ const LessonOutro = ({
   };
 
   const getScore = () => {
-    const correctAnswers = lessonQuestions.filter((question) => {
+    let score = 0;
+    const correctAnswers = lessonQuestions?.filter((question) => {
       return question.correct === true;
     });
-    const score = correctAnswers.length / lessonQuestions.length;
-    return Math.ceil((score * 100) / 5) * 5;
+    if (correctAnswers) {
+      score = correctAnswers.length / lessonQuestions.length;
+      return Math.ceil((score * 100) / 5) * 5;
+    } else {
+      return score;
+    }
   };
 
   let score = getScore();
 
   const resetQuiz = () => {
+    if (editMode) {
+      return;
+    }
     const resetQuiz = new CustomEvent('resetQuiz', {
       detail: lessonQuestions,
     });
     document.dispatchEvent(resetQuiz);
-    setLessonQuestions([...lesson.attempts[attempt.current].questions]);
+
+    if (lesson && lesson.attempts && attempt) {
+      setLessonQuestions([...lesson.attempts[attempt.current].questions]);
+    }
     score = 0;
   };
 
   useEffect(() => {
     const handleUpdateOutro = (ev) => {
+      if (editMode) {
+        return;
+      }
       const updatedQuestions = lessonQuestions;
       lessonQuestions.forEach((question, idx) => {
         if (question.id === ev.detail.contentId) {
@@ -98,7 +115,17 @@ const LessonOutro = ({
     };
 
     document.addEventListener('updateOutro', handleUpdateOutro);
-  }, [lesson.attempts[attempt.current].questions]);
+    //@ts-ignore
+  }, [lesson?.attempts[attempt.current].questions]);
+
+  useEffect(() => {
+    if (score && score > threshold) {
+      const passLessonEvent = new CustomEvent('passLesson', {
+        detail: score,
+      });
+      document.dispatchEvent(passLessonEvent);
+    }
+  }, [score]);
 
   return (
     <Scrowl.core.Template
@@ -115,7 +142,7 @@ const LessonOutro = ({
           </h1>
           <div className="results-container">
             <h3>Score: {score}%</h3>
-            {score > threshold ? <h3>PASS</h3> : <h3>FAIL</h3>}
+            {score && score > threshold ? <h3>PASS</h3> : <h3>FAIL</h3>}
           </div>
 
           <table className="questions-table">
@@ -127,17 +154,17 @@ const LessonOutro = ({
             </thead>
 
             <tbody>
-              {lessonQuestions.map((question, idx) => {
-                return (
-                  <tr key={idx}>
-                    <td>{question.question}</td>
-                    {question.correct ? <td>Correct</td> : <td>Incorrect</td>}
-                  </tr>
-                );
-              })}
+              {lessonQuestions &&
+                lessonQuestions.map((question, idx) => {
+                  return (
+                    <tr key={idx}>
+                      <td>{question.question}</td>
+                      {question.correct ? <td>Correct</td> : <td>Incorrect</td>}
+                    </tr>
+                  );
+                })}
             </tbody>
           </table>
-
           {score < threshold && (
             <button onClick={resetQuiz}>Retake Quiz</button>
           )}

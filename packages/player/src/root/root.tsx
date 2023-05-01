@@ -307,7 +307,7 @@ export const Root = ({
       </div>
     </Router>
   );
-};
+};;
 
 export default {
   Root,

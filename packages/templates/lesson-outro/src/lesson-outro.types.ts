@@ -9,6 +9,8 @@ import {
   TemplateSchema,
 } from '@scrowl/template-core';
 
+import { ProjectLesson } from '@scrowl/player';
+
 export interface LessonOutroContentBgImage extends InputFieldsetProps {
   content: {
     alt: InputTextboxProps;
@@ -30,6 +32,8 @@ export interface LessonOutroSchemaProps extends TemplateSchema {
 
 export interface LessonOutroCommons extends TemplateCommons {
   schema: LessonOutroSchemaProps;
+  lesson?: ProjectLesson;
+  attempt?: React.MutableRefObject<number>;
 }
 
 export type LessonOutroProps = LessonOutroCommons &

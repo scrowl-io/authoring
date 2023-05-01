@@ -36,14 +36,15 @@ export type ProjectModule = {
 export type LessonQuestion = {
   id: string;
   correct: boolean;
+  question: string;
   answer: string;
   started_at?: string;
   submitted_at?: string;
 };
 
 export type LessonAttempt = {
-  started_at?: string;
-  finished_at?: string;
+  started_at?: string | Date;
+  finished_at?: string | Date;
   questions: Array<LessonQuestion>;
 };
 

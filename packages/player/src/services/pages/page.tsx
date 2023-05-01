@@ -42,7 +42,6 @@ export const Page = ({
 
   const attempts: Array<LessonAttempt> = [
     {
-      //@ts-ignore
       started_at: timeStamp,
       finished_at: '',
       questions: [],
@@ -334,23 +333,22 @@ export const Page = ({
 
   useEffect(() => {
     const handleResetQuiz = (_ev) => {
-      //@ts-ignore
       const resetQuestions: Array<any> = [];
       const timeStamp = new Date();
       timeStamp.toLocaleString();
       timeStamp.toLocaleDateString();
       timeStamp.toLocaleTimeString();
 
-      //@ts-ignore
-      lesson.attempts[attempt.current].questions = _ev.detail;
+      if (lesson.attempts) {
+        lesson.attempts[attempt.current].questions = _ev.detail;
+      }
 
       const newAttempt = {
         started_at: timeStamp,
         finished_at: '',
-        questions: [],
+        questions: [] as any,
       };
       if (lesson.attempts) {
-        //@ts-ignore
         lesson.attempts[attempt.current].finished_at = timeStamp;
       }
 
@@ -371,18 +369,20 @@ export const Page = ({
 
           resetQuestions.push(question);
 
-          // @ts-ignore
           newAttempt.questions = resetQuestions;
         }
       });
 
       var ele: any = document.querySelectorAll('input[type=radio]');
-      for (var i = 0; i < ele.length; i++) {
-        ele[i].checked = false;
-      }
-      //@ts-ignore
+      ele.forEach((el) => {
+        el.checked = false;
+      });
+
       lesson.attempts?.push(newAttempt);
       attempt.current++;
+      console.log('reset lesson attempts: ', lesson);
+
+      ele[0].scrollIntoView(false);
     };
 
     document.addEventListener('resetQuiz', handleResetQuiz);
