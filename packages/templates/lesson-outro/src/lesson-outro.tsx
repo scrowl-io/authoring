@@ -7,6 +7,8 @@ const LessonOutro = ({
   schema,
   lesson,
   attempt,
+  // @ts-ignore
+  slides,
   ...props
 }: LessonOutroProps) => {
   const Scrowl = window['Scrowl'];
@@ -90,7 +92,10 @@ const LessonOutro = ({
       return;
     }
     const resetQuiz = new CustomEvent('resetQuiz', {
-      detail: lessonQuestions,
+      detail: {
+        lessonQuestions,
+        slides,
+      },
     });
     document.dispatchEvent(resetQuiz);
 

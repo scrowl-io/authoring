@@ -12,7 +12,10 @@ export const Page = ({
 }: PageProps) => {
   const Scrowl = window['Scrowl'];
   const [hasStartedCourse, setHasStartedCourse] = useState(true);
+  const [randomSlides, setRandomSlides] = useState([]);
   const attempt = useRef(0);
+  const targets = useRef(['']);
+  // @ts-ignore
 
   if (
     Scrowl &&
@@ -69,18 +72,28 @@ export const Page = ({
     }
   });
 
-  attempts[attempt.current].questions = questions;
-
-  lesson.attempts = attempts;
+  if (lesson.attempts && lesson.attempts?.length > 0) {
+    lesson.attempts[attempt.current].questions = questions;
+  } else {
+    attempts[attempt.current].questions = questions;
+    lesson.attempts = attempts;
+  }
 
   const controller = new Scrowl.core.scroll.Controller();
 
   let currentSlide = `module-${slides[0].moduleId}--lesson-${slides[0].lessonId}--slide-${slides[0].id}-${slides[0].template.meta.filename}`;
   let currentIndex = 0;
 
-  const targets = slides?.map((slide) => {
-    return `module-${slide.moduleId}--lesson-${slide.lessonId}--slide-${slide.id}-${slide.template.meta.filename}`;
-  });
+  if (randomSlides.length < 1) {
+    targets.current = slides?.map((slide) => {
+      return `module-${slide.moduleId}--lesson-${slide.lessonId}--slide-${slide.id}-${slide.template.meta.filename}`;
+    });
+  } else {
+    targets.current = randomSlides?.map((slide) => {
+      //@ts-ignore
+      return `module-${slide.moduleId}--lesson-${slide.lessonId}--slide-${slide.id}-${slide.template.meta.filename}`;
+    });
+  }
 
   const handleArrowKeys = (ev) => {
     if (Scrowl && Scrowl.runtime) {
@@ -99,16 +112,16 @@ export const Page = ({
 
     let matchingId;
 
-    if (targets && currentSlide !== 'owlui-last') {
-      matchingId = targets.find((t) => {
+    if (targets.current && currentSlide !== 'owlui-last') {
+      matchingId = targets.current.find((t) => {
         return t === currentSlide;
       });
     } else {
-      currentIndex = targets.length;
+      currentIndex = targets.current.length;
     }
 
     if (matchingId) {
-      currentIndex = targets?.indexOf(matchingId);
+      currentIndex = targets.current?.indexOf(matchingId);
     }
 
     let targetID;
@@ -120,7 +133,7 @@ export const Page = ({
           return;
         }
         if (currentIndex === 1) {
-          targetID = targets[0];
+          targetID = targets.current[0];
           targetElement = document.querySelector(`#${targetID}`);
           currentIndex = 0;
           currentSlide = `module-${slides[0].moduleId}--lesson-${slides[0].lessonId}--slide-${slides[0].id}-${slides[0].template.meta.filename}`;
@@ -132,7 +145,7 @@ export const Page = ({
             });
           }, 0);
         } else {
-          targetID = targets[currentIndex - 1];
+          targetID = targets.current[currentIndex - 1];
           targetElement = document.querySelector(`#${targetID}`);
 
           if (
@@ -158,10 +171,10 @@ export const Page = ({
         }
         break;
       case 'ArrowRight':
-        if (currentIndex === targets.length) {
+        if (currentIndex === targets.current.length) {
           return;
         }
-        if (currentIndex + 1 === targets.length) {
+        if (currentIndex + 1 === targets.current.length) {
           targetElement = document.querySelector('.owlui-last');
           setTimeout(() => {
             targetElement?.scrollIntoView({
@@ -172,9 +185,8 @@ export const Page = ({
           }, 0);
           currentSlide = 'owlui-last';
         } else {
-          targetID = targets[currentIndex + 1];
+          targetID = targets.current[currentIndex + 1];
           targetElement = document.querySelector(`#${targetID}`);
-
           const currentSlideElement = document.querySelector(
             `#${targets[currentIndex]}`
           );
@@ -187,13 +199,6 @@ export const Page = ({
           ) {
             scrollMagicPin = currentSlideElement?.parentElement?.parentElement;
           }
-
-          // if (
-          //   slides[currentIndex].template.controlOptions.stopUserAdvancement
-          //     .value === true
-          // ) {
-          //   return;
-          // }
 
           if (
             slides[currentIndex + 1].template.controlOptions.disableAnimations
@@ -294,7 +299,7 @@ export const Page = ({
     let targetElements;
 
     setTimeout(() => {
-      targetElements = targets.map((target) => {
+      targetElements = targets.current.map((target) => {
         return document.querySelector(`#${target}`);
       });
 
@@ -326,6 +331,15 @@ export const Page = ({
         detail: _ev.detail,
       });
       document.dispatchEvent(updateOutro);
+
+      if (_ev.detail.correct) {
+        const currentIndex = targets.current.indexOf(currentSlide);
+        const nextSlide = document.querySelector(
+          `#${targets[currentIndex + 1]}`
+        );
+
+        nextSlide?.scrollIntoView();
+      }
     };
 
     document.addEventListener('quizCompleted', handleSubmitQuizAnswer);
@@ -340,7 +354,7 @@ export const Page = ({
       timeStamp.toLocaleTimeString();
 
       if (lesson.attempts) {
-        lesson.attempts[attempt.current].questions = _ev.detail;
+        lesson.attempts[attempt.current].questions = _ev.detail.lessonQuestions;
       }
 
       const newAttempt = {
@@ -366,9 +380,7 @@ export const Page = ({
             // @ts-ignore
             slide.template.content.question.content.question.value;
           question.answers = answers;
-
           resetQuestions.push(question);
-
           newAttempt.questions = resetQuestions;
         }
       });
@@ -380,9 +392,8 @@ export const Page = ({
 
       lesson.attempts?.push(newAttempt);
       attempt.current++;
-      console.log('reset lesson attempts: ', lesson);
 
-      ele[0].scrollIntoView(false);
+      randomize(_ev.detail.slides);
     };
 
     document.addEventListener('resetQuiz', handleResetQuiz);
@@ -395,6 +406,34 @@ export const Page = ({
 
     document.addEventListener('startCourse', handleCourseStart);
   }, []);
+
+  const randomize = (slides) => {
+    const intro = slides.shift();
+    const outro = slides.pop();
+
+    const newArray = [...slides];
+    const length = newArray.length;
+
+    for (let start = 0; start < length; start++) {
+      const randomPosition = Math.floor(
+        (newArray.length - start) * Math.random()
+      );
+      const randomItem = newArray.splice(randomPosition, 1);
+
+      newArray.push(...randomItem);
+    }
+
+    slides.unshift(intro);
+    slides.push(outro);
+
+    newArray.unshift(intro);
+    newArray.push(outro);
+
+    // @ts-ignore
+    setRandomSlides(newArray);
+
+    window.scrollTo(0, 0);
+  };
 
   if (!hasStartedCourse) {
     const id = `${props.id}--slide-${slides[0].id}`;
@@ -409,6 +448,54 @@ export const Page = ({
         controller={controller}
         slides={slides[0]}
       />
+    );
+  } else if (randomSlides.length > 0) {
+    return (
+      <>
+        {/* @ts-ignore */}
+        {randomSlides.map((slide, idx) => {
+          //@ts-ignore
+          const id = `${props.id}--slide-${slide.id}`;
+          //@ts-ignore
+
+          const component = slide.template.meta.component;
+
+          if (!templates.hasOwnProperty(component)) {
+            return <Error msg={`Unabled to find template: ${component}`} />;
+          }
+
+          const Template = templates[component] as TemplateComponent;
+
+          if (component === 'Quiz' || component === 'LessonOutro') {
+            return (
+              <Template
+                key={idx}
+                id={id}
+                //@ts-ignore
+
+                schema={slide.template}
+                controller={controller}
+                slides={randomSlides}
+                lesson={lesson}
+                attempt={attempt}
+                randomize={randomize}
+              />
+            );
+          }
+
+          return (
+            <Template
+              key={idx}
+              id={id}
+              //@ts-ignore
+
+              schema={slide.template}
+              controller={controller}
+              slides={slides}
+            />
+          );
+        })}
+      </>
     );
   } else {
     return (
