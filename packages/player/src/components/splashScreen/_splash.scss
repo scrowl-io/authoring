@@ -1,0 +1,15 @@
+.splash-container {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  top: 50%;
+  left: 50%;
+  height: 50%;
+  width: 50%;
+  margin-top: -25%;
+  margin-left: -25%;
+  background-color: white;
+  z-index: 999;
+}
