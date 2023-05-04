@@ -8,7 +8,7 @@ import {
 import './_root.scss';
 import { PlayerRootProps } from './root.types';
 import Config from './config';
-import { Error as ErrorComponent } from '../components';
+import { Error as ErrorComponent, Splash } from '../components';
 import { ErrorModal } from '../components/modal';
 import { Preview as PreviewPanel } from '../components/preview';
 import { Pages } from '../services';
@@ -280,6 +280,7 @@ export const Root = ({
   return (
     <Router>
       <div id="scrowl-player" {...props}>
+        <Splash />
         <main className="owlui-lesson-wrapper">
           <ErrorModal />
           <ScrollHint />

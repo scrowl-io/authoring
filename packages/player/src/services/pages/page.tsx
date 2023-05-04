@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { PageProps } from './pages.types';
 import { LessonAttempt, TemplateComponent } from '../../root/root.types';
-import { Error, Splash } from '../../components';
+import { Error } from '../../components';
 
 export const Page = ({
   slides,
@@ -13,8 +13,6 @@ export const Page = ({
   const Scrowl = window['Scrowl'];
   const [hasStartedCourse, setHasStartedCourse] = useState(true);
   const [randomSlides, setRandomSlides] = useState([]);
-  // @ts-ignore
-  const [isLoading, setIsLoading] = useState(false);
   const attempt = useRef(0);
   const targets = useRef(['']);
 
@@ -408,19 +406,6 @@ export const Page = ({
     document.addEventListener('startCourse', handleCourseStart);
   }, []);
 
-  useEffect(() => {
-    const checkLoaded = () => {
-      setTimeout(() => {
-        if (document.documentElement.scrollTop === 0) {
-          setIsLoading(false);
-        } else {
-          checkLoaded();
-        }
-      }, 500);
-    };
-    checkLoaded();
-  }, [isLoading]);
-
   const randomize = (slides) => {
     const intro = slides.shift();
     const outro = slides.pop();
@@ -443,12 +428,18 @@ export const Page = ({
     newArray.unshift(intro);
     newArray.push(outro);
 
-    // @ts-ignore
-    setRandomSlides(newArray);
+    const setIsLoading = new CustomEvent('setIsLoading', {
+      detail: slides,
+    });
+    document.dispatchEvent(setIsLoading);
 
-    setIsLoading(true);
+    const target = document.querySelector(`#${targets.current[0]}`);
 
-    window.scrollTo(0, 0);
+    setTimeout(() => {
+      // @ts-ignore
+      setRandomSlides(newArray);
+      target?.scrollIntoView(false);
+    }, 600);
   };
 
   if (!hasStartedCourse) {
@@ -468,13 +459,11 @@ export const Page = ({
   } else if (randomSlides.length > 0) {
     return (
       <>
-        {isLoading && <Splash />}
         {/* @ts-ignore */}
         {randomSlides.map((slide, idx) => {
           //@ts-ignore
           const id = `${props.id}--slide-${slide.id}`;
           //@ts-ignore
-
           const component = slide.template.meta.component;
 
           if (!templates.hasOwnProperty(component)) {

@@ -63,11 +63,11 @@
     "@scrowl/postcss-prefixer": "^0.0.40",
     "@scrowl/template-block-text": "^1.0.99",
     "@scrowl/template-lesson-intro": "^1.0.99",
+    "@scrowl/template-lesson-outro": "^1.0.99",
     "@scrowl/template-quiz": "^1.0.99",
     "@scrowl/template-simple-text": "^1.0.99",
     "@scrowl/template-simple-video": "^1.0.99",
     "@scrowl/template-two-column": "^1.0.99",
-    "@scrowl/template-lesson-outro": "^1.0.99",
     "@types/react": "^18.0.21",
     "@types/react-dom": "^18.0.6",
     "eslint": "^8.25.0",
@@ -91,6 +91,7 @@
     "react-dom": "^18.2.0",
     "react-keywords": "^0.0.5",
     "react-lazyload": "^3.2.0",
-    "react-router-dom": "^6.4.2"
+    "react-router-dom": "^6.4.2",
+    "react-spinners": "^0.13.8"
   }
 }
