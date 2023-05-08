@@ -34,6 +34,7 @@ export interface LessonOutroCommons extends TemplateCommons {
   schema: LessonOutroSchemaProps;
   lesson?: ProjectLesson;
   attempt?: React.MutableRefObject<number>;
+  passingThreshold: number;
 }
 
 export type LessonOutroProps = LessonOutroCommons &

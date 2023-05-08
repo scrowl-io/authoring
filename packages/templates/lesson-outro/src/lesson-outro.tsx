@@ -9,6 +9,7 @@ const LessonOutro = ({
   attempt,
   // @ts-ignore
   slides,
+  passingThreshold,
   ...props
 }: LessonOutroProps) => {
   const Scrowl = window['Scrowl'];
@@ -36,7 +37,12 @@ const LessonOutro = ({
     );
   }
 
-  const threshold = 60;
+  let threshold;
+  if (passingThreshold) {
+    threshold = passingThreshold;
+  } else {
+    threshold = 75;
+  }
 
   if (focusElement === 'title') {
     titleClasses += ' has-focus';
@@ -147,7 +153,7 @@ const LessonOutro = ({
           </h1>
           <div className="results-container">
             <h3>Score: {score}%</h3>
-            {score && score > threshold ? <h3>PASS</h3> : <h3>FAIL</h3>}
+            {score && score >= threshold ? <h3>PASS</h3> : <h3>FAIL</h3>}
           </div>
 
           <table className="questions-table">

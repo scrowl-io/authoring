@@ -76,6 +76,7 @@ export const create = (
     module.lessons.forEach((page, lIdx) => {
       const id = `module-${mIdx}--lesson-${page.lesson.id}`;
       const url = `/${id}`;
+      const passingThreshold = module.module.passingThreshold;
 
       let nextLessonUrl;
       let nextLessonId;
@@ -116,6 +117,8 @@ export const create = (
                     slideId={slideId}
                     // @ts-ignore
                     lesson={page.lesson}
+                    //@ts-ignore
+                    passingThreshold={passingThreshold}
                   />
                 </Suspense>
 

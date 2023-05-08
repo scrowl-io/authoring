@@ -115,6 +115,7 @@ export interface ProjectResource extends ProjectAsset {
 export type ProjectModule = {
   id: number;
   name: string;
+  passingThreshold: number;
 };
 
 export type ProjectLesson = {

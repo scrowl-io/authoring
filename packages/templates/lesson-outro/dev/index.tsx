@@ -27,6 +27,7 @@ const App = () => {
             id="template-lesson-outro"
             controller={controller}
             schema={schema}
+            passingThreshold={75}
           />
         </Suspense>
       </div>

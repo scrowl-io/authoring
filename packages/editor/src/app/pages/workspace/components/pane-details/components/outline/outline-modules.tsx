@@ -4,7 +4,11 @@ import { Collapse } from 'react-bootstrap';
 import { OutlineModulesProps, OutlineModuleItemProps } from './outline.types';
 import * as css from '../../_pane-details.scss';
 import { OutlineLessons } from './outline-lessons';
-import { resetActiveSlide, useActiveSlide } from '../../../../';
+import {
+  openTemplateBrowser,
+  resetActiveSlide,
+  useActiveSlide,
+} from '../../../../';
 import { Projects } from '../../../../../../models';
 import { menu, sys, events } from '../../../../../../services';
 import { InlineInput } from '../../../../../../components';
@@ -39,6 +43,12 @@ export const OutlineModuleItem = ({
       label: 'Duplicate Module',
       click: () => {
         Projects.duplicateModule(module);
+      },
+    },
+    {
+      label: 'Edit Module',
+      click: () => {
+        openTemplateBrowser();
       },
     },
     {
@@ -197,6 +207,7 @@ export const OutlineModules = ({
   const handleAddModule = () => {
     Projects.addModule({
       id: -1,
+      passingThreshold: 75,
     });
   };
 

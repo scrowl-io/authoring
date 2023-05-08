@@ -8,6 +8,7 @@ export const Page = ({
   templates,
   slideId,
   lesson,
+  passingThreshold,
   ...props
 }: PageProps) => {
   const Scrowl = window['Scrowl'];
@@ -483,6 +484,7 @@ export const Page = ({
                 slides={randomSlides}
                 lesson={lesson}
                 attempt={attempt}
+                passingThreshold={passingThreshold}
               />
             );
           }

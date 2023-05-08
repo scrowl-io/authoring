@@ -7,6 +7,7 @@ export const make = () => {
   project.modules?.push({
     id: 0,
     name: 'Introduction',
+    passingThreshold: 75,
   });
   project.lessons?.push({
     moduleId: 0,
