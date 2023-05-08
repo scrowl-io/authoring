@@ -20,7 +20,7 @@ export const Splash = () => {
   useEffect(() => {
     const checkLoaded = () => {
       setTimeout(() => {
-        if (document.documentElement.scrollTop === 0) {
+        if (document.body.scrollTop === 0) {
           setIsLoading(false);
         } else {
           checkLoaded();
