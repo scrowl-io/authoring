@@ -111,16 +111,16 @@ export const create = () => {
       createSlide('Slide 1.3', 0, 0, 2, 'quiz'),
       createSlide('Slide 1.4', 0, 0, 3, 'quiz'),
 
-      createSlide('Slide 1.4', 0, 0, 3, 'blockText', true, './osg-logo.png'),
-      createSlide('Slide 1.5', 0, 0, 4, 'twoColumn'),
+      createSlide('Slide 1.4', 0, 0, 4, 'blockText', true, './osg-logo.png'),
+      createSlide('Slide 1.5', 0, 0, 5, 'twoColumn'),
 
-      createSlide('Slide 2.2', 0, 0, 5, 'simpleText'),
+      createSlide('Slide 2.2', 0, 0, 6, 'simpleText'),
 
-      createSlide('Slide 3.1', 0, 0, 6, 'twoColumn'),
       createSlide('Slide 3.1', 0, 0, 7, 'twoColumn'),
       createSlide('Slide 3.1', 0, 0, 8, 'twoColumn'),
+      createSlide('Slide 3.1', 0, 0, 9, 'twoColumn'),
 
-      createSlide('Slide 3.2', 0, 0, 9, 'lessonOutro'),
+      createSlide('Slide 3.2', 0, 0, 10, 'lessonOutro'),
       // createSlide('Slide 4.1', 1, 3, 8, 'twoColumn'),
       // createSlide('Slide 4.2', 1, 4, 9, 'twoColumn'),
       // createSlide('Slide 4.3', 1, 4, 10, 'twoColumn'),

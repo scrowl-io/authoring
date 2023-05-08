@@ -363,6 +363,15 @@ export const Template = ({
   }, [windowSize, duration, isReady.current, triggerRef.current, isNotScene]);
 
   useEffect(() => {
+    const handleVideoSlideEnter = (_ev) => {
+      console.log('inside core video handler');
+      setUserIsStopped(false);
+    };
+
+    const handleQuizCompleted = (_ev) => {
+      setUserIsStopped(false);
+    };
+
     const handleStart = (ev) => {
       if (Scrowl.runtime) {
         Scrowl.runtime.setCourseStart();
@@ -387,22 +396,16 @@ export const Template = ({
         });
       }, 250);
     };
+
     document.addEventListener('startCourse', handleStart);
-  }, []);
-
-  useEffect(() => {
-    const handleVideoSlideEnter = (_ev) => {
-      console.log('inside core video handler');
-      setUserIsStopped(false);
-    };
-    document.addEventListener('videoEnded', handleVideoSlideEnter);
-  }, []);
-
-  useEffect(() => {
-    const handleQuizCompleted = (_ev) => {
-      setUserIsStopped(false);
-    };
     document.addEventListener('quizCompleted', handleQuizCompleted);
+    document.addEventListener('videoEnded', handleVideoSlideEnter);
+
+    return () => {
+      document.removeEventListener('startCourse', handleStart);
+      document.removeEventListener('quizCompleted', handleQuizCompleted);
+      document.removeEventListener('videoEnded', handleVideoSlideEnter);
+    };
   }, []);
 
   return (
