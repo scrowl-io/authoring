@@ -212,6 +212,32 @@ export const closeTemplateBrowser = () => {
   processor.dispatch(fn());
 };
 
+export const useModuleEditor = () => {
+  return useSelector((data: stateManager.RootState) => {
+    return data.workspace.isOpenEditModule;
+  });
+};
+
+export const openModuleEditor = () => {
+  if (!processor.dispatch) {
+    console.warn('workspace processor not ready');
+    return;
+  }
+
+  const fn = state.workspace.openEditModule as ActionCreatorWithoutPayload;
+  processor.dispatch(fn());
+};
+
+export const closeModuleEditor = () => {
+  if (!processor.dispatch) {
+    console.warn('workspace processor not ready');
+    return;
+  }
+
+  const fn = state.workspace.closeEditModule as ActionCreatorWithoutPayload;
+  processor.dispatch(fn());
+};
+
 export const useNewContent = () => {
   return useSelector((data: stateManager.RootState) => {
     return {
@@ -320,6 +346,7 @@ export default {
   setContentFocus,
   resetContentFocus,
   useTemplateBrowser,
+  useModuleEditor,
   openTemplateBrowser,
   closeTemplateBrowser,
   useNewContent,

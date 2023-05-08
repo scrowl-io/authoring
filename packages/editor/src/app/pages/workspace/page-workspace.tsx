@@ -12,6 +12,7 @@ import {
   Canvas,
   PaneEditor,
   TemplateBrowser,
+  ModuleEditor,
   PromptProjectName,
   PublishProgress,
 } from './components';
@@ -265,6 +266,7 @@ export const Page = () => {
         <Canvas />
         <PaneEditor />
       </div>
+      <ModuleEditor />
       <TemplateBrowser />
       <PromptProjectName />
       <PublishProgress />

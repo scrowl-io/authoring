@@ -4,3 +4,4 @@ export * from './prompt-project-name';
 export * from './publish';
 export * from './resource';
 export * from './template-browser';
+export * from './module-editor';

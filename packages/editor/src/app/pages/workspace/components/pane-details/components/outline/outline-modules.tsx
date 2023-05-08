@@ -5,7 +5,7 @@ import { OutlineModulesProps, OutlineModuleItemProps } from './outline.types';
 import * as css from '../../_pane-details.scss';
 import { OutlineLessons } from './outline-lessons';
 import {
-  openTemplateBrowser,
+  openModuleEditor,
   resetActiveSlide,
   useActiveSlide,
 } from '../../../../';
@@ -48,7 +48,7 @@ export const OutlineModuleItem = ({
     {
       label: 'Edit Module',
       click: () => {
-        openTemplateBrowser();
+        openModuleEditor();
       },
     },
     {

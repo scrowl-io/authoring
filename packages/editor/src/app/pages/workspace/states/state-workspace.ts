@@ -7,6 +7,7 @@ export const initialState = {
   isOpenGlossaryEditor: false,
   isOpenAssetBrowser: false,
   isOpenTemplateBrowser: false,
+  isOpenEditModule: false,
   isOpenPromptProjectName: false,
   promptProjectNamePostEvent: '',
   isOpenPublishProgress: false,
@@ -37,6 +38,12 @@ export const config: stateManager.StateConfig = {
     },
     closeTemplateBrowser: (state) => {
       state.isOpenTemplateBrowser = false;
+    },
+    openEditModule: (state) => {
+      state.isOpenEditModule = true;
+    },
+    closeEditModule: (state) => {
+      state.isOpenEditModule = false;
     },
     resetNewContent: (state) => {
       state.newSlide = false;
@@ -94,12 +101,14 @@ export const {
   resetContentFocus,
   openTemplateBrowser,
   closeTemplateBrowser,
+  openEditModule,
+  closeEditModule,
   resetNewContent,
   openPromptProjectName,
   closePromptProjectName,
   resetPromptProjectNamePostEvent,
   openPublishProgress,
-  closePublishProgress
+  closePublishProgress,
 } = slice.actions;
 
 export const reducer = slice.reducer;
