@@ -525,6 +525,7 @@ export const Page = ({
                 slides={slides}
                 lesson={lesson}
                 attempt={attempt}
+                passingThreshold={passingThreshold}
               />
             );
           }

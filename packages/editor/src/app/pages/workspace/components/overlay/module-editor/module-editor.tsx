@@ -1,125 +1,95 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ui, IconType } from '@scrowl/ui';
+import { ui } from '@scrowl/ui';
+import { Form } from 'react-bootstrap';
 import * as css from './_module-editor.scss';
 import { Modal } from '../../../../../components';
-import { Projects, Templates } from '../../../../../models';
+import { Projects } from '../../../../../models';
 import {
-  openTemplateBrowser,
-  closeTemplateBrowser,
-  useNewContent,
-  resetNewContent,
-  useActiveSlide,
-  setActiveSlide,
-  resetActiveSlide,
   useModuleEditor,
   closeModuleEditor,
+  useActiveSlide,
 } from '../../../page-workspace-hooks';
 
 export const ModuleEditor = () => {
   const title = 'Edit Module';
-  const inProgress = useRef(false);
-  const [templateList, setTemplateList] = useState<
-    Array<Templates.TemplateSchema>
-  >([]);
-  const activeSlide = useActiveSlide();
-  const activeTemplate = activeSlide.template;
-  const activeSlideRef = useRef(activeSlide);
   const isOpen = useModuleEditor();
-  const [selectedTemplate, setSelectedTemplate] = useState(activeTemplate);
-  const newContent = useNewContent();
-  const latestSlide = Projects.useLatestSlide();
+  const threshold = useRef(0);
+  const [stateThreshold, setStateThreshold] = useState(0);
+  let project = Projects.useData();
+  const activeSlide = useActiveSlide();
 
-  const handelClose = () => {
-    if (newContent.newSlide) {
-      Projects.removeSlide(latestSlide);
-      resetNewContent();
-    }
+  let module;
+  let passingThreshold;
 
+  if (project && project.modules) {
+    module = project.modules[activeSlide.moduleId];
+  }
+
+  if (module) {
+    passingThreshold = module.passingThreshold;
+    threshold.current = passingThreshold;
+  }
+
+  const handleChange = (ev) => {
+    const target = ev.target as HTMLInputElement;
+    threshold.current = parseFloat(target.value);
+    setStateThreshold(threshold.current);
+  };
+
+  const handleClose = () => {
     closeModuleEditor();
   };
 
   const handleSubmit = () => {
-    if (!newContent.newSlide) {
-      setActiveSlide({
-        template: selectedTemplate,
-      });
-      Projects.setSlide({
-        ...activeSlide,
-        template: selectedTemplate,
-      });
-    } else {
-      setActiveSlide({
-        ...latestSlide,
-        template: selectedTemplate,
-      });
-      resetNewContent();
-      Projects.setSlide({
-        ...latestSlide,
-        template: selectedTemplate,
-      });
-    }
+    if (project.modules) {
+      const newModule = { ...module, passingThreshold: stateThreshold };
 
-    closeTemplateBrowser();
+      const mods = [...project.modules];
+
+      mods[activeSlide.moduleId] = newModule;
+
+      const newProj = {
+        ...project,
+        modules: mods,
+      };
+
+      Projects.setData(newProj);
+      closeModuleEditor();
+    }
   };
 
   useEffect(() => {
-    if (selectedTemplate.meta.component && !activeTemplate.meta.component) {
-      return;
+    if (isOpen) {
+      setStateThreshold(threshold.current);
     }
-
-    setSelectedTemplate(activeTemplate);
-    activeSlideRef.current = activeSlide;
-  }, [activeTemplate]);
-
-  useEffect(() => {
-    if (newContent.newSlide) {
-      if (!newContent.newLesson && !newContent.newModule) {
-        openTemplateBrowser();
-        setSelectedTemplate(templateList[0]);
-        resetActiveSlide();
-      } else {
-        const newSlide = {
-          ...latestSlide,
-          template: templateList[0],
-        };
-        setActiveSlide(newSlide);
-        resetNewContent();
-        Projects.setSlide(newSlide);
-      }
-    }
-  }, [newContent.newSlide]);
-
-  useEffect(() => {
-    if (selectedTemplate.meta.component === '') {
-      setSelectedTemplate(activeTemplate);
-    }
-    const queryString = activeTemplate.meta.component
-      ? `#template-${activeTemplate.meta.component}`
-      : '#template-BlockText';
-
-    const templateButton = document.querySelector(queryString);
-
-    (templateButton as HTMLElement)?.focus();
   }, [isOpen]);
+
+  console.log('project: ', project);
 
   return (
     <Modal
       className="modal-template-browser"
       title={title}
       isOpen={isOpen}
-      onClose={handelClose}
+      onClose={handleClose}
     >
-      <div className={css.templateBrowserContainer}>
-        <div className={css.templateBrowserContent}></div>
+      <div className={css.moduleEditorContainer}>
+        <div className={css.moduleEditorContent}>
+          {passingThreshold && (
+            <div>
+              <h3>Passing Threshold:</h3>
+              <h3>{stateThreshold}</h3>
+              <Form.Range value={stateThreshold} onChange={handleChange} />
+            </div>
+          )}
+        </div>
       </div>
       <footer className="d-flex justify-content-end">
-        {!newContent.newSlide && (
-          <ui.Button variant="link" onClick={handelClose}>
-            Cancel
-          </ui.Button>
-        )}
+        <ui.Button variant="link" onClick={handleClose}>
+          Cancel
+        </ui.Button>
         <ui.Button variant="success" onClick={handleSubmit}>
-          Select Template
+          Save Module
         </ui.Button>
       </footer>
     </Modal>
