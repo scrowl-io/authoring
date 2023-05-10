@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ui } from '@scrowl/ui';
-import { Form } from 'react-bootstrap';
+import { Col, Form, Row } from 'react-bootstrap';
 import * as css from './_module-editor.scss';
 import { Modal } from '../../../../../components';
 import { Projects } from '../../../../../models';
@@ -13,27 +13,19 @@ import {
 export const ModuleEditor = () => {
   const title = 'Edit Module';
   const isOpen = useModuleEditor();
-  const threshold = useRef(0);
   const [stateThreshold, setStateThreshold] = useState(0);
   let project = Projects.useData();
   const activeSlide = useActiveSlide();
 
   let module;
-  let passingThreshold;
 
   if (project && project.modules) {
     module = project.modules[activeSlide.moduleId];
   }
 
-  if (module) {
-    passingThreshold = module.passingThreshold;
-    threshold.current = passingThreshold;
-  }
-
   const handleChange = (ev) => {
     const target = ev.target as HTMLInputElement;
-    threshold.current = parseFloat(target.value);
-    setStateThreshold(threshold.current);
+    setStateThreshold(parseFloat(target.value));
   };
 
   const handleClose = () => {
@@ -44,13 +36,13 @@ export const ModuleEditor = () => {
     if (project.modules) {
       const newModule = { ...module, passingThreshold: stateThreshold };
 
-      const mods = [...project.modules];
+      const modules = [...project.modules];
 
-      mods[activeSlide.moduleId] = newModule;
+      modules[activeSlide.moduleId] = newModule;
 
       const newProj = {
         ...project,
-        modules: mods,
+        modules: modules,
       };
 
       Projects.setData(newProj);
@@ -60,26 +52,37 @@ export const ModuleEditor = () => {
 
   useEffect(() => {
     if (isOpen) {
-      setStateThreshold(threshold.current);
+      setStateThreshold(module.passingThreshold);
     }
   }, [isOpen]);
 
-  console.log('project: ', project);
-
   return (
     <Modal
-      className="modal-template-browser"
+      className="modal-module-editor"
       title={title}
       isOpen={isOpen}
       onClose={handleClose}
     >
       <div className={css.moduleEditorContainer}>
         <div className={css.moduleEditorContent}>
-          {passingThreshold && (
+          {stateThreshold && (
             <div>
-              <h3>Passing Threshold:</h3>
-              <h3>{stateThreshold}</h3>
-              <Form.Range value={stateThreshold} onChange={handleChange} />
+              <h3>Passing Threshold: {stateThreshold}</h3>
+              <Form.Group as={Row}>
+                <Col xs="9">
+                  <Form.Range
+                    step={10}
+                    value={stateThreshold}
+                    onChange={handleChange}
+                  />
+                </Col>
+                <Col xs="3">
+                  <Form.Control
+                    value={stateThreshold}
+                    onChange={handleChange}
+                  />
+                </Col>
+              </Form.Group>
             </div>
           )}
         </div>
