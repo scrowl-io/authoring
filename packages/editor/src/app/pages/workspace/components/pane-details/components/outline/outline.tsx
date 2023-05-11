@@ -253,10 +253,15 @@ export const Outline = () => {
       highlightItem.classList.remove(dropIndicatorClass.replace('.', ''));
     }
 
+    let outroSlide;
+    if (project.slides) {
+      outroSlide = project.slides[project.slides.length - 1];
+    }
+
     if (
       project.type === 'assessment' &&
       project.slides &&
-      (moveFrom.id === project.slides.length - 1 || moveFrom.id === 0)
+      (moveFrom.id === 0 || outroSlide.id === moveFrom.id)
     ) {
       return;
     }
@@ -264,7 +269,7 @@ export const Outline = () => {
     if (
       project.type === 'assessment' &&
       project.slides &&
-      (moveTo.id === 0 || moveTo.id === project.slides?.length - 1)
+      (moveTo.id === 0 || outroSlide.id === moveTo.id)
     ) {
       return;
     }
