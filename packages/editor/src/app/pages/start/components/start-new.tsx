@@ -32,6 +32,25 @@ export const StartNew = ({ hasProjects, ...props }: StartNewProps) => {
     });
   };
 
+  const handleNewAssessment = () => {
+    if (inProgress.current) {
+      return;
+    }
+
+    inProgress.current = true;
+    Projects.create('assessment').then((result) => {
+      if (result.error) {
+        console.error(result);
+        return;
+      }
+
+      menu.API.enableProjectActions().then(() => {
+        inProgress.current = false;
+        navigator(Workspace.Path);
+      });
+    });
+  };
+
   useEffect(() => {
     if (isReady.current) {
       return;
@@ -54,6 +73,12 @@ export const StartNew = ({ hasProjects, ...props }: StartNewProps) => {
           <ui.Button variant="link" onClick={handleNewProject}>
             <ui.Icon display="outlined" icon="library_add" />
             New Project
+          </ui.Button>
+        </Nav.Item>
+        <Nav.Item>
+          <ui.Button variant="link" onClick={handleNewAssessment}>
+            <ui.Icon display="outlined" icon="library_add" />
+            New Assessment
           </ui.Button>
         </Nav.Item>
       </Nav>

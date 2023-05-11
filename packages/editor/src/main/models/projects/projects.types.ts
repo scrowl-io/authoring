@@ -146,6 +146,7 @@ export type ProjectData = {
   slides?: Array<ProjectSlide>;
   glossary?: Array<ProjectGlossaryItem>;
   resources?: Array<ProjectResource>;
+  type?: 'course' | 'assessment';
 };
 
 export type ProjectFile = {

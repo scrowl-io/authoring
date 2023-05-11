@@ -18,6 +18,7 @@ export const OutlineLessonItem = ({
 }: OutlineLessonItemProps) => {
   let classes = `${css.outlineHeader} outline-item__lesson`;
   const activeSlide = useActiveSlide() as Projects.ProjectSlide;
+  const project = Projects.useData();
   const [isOpen, setOpen] = useState(true);
   const menuId = `module-${lesson.moduleId}-lesson-menu-${lesson.id}`;
   const [isEdit, setIsEdit] = useState(false);
@@ -31,10 +32,18 @@ export const OutlineLessonItem = ({
     {
       label: 'Add Slide',
       click: () => {
+        if (project.type !== 'assessment') {
+          Projects.addSlide({
+            id: -1,
+            lessonId: lesson.id,
+            moduleId: lesson.moduleId,
+          });
+        }
         Projects.addSlide({
           id: -1,
           lessonId: lesson.id,
           moduleId: lesson.moduleId,
+          projectType: 'assessment',
         });
       },
     },
@@ -208,6 +217,7 @@ export const OutlineLessons = ({
   ...props
 }: OutlineLessonsProps) => {
   const lessons = Projects.useLessons(moduleId);
+  const project = Projects.useData();
   let classes = `nav flex-column outline-list-lesson`;
   let addClasses = `${css.outlineAdd} outline-item__lesson .inline-input`;
   const handleAddLesson = () => {
@@ -233,16 +243,18 @@ export const OutlineLessons = ({
           />
         );
       })}
-      <ui.Button
-        variant="link"
-        className={addClasses}
-        onClick={handleAddLesson}
-        data-module-id={moduleId}
-        data-lesson-id={-1}
-      >
-        <ui.Icon icon="add" display="outlined" />
-        <span>Add New Lesson</span>
-      </ui.Button>
+      {project.type !== 'assessment' && (
+        <ui.Button
+          variant="link"
+          className={addClasses}
+          onClick={handleAddLesson}
+          data-module-id={moduleId}
+          data-lesson-id={-1}
+        >
+          <ui.Icon icon="add" display="outlined" />
+          <span>Add New Lesson</span>
+        </ui.Button>
+      )}
     </div>
   );
 };

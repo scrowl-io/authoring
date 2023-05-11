@@ -13,6 +13,7 @@ export const Outline = () => {
   const draggable = useRef<HTMLDivElement>();
   const defaultId = '-1';
   const activeSlide = useActiveSlide() as Projects.ProjectSlide;
+  const project = Projects.useData();
 
   const handleDragStart = (ev: React.DragEvent<HTMLDivElement>) => {
     const appNode = document.getElementById('app');
@@ -250,6 +251,22 @@ export const Outline = () => {
 
     if (highlightItem) {
       highlightItem.classList.remove(dropIndicatorClass.replace('.', ''));
+    }
+
+    if (
+      project.type === 'assessment' &&
+      project.slides &&
+      (moveFrom.id === project.slides.length - 1 || moveFrom.id === 0)
+    ) {
+      return;
+    }
+
+    if (
+      project.type === 'assessment' &&
+      project.slides &&
+      (moveTo.id === 0 || moveTo.id === project.slides?.length - 1)
+    ) {
+      return;
     }
 
     Projects.moveOutlineItem({

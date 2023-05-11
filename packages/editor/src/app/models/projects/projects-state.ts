@@ -12,38 +12,40 @@ export const initialState = {
   data: {
     meta: {
       id: null,
-      name: "",
-      blueprint: "",
+      name: '',
+      blueprint: '',
       version: 0,
-      createdBy: "",
-      folder: "",
+      createdBy: '',
+      folder: '',
       tags: [],
-      scrowlVer: "",
+      scrowlVer: '',
       dateCreated: 0,
       lastSaved: 0,
     },
     scorm: {
-      name: "",
-      description: "",
-      authors: "",
-      organization: "",
-      reportStatus: "Passed/Incomplete",
-      lmsIdentifier: "",
-      outputFormat: "SCORM 2004",
-      optimizeMedia: "Recommended",
+      name: '',
+      description: '',
+      authors: '',
+      organization: '',
+      reportStatus: 'Passed/Incomplete',
+      lmsIdentifier: '',
+      outputFormat: 'SCORM 2004',
+      optimizeMedia: 'Recommended',
     },
+    type: 'course',
     modules: [],
     lessons: [],
     slides: [],
     glossary: [],
-    resources: []
+    resources: [],
   },
 };
 
 const generateNewId = (list) => {
   const lastIdx = list.length - 1;
 
-  return list.slice().sort((a, b) => {
+  return (
+    list.slice().sort((a, b) => {
       const valA = a.id;
       const valB = b.id;
 
@@ -52,8 +54,9 @@ const generateNewId = (list) => {
       }
 
       return valA < valB ? -1 : 1;
-  })[lastIdx].id + 1;
-}
+    })[lastIdx].id + 1
+  );
+};
 
 const copyListItems = (list, field, fromId, toId) => {
   const copy: Array<{ [key: string]: any }> = List.filterBy(
@@ -148,11 +151,18 @@ export const config: stateManager.StateConfig = {
             break;
         }
 
+        let addPosition;
+
+        if (type === 'slide' && payload.projectType === 'assessment') {
+          addPosition = outlineList.length - 1;
+        } else if (id !== -1) {
+          addPosition = List.indexBy(outlineList, 'id', id) + 1;
+        } else {
+          addPosition = outlineList.length;
+        }
+
         const newId = generateNewId(outlineList);
-        const addPosition =
-          id !== -1
-            ? List.indexBy(outlineList, 'id', id) + 1
-            : outlineList.length;
+
         const newItem = {
           ...data,
           name,

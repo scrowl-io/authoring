@@ -24,12 +24,13 @@ export const project = (): ProjectData => {
   return {
     meta: {
       id: '',
-      name: 'Untitled Project',
+      name: 'Untitled Course',
       filename: '',
       createdAt: now,
       updatedAt: now,
       tags: [],
     },
+    type: 'course',
     scorm: {
       name: '',
       description: '',

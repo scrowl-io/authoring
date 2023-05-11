@@ -203,6 +203,7 @@ export const OutlineModules = ({
   const modules = Projects.useModules();
   let classes = `outline-list-module`;
   let addClasses = `${css.outlineAdd} outline-item__module`;
+  const project = Projects.useData();
 
   const handleAddModule = () => {
     Projects.addModule({
@@ -220,15 +221,17 @@ export const OutlineModules = ({
       {modules.map((module, idx) => {
         return <OutlineModuleItem key={idx} module={module} idx={idx} />;
       })}
-      <ui.Button
-        variant="link"
-        className={addClasses}
-        onClick={handleAddModule}
-        data-module-id={-1}
-      >
-        <ui.Icon icon="add" display="outlined" />
-        <span>Add New Module</span>
-      </ui.Button>
+      {project.type !== 'assessment' && (
+        <ui.Button
+          variant="link"
+          className={addClasses}
+          onClick={handleAddModule}
+          data-module-id={-1}
+        >
+          <ui.Icon icon="add" display="outlined" />
+          <span>Add New Module</span>
+        </ui.Button>
+      )}
     </div>
   );
 };

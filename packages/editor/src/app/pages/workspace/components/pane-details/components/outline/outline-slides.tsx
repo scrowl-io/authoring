@@ -21,6 +21,7 @@ export const OutlineSlideItem = ({
   ...props
 }: OutlineSlideItemProps) => {
   const activeSlide = useActiveSlide();
+  const project = Projects.useData();
   const isFirstItem = moduleIdx === 0 && lessonIdx === 0 && idx === 0;
   const isActive =
     slide.moduleId === activeSlide.moduleId &&
@@ -45,6 +46,10 @@ export const OutlineSlideItem = ({
     },
     {
       label: 'Add New Slide After',
+      enabled:
+        slide.template && slide.template.meta.filename === 'lesson-outro'
+          ? false
+          : true,
       click: () => {
         Projects.addSlide({
           id: slide.id,
@@ -63,6 +68,13 @@ export const OutlineSlideItem = ({
     { type: 'separator' },
     {
       label: 'Delete Slide',
+      enabled:
+        project.type === 'assessment' &&
+        slide.template &&
+        (slide.template.meta.filename === 'lesson-intro' ||
+          slide.template.meta.filename === 'lesson-outro')
+          ? false
+          : true,
       click: () => {
         sys
           .messageDialog({
@@ -203,15 +215,25 @@ export const OutlineSlides = ({
   ...props
 }: OutlineSlidesProps) => {
   const slides = Projects.useSlides(moduleId, lessonId);
+  const project = Projects.useData();
   let classes = `nav flex-column outline-list-slide`;
   let addClasses = `${css.outlineAdd} outline-item__slide`;
 
   const handleAddSlide = () => {
-    Projects.addSlide({
-      id: -1,
-      lessonId,
-      moduleId,
-    });
+    if (project.type !== 'assessment') {
+      Projects.addSlide({
+        id: -1,
+        lessonId,
+        moduleId,
+      });
+    } else {
+      Projects.addSlide({
+        id: -1,
+        lessonId,
+        moduleId,
+        projectType: 'assessment',
+      });
+    }
   };
 
   if (className) {
