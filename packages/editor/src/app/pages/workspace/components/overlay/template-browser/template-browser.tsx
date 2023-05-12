@@ -27,6 +27,7 @@ export const TemplateBrowser = () => {
   const [selectedTemplate, setSelectedTemplate] = useState(activeTemplate);
   const newContent = useNewContent();
   const latestSlide = Projects.useLatestSlide();
+  const project = Projects.useData();
 
   const handelClose = () => {
     if (newContent.newSlide) {
@@ -64,6 +65,11 @@ export const TemplateBrowser = () => {
   const updateTemplateList = (res) => {
     if (res.error) {
       console.error(res);
+    } else if (project.type === 'assessment') {
+      const filteredList = res.data.templates.filter((temp) => {
+        return temp.meta.filename === 'quiz';
+      });
+      setTemplateList(filteredList);
     } else {
       setTemplateList(res.data.templates);
     }
@@ -75,7 +81,7 @@ export const TemplateBrowser = () => {
     if (!inProgress.current) {
       Templates.get().then(updateTemplateList);
     }
-  }, [inProgress]);
+  }, [inProgress, project.type]);
 
   useEffect(() => {
     if (selectedTemplate.meta.component && !activeTemplate.meta.component) {

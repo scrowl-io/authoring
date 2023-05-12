@@ -24,6 +24,7 @@ export const OutlineModuleItem = ({
   const [isOpen, setOpen] = useState(true);
   const menuId = `module-menu-${module.id}`;
   const [isEdit, setIsEdit] = useState(false);
+  const project = Projects.useData();
   const inputContainerProps = {
     draggable: true,
     'data-outline-type': 'module',
@@ -32,6 +33,7 @@ export const OutlineModuleItem = ({
   const moduleMenuItems: Array<menu.ContextMenuItem> = [
     {
       label: 'Add Lesson',
+      enabled: project.type === 'assessment' ? false : true,
       click: () => {
         Projects.addLesson({
           id: -1,
@@ -41,6 +43,7 @@ export const OutlineModuleItem = ({
     },
     {
       label: 'Duplicate Module',
+      enabled: project.type === 'assessment' ? false : true,
       click: () => {
         Projects.duplicateModule(module);
       },
@@ -53,6 +56,7 @@ export const OutlineModuleItem = ({
     },
     {
       label: 'Add New Module After',
+      enabled: project.type === 'assessment' ? false : true,
       click: () => {
         Projects.addModule({
           id: module.id,

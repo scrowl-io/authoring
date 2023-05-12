@@ -40,12 +40,22 @@ export const OutlineSlideItem = ({
   const slideMenuItems: Array<menu.ContextMenuItem> = [
     {
       label: 'Duplicate Slide',
+      enabled:
+        project.type === 'assessment' &&
+        slide.template &&
+        (slide.template.meta.filename === 'lesson-intro' ||
+          slide.template.meta.filename === 'lesson-outro')
+          ? false
+          : true,
       click: () => {
         Projects.duplicateSlide(slide);
       },
     },
     {
-      label: 'Add New Slide After',
+      label:
+        project.type === 'course'
+          ? 'Add New Slide After'
+          : 'Add New Question After',
       enabled:
         slide.template && slide.template.meta.filename === 'lesson-outro'
           ? false
@@ -218,6 +228,12 @@ export const OutlineSlides = ({
   const project = Projects.useData();
   let classes = `nav flex-column outline-list-slide`;
   let addClasses = `${css.outlineAdd} outline-item__slide`;
+  let quizSlide;
+  if (project.type === 'assessment' && project.slides) {
+    quizSlide = project.slides.find((slide) => {
+      return slide.template.meta.filename === 'quiz';
+    });
+  }
 
   const handleAddSlide = () => {
     if (project.type !== 'assessment') {
@@ -262,7 +278,9 @@ export const OutlineSlides = ({
         data-slide-id={-1}
       >
         <ui.Icon icon="add" display="outlined" />
-        <span>Add New Slide</span>
+        <span>
+          {project.type === 'course' ? 'Add New Slide' : 'Add New Question'}
+        </span>
       </ui.Button>
     </div>
   );

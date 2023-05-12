@@ -49,12 +49,14 @@ export const OutlineLessonItem = ({
     },
     {
       label: 'Duplicate Lesson',
+      enabled: project.type === 'assessment' ? false : true,
       click: () => {
         Projects.duplicateLesson(lesson);
       },
     },
     {
       label: 'Add New Lesson After',
+      enabled: project.type === 'assessment' ? false : true,
       click: () => {
         Projects.addLesson({
           id: lesson.id,
