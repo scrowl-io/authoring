@@ -72,7 +72,7 @@ export const StartNew = ({ hasProjects, ...props }: StartNewProps) => {
         <Nav.Item>
           <ui.Button variant="link" onClick={handleNewProject}>
             <ui.Icon display="outlined" icon="library_add" />
-            New Project
+            New Course
           </ui.Button>
         </Nav.Item>
         <Nav.Item>

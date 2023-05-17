@@ -5,7 +5,7 @@ import {
   useActiveSlide,
   resetActiveSlide,
 } from '../../../../page-workspace-hooks';
-import { OutlineModules, AssessmentOutlineModules } from './';
+import { OutlineModules, AssessmentOutlineSlides } from './';
 import { getContainer } from './utils';
 import { events, menu, sys } from '../../../../../../services';
 
@@ -409,7 +409,12 @@ export const Outline = () => {
         onDrop={handleDragDrop}
         onDragEnd={handleDragEnd}
       >
-        <AssessmentOutlineModules />
+        <AssessmentOutlineSlides
+          moduleId={0}
+          lessonId={0}
+          moduleIdx={0}
+          lessonIdx={0}
+        />
       </div>
     );
   }

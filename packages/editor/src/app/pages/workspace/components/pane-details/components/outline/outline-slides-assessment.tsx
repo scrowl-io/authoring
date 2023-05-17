@@ -111,7 +111,6 @@ export const AssessmentOutlineSlideItem = ({
 
   const handleSetActiveSlide = (ev: React.MouseEvent) => {
     ev.preventDefault();
-    Projects.testFunc();
     setActiveSlide(slide);
   };
 
