@@ -221,6 +221,17 @@ export const create = (ev: rq.RequestEvent, blueprint?: string) => {
     const assets: Array<ProjectAsset> = [];
     const assetsMap = new Map();
 
+    const handleRebuildMenu = (project) => {
+      mu.rebuildMenu(project.type).then((updateRes) => {
+        if (updateRes.error) {
+          resolve(updateRes);
+          return;
+        }
+      });
+    };
+
+    handleRebuildMenu(project);
+
     const updateContent = (content) => {
       try {
         for (const [key, item] of Object.entries(content)) {
@@ -1006,6 +1017,15 @@ export const open = (ev: rq.RequestEvent, project: ProjectMeta) => {
         return;
       }
 
+      const handleRebuildMenu = (project) => {
+        mu.rebuildMenu(project.type).then((updateRes) => {
+          if (updateRes.error) {
+            resolve(updateRes);
+            return;
+          }
+        });
+      };
+
       const pathName = fs.joinPath(fs.getDirname(project.filename), 'assets');
 
       fs.fileExists(pathName).then((existsRes) => {
@@ -1015,6 +1035,8 @@ export const open = (ev: rq.RequestEvent, project: ProjectMeta) => {
         }
 
         if (!existsRes.data.exists) {
+          handleRebuildMenu(JSON.parse(res.data.contents));
+
           resolve({
             error: false,
             data: {

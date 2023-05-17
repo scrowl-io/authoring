@@ -3,7 +3,7 @@ import { ui } from '@scrowl/ui';
 import { Collapse } from 'react-bootstrap';
 import { OutlineModulesProps, OutlineModuleItemProps } from './outline.types';
 import * as css from '../../_pane-details.scss';
-import { OutlineLessons } from './outline-lessons';
+import { AssessmentOutlineLessons } from './outline-lessons-assessment';
 import {
   openModuleEditor,
   resetActiveSlide,
@@ -13,7 +13,7 @@ import { Projects } from '../../../../../../models';
 import { menu, sys, events } from '../../../../../../services';
 import { InlineInput } from '../../../../../../components';
 
-export const OutlineModuleItem = ({
+export const AssessmentOutlineModuleItem = ({
   module,
   idx,
   className,
@@ -32,7 +32,7 @@ export const OutlineModuleItem = ({
   const moduleMenuItems: Array<menu.ContextMenuItem> = [
     {
       label: 'Add Lesson',
-      enabled: true,
+      enabled: false,
       click: () => {
         Projects.addLesson({
           id: -1,
@@ -42,7 +42,7 @@ export const OutlineModuleItem = ({
     },
     {
       label: 'Duplicate Module',
-      enabled: true,
+      enabled: false,
       click: () => {
         Projects.duplicateModule(module);
       },
@@ -55,7 +55,7 @@ export const OutlineModuleItem = ({
     },
     {
       label: 'Add New Module After',
-      enabled: true,
+      enabled: false,
       click: () => {
         Projects.addModule({
           id: module.id,
@@ -192,27 +192,23 @@ export const OutlineModuleItem = ({
       </div>
       <Collapse in={isOpen}>
         <div>
-          <OutlineLessons id={menuId} moduleId={module.id} moduleIdx={idx} />
+          <AssessmentOutlineLessons
+            id={menuId}
+            moduleId={module.id}
+            moduleIdx={idx}
+          />
         </div>
       </Collapse>
     </div>
   );
 };
 
-export const OutlineModules = ({
+export const AssessmentOutlineModules = ({
   className,
   ...props
 }: OutlineModulesProps) => {
   const modules = Projects.useModules();
   let classes = `outline-list-module`;
-  let addClasses = `${css.outlineAdd} outline-item__module`;
-
-  const handleAddModule = () => {
-    Projects.addModule({
-      id: -1,
-      passingThreshold: 75,
-    });
-  };
 
   if (className) {
     classes += ` ${className}`;
@@ -221,22 +217,15 @@ export const OutlineModules = ({
   return (
     <div className={classes} {...props}>
       {modules.map((module, idx) => {
-        return <OutlineModuleItem key={idx} module={module} idx={idx} />;
+        return (
+          <AssessmentOutlineModuleItem key={idx} module={module} idx={idx} />
+        );
       })}
-      <ui.Button
-        variant="link"
-        className={addClasses}
-        onClick={handleAddModule}
-        data-module-id={-1}
-      >
-        <ui.Icon icon="add" display="outlined" />
-        <span>Add New Module</span>
-      </ui.Button>
     </div>
   );
 };
 
 export default {
-  OutlineModules,
-  OutlineModuleItem,
+  AssessmentOutlineModules,
+  AssessmentOutlineModuleItem,
 };

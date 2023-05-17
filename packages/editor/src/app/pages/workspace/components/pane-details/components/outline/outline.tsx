@@ -5,7 +5,7 @@ import {
   useActiveSlide,
   resetActiveSlide,
 } from '../../../../page-workspace-hooks';
-import { OutlineModules } from './';
+import { OutlineModules, AssessmentOutlineModules } from './';
 import { getContainer } from './utils';
 import { events, menu, sys } from '../../../../../../services';
 
@@ -384,19 +384,35 @@ export const Outline = () => {
     };
   });
 
-  return (
-    <div
-      className={css.tabOutline}
-      onDragStart={handleDragStart}
-      onDragOver={handleValidDragTarget}
-      onDragEnter={handleValidDragTarget}
-      onDragLeave={handleDragLeave}
-      onDrop={handleDragDrop}
-      onDragEnd={handleDragEnd}
-    >
-      <OutlineModules />
-    </div>
-  );
+  if (project.type === 'course') {
+    return (
+      <div
+        className={css.tabOutline}
+        onDragStart={handleDragStart}
+        onDragOver={handleValidDragTarget}
+        onDragEnter={handleValidDragTarget}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDragDrop}
+        onDragEnd={handleDragEnd}
+      >
+        <OutlineModules />
+      </div>
+    );
+  } else {
+    return (
+      <div
+        className={css.tabOutline}
+        onDragStart={handleDragStart}
+        onDragOver={handleValidDragTarget}
+        onDragEnter={handleValidDragTarget}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDragDrop}
+        onDragEnd={handleDragEnd}
+      >
+        <AssessmentOutlineModules />
+      </div>
+    );
+  }
 };
 
 export default {

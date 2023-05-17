@@ -12,7 +12,7 @@ import {
 import { menu, sys } from '../../../../../../services';
 import { InlineInput } from '../../../../../../components';
 
-export const OutlineSlideItem = ({
+export const AssessmentOutlineSlideItem = ({
   slide,
   moduleIdx,
   lessonIdx,
@@ -39,14 +39,22 @@ export const OutlineSlideItem = ({
   const slideMenuItems: Array<menu.ContextMenuItem> = [
     {
       label: 'Duplicate Slide',
-      enabled: true,
+      enabled:
+        slide.template &&
+        (slide.template.meta.filename === 'lesson-intro' ||
+          slide.template.meta.filename === 'lesson-outro')
+          ? false
+          : true,
       click: () => {
         Projects.duplicateSlide(slide);
       },
     },
     {
-      label: 'Add New Slide After',
-      enabled: true,
+      label: 'Add New Question After',
+      enabled:
+        slide.template && slide.template.meta.filename === 'lesson-outro'
+          ? false
+          : true,
       click: () => {
         Projects.addSlide({
           id: slide.id,
@@ -65,7 +73,12 @@ export const OutlineSlideItem = ({
     { type: 'separator' },
     {
       label: 'Delete Slide',
-      enabled: true,
+      enabled:
+        slide.template &&
+        (slide.template.meta.filename === 'lesson-intro' ||
+          slide.template.meta.filename === 'lesson-outro')
+          ? false
+          : true,
       click: () => {
         sys
           .messageDialog({
@@ -98,6 +111,7 @@ export const OutlineSlideItem = ({
 
   const handleSetActiveSlide = (ev: React.MouseEvent) => {
     ev.preventDefault();
+    Projects.testFunc();
     setActiveSlide(slide);
   };
 
@@ -197,7 +211,7 @@ export const OutlineSlideItem = ({
   );
 };
 
-export const OutlineSlides = ({
+export const AssessmentOutlineSlides = ({
   moduleId,
   moduleIdx,
   lessonId,
@@ -214,6 +228,7 @@ export const OutlineSlides = ({
       id: -1,
       lessonId,
       moduleId,
+      projectType: 'assessment',
     });
   };
 
@@ -225,7 +240,7 @@ export const OutlineSlides = ({
     <div className={classes} {...props}>
       {slides.map((slide, idx) => {
         return (
-          <OutlineSlideItem
+          <AssessmentOutlineSlideItem
             key={idx}
             slide={slide}
             moduleIdx={moduleIdx}
@@ -243,13 +258,13 @@ export const OutlineSlides = ({
         data-slide-id={-1}
       >
         <ui.Icon icon="add" display="outlined" />
-        <span>Add New Slide</span>
+        <span>Add New Question</span>
       </ui.Button>
     </div>
   );
 };
 
 export default {
-  OutlineSlides,
-  OutlineSlideItem,
+  AssessmentOutlineSlides,
+  AssessmentOutlineSlideItem,
 };

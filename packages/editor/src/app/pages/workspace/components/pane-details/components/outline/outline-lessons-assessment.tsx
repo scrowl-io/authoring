@@ -1,64 +1,58 @@
 import React, { useEffect, useState } from 'react';
 import { ui } from '@scrowl/ui';
 import { Collapse } from 'react-bootstrap';
-import { OutlineModulesProps, OutlineModuleItemProps } from './outline.types';
+import { OutlineLessonsProps, OutlineLessonItemProps } from './outline.types';
 import * as css from '../../_pane-details.scss';
-import { OutlineLessons } from './outline-lessons';
-import {
-  openModuleEditor,
-  resetActiveSlide,
-  useActiveSlide,
-} from '../../../../';
+import { resetActiveSlide, useActiveSlide } from '../../../../';
 import { Projects } from '../../../../../../models';
 import { menu, sys, events } from '../../../../../../services';
 import { InlineInput } from '../../../../../../components';
+import { AssessmentOutlineSlides } from './outline-slides-assessment';
 
-export const OutlineModuleItem = ({
-  module,
+export const AssessmentOutlineLessonItem = ({
+  lesson,
+  moduleIdx,
   idx,
   className,
   ...props
-}: OutlineModuleItemProps) => {
-  let classes = `${css.outlineHeader} outline-item__module`;
+}: OutlineLessonItemProps) => {
+  let classes = `${css.outlineHeader} outline-item__lesson`;
   const activeSlide = useActiveSlide() as Projects.ProjectSlide;
   const [isOpen, setOpen] = useState(true);
-  const menuId = `module-menu-${module.id}`;
+  const menuId = `module-${lesson.moduleId}-lesson-menu-${lesson.id}`;
   const [isEdit, setIsEdit] = useState(false);
   const inputContainerProps = {
     draggable: true,
-    'data-outline-type': 'module',
-    'data-module-id': module.id,
+    'data-outline-type': 'lesson',
+    'data-lesson-id': lesson.id,
+    'data-module-id': lesson.moduleId,
   };
-  const moduleMenuItems: Array<menu.ContextMenuItem> = [
+  const lessonMenuItems: Array<menu.ContextMenuItem> = [
     {
-      label: 'Add Lesson',
-      enabled: true,
+      label: 'Add Slide',
       click: () => {
-        Projects.addLesson({
+        Projects.addSlide({
           id: -1,
-          moduleId: module.id,
+          lessonId: lesson.id,
+          moduleId: lesson.moduleId,
+          projectType: 'assessment',
         });
       },
     },
     {
-      label: 'Duplicate Module',
-      enabled: true,
+      label: 'Duplicate Lesson',
+      enabled: false,
       click: () => {
-        Projects.duplicateModule(module);
+        Projects.duplicateLesson(lesson);
       },
     },
     {
-      label: 'Edit Module',
+      label: 'Add New Lesson After',
+      enabled: false,
       click: () => {
-        openModuleEditor();
-      },
-    },
-    {
-      label: 'Add New Module After',
-      enabled: true,
-      click: () => {
-        Projects.addModule({
-          id: module.id,
+        Projects.addLesson({
+          id: lesson.id,
+          moduleId: lesson.moduleId,
         });
       },
     },
@@ -71,13 +65,13 @@ export const OutlineModuleItem = ({
     },
     { type: 'separator' },
     {
-      label: 'Delete Module',
+      label: 'Delete Lesson',
       click: () => {
         sys
           .messageDialog({
             message: 'Are you sure?',
-            buttons: ['Delete Module', 'Cancel'],
-            detail: module.name,
+            buttons: ['Delete Lesson', 'Cancel'],
+            detail: lesson.name,
           })
           .then((res) => {
             if (res.error) {
@@ -87,7 +81,7 @@ export const OutlineModuleItem = ({
 
             if (res.data.response === 0) {
               resetActiveSlide();
-              Projects.removeModule(module);
+              Projects.removeModule(lesson);
             }
           });
       },
@@ -103,12 +97,12 @@ export const OutlineModuleItem = ({
     setOpen(!isOpen);
   };
 
-  const handleOpenModuleMenu = (ev: React.MouseEvent) => {
+  const handleOpenLessonMenu = (ev: React.MouseEvent) => {
     ev.preventDefault();
 
     const target = ev.target as HTMLElement;
 
-    menu.API.contextMenu(moduleMenuItems).then((result) => {
+    menu.API.contextMenu(lessonMenuItems).then((result) => {
       console.log('menu close', result);
       target.blur();
     });
@@ -116,11 +110,11 @@ export const OutlineModuleItem = ({
 
   const handleNameChange = (val) => {
     const updateData = {
-      ...module,
+      ...lesson,
       name: val,
     };
 
-    Projects.setModule(updateData);
+    Projects.setLesson(updateData);
   };
 
   const handleNameClose = () => {
@@ -129,7 +123,7 @@ export const OutlineModuleItem = ({
 
   useEffect(() => {
     const handleSlideFocus = (ev: CustomEvent) => {
-      if (activeSlide.moduleId !== module.id) {
+      if (activeSlide.lessonId !== lesson.id) {
         return;
       }
 
@@ -144,17 +138,22 @@ export const OutlineModuleItem = ({
   }, [activeSlide.id]);
 
   return (
-    <div className={css.outlineModule} {...props} data-module-id={module.id}>
+    <div
+      className={css.outlineLesson}
+      {...props}
+      data-module-id={lesson.moduleId}
+      data-lesson-id={lesson.id}
+    >
       <div className={classes}>
         <ui.Button
           aria-expanded={isOpen}
           aria-controls={menuId}
           className={css.outlineItem}
           onClick={handleToggleOpen}
-          onContextMenu={handleOpenModuleMenu}
+          onContextMenu={handleOpenLessonMenu}
           variant="link"
         >
-          <div className={css.moduleIcons}>
+          <div className={css.lessonIcons}>
             <span className={css.outlineItemIconHandle}>
               <ui.Icon
                 icon="arrow_drop_down"
@@ -165,7 +164,7 @@ export const OutlineModuleItem = ({
             </span>
             <span className={css.outlineItemIconDetail}>
               <ui.Icon
-                icon="folder"
+                icon="interests"
                 display="sharp"
                 filled={!isOpen}
                 grad={200}
@@ -174,7 +173,7 @@ export const OutlineModuleItem = ({
             </span>
             <InlineInput.Text
               isEdit={isEdit}
-              text={module.name}
+              text={lesson.name}
               onChange={handleNameChange}
               onBlur={handleNameClose}
               containerProps={inputContainerProps}
@@ -184,59 +183,57 @@ export const OutlineModuleItem = ({
         <ui.Button
           className={css.actionMenu}
           variant="ghost"
-          onClick={handleOpenModuleMenu}
-          onContextMenu={handleOpenModuleMenu}
+          onClick={handleOpenLessonMenu}
+          onContextMenu={handleOpenLessonMenu}
         >
           <ui.Icon display="rounded" icon="more_vert" opsz={20} filled />
         </ui.Button>
       </div>
       <Collapse in={isOpen}>
         <div>
-          <OutlineLessons id={menuId} moduleId={module.id} moduleIdx={idx} />
+          <AssessmentOutlineSlides
+            id={menuId}
+            moduleId={lesson.moduleId}
+            moduleIdx={moduleIdx}
+            lessonId={lesson.id}
+            lessonIdx={idx}
+          />
         </div>
       </Collapse>
     </div>
   );
 };
 
-export const OutlineModules = ({
+export const AssessmentOutlineLessons = ({
+  moduleId,
+  moduleIdx,
   className,
   ...props
-}: OutlineModulesProps) => {
-  const modules = Projects.useModules();
-  let classes = `outline-list-module`;
-  let addClasses = `${css.outlineAdd} outline-item__module`;
-
-  const handleAddModule = () => {
-    Projects.addModule({
-      id: -1,
-      passingThreshold: 75,
-    });
-  };
+}: OutlineLessonsProps) => {
+  const lessons = Projects.useLessons(moduleId);
+  let classes = `nav flex-column outline-list-lesson`;
 
   if (className) {
-    classes += ` ${className}`;
+    classes += `${className} `;
   }
 
   return (
     <div className={classes} {...props}>
-      {modules.map((module, idx) => {
-        return <OutlineModuleItem key={idx} module={module} idx={idx} />;
+      {lessons.map((lesson, idx) => {
+        return (
+          <AssessmentOutlineLessonItem
+            key={idx}
+            lesson={lesson}
+            moduleIdx={moduleIdx}
+            idx={idx}
+          />
+        );
       })}
-      <ui.Button
-        variant="link"
-        className={addClasses}
-        onClick={handleAddModule}
-        data-module-id={-1}
-      >
-        <ui.Icon icon="add" display="outlined" />
-        <span>Add New Module</span>
-      </ui.Button>
     </div>
   );
 };
 
 export default {
-  OutlineModules,
-  OutlineModuleItem,
+  AssessmentOutlineLessons,
+  AssessmentOutlineLessonItem,
 };
