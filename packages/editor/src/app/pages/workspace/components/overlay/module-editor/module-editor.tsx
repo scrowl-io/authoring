@@ -23,9 +23,23 @@ export const ModuleEditor = () => {
     module = project.modules[activeSlide.moduleId];
   }
 
-  const handleChange = (ev) => {
+  const handleInputChange = (ev) => {
     const target = ev.target as HTMLInputElement;
-    setStateThreshold(parseFloat(target.value));
+    const newVal = parseInt(target.value);
+
+    if (newVal > 0 && newVal <= 100) {
+      setStateThreshold(newVal);
+    } else if (newVal > 100) {
+      setStateThreshold(100);
+    } else {
+      setStateThreshold(0);
+    }
+  };
+
+  const handleRangeChange = (ev) => {
+    const target = ev.target as HTMLInputElement;
+    const newVal = parseInt(target.value);
+    setStateThreshold(Math.round(newVal / 10) * 10);
   };
 
   const handleClose = () => {
@@ -65,26 +79,24 @@ export const ModuleEditor = () => {
     >
       <div className={css.moduleEditorContainer}>
         <div className={css.moduleEditorContent}>
-          {stateThreshold && (
-            <div>
-              <h3>Passing Threshold: {stateThreshold}</h3>
-              <Form.Group as={Row}>
-                <Col xs="9">
-                  <Form.Range
-                    step={10}
-                    value={stateThreshold}
-                    onChange={handleChange}
-                  />
-                </Col>
-                <Col xs="3">
-                  <Form.Control
-                    value={stateThreshold}
-                    onChange={handleChange}
-                  />
-                </Col>
-              </Form.Group>
-            </div>
-          )}
+          <div>
+            <h3>Passing Threshold: {stateThreshold}%</h3>
+            <Form.Group as={Row}>
+              <Col xs="9">
+                <Form.Range
+                  step={10}
+                  value={stateThreshold}
+                  onChange={handleRangeChange}
+                />
+              </Col>
+              <Col xs="3">
+                <Form.Control
+                  value={stateThreshold}
+                  onChange={handleInputChange}
+                />
+              </Col>
+            </Form.Group>
+          </div>
         </div>
       </div>
       <footer className="d-flex justify-content-end">
