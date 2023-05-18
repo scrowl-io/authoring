@@ -13,7 +13,7 @@ export const StartNew = ({ hasProjects, ...props }: StartNewProps) => {
   const inProgress = useRef(false);
   const isReady = useRef(false);
 
-  const handleNewProject = () => {
+  const handleNewCourse = () => {
     if (inProgress.current) {
       return;
     }
@@ -70,7 +70,7 @@ export const StartNew = ({ hasProjects, ...props }: StartNewProps) => {
       <h2>Start</h2>
       <Nav className="flex-column">
         <Nav.Item>
-          <ui.Button variant="link" onClick={handleNewProject}>
+          <ui.Button variant="link" onClick={handleNewCourse}>
             <ui.Icon display="outlined" icon="library_add" />
             New Course
           </ui.Button>

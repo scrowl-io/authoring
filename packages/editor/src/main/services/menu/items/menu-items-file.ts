@@ -31,48 +31,56 @@ export const create = (isMac: boolean, isRebuild?: boolean) => {
     submenu: [
       {
         id: `${menuId}-create`,
-        label: "New Project",
-        accelerator: "CmdorCtrl+N",
+        label: 'New Course',
+        accelerator: 'CmdorCtrl+N',
         click: () => {
           rq.send(API.create.name);
         },
       },
-      { type: "separator" },
+      {
+        id: `${menuId}-create-assessment`,
+        label: 'New Assessment',
+        accelerator: 'CmdorCtrl+Shift+A',
+        click: () => {
+          rq.send(API.create.name, 'assessment');
+        },
+      },
+      { type: 'separator' },
       {
         id: `${menuId}-open`,
-        label: "Open...",
-        accelerator: "CmdorCtrl+O",
+        label: 'Open...',
+        accelerator: 'CmdorCtrl+O',
         click: () => {
           rq.send(API.open.name);
         },
       },
       {
         id: `${menuId}-open-recent`,
-        label: "Open Recent",
+        label: 'Open Recent',
         submenu: [],
       },
-  
-      { type: "separator" },
+
+      { type: 'separator' },
       {
         id: `${menuId}-save`,
-        label: "Save",
-        accelerator: "CmdorCtrl+S",
+        label: 'Save',
+        accelerator: 'CmdorCtrl+S',
         enabled: isRebuild ? true : false,
         click: () => {
           rq.send(API.save.name);
         },
       },
-      { type: "separator" },
+      { type: 'separator' },
       {
         id: `${menuId}-close`,
-        label: "Close Project",
-        accelerator: "CmdorCtrl+W",
+        label: 'Close Project',
+        accelerator: 'CmdorCtrl+W',
         enabled: isRebuild ? true : false,
         click: () => {
           rq.send(API.close.name);
         },
-      }
-    ] as Array<MenuItemConstructorOptions>
+      },
+    ] as Array<MenuItemConstructorOptions>,
   };
 
   if (isMac) {

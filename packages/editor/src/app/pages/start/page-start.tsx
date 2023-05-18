@@ -39,14 +39,14 @@ export const Page = () => {
       });
     };
 
-    const createListener = (result) => {
+    const createListener = (result, type) => {
       if (inProgress) {
         return;
       }
 
       setProgress(true);
 
-      Projects.create().then((result) => {
+      Projects.create(type).then((result) => {
         if (result.error) {
           setProgress(false);
           console.error(result);
