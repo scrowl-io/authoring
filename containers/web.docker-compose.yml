@@ -1,0 +1,20 @@
+version: '3.9'
+services:
+  authoring-editor-server:
+    build:
+      context: ../
+      dockerfile: containers/web.dockerfile
+    ports:
+      - '${SRPORT}:${SRPORT}'
+    volumes:
+      - ../packages/editor/package.json:/usr/authoring/packages/editor/package.json
+      - ../packages/editor/src/server:/usr/authoring/packages/editor/src/server
+      - ../packages/editor/src/app:/usr/authoring/packages/editor/src/app
+  authoring-editor-db:
+    image: '${DBIMAGE}'
+    restart: 'always'
+    ports:
+      - '${DBPORT}:${DBPORT}'
+    environment:
+      POSTGRES_PASSWORD: '${DBPASS}'
+      POSTGRES_USER: '${DBUSER}'

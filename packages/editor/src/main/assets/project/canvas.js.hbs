@@ -54,9 +54,13 @@ class App extends React.Component {
     window.removeEventListener('message', this.onMessage, false);
   }
   render() {
-    let transmitter;
-    const controller = new Scrowl.core.scroll.Controller();
     const schema = this.state.schema;
+
+    if (!Object.keys(schema.content).length) {
+      return e('main', { className: 'lesson-wrapper' });
+    }
+
+    const controller = new Scrowl.core.scroll.Controller();
     const focusElement = this.state.focusElement;
     const Template = e(
       {{data.templateComponent}},

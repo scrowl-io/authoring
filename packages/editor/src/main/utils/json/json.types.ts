@@ -3,6 +3,7 @@ export type JSON_VALUE =
   | number
   | boolean
   | Date
+  | undefined
   | JSON_DATA
   | Array<JSON_VALUE>;
 

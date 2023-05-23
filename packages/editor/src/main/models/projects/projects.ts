@@ -7,11 +7,13 @@ import {
   ProjectData,
   ProjectFile,
   ProjectMeta,
-  UploadReq,
-  SaveReq,
-  PreviewAssetReq,
+  ProjectsReqCreate,
+  ProjectsReqUpload,
+  ProjectsReqSave,
+  ProjectsReqPreviewAsset,
   ProjectAsset,
-  PreviewProjectReq,
+  ProjectsReqPreviewProject,
+  ProjectsReqList,
 } from './projects.types';
 import { Templates } from '../';
 import { set as setSetting } from '../settings';
@@ -104,7 +106,7 @@ const getProjectInfo = (meta: ProjectMeta): rq.ApiResult => {
   }
 };
 
-export const create = (ev: rq.RequestEvent, blueprint?: string) => {
+export const create = (ev: rq.RequestEvent, req: ProjectsReqCreate) => {
   const copyAsset = (assetFilename: string) => {
     return new Promise<rq.ApiResult>((resolve) => {
       try {
@@ -186,7 +188,7 @@ export const create = (ev: rq.RequestEvent, blueprint?: string) => {
   };
 
   return new Promise<rq.ApiResult>((resolve) => {
-    const project = blueprints.get(blueprint);
+    const project = blueprints.get(req.blueprint);
 
     // convert asset list
     // put assets into temp folder
@@ -283,7 +285,7 @@ export const create = (ev: rq.RequestEvent, blueprint?: string) => {
   });
 };
 
-export const upload = (ev: rq.RequestEvent, req: UploadReq) => {
+export const upload = (ev: rq.RequestEvent, req: ProjectsReqUpload) => {
   return new Promise<rq.ApiResult>((resolve) => {
     if (!req.meta) {
       resolve({
@@ -633,7 +635,7 @@ const writeProjectData = (projectData: ProjectData) => {
   });
 };
 
-export const save = (ev: rq.RequestEvent, { data, assets }: SaveReq) => {
+export const save = (ev: rq.RequestEvent, { data, assets }: ProjectsReqSave) => {
   return new Promise<rq.ApiResult>((resolve) => {
     if (!data.meta.name) {
       resolve({
@@ -690,7 +692,12 @@ export const save = (ev: rq.RequestEvent, { data, assets }: SaveReq) => {
 
       const updateSettings = () => {
         return new Promise<rq.ApiResult>((resolveSettings) => {
-          setSetting(ev, 'lastUsedAt', data.meta.updatedAt).then(
+          const settingsPayload = {
+            key: 'lastUsedAt',
+            value: data.meta.updatedAt,
+          };
+
+          setSetting(ev, settingsPayload).then(
             (settingRes) => {
               if (settingRes.error) {
                 log.error(settingRes);
@@ -772,8 +779,12 @@ export const publish = (ev: rq.RequestEvent, data: ProjectData) => {
   const updateSettings = () => {
     return new Promise<rq.ApiResult>((resolveUpdate) => {
       const now = new Date().toISOString();
+      const settingsPayload = {
+        key: 'lastPublishedAt',
+        value: now,
+      };
 
-      setSetting(ev, 'lastPublishedAt', now).then((settingRes) => {
+      setSetting(ev, settingsPayload).then((settingRes) => {
         if (settingRes.error) {
           log.error(settingRes);
         }
@@ -946,9 +957,9 @@ export const publish = (ev: rq.RequestEvent, data: ProjectData) => {
   });
 };
 
-export const list = (ev: rq.RequestEvent, limit?: number) => {
+export const list = (ev: rq.RequestEvent, req: ProjectsReqList) => {
   return new Promise<rq.ApiResult>((resolve) => {
-    fs.drainProjectFiles(limit).then((drainRes) => {
+    fs.drainProjectFiles(req.limit).then((drainRes) => {
       if (drainRes.error) {
         resolve(drainRes);
         return;
@@ -1043,7 +1054,7 @@ export const open = (ev: rq.RequestEvent, project: ProjectMeta) => {
   });
 };
 
-export const previewAsset = (ev: rq.RequestEvent, req: PreviewAssetReq) => {
+export const previewAsset = (ev: rq.RequestEvent, req: ProjectsReqPreviewAsset) => {
   return new Promise<rq.ApiResult>((resolve) => {
     let errorMsg = '';
     const event = ev as IpcMainInvokeEvent;
@@ -1092,7 +1103,7 @@ export const previewAsset = (ev: rq.RequestEvent, req: PreviewAssetReq) => {
   });
 };
 
-export const previewProject = (ev: rq.RequestEvent, req: PreviewProjectReq) => {
+export const previewProject = (ev: rq.RequestEvent, req: ProjectsReqPreviewProject) => {
   return new Promise<rq.ApiResult>((resolve) => {
     const event = ev as IpcMainInvokeEvent;
     const win = BrowserWindow.fromWebContents(event.sender);

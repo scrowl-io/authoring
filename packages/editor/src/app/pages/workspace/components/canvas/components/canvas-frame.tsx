@@ -64,6 +64,7 @@ export const CanvasFrame = () => {
     switch (ev.data.type) {
       case 'connection':
         setConnection(true);
+        sendMessage({ type: 'update', data: data.template.content });
         break;
       case 'update':
         console.log('update complete');

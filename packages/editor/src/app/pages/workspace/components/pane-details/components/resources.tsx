@@ -7,7 +7,7 @@ import {
   ContextMenuResult,
 } from '../pane-details.types';
 import { Projects } from '../../../../../models';
-import { List, Elem } from '../../../../../utils';
+import { List } from '../../../../../utils';
 import { menu, sys } from '../../../../../services';
 import { AssetIcon } from '../../../../../components';
 import { ResourceOverlay } from '../../overlay';
@@ -92,21 +92,20 @@ export const Resources = () => {
     ev: React.MouseEvent,
     resource?: ResourceItem
   ) => {
-    Elem.stopEvent(ev);
-
     const target = ev.target as HTMLElement;
-
-    const position = [ev.clientX, ev.clientY];
 
     if (resource) {
       setSelectedResource(resource);
     }
 
-    menu.API.contextMenu(resourceMenu, position, { item: resource }).then(
-      (result) => {
-        target.blur();
-      }
-    );
+    menu.API.contextMenu(
+      ev,
+      resourceMenu,
+      { item: resource },
+      { alignment: 'left-bottom' }
+    ).then((result) => {
+      target.blur();
+    });
   };
 
   const handleOpenResourceBrowser = (resource: ResourceItem) => {

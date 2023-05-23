@@ -52,6 +52,7 @@ const fileLoader = {
 module.exports = {
   mode: 'production',
   target: 'web',
+  devtool: 'source-map',
   module: {
     noParse: [
       require.resolve('react'),
@@ -85,7 +86,6 @@ module.exports = {
     'react-dom': 'ReactDOM',
     'react-dom/server': 'ReactDOMServer',
   },
-  devtool: 'eval',
   optimization: {
     minimize: true,
     minimizer: [

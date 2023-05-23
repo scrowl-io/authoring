@@ -7,7 +7,8 @@ const ENDPOINTS: TemplatesEndpoints = {
 };
 
 export const load = (template) => {
-  return rq.invoke(ENDPOINTS.load, template);
+  console.log('loading', template);
+  return rq.invoke(ENDPOINTS.load, { template }, 'POST');
 };
 
 export const get = () => {

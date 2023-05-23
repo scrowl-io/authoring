@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './_root.scss';
 import {
-  MemoryRouter as Router,
+  MemoryRouter,
+  BrowserRouter,
   Routes,
   Route,
   Navigate,
@@ -11,9 +12,9 @@ import { Pages, Models } from './root.types';
 import { rq, sys } from '../services';
 import * as pages from '../pages';
 import * as models from '../models';
-import { menu, events } from '../services';
+import { menu, events, config } from '../services';
 import { Elem } from '../utils';
-import { ProjectBrowser } from '../components';
+import { ProjectBrowser, ContextMenu } from '../components';
 
 const Loader = () => {
   return <div>Loading...</div>;
@@ -30,10 +31,10 @@ const PageRoutes = () => {
   const pageNames = Object.keys(pageModules);
 
   pageNames.map((page: string) => {
-    const config = pageModules[page];
+    const pageModule = pageModules[page];
 
-    if (config.useProcessor) {
-      config.useProcessor();
+    if (pageModule.useProcessor) {
+      pageModule.useProcessor();
     }
   });
 
@@ -129,9 +130,15 @@ const PageRoutes = () => {
   return (
     <Routes>
       {pageNames.map((page: string, idx: number) => {
-        const config = pageModules[page];
+        const pageModule = pageModules[page];
 
-        return <Route key={idx} path={config.Path} element={<config.Page />} />;
+        return (
+          <Route
+            key={idx}
+            path={pageModule.Path}
+            element={<pageModule.Page />}
+          />
+        );
       })}
       <Route path="*" element={<Navigate to={defaultPath} />} />
     </Routes>
@@ -143,6 +150,7 @@ export const Root = () => {
   const modelNames = Object.keys(modelModules);
   const inits: Array<Promise<rq.ApiResult>> = [];
   const [isReady, setIsReady] = useState(false);
+  const isDesktop = config.app.desktop;
 
   models.Settings.useProcessor();
   models.Projects.useProcessor();
@@ -166,10 +174,22 @@ export const Root = () => {
       setIsReady(true);
     });
   }, [modelModules, modelNames, inits]);
-  return (
-    <Router>
-      <main>{!isReady ? <Loader /> : <PageRoutes />}</main>
-      <ProjectBrowser />
-    </Router>
-  );
+
+  if (isDesktop) {
+    return (
+      <MemoryRouter>
+        <main>{!isReady ? <Loader /> : <PageRoutes />}</main>
+        <ProjectBrowser />
+        <ContextMenu.Menu />
+      </MemoryRouter>
+    );
+  } else {
+    return (
+      <BrowserRouter basename="/app">
+        <main>{!isReady ? <Loader /> : <PageRoutes />}</main>
+        <ProjectBrowser />
+        <ContextMenu.Menu />
+      </BrowserRouter>
+    );
+  }
 };

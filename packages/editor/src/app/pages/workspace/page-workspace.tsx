@@ -138,7 +138,7 @@ export const Page = () => {
     };
 
     const previewListener = (ev, type: menu.PreviewTypes) => {
-      const payload: Projects.PreviewProjectReq = {
+      const payload: Projects.ProjectsReqPreviewProject = {
         type,
         project: projectData,
         assets,

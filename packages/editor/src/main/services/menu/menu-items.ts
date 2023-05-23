@@ -57,7 +57,7 @@ export const createMenu = () => {
 
   for (const [menuKey, menuItem] of Object.entries(_menuItems)) {
     if (menuItem.create) {
-      template.push(menuItem.create(isMac));
+      template.push(menuItem.create(isMac, false));
     }
 
     if (menuItem.register) {

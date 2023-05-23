@@ -48,3 +48,7 @@ export type TemplatesEndpoints = {
   load: TemplatesApiLoad['name'];
   get: TemplatesApiGet['name'];
 };
+
+export type TemplateReqLoad = {
+  template: schema;
+};

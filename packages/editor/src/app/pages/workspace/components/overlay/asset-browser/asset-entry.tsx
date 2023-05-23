@@ -59,12 +59,9 @@ export const AssetEntry = ({
   }
 
   const handleAssetMenu = (ev: React.MouseEvent) => {
-    ev.preventDefault();
-
     const target = ev.target as HTMLElement;
 
-    menu.API.contextMenu(assetEntryMenu).then((result) => {
-      console.log('asset entry menu close', result);
+    menu.API.contextMenu(ev, assetEntryMenu).then((result) => {
       target.blur();
     });
   };

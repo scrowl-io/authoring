@@ -59,7 +59,11 @@ export const Textbox = ({
   let inputClasses = 'form-control form-control-sm';
   let groupClasses = 'input-group input-group-sm';
   let controlClasses = 'control-textbox mb-2 template-content-input';
-  const inputId = `input-checkbox-${field.replace(/\./g, '-')}`;
+  let inputId = '';
+
+  if (field) {
+    inputId = `input-checkbox-${field.replace(/\./g, '-')}`;
+  }
 
   if (isInvalid) {
     inputClasses += ' is-invalid';
