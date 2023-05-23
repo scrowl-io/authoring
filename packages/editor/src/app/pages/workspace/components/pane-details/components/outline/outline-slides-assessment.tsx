@@ -8,6 +8,7 @@ import {
   setActiveSlide,
   resetActiveSlide,
   useNewContent,
+  openModuleEditor,
 } from '../../../../';
 import { menu, sys } from '../../../../../../services';
 import { InlineInput } from '../../../../../../components';
@@ -251,6 +252,10 @@ export const AssessmentOutlineSlides = ({
     });
   };
 
+  const handleEditLesson = () => {
+    openModuleEditor();
+  };
+
   if (className) {
     classes += ` ${className}`;
   }
@@ -278,6 +283,14 @@ export const AssessmentOutlineSlides = ({
       >
         <ui.Icon icon="add" display="outlined" />
         <span>Add New Question</span>
+      </ui.Button>
+      <ui.Button
+        variant="link"
+        className={addClasses}
+        onClick={handleEditLesson}
+      >
+        <ui.Icon icon="edit" display="outlined" />
+        <span>Edit Lesson</span>
       </ui.Button>
     </div>
   );
