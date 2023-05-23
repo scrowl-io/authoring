@@ -1,0 +1,42 @@
+.dark-background {
+  background-color: rgba(0, 0, 0, 0.2);
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  position: fixed;
+}
+
+.modal-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 999;
+  border: 2px solid black;
+  background-color: white;
+  padding: 2em;
+}
+
+.modal-header {
+  margin-bottom: 1em;
+
+  h1 {
+    margin: 0;
+  }
+}
+
+.close-button {
+  font-size: 1.5em;
+}
+
+.close-button:hover {
+  cursor: pointer;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-evenly;
+}

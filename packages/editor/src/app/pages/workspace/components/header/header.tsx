@@ -271,10 +271,6 @@ export const Header = () => {
       setIsOpenPublish(true);
     });
 
-    // menu.API.onPublishQuick(() => {
-    //   handelSubmitPublish();
-    // });
-
     return () => {
       menu.API.offPublish();
       menu.API.offPublishQuick();

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   MemoryRouter as Router,
   Routes,
@@ -8,14 +8,59 @@ import {
 import './_root.scss';
 import { PlayerRootProps } from './root.types';
 import Config from './config';
-import { Error } from '../components';
+import { Error as ErrorComponent } from '../components';
+import { ErrorModal } from '../components/modal';
+import { Preview as PreviewPanel } from '../components/preview';
 import { Pages } from '../services';
+import { formatResponse } from '../utils/formatResponse';
+import { ScrollHint } from '../components/scrollHint';
 
-export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
+export const Root = ({
+  project,
+  templateList,
+  scorm,
+  ...props
+}: PlayerRootProps) => {
   const Scrowl = window['Scrowl'];
+  let apiPreference;
+
+  const [showPanel, _setShowPanel] = useState(true);
+
+  if (scorm && scorm.outputFormat) {
+    switch (scorm.outputFormat) {
+      case '2004 3rd Edition':
+        apiPreference = '2004v3';
+        break;
+      case '1.2':
+      default:
+        apiPreference = '1.2';
+    }
+  }
+
+  if (window['Scorm2004API']) {
+    // @ts-ignore
+    window['API_1484_11'] = new Scorm2004API({});
+  }
+
+  if (window['API_1484_11'] !== undefined) {
+    let authors;
+    if (scorm) {
+      authors = scorm.authors;
+    } else {
+      authors = '';
+    }
+    const initialData = {
+      'learner_id': '1',
+      'learner_name': authors,
+      'completion_status': 'incomplete',
+    };
+    window['API_1484_11'].loadFromJSON(initialData);
+
+    window['API_1484_11'].Initialize();
+  }
 
   if (Scrowl.runtime) {
-    const [isStarted] = Scrowl.runtime.start();
+    const [isStarted] = Scrowl.runtime.start(apiPreference);
 
     if (!isStarted) {
       console.error('unable to start runtime');
@@ -23,19 +68,19 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
   }
 
   if (!templateList || !Object.keys(templateList).length) {
-    return <Error msg="Templates missing" />;
+    return <ErrorComponent msg="Templates missing" />;
   }
 
   if (!project || !project.slides || !project.slides.length) {
-    return <Error msg="Slides missing" />;
+    return <ErrorComponent msg="Slides missing" />;
   }
 
   if (!project || !project.lessons || !project.lessons.length) {
-    return <Error msg="Lessons missing" />;
+    return <ErrorComponent msg="Lessons missing" />;
   }
 
   if (!project || !project.modules || !project.modules.length) {
-    return <Error msg="Modules missing" />;
+    return <ErrorComponent msg="Modules missing" />;
   }
 
   const slides = project.slides;
@@ -44,15 +89,22 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
   const resources = project.resources;
   const glossary = project.glossary;
   const name = project.name;
+  const subtitle = project.subtitle;
 
   let moduleIdx;
   let lessonIdx;
   let slideId;
 
   if (Scrowl.runtime) {
-    const [locationError, location] = Scrowl.runtime.getLocation();
+    let locationError;
+    let location;
+    try {
+      [locationError, location] = Scrowl.runtime.getLocation();
+    } catch (e) {
+      console.log(e);
+    }
 
-    if (!locationError && location) {
+    if (!locationError && location && location.cur) {
       moduleIdx = location.cur.m;
       lessonIdx = location.cur.l;
       slideId = location.slideId;
@@ -65,7 +117,8 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
     modules,
     resources,
     glossary,
-    name
+    name,
+    subtitle
   );
   const pages = Pages.create(config, templateList, slideId);
 
@@ -78,12 +131,12 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
         cur: {
           m: number;
           l: number;
-          s?: number;
+          s: number;
         };
         max: {
-          m?: number;
-          l?: number;
-          s?: number;
+          m: number;
+          l: number;
+          s: number;
         };
       };
 
@@ -122,6 +175,12 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
         previousLocation[1].max === undefined
       ) {
         Scrowl.runtime?.updateLocation(locationObj, id);
+        if (window['API_1484_11'] !== undefined) {
+          window['API_1484_11'].SetValue(
+            'cmi.location',
+            JSON.stringify(locationObj)
+          );
+        }
       } else {
         if (locationObj.cur.m > previousLocation[1].max.m) {
           locationObj.max.m = locationObj.cur.m;
@@ -164,16 +223,69 @@ export const Root = ({ project, templateList, ...props }: PlayerRootProps) => {
     };
   }, [project]);
 
+  useEffect(() => {
+    if (Scrowl && Scrowl.runtime) {
+      Scrowl.runtime.getError(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (Scrowl.runtime && Scrowl.runtime !== null) {
+      if (Scrowl.runtime.API === null) {
+        const errorObject = {
+          id: '600',
+          message: 'Unable to connect to API',
+          stack:
+            'This course was not able to connect to the SCORM API. Course data will not be saved to the LMS.',
+        };
+        const errorEvent = new CustomEvent('APIError', { detail: errorObject });
+        document.dispatchEvent(errorEvent);
+      }
+    }
+
+    if (window.navigator.onLine === false) {
+      const errorObject = {
+        id: '700',
+        message: 'No internet connection',
+        stack:
+          'You are not connected to the internet. Course data will not be saved.',
+      };
+      const onlineEvent = new CustomEvent('connectionError', {
+        detail: errorObject,
+      });
+      document.dispatchEvent(onlineEvent);
+    }
+    window.addEventListener('error', (event) => {
+      const errorEvent = new CustomEvent('playerError', { detail: event });
+      document.dispatchEvent(errorEvent);
+    });
+  }, [project, slides]);
+
   let targetUrl;
 
   if (moduleIdx !== undefined) {
     targetUrl = `/module-${moduleIdx}--lesson-${lessonIdx}`;
   }
 
+  if (window['API_1484_11']) {
+    window['API_1484_11'].on('SetValue.cmi.*', () => {
+      const value = window['API_1484_11'].GetValue('cmi');
+      const p = document.querySelector('#scorm-preview-content');
+      if (p) {
+        p.textContent = formatResponse(value);
+      }
+    });
+  }
+
   return (
     <Router>
       <div id="scrowl-player" {...props}>
         <main className="owlui-lesson-wrapper">
+          <ErrorModal />
+          <ScrollHint />
+          {window['API_1484_11'] !== undefined && showPanel ? (
+            <PreviewPanel />
+          ) : null}
           <Routes>
             {pages.map((page, idx) => {
               return (

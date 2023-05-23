@@ -6,6 +6,7 @@ import {
   InputFieldsetProps,
   InputAssetProps,
   InputCheckboxProps,
+  TemplateSchema,
 } from '@scrowl/template-core';
 
 export interface LessonIntroContentBgImage extends InputFieldsetProps {
@@ -16,7 +17,7 @@ export interface LessonIntroContentBgImage extends InputFieldsetProps {
   };
 }
 
-export type LessonIntroSchemaProps = {
+export interface LessonIntroSchemaProps extends TemplateSchema {
   meta: TemplateSchemaMeta;
   content: {
     title: InputTextboxProps;

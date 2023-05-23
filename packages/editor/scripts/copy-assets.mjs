@@ -21,6 +21,10 @@ const config = {
     dest: './src/main/assets/project/react-bootstrap.min.js',
     includePaths: ['../../'],
   },
+  'node_modules/scorm-again/dist/scorm-again.min.js': {
+    dest: './src/main/assets/project/scorm-again.min.js',
+    includePaths: ['../../'],
+  },
   'node_modules/@scrowl/ui/dist': {
     dest: './src/main/assets/project',
     includePaths: ['../../'],
@@ -69,6 +73,13 @@ const config = {
   },
   'node_modules/@scrowl/template-two-column/dist': {
     dest: './src/main/assets/templates/two-column',
+    includePaths: ['../../'],
+    options: {
+      overwrite: true,
+    },
+  },
+  'node_modules/@scrowl/template-simple-video/dist': {
+    dest: './src/main/assets/templates/simple-video',
     includePaths: ['../../'],
     options: {
       overwrite: true,

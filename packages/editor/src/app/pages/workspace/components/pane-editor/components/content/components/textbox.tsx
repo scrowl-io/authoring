@@ -137,7 +137,6 @@ export const Textbox = ({
           onChange(field, prevValue.current);
         }
         isDirty.current = false;
-        // ev.currentTarget.blur();
         return;
       }
     },

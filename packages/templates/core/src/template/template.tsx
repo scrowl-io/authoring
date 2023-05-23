@@ -2,9 +2,11 @@ import React, { useEffect, useState, useRef } from 'react';
 import magic, { Scene } from 'scrollmagic';
 import * as css from './_template.scss';
 import { TemplateProps } from './template.types';
+// import LazyLoad from 'react-lazyload';
 
 export const Template = ({
   id,
+  slides,
   className,
   controller,
   onEnter,
@@ -30,6 +32,16 @@ export const Template = ({
     height: window.innerHeight,
     width: window.innerWidth,
   });
+  // @ts-ignore
+  const [scroll, setScroll] = useState(false);
+
+  const Scrowl = window['Scrowl'];
+
+  if (!scroll) {
+    document.body.style.overflow = 'hidden';
+  } else {
+    document.body.style.overflow = 'scroll';
+  }
 
   if (className) {
     classes += ` ${className}`;
@@ -56,8 +68,21 @@ export const Template = ({
   });
 
   useEffect(() => {
-    let sceneTrigger: Scene;
     let scene: Scene;
+
+    if (!Scrowl || !Scrowl.runtime || Scrowl.runtime.API === null) {
+      setScroll(true);
+    }
+
+    if (Scrowl && Scrowl.runtime && Scrowl.runtime.API !== null) {
+      const [courseStartError, suspendData] = Scrowl.runtime.getSuspendData();
+
+      const parsedData = JSON.parse(suspendData);
+
+      if (!courseStartError && parsedData.courseStarted === true) {
+        setScroll(true);
+      }
+    }
 
     const createScene = () => {
       if (isNotScene) {
@@ -155,6 +180,14 @@ export const Template = ({
           } else {
             sceneRef.current.style.top = `${stats.rect.y}px`;
           }
+        }
+
+        if (
+          stats.progress > 0 &&
+          // @ts-ignore
+          sceneRef.current?.firstChild.id.includes('video')
+        ) {
+          // setScroll(false);
         }
 
         if (onProgress) {
@@ -313,13 +346,44 @@ export const Template = ({
     createScene();
 
     return () => {
-      if (sceneTrigger) {
-        sceneTrigger.destroy(true);
-        controller.removeScene(sceneTrigger);
+      if (scene) {
+        scene.destroy(true);
+        controller.removeScene(scene);
         isReady.current = false;
       }
     };
-  }, [windowSize, duration, isReady.current, triggerRef.current]);
+  }, [windowSize, duration, isReady.current, triggerRef.current, isNotScene]);
+
+  useEffect(() => {
+    const handleStart = (ev) => {
+      if (Scrowl.runtime) {
+        Scrowl.runtime.setCourseStart();
+      }
+      setScroll(true);
+      setTimeout(() => {
+        const domSlideParents = document.querySelectorAll('.inner-content');
+        const domSlides = Array.from(domSlideParents).map((parent) => {
+          return parent.firstElementChild?.id;
+        });
+
+        const slideContent = ev.detail.target.parentElement.parentElement.id;
+
+        const index = domSlides.indexOf(slideContent);
+        const targetIndex = domSlides[index + 1];
+        const nextTarget = document.querySelector(`#${targetIndex}`);
+
+        nextTarget?.scrollIntoView();
+      }, 250);
+    };
+    document.addEventListener('startCourse', handleStart);
+  }, []);
+
+  useEffect(() => {
+    const handleVideoSlideEnter = (_ev) => {
+      console.log('inside core handler');
+    };
+    document.addEventListener('videoEnded', handleVideoSlideEnter);
+  }, []);
 
   return (
     <div ref={slideRef} className={classes} {...props}>

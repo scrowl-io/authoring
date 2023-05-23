@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './_index.scss';
 import { BlockTextProps } from './block-text.types';
+import LazyLoad from 'react-lazyload';
 
-export const BlockText = ({ id, schema, ...props }: BlockTextProps) => {
+const BlockText = ({ id, schema, ...props }: BlockTextProps) => {
   const Scrowl = window['Scrowl'];
   let classes = 'template-block-text';
   const Markdown = Scrowl.core.Markdown;
@@ -16,11 +17,13 @@ export const BlockText = ({ id, schema, ...props }: BlockTextProps) => {
   const bgLabel = schema.content.bgImage.content.alt.value || '';
   const bgFocusCss = focusElement === 'bgImage.url' && 'has-focus';
   const bgRef = useRef<HTMLDivElement>(null);
+  // @ts-ignore
   const bgStyles = {
     backgroundImage: `url("${bgUrl}")`,
   };
   const alignment = schema.content.options.content.alignment.value;
   const alignmentCss = alignment === 'right' ? 'right' : 'left';
+  const disableAnimations = schema.controlOptions.disableAnimations?.value;
   const showProgressBar = schema.content.options.content.showProgress.value;
   const showProgressRef = useRef(showProgressBar);
   const slideProgress = useRef(0);
@@ -88,6 +91,7 @@ export const BlockText = ({ id, schema, ...props }: BlockTextProps) => {
       className={classes}
       onProgress={handleSlideProgress}
       onEnd={handleSlideEnd}
+      notScene={disableAnimations ? true : false}
       {...props}
     >
       <div id={contentId} className="owlui-container">
@@ -117,17 +121,13 @@ export const BlockText = ({ id, schema, ...props }: BlockTextProps) => {
           }`}
           onMouseDown={handleFocusBg}
         >
-          <img
-            className="img__container"
-            aria-label={bgLabel}
-            style={bgStyles}
-          />
+          <LazyLoad>
+            <img className="img__container" aria-label={bgLabel} src={bgUrl} />
+          </LazyLoad>
         </div>
       )}
     </Scrowl.core.Template>
   );
 };
 
-export default {
-  BlockText,
-};
+export { BlockText as default };

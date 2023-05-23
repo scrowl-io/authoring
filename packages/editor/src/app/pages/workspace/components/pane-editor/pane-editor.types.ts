@@ -14,11 +14,12 @@ export type {
 
 export interface InputFactoryCommons {
   field: string;
-  content: InputProps,
+  content: InputProps;
   onChange: (field: string | Array<string>, value: any) => void;
   onValidate: (field: string | Array<string>, value: any) => void;
   onBlur: (field: string | Array<string>, value: any) => void;
   onFocus: (field: string | Array<string>, value: any) => void;
+  disableFlag?: string;
 };
 
 export type InputFactoryProps = InputFactoryCommons;

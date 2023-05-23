@@ -1,4 +1,5 @@
-import { BlockText, BlockTextSchema, BlockTextSchemaProps } from '../src';
+import { BlockTextSchema, BlockTextSchemaProps } from '../src';
+import BlockText from './block-text-lazy';
 
 window.BlockText = BlockText;
 window.BlockTextSchema = BlockTextSchema as BlockTextSchemaProps;

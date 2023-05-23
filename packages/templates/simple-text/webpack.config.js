@@ -3,9 +3,11 @@ const { merge } = require('webpack-merge');
 const common = require('@scrowl/config/webpack');
 const config = require('./package.json');
 
+const templateName = path.basename(config.exports['./web'], '.js');
+
 module.exports = merge(common, {
   entry: {
-    [`${path.basename(config.exports['./web'], '.js')}`]: './web/index.ts',
+    [`${templateName}`]: './web/index.ts',
   },
   module: {
     noParse: [
@@ -26,8 +28,9 @@ module.exports = merge(common, {
     },
   },
   output: {
-    libraryTarget: "umd",
+    libraryTarget: 'umd',
     filename: '[name].js',
     path: path.resolve(__dirname, 'dist'),
+    chunkFilename: 'scrowl.[name].component.js',
   },
 });

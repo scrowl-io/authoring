@@ -34,6 +34,7 @@ export const openProject = (project: Projects.ProjectMeta) => {
     resetActiveSlide();
 
     setTimeout(() => {
+      Projects.setAssets(res.data.file.assets);
       Projects.setData(res.data.project);
     }, 1);
   });
@@ -116,8 +117,6 @@ export const Page = () => {
           console.error(res);
           return;
         }
-
-        // notification - project saved correctly
       });
     };
 
@@ -180,8 +179,8 @@ export const Page = () => {
         resetActiveSlide();
 
         Projects.create().then((result) => {
+          setProgress(false);
           if (result.error) {
-            setProgress(false);
             console.error(result);
             return;
           }

@@ -4,7 +4,7 @@ import * as css from './_pane-editor.scss';
 import { useActiveTemplate } from '../../';
 import { Pane } from '../../../../components';
 import { Settings } from '../../../../models';
-import { Content, TemplateSelector } from './components';
+import { Content, Controls, TemplateSelector } from './components';
 
 export const PaneEditor = () => {
   const data = useActiveTemplate();
@@ -35,6 +35,11 @@ export const PaneEditor = () => {
       id: 'tab-content',
       title: 'Content',
       view: <Content />,
+    },
+    {
+      id: 'tab-controls',
+      title: 'Controls',
+      view: <Controls />,
     },
   ];
 

@@ -71,10 +71,16 @@ export const load = (ev: rq.RequestEvent, req: TemplateReqLoad) => {
           return src.indexOf('.hbs') === -1;
         },
       };
-      const templatePath = fs.joinPath(TEMPLATE_PATHS.templates, req.template.meta.filename);
+      const templatePath = fs.joinPath(
+        TEMPLATE_PATHS.templates,
+        req.template.meta.filename
+      );
       const canvasJsSrc = fs.joinPath(TEMPLATE_PATHS.project, 'canvas.js.hbs');
       const canvasJsDest = fs.joinPath(TEMPLATE_PATHS.working, 'index.js');
-      const canvasHtmlSrc = fs.joinPath(TEMPLATE_PATHS.project, 'canvas.html.hbs');;
+      const canvasHtmlSrc = fs.joinPath(
+        TEMPLATE_PATHS.project,
+        'canvas.html.hbs'
+      );
       const canvasHtmlDest = fs.joinPath(TEMPLATE_PATHS.working, 'index.html');
       const renderData = {
         canvasJs: `./index.js?ver=${cacheBreaker}`,
@@ -82,6 +88,7 @@ export const load = (ev: rq.RequestEvent, req: TemplateReqLoad) => {
         templateCss: `./scrowl.template-${req.template.meta.filename}.css?ver=${cacheBreaker}`,
         templateComponent: req.template.meta.component,
         templateContent: JSON.stringify(req.template.content),
+        templateControls: JSON.stringify(req.template.controlOptions),
       };
 
       fs.copy(TEMPLATE_PATHS.project, TEMPLATE_PATHS.working, projectCopyOpts).then((copyProjectFilesRes) => {
@@ -129,7 +136,9 @@ export const load = (ev: rq.RequestEvent, req: TemplateReqLoad) => {
           };
 
           const copyUploads = () => {
-            fs.copy(fs.APP_PATHS.uploads, TEMPLATE_PATHS.workingAssets, { overwrite: false }).then((assetCopyRes) => {
+            fs.copy(fs.APP_PATHS.uploads, TEMPLATE_PATHS.workingAssets, {
+              overwrite: false,
+            }).then((assetCopyRes) => {
               if (assetCopyRes.error) {
                 log.error(assetCopyRes);
                 resolve(assetCopyRes);
@@ -138,9 +147,11 @@ export const load = (ev: rq.RequestEvent, req: TemplateReqLoad) => {
 
               loadDone();
             });
-          }
-  
-          fs.copy(templatePath, TEMPLATE_PATHS.working, { overwrite: false }).then((tempCopyRes) => {
+          };
+
+          fs.copy(templatePath, TEMPLATE_PATHS.working, {
+            overwrite: false,
+          }).then((tempCopyRes) => {
             if (tempCopyRes.error) {
               log.error(tempCopyRes);
               resolve(tempCopyRes);

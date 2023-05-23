@@ -65,8 +65,20 @@ export const LessonIntroSchema: LessonIntroSchemaProps = {
           type: 'Checkbox',
           label: 'Use as Background',
           value: false,
-        }
+        },
       },
+    },
+  },
+  controlOptions: {
+    stopUserAdvancement: {
+      type: 'Checkbox',
+      label: 'Stop User Advancement',
+      value: false,
+    },
+    disableAnimations: {
+      type: 'Checkbox',
+      label: 'Disable Animations',
+      value: true,
     },
   },
 };

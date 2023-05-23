@@ -76,6 +76,9 @@ module.exports = {
   plugins: [
     new MiniCssExtractPlugin({
       filename: '[name].css',
+      chunkFilename: (pathData) => {
+        return `${pathData.chunk.runtime}.css`;
+      },
     }),
   ],
   externals: {

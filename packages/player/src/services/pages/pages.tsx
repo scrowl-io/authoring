@@ -1,61 +1,13 @@
-import React, { useEffect } from 'react';
+import React, { Suspense } from 'react';
 import { Link } from 'react-router-dom';
-import { PageDefinition, PageProps } from './pages.types';
-import {
-  // @ts-ignore
-  PlayerRootConfig,
-  PlayerTemplateList,
-  TemplateComponent,
-} from '../../root/root.types';
+import { PageDefinition } from './pages.types';
+import { PlayerTemplateList } from '../../root/root.types';
 import utils from '../../utils';
 import * as _css from '../../root/_root.scss';
-import { Error } from '../../components';
 import { NavBar } from '../../components/navbar';
+import { Page } from './page';
 
 const css = utils.css.removeMapPrefix(_css);
-
-const Page = ({ slides, templates, slideId, ...props }: PageProps) => {
-  const Scrowl = window['Scrowl'];
-  const controller = new Scrowl.core.scroll.Controller();
-
-  useEffect(() => {
-    if (slideId && slideId?.length > 0) {
-      document.querySelector(`#${slideId}`)?.scrollIntoView();
-    } else {
-      window.scrollTo({ top: 0 });
-    }
-  }, [slides]);
-
-  useEffect(() => {
-    return () => {
-      controller.destroy(true);
-    };
-  });
-
-  return (
-    <>
-      {slides.map((slide, idx) => {
-        const id = `${props.id}--slide-${idx}`;
-        const component = slide.template.meta.component;
-
-        if (!templates.hasOwnProperty(component)) {
-          return <Error msg={`Unabled to find template: ${component}`} />;
-        }
-
-        const Template = templates[component] as TemplateComponent;
-
-        return (
-          <Template
-            key={idx}
-            id={id}
-            schema={slide.template}
-            controller={controller}
-          />
-        );
-      })}
-    </>
-  );
-};
 
 const updateCourseProgress = (project, id) => {
   const Scrowl = window['Scrowl'];
@@ -81,7 +33,6 @@ const updateCourseProgress = (project, id) => {
   const currentLessonIndex = currentLesson?.index;
   const totalLessons = lessonsArray.length;
 
-  // @ts-ignore
   let percentageCompleted;
 
   if (currentLessonIndex) {
@@ -89,6 +40,9 @@ const updateCourseProgress = (project, id) => {
   }
 
   Scrowl.runtime?.updateProgress(percentageCompleted);
+  if (window['API_1484_11']) {
+    window['API_1484_11'].SetValue('cmi.progress_measure', percentageCompleted);
+  }
 };
 
 const finishCourse = () => {
@@ -96,6 +50,16 @@ const finishCourse = () => {
 
   if (Scrowl.runtime) {
     Scrowl.runtime.finish();
+  }
+
+  if (window['API_1484_11']) {
+    window['API_1484_11'].SetValue('cmi.score.raw', 90);
+    window['API_1484_11'].SetValue('cmi.score.min', 70);
+    window['API_1484_11'].SetValue('cmi.score.max', 100);
+    window['API_1484_11'].SetValue('cmi.score.scaled', 90 / 100);
+    window['API_1484_11'].SetValue('cmi.success_status', 'passed');
+    window['API_1484_11'].SetValue('cmi.completion_status', 'completed');
+    window['API_1484_11'].SetValue('cmi.progress_measure', 1);
   }
 };
 
@@ -110,7 +74,7 @@ export const create = (
 
   project.outlineConfig.forEach((module, mIdx) => {
     module.lessons.forEach((page, lIdx) => {
-      const id = `module-${mIdx}--lesson-${lIdx}`;
+      const id = `module-${mIdx}--lesson-${page.lesson.id}`;
       const url = `/${id}`;
 
       let nextLessonUrl;
@@ -121,7 +85,7 @@ export const create = (
         lIdx < module.lessons.length - 1 ||
         mIdx < project.outlineConfig.length - 1
       ) {
-        nextLessonId = `module-${mIdx}--lesson-${lIdx + 1}`;
+        nextLessonId = `module-${mIdx}--lesson-${page.lesson.id + 1}`;
         nextLessonUrl = `/${nextLessonId}`;
         nextLessonText = `Continue to the next lesson`;
       }
@@ -130,7 +94,7 @@ export const create = (
         lIdx === module.lessons.length - 1 &&
         mIdx <= project.outlineConfig.length - 1
       ) {
-        nextLessonId = `module-${mIdx + 1}--lesson-0`;
+        nextLessonId = `module-${mIdx + 1}--lesson-${page.lesson.id + 1}`;
         nextLessonUrl = `/${nextLessonId}`;
         nextLessonText = `Continue to the first Lesson of Module ${mIdx + 1}`;
       }
@@ -142,14 +106,17 @@ export const create = (
         Element: () => {
           return (
             <>
-              <NavBar pageId={id} project={project} />
+              <NavBar slides={page.slides} pageId={id} project={project} />
               <div className="owlui-lesson">
-                <Page
-                  id={id}
-                  slides={page.slides}
-                  templates={templateList}
-                  slideId={slideId}
-                />
+                <Suspense fallback={<div>Loading...</div>}>
+                  <Page
+                    id={id}
+                    slides={page.slides}
+                    templates={templateList}
+                    slideId={slideId}
+                  />
+                </Suspense>
+
                 <Scrowl.core.Template
                   className="owlui-last"
                   id={`slide-end-${id}`}
@@ -161,7 +128,6 @@ export const create = (
                     mIdx < project.outlineConfig.length - 1 ? (
                       <Link
                         to={nextLessonUrl}
-                        // @ts-ignore
                         onClick={() => updateCourseProgress(project, id)}
                       >
                         {nextLessonText}

@@ -82,7 +82,7 @@ const createTemplateServer = () => {
           const filename = fs.joinPath(templateWorkingPath, pathname);
 
           fs.fileExists(filename)
-            .then(existRes => {
+            .then((existRes) => {
               if (existRes.error) {
                 responseInternalError(existRes, res);
                 return;
@@ -95,7 +95,7 @@ const createTemplateServer = () => {
 
               responseOk(filename, contentType, res);
             })
-            .catch(e => {
+            .catch((e) => {
               responseInternalError(e, res);
             });
         } catch (e) {

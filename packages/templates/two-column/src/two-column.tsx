@@ -46,13 +46,13 @@ const Column = ({ field, className, heading, body, isEdit, focusElement }) => {
   );
 };
 
-export const TwoColumn = ({ id, schema, ...props }: TwoColumnProps) => {
+const TwoColumn = ({ id, schema, ...props }: TwoColumnProps) => {
   const Scrowl = window['Scrowl'];
   let classes = `template-two-columns`;
   let columnClasses = 'column-wrapper';
   const editMode = props.editMode ? true : false;
   const focusElement = editMode ? props.focusElement : null;
-  const contentId = `${id}-block-text`;
+  const contentId = `${id}-two-column`;
   const options = schema.content.options;
   const alignment = options.content.alignment.value;
   const numberOfColumns = options.content.numberOfColumns.value;
@@ -60,6 +60,7 @@ export const TwoColumn = ({ id, schema, ...props }: TwoColumnProps) => {
   const firstColumn = schema.content.firstColumn.content;
   const secondColumn = schema.content.secondColumn.content;
   const thirdColumn = schema.content.thirdColumn.content;
+  const disableAnimation = schema.controlOptions.disableAnimations?.value;
 
   if (stackOnMobile) {
     switch (numberOfColumns) {
@@ -83,6 +84,7 @@ export const TwoColumn = ({ id, schema, ...props }: TwoColumnProps) => {
     <Scrowl.core.Template
       id={`slide-${contentId}`}
       className={classes}
+      notScene={disableAnimation ? true : false}
       {...props}
     >
       <div id={contentId}>
@@ -121,6 +123,4 @@ export const TwoColumn = ({ id, schema, ...props }: TwoColumnProps) => {
   );
 };
 
-export default {
-  TwoColumn,
-};
+export { TwoColumn as default };

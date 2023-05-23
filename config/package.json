@@ -1,6 +1,6 @@
 {
   "name": "@scrowl/config",
-  "version": "0.0.89",
+  "version": "0.0.100",
   "license": "MIT",
   "files": [
     "src",
@@ -16,6 +16,7 @@
     "./webpack": "./src/webpack.common.js"
   },
   "dependencies": {
+    "@types/webpack": "^5.28.0",
     "@typescript-eslint/eslint-plugin": "^5.38.1",
     "@typescript-eslint/parser": "^5.38.1",
     "css-loader": "^6.7.1",

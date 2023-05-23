@@ -1,0 +1,72 @@
+.template-simple-video {
+  position: relative;
+
+  .row.right {
+    flex-direction: row-reverse;
+  }
+
+  .text__container {
+    margin: 0 1.5rem;
+
+    .progress {
+      &-indictor {
+        width: 100%;
+      }
+
+      &-bar {
+        width: 0%;
+        border: none;
+        height: 0.4rem;
+        background: var(--bs-body-color);
+        padding: 0;
+        margin: 1rem 0 2rem 0;
+      }
+    }
+  }
+
+  .overlay {
+    background-color: rgba(0, 0, 0, 0.1);
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 5;
+  }
+
+  .lazyload-wrapper {
+    display: flex;
+    justify-content: center;
+  }
+
+  .video {
+    &__wrapper {
+      display: flex;
+      justify-content: center;
+
+      .vimeo-player {
+        iframe {
+          width: 70vw;
+          height: 40vh;
+        }
+      }
+    }
+
+    &__container {
+      height: 100%;
+      width: 70% !important;
+      background-size: cover;
+      background-position: 50% 50%;
+    }
+  }
+
+  &.edit-mode {
+    .can-focus {
+      cursor: pointer;
+    }
+
+    .has-focus {
+      background-color: #fff8e6;
+    }
+  }
+}
