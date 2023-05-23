@@ -124,7 +124,7 @@ export const Page = () => {
       });
     };
 
-    const openListener = (ev, project?: Projects.ProjectMeta) => {
+    const openListener = (_ev, project?: Projects.ProjectMeta) => {
       if (project) {
         if (project.id === projectData.meta.id) {
           return;
@@ -141,7 +141,7 @@ export const Page = () => {
       Projects.openProjectBrowser();
     };
 
-    const previewListener = (ev, type: menu.PreviewTypes) => {
+    const previewListener = (_ev, type: menu.PreviewTypes) => {
       const payload: Projects.PreviewProjectReq = {
         type,
         project: projectData,
@@ -171,7 +171,7 @@ export const Page = () => {
       });
     };
 
-    const createListener = () => {
+    const createListener = (_ev, type: string) => {
       if (inProgress) {
         return;
       }
@@ -182,7 +182,7 @@ export const Page = () => {
         resetWorkspace();
         resetActiveSlide();
 
-        Projects.create().then((result) => {
+        Projects.create(type).then((result) => {
           setProgress(false);
           if (result.error) {
             console.error(result);
