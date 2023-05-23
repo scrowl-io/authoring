@@ -5,7 +5,7 @@ import { rq } from '../';
 
 export const menuItems = menus;
 
-export const rebuildMenu = (type?) => {
+export const rebuildMenu = (type?: string, rebuildOptions?) => {
   return new Promise<rq.ApiResult>((resolve) => {
     const isMac = process.platform === 'darwin';
     const isRebuild = true;
@@ -17,7 +17,7 @@ export const rebuildMenu = (type?) => {
 
     for (const [menuKey, menuItem] of Object.entries(_menuItems)) {
       if (menuItem.create) {
-        template.push(menuItem.create(isMac, isRebuild, type));
+        template.push(menuItem.create(isMac, isRebuild, type, rebuildOptions));
       }
 
       if (menuItem.asyncInit) {

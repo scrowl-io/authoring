@@ -435,6 +435,20 @@ export const create = (blueprint?: string): Promise<rq.ApiResult> => {
   });
 };
 
+export const updateSlide = (enableOptions?: any): Promise<rq.ApiResult> => {
+  return new Promise((resolve) => {
+    API.updateSlide(enableOptions).then((res) => {
+      if (res.error) {
+        console.error(res);
+      } else {
+        console.log('update Slide ', res.data);
+      }
+
+      resolve(res);
+    });
+  });
+};
+
 export const upload = (req: UploadReq): Promise<rq.ApiResult> => {
   return new Promise((resolve) => {
     API.upload(req).then((res) => {

@@ -111,6 +111,26 @@ export const AssessmentOutlineSlideItem = ({
 
   const handleSetActiveSlide = (ev: React.MouseEvent) => {
     ev.preventDefault();
+
+    let enableOptions = {
+      newSlide: true,
+      duplicateSlide: true,
+      removeSlide: true,
+    };
+
+    if (
+      slide.template.meta.filename === 'lesson-outro' ||
+      slide.template.meta.filename === 'lesson-intro'
+    ) {
+      enableOptions.removeSlide = false;
+      enableOptions.duplicateSlide = false;
+    }
+
+    if (slide.template.meta.filename === 'lesson-outro') {
+      enableOptions.newSlide = false;
+    }
+
+    Projects.updateSlide(enableOptions);
     setActiveSlide(slide);
   };
 

@@ -18,6 +18,7 @@ const ENDPOINTS: ProjectsEndpoints = {
   open: '/projects/open',
   previewAsset: '/projects/preview-asset',
   preview: '/projects/preview',
+  updateSlide: '/projects/update-slide',
 };
 
 const WINDOW_ENDPOINTS: WindowEndpoints = {
@@ -27,6 +28,10 @@ const WINDOW_ENDPOINTS: WindowEndpoints = {
 
 export const create = (blueprint?: string): Promise<rq.ApiResult> => {
   return rq.invoke(ENDPOINTS.create, blueprint);
+};
+
+export const updateSlide = (blueprint?): Promise<rq.ApiResult> => {
+  return rq.invoke(ENDPOINTS.updateSlide, blueprint);
 };
 
 export const upload = (data?): Promise<rq.ApiResult> => {

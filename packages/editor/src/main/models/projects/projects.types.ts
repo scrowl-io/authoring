@@ -47,6 +47,11 @@ export interface ProjectsApiPreview
   name: '/projects/preview';
 }
 
+export interface ProjectsApiUpdateSlide
+  extends Omit<rq.RegisterEndpoint, 'name'> {
+  name: '/projects/update-slide';
+}
+
 export type ProjectsApi = {
   create: ProjectsApiCreate;
   upload: ProjectsApiUpload;
@@ -57,6 +62,7 @@ export type ProjectsApi = {
   open: ProjectsApiOpen;
   previewAsset: ProjectsApiPreviewAsset;
   preview: ProjectsApiPreview;
+  updateSlide: ProjectsApiUpdateSlide;
 };
 
 export type ProjectsEndpoints = {
@@ -69,6 +75,7 @@ export type ProjectsEndpoints = {
   open: ProjectsApiOpen['name'];
   previewAsset: ProjectsApiPreviewAsset['name'];
   preview: ProjectsApiPreview['name'];
+  updateSlide: ProjectsApiUpdateSlide['name'];
 };
 
 export type ProjectMeta = {

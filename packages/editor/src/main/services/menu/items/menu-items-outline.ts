@@ -2,7 +2,12 @@ import { MenuItemConstructorOptions } from 'electron';
 import { MenuItemApiOutline } from '../menu.types';
 import { rq } from '../..';
 
-export const create = (isMac: boolean, isRebuild?: boolean, type?: string) => {
+export const create = (
+  isMac: boolean,
+  isRebuild?: boolean,
+  type?: string,
+  rebuildOptions?
+) => {
   const menuId = 'outline-menu';
   const courseOutlineMenu = [
     {
@@ -68,14 +73,8 @@ export const create = (isMac: boolean, isRebuild?: boolean, type?: string) => {
       id: `${menuId}-add-slide`,
       label: 'Add New Slide',
       accelerator: 'CmdorCtrl+Alt+S',
-      enabled: false,
-      // visible: false,
-      submenu: [
-        // {
-        //   label: 'test',
-        //   enabled: false,
-        // },
-      ],
+      enabled: rebuildOptions && rebuildOptions.newSlide ? true : false,
+      submenu: rebuildOptions && rebuildOptions.newSlide ? null : [],
       acceleratorWorksWhenHidden: false,
       registerAccelerator: false,
       click: () => {
@@ -111,9 +110,8 @@ export const create = (isMac: boolean, isRebuild?: boolean, type?: string) => {
       id: `${menuId}-dup-slide`,
       label: 'Duplicate Slide',
       accelerator: 'CmdorCtrl+Alt+D',
-      enabled: false,
-      // visible: false,
-      submenu: [],
+      enabled: rebuildOptions && rebuildOptions.duplicateSlide ? true : false,
+      submenu: rebuildOptions && rebuildOptions.duplicateSlide ? null : [],
       acceleratorWorksWhenHidden: false,
       registerAccelerator: false,
       click: () => {
@@ -134,9 +132,8 @@ export const create = (isMac: boolean, isRebuild?: boolean, type?: string) => {
       id: `${menuId}-delete-slide`,
       label: 'Delete Slide',
       accelerator: 'CmdorCtrl+D',
-      enabled: false,
-      // visible: false,
-      submenu: [],
+      enabled: rebuildOptions && rebuildOptions.removeSlide ? true : false,
+      submenu: rebuildOptions && rebuildOptions.removeSlide ? null : [],
       acceleratorWorksWhenHidden: false,
       registerAccelerator: false,
       click: () => {

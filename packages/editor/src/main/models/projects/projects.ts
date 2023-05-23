@@ -104,6 +104,28 @@ const getProjectInfo = (meta: ProjectMeta): rq.ApiResult => {
   }
 };
 
+const updateSlide = (_ev, enableOptions) => {
+  return new Promise<rq.ApiResult>((resolve) => {
+    const handleRebuildMenu = (options) => {
+      mu.rebuildMenu('assessment', options).then((updateRes) => {
+        if (updateRes.error) {
+          resolve(updateRes);
+          return;
+        }
+      });
+    };
+
+    handleRebuildMenu(enableOptions);
+
+    resolve({
+      error: false,
+      data: {
+        test: true,
+      },
+    });
+  });
+};
+
 export const create = (ev: rq.RequestEvent, blueprint?: string) => {
   const copyAsset = (assetFilename: string) => {
     return new Promise<rq.ApiResult>((resolve) => {
@@ -222,7 +244,7 @@ export const create = (ev: rq.RequestEvent, blueprint?: string) => {
     const assetsMap = new Map();
 
     const handleRebuildMenu = (project) => {
-      mu.rebuildMenu(project.type).then((updateRes) => {
+      mu.rebuildMenu(project.type, {}).then((updateRes) => {
         if (updateRes.error) {
           resolve(updateRes);
           return;
@@ -1018,7 +1040,7 @@ export const open = (ev: rq.RequestEvent, project: ProjectMeta) => {
       }
 
       const handleRebuildMenu = (project) => {
-        mu.rebuildMenu(project.type).then((updateRes) => {
+        mu.rebuildMenu(project.type, {}).then((updateRes) => {
           if (updateRes.error) {
             resolve(updateRes);
             return;
@@ -1269,6 +1291,11 @@ export const API: ProjectsApi = {
     type: 'invoke',
     fn: previewProject,
   },
+  updateSlide: {
+    name: '/projects/update-slide',
+    type: 'invoke',
+    fn: updateSlide,
+  },
 };
 
 export const init = () => {
@@ -1276,6 +1303,7 @@ export const init = () => {
 };
 
 export default {
+  updateSlide,
   create,
   upload,
   save,
