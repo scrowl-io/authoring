@@ -312,11 +312,6 @@ const $29add62a37af587e$export$6ed414b8d8bead88 = {
             };
             $29add62a37af587e$export$6ed414b8d8bead88.setValue("cmi.location", JSON.stringify(startLocation));
         } else {
-            // service.setValue(
-            //   'cmi.score.scaled',
-            //   service.getValue('cmi.score.scaled')[1]
-            // );
-            // service.setValue('cmi.score.raw', service.getValue('cmi.score.raw')[1]);
             $29add62a37af587e$export$6ed414b8d8bead88.setValue("cmi.success_status", $29add62a37af587e$export$6ed414b8d8bead88.getValue("cmi.success_status")[1]);
             $29add62a37af587e$export$6ed414b8d8bead88.setValue("cmi.progress_measure", $29add62a37af587e$export$6ed414b8d8bead88.getValue("cmi.progress_measure")[1]);
             $29add62a37af587e$export$6ed414b8d8bead88.setValue("cmi.completion_status", $29add62a37af587e$export$6ed414b8d8bead88.getValue("cmi.completion_status")[1]);
@@ -734,18 +729,6 @@ const $bc9227963e5f4dff$export$6ed414b8d8bead88 = {
             ];
         }
         const getRes = API.LMSGetValue(elem);
-        // Unlike in SCORM 2004v3, failing to retrieve a value from the LMS does not cause an error: it just returns an empty string and continues. Below has been added to keep 1.2 consistent with 2004, but for now I don't think we should treat this as an error
-        // if (getRes === '' || getRes === null || getRes === undefined) {
-        //   const apiError = {
-        //     id: '403',
-        //     message: `Data Model Element Not Initialized`,
-        //     stack: `The ${elem} field has not been set for this SCO.`,
-        //   };
-        //   const errorEvent = new CustomEvent('scormError', {
-        //     detail: apiError,
-        //   });
-        //   document.dispatchEvent(errorEvent);
-        // }
         if (getRes === "") {
             console.error(`API failed to get value for: ${elem}`);
             $bc9227963e5f4dff$export$6ed414b8d8bead88.getError(true);
